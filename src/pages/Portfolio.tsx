@@ -1,5 +1,5 @@
 import { AppLayout } from "@/components/layout/AppLayout";
-import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
+import { PortfolioGrid, PortfolioItemProps } from "@/components/portfolio/PortfolioGrid";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,81 +20,100 @@ import {
   Grid3X3, 
   List,
   Upload,
-  FileText
+  FileText,
+  Clock
 } from "lucide-react";
+import { PublicationStatus } from "@/lib/publication";
 
-const portfolioItems = [
+const portfolioItems: PortfolioItemProps[] = [
   {
     id: "1",
     title: "Urban Street Style Series",
     category: "Fashion",
     thumbnail: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600",
-    status: "published" as const,
+    status: "published",
     createdAt: "Dec 5, 2024",
-    source: "stylebox" as const,
+    source: "stylebox",
+    publicationStatus: "published",
   },
   {
     id: "2",
     title: "Minimalist Ring Collection",
     category: "Jewelry",
     thumbnail: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600",
-    status: "completed" as const,
+    status: "completed",
     createdAt: "Dec 3, 2024",
-    source: "stylebox" as const,
+    source: "stylebox",
+    publicationStatus: "sampling",
+    submittedAt: "Dec 4, 2024",
+    lastUpdated: "Dec 6, 2024",
   },
   {
     id: "3",
     title: "Autumn Textile Print",
     category: "Textile",
     thumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600",
-    status: "pending" as const,
+    status: "pending",
     createdAt: "Dec 1, 2024",
-    source: "stylebox" as const,
+    source: "stylebox",
+    publicationStatus: "pending_review",
+    submittedAt: "Dec 2, 2024",
+    lastUpdated: "Dec 2, 2024",
   },
   {
     id: "4",
     title: "Personal Lookbook 2024",
     category: "Fashion",
     thumbnail: "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=600",
-    status: "draft" as const,
+    status: "draft",
     createdAt: "Nov 28, 2024",
-    source: "upload" as const,
+    source: "upload",
+    publicationStatus: "draft",
   },
   {
     id: "5",
     title: "Coastal Jewelry Concept",
     category: "Jewelry",
     thumbnail: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600",
-    status: "completed" as const,
+    status: "completed",
     createdAt: "Nov 25, 2024",
-    source: "stylebox" as const,
+    source: "stylebox",
+    publicationStatus: "revision_requested",
+    submittedAt: "Nov 26, 2024",
+    lastUpdated: "Nov 28, 2024",
+    reviewerNotes: "Great concept! Please add more detailed fabric/material specifications and update the moodboard with production-ready references.",
   },
   {
     id: "6",
     title: "Heritage Weave Patterns",
     category: "Textile",
     thumbnail: "https://images.unsplash.com/photo-1606722590583-3b9e9e9b9b9d?w=600",
-    status: "published" as const,
+    status: "published",
     createdAt: "Nov 20, 2024",
-    source: "stylebox" as const,
+    source: "stylebox",
+    publicationStatus: "published",
   },
   {
     id: "7",
     title: "Avant-Garde Evening Wear",
     category: "Fashion",
     thumbnail: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600",
-    status: "completed" as const,
+    status: "completed",
     createdAt: "Nov 15, 2024",
-    source: "upload" as const,
+    source: "upload",
+    publicationStatus: "marketplace_pending",
+    submittedAt: "Nov 16, 2024",
+    lastUpdated: "Dec 5, 2024",
   },
   {
     id: "8",
     title: "Nature-Inspired Pendants",
     category: "Jewelry",
     thumbnail: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600",
-    status: "published" as const,
+    status: "published",
     createdAt: "Nov 10, 2024",
-    source: "stylebox" as const,
+    source: "stylebox",
+    publicationStatus: "published",
   },
 ];
 
@@ -128,8 +147,8 @@ const Portfolio = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { label: "Total Projects", value: "89", icon: Grid3X3 },
-            { label: "Published", value: "6", icon: Upload },
-            { label: "Pending Review", value: "2", icon: FileText },
+            { label: "Published", value: "3", icon: Upload },
+            { label: "In Pipeline", value: "4", icon: Clock },
             { label: "Collections", value: "4", icon: FolderPlus },
           ].map((stat, index) => (
             <Card key={index}>

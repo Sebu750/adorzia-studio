@@ -6,9 +6,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
-// Studio Pages
-import Index from "./pages/Index";
+// Public Pages
+import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
+
+// Studio Pages (Protected)
+import Dashboard from "./pages/Dashboard";
 import Styleboxes from "./pages/Styleboxes";
 import Portfolio from "./pages/Portfolio";
 import Profile from "./pages/Profile";
@@ -38,13 +41,14 @@ const App = () => (
         <AuthProvider>
           <Routes>
             {/* Public Routes */}
+            <Route path="/" element={<Landing />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             
             {/* Protected Studio App Routes */}
-            <Route path="/" element={
+            <Route path="/dashboard" element={
               <ProtectedRoute>
-                <Index />
+                <Dashboard />
               </ProtectedRoute>
             } />
             <Route path="/styleboxes" element={

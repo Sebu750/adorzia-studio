@@ -50,7 +50,7 @@ export default function Auth() {
 
   // Redirect if already logged in
   if (user) {
-    navigate("/");
+    navigate("/dashboard");
     return null;
   }
 
@@ -72,7 +72,7 @@ export default function Auth() {
         });
       } else {
         toast({ title: "Welcome back!" });
-        navigate("/");
+        navigate("/dashboard");
       }
     } catch (error) {
       if (error instanceof z.ZodError) {

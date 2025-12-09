@@ -31,6 +31,7 @@ import AdminDesigners from "./pages/admin/AdminDesigners";
 import AdminPublications from "./pages/admin/AdminPublications";
 import AdminStyleboxes from "./pages/admin/AdminStyleboxes";
 import AdminRankings from "./pages/admin/AdminRankings";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 const queryClient = new QueryClient();
 
@@ -120,6 +121,11 @@ const App = () => (
             <Route path="/admin/publications" element={
               <ProtectedRoute requireAdmin>
                 <AdminPublications />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/settings" element={
+              <ProtectedRoute requireAdmin>
+                <AdminSettings />
               </ProtectedRoute>
             } />
             

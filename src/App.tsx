@@ -20,6 +20,7 @@ import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDesigners from "./pages/admin/AdminDesigners";
 import AdminPublications from "./pages/admin/AdminPublications";
+import AdminStyleboxes from "./pages/admin/AdminStyleboxes";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ const App = () => (
           {/* Admin Portal Routes */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/designers" element={<AdminDesigners />} />
+          <Route path="/admin/styleboxes" element={<AdminStyleboxes />} />
           <Route path="/admin/publications" element={<AdminPublications />} />
           
           <Route path="*" element={<NotFound />} />

@@ -19,9 +19,15 @@ import {
   Flame,
   Target,
   Award,
-  ExternalLink
+  ExternalLink,
+  Sparkles,
+  Percent
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { RANKS, RankTier } from "@/lib/ranks";
+import { RankOverview } from "@/components/rank/RankOverview";
+
+const currentRank: RankTier = "senior";
 
 const Profile = () => {
   const skills = [
@@ -65,11 +71,14 @@ const Profile = () => {
               <div className="flex-1 md:pb-2">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="font-display text-2xl font-bold">Aria Kim</h1>
-                  <Badge variant="gold" className="gap-1">
+                  <Badge className="gap-1 bg-rank-senior/20 text-rank-senior border-rank-senior/30">
                     <Crown className="h-3 w-3" />
-                    Gold
+                    {RANKS[currentRank].name}
                   </Badge>
-                  <Badge variant="secondary">Lv. 24</Badge>
+                  <Badge variant="accent" className="gap-1">
+                    <Percent className="h-3 w-3" />
+                    {RANKS[currentRank].revenueShare}% Share
+                  </Badge>
                 </div>
                 <p className="text-muted-foreground mt-1">
                   Fashion & Textile Designer | Sustainable Design Advocate
@@ -167,46 +176,62 @@ const Profile = () => {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Crown className="h-5 w-5 text-rank-gold" />
-                    Rank Progress
+                    <Crown className="h-5 w-5 text-rank-senior" />
+                    Rank Status
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="text-center">
-                    <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-rank-gold/20 to-rank-gold/5 border-2 border-rank-gold/30 mb-3">
-                      <Crown className="h-10 w-10 text-rank-gold" />
+                    <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-rank-senior/20 to-rank-senior/5 border-2 border-rank-senior/30 mb-3">
+                      <Crown className="h-10 w-10 text-rank-senior" />
                     </div>
-                    <h3 className="font-display text-xl font-semibold text-rank-gold">Gold Designer</h3>
-                    <p className="text-sm text-muted-foreground">Level 24</p>
+                    <h3 className="font-display text-xl font-semibold text-rank-senior">
+                      {RANKS[currentRank].name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">{RANKS[currentRank].title}</p>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-rank-senior/10 border border-rank-senior/20 text-center">
+                    <p className="text-sm text-muted-foreground">Revenue Share</p>
+                    <p className="font-display text-3xl font-bold text-rank-senior">
+                      {RANKS[currentRank].revenueShare}%
+                    </p>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span>2,450 XP</span>
-                      <span className="text-muted-foreground">3,000 XP</span>
+                      <span>Progress to Lead</span>
+                      <span className="text-muted-foreground">49%</span>
                     </div>
-                    <Progress value={82} className="h-2" />
+                    <Progress value={49} className="h-2" />
                     <p className="text-xs text-muted-foreground text-center">
-                      550 XP to Platinum
+                      $2,550 more in sales to unlock Lead Designer
                     </p>
                   </div>
 
                   <div className="pt-4 border-t space-y-3">
-                    <h4 className="text-sm font-medium">Next Perks</h4>
+                    <h4 className="text-sm font-medium">Next Perks at Lead</h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        <Star className="h-4 w-4 text-accent" />
-                        Priority Marketplace Listing
+                        <Percent className="h-4 w-4 text-accent" />
+                        40% Revenue Share
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Sparkles className="h-4 w-4 text-accent" />
+                        Priority Production
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Award className="h-4 w-4 text-accent" />
-                        Featured Designer Badge
+                        Mentorship Opportunities
                       </div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
+
+            {/* Full Rank Overview */}
+            <RankOverview currentRank={currentRank} />
           </TabsContent>
 
           <TabsContent value="achievements">

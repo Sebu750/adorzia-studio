@@ -8,6 +8,7 @@ import { Box, Trophy, FolderOpen, DollarSign, ArrowRight, Sparkles } from "lucid
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { RankTier } from "@/lib/ranks";
 
 const Dashboard = () => {
   const activeStyleboxes = [
@@ -41,10 +42,9 @@ const Dashboard = () => {
   };
 
   const rankData = {
-    currentRank: "Gold",
-    currentLevel: 24,
+    currentRank: "senior" as RankTier,
     xp: 2450,
-    xpToNextLevel: 3000,
+    xpToNextLevel: 5000,
     badges: [
       { name: "First Win", icon: "🏆" },
       { name: "Team Player", icon: "🤝" },

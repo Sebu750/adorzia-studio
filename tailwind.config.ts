@@ -70,6 +70,18 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        admin: {
+          wine: "hsl(var(--admin-wine))",
+          "wine-foreground": "hsl(var(--admin-wine-foreground))",
+          camel: "hsl(var(--admin-camel))",
+          "camel-foreground": "hsl(var(--admin-camel-foreground))",
+          coffee: "hsl(var(--admin-coffee))",
+          "coffee-foreground": "hsl(var(--admin-coffee-foreground))",
+          chocolate: "hsl(var(--admin-chocolate))",
+          "chocolate-foreground": "hsl(var(--admin-chocolate-foreground))",
+          apricot: "hsl(var(--admin-apricot))",
+          "apricot-foreground": "hsl(var(--admin-apricot-foreground))",
+        },
         rank: {
           // Foundation Ranks
           f1: "hsl(var(--rank-f1))",

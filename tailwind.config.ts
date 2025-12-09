@@ -71,6 +71,19 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         rank: {
+          // Foundation Ranks
+          f1: "hsl(var(--rank-f1))",
+          "f1-glow": "hsl(var(--rank-f1-glow))",
+          f2: "hsl(var(--rank-f2))",
+          "f2-glow": "hsl(var(--rank-f2-glow))",
+          // Standard Ranks
+          novice: "hsl(var(--rank-novice))",
+          apprentice: "hsl(var(--rank-apprentice))",
+          designer: "hsl(var(--rank-designer))",
+          senior: "hsl(var(--rank-senior))",
+          lead: "hsl(var(--rank-lead))",
+          elite: "hsl(var(--rank-elite))",
+          // Legacy
           bronze: "hsl(var(--rank-bronze))",
           silver: "hsl(var(--rank-silver))",
           gold: "hsl(var(--rank-gold))",

@@ -77,7 +77,22 @@
     --font-display: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
 
-    /* Rank Colors */
+    /* Rank Colors - 8 Tier System */
+    /* Foundation Ranks */
+    --rank-f1: 280 75% 55%;
+    --rank-f1-glow: 280 75% 65%;
+    --rank-f2: 260 65% 50%;
+    --rank-f2-glow: 260 65% 60%;
+    
+    /* Standard Ranks */
+    --rank-novice: 30 45% 50%;
+    --rank-apprentice: 30 55% 55%;
+    --rank-designer: 220 15% 55%;
+    --rank-senior: 45 85% 55%;
+    --rank-lead: 200 25% 72%;
+    --rank-elite: 200 80% 60%;
+    
+    /* Legacy (for backwards compat) */
     --rank-bronze: 30 60% 45%;
     --rank-silver: 220 10% 60%;
     --rank-gold: 45 85% 55%;

@@ -3,9 +3,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/hooks/useAuth";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 // Studio Pages
 import Index from "./pages/Index";
+import Auth from "./pages/Auth";
 import Styleboxes from "./pages/Styleboxes";
 import Portfolio from "./pages/Portfolio";
 import Profile from "./pages/Profile";
@@ -17,6 +20,7 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 // Admin Pages
+import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDesigners from "./pages/admin/AdminDesigners";
 import AdminPublications from "./pages/admin/AdminPublications";
@@ -31,27 +35,89 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          {/* Studio App Routes */}
-          <Route path="/" element={<Index />} />
-          <Route path="/styleboxes" element={<Styleboxes />} />
-          <Route path="/portfolio" element={<Portfolio />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/teams" element={<Teams />} />
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/settings" element={<Settings />} />
-          
-          {/* Admin Portal Routes */}
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/designers" element={<AdminDesigners />} />
-          <Route path="/admin/styleboxes" element={<AdminStyleboxes />} />
-          <Route path="/admin/rankings" element={<AdminRankings />} />
-          <Route path="/admin/publications" element={<AdminPublications />} />
-          
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            
+            {/* Protected Studio App Routes */}
+            <Route path="/" element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/styleboxes" element={
+              <ProtectedRoute>
+                <Styleboxes />
+              </ProtectedRoute>
+            } />
+            <Route path="/portfolio" element={
+              <ProtectedRoute>
+                <Portfolio />
+              </ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            } />
+            <Route path="/teams" element={
+              <ProtectedRoute>
+                <Teams />
+              </ProtectedRoute>
+            } />
+            <Route path="/jobs" element={
+              <ProtectedRoute>
+                <Jobs />
+              </ProtectedRoute>
+            } />
+            <Route path="/analytics" element={
+              <ProtectedRoute>
+                <Analytics />
+              </ProtectedRoute>
+            } />
+            <Route path="/notifications" element={
+              <ProtectedRoute>
+                <Notifications />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            } />
+            
+            {/* Protected Admin Portal Routes */}
+            <Route path="/admin" element={
+              <ProtectedRoute requireAdmin>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/designers" element={
+              <ProtectedRoute requireAdmin>
+                <AdminDesigners />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/styleboxes" element={
+              <ProtectedRoute requireAdmin>
+                <AdminStyleboxes />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/rankings" element={
+              <ProtectedRoute requireAdmin>
+                <AdminRankings />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/publications" element={
+              <ProtectedRoute requireAdmin>
+                <AdminPublications />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

@@ -1,3 +1,4 @@
+import { useNavigate, Link } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,9 @@ import { Input } from "@/components/ui/input";
 import { 
   Search,
   Bell,
-  ChevronDown
+  ChevronDown,
+  Settings,
+  LogOut
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -17,6 +20,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -24,6 +29,33 @@ interface AdminLayoutProps {
 }
 
 export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) {
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    if (user) {
+      await supabase.from("admin_logs").insert({
+        admin_id: user.id,
+        action: "logout",
+        target_type: "session",
+      });
+    }
+    await signOut();
+    navigate("/admin/login");
+  };
+
+  const getInitials = () => {
+    if (user?.user_metadata?.name) {
+      return user.user_metadata.name
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+    }
+    return "AD";
+  };
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -54,27 +86,42 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="gap-2 px-2">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100" />
-                      <AvatarFallback>AD</AvatarFallback>
+                      <AvatarImage src="" />
+                      <AvatarFallback className="bg-admin-wine text-admin-wine-foreground text-xs">
+                        {getInitials()}
+                      </AvatarFallback>
                     </Avatar>
-                    <span className="hidden md:inline text-sm font-medium">Admin</span>
+                    <span className="hidden md:inline text-sm font-medium">
+                      {user?.user_metadata?.name || "Admin"}
+                    </span>
                     <ChevronDown className="h-4 w-4 text-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel>
                     <div className="flex flex-col gap-1">
-                      <span>Admin User</span>
-                      <Badge variant="outline" className="w-fit text-xs">
+                      <span>{user?.user_metadata?.name || "Admin User"}</span>
+                      <span className="text-xs font-normal text-muted-foreground">
+                        {user?.email}
+                      </span>
+                      <Badge variant="outline" className="w-fit text-xs mt-1">
                         {userRole === 'superadmin' ? 'Superadmin' : 'Admin'}
                       </Badge>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Account Settings</DropdownMenuItem>
-                  <DropdownMenuItem>Activity Log</DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin/settings" className="flex items-center gap-2 cursor-pointer">
+                      <Settings className="h-4 w-4" />
+                      Account Settings
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-destructive">
+                  <DropdownMenuItem 
+                    className="text-destructive flex items-center gap-2 cursor-pointer"
+                    onClick={handleSignOut}
+                  >
+                    <LogOut className="h-4 w-4" />
                     Sign Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>

@@ -530,7 +530,9 @@ export type Database = {
           description: string | null
           difficulty: Database["public"]["Enums"]["stylebox_difficulty"]
           id: string
+          is_walkthrough: boolean
           status: Database["public"]["Enums"]["content_status"]
+          steps: Json | null
           title: string
           updated_at: string
           xp_reward: number | null
@@ -544,7 +546,9 @@ export type Database = {
           description?: string | null
           difficulty?: Database["public"]["Enums"]["stylebox_difficulty"]
           id?: string
+          is_walkthrough?: boolean
           status?: Database["public"]["Enums"]["content_status"]
+          steps?: Json | null
           title: string
           updated_at?: string
           xp_reward?: number | null
@@ -558,7 +562,9 @@ export type Database = {
           description?: string | null
           difficulty?: Database["public"]["Enums"]["stylebox_difficulty"]
           id?: string
+          is_walkthrough?: boolean
           status?: Database["public"]["Enums"]["content_status"]
+          steps?: Json | null
           title?: string
           updated_at?: string
           xp_reward?: number | null
@@ -665,6 +671,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      walkthrough_progress: {
+        Row: {
+          added_to_portfolio: boolean
+          completed_at: string | null
+          completed_steps: Json | null
+          current_step: number
+          designer_id: string
+          id: string
+          started_at: string
+          stylebox_id: string
+        }
+        Insert: {
+          added_to_portfolio?: boolean
+          completed_at?: string | null
+          completed_steps?: Json | null
+          current_step?: number
+          designer_id: string
+          id?: string
+          started_at?: string
+          stylebox_id: string
+        }
+        Update: {
+          added_to_portfolio?: boolean
+          completed_at?: string | null
+          completed_steps?: Json | null
+          current_step?: number
+          designer_id?: string
+          id?: string
+          started_at?: string
+          stylebox_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "walkthrough_progress_stylebox_id_fkey"
+            columns: ["stylebox_id"]
+            isOneToOne: false
+            referencedRelation: "styleboxes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

@@ -14,6 +14,8 @@ import ResetPassword from "./pages/ResetPassword";
 
 // Studio Pages (Protected)
 import Dashboard from "./pages/Dashboard";
+import Walkthroughs from "./pages/Walkthroughs";
+import WalkthroughDetail from "./pages/WalkthroughDetail";
 import Styleboxes from "./pages/Styleboxes";
 import Portfolio from "./pages/Portfolio";
 import Profile from "./pages/Profile";
@@ -54,6 +56,16 @@ const App = () => (
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/walkthroughs" element={
+              <ProtectedRoute>
+                <Walkthroughs />
+              </ProtectedRoute>
+            } />
+            <Route path="/walkthroughs/:id" element={
+              <ProtectedRoute>
+                <WalkthroughDetail />
               </ProtectedRoute>
             } />
             <Route path="/styleboxes" element={

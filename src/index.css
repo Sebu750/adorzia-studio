@@ -1,7 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
-@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -9,80 +6,79 @@
 
 @layer base {
   :root {
-    /* Adorzia Brand Palette - Warm Luxury */
-    --background: 0 0% 96%;
-    --foreground: 0 0% 9%;
+    /* Minimal Black & White Theme */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 5%;
 
-    --card: 0 0% 98%;
-    --card-foreground: 0 0% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 5%;
 
-    --popover: 0 0% 89%;
-    --popover-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 5%;
 
-    /* Primary - Deep Charcoal */
-    --primary: 161 93% 30%;
-    --primary-foreground: 151 80% 95%;
+    /* Primary - Pure Black */
+    --primary: 0 0% 5%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Warm Gray */
-    --secondary: 0 0% 32%;
-    --secondary-foreground: 0 0% 98%;
+    /* Secondary - Light Gray */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 5%;
 
-    /* Muted - Soft Warm Gray */
-    --muted: 0 0% 63%;
-    --muted-foreground: 0 0% 9%;
+    /* Muted - Subtle Gray */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    /* Accent - Warm Bronze/Gold */
-    --accent: 166 76% 96%;
-    --accent-foreground: 173 80% 40%;
-    --accent-glow: 35 70% 60%;
+    /* Accent - Soft Gray */
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 5%;
 
     /* Status Colors */
-    --destructive: 0 72% 50%;
-    --destructive-foreground: 0 85% 97%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
     --success: 142 70% 45%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
-    --warning-foreground: 30 10% 12%;
+    --warning-foreground: 0 0% 5%;
 
-    --border: 0 0% 83%;
-    --input: 0 0% 83%;
-    --ring: 161 93% 30%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 5%;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Sidebar */
-    --sidebar-background: 30 10% 8%;
-    --sidebar-foreground: 0 0% 9%;
-    --sidebar-primary: 161 93% 30%;
-    --sidebar-primary-foreground: 151 80% 95%;
-    --sidebar-accent: 0 0% 32%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 83%;
-    --sidebar-ring: 161 93% 30%;
+    /* Sidebar - Clean White */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 0 0% 5%;
+    --sidebar-primary: 0 0% 5%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 5%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 0 0% 5%;
 
-    /* Admin Portal Colors - Fashion-Tech Palette */
-    --admin-wine: 345 45% 25%;
-    --admin-wine-foreground: 40 20% 95%;
-    --admin-camel: 32 35% 55%;
-    --admin-camel-foreground: 30 10% 12%;
-    --admin-coffee: 25 30% 20%;
-    --admin-coffee-foreground: 40 20% 95%;
-    --admin-chocolate: 20 40% 30%;
-    --admin-chocolate-foreground: 40 20% 95%;
-    --admin-apricot: 25 60% 85%;
-    --admin-apricot-foreground: 30 10% 12%;
+    /* Admin Portal - Minimal Black & White */
+    --admin-wine: 0 0% 5%;
+    --admin-wine-foreground: 0 0% 100%;
+    --admin-camel: 0 0% 45%;
+    --admin-camel-foreground: 0 0% 100%;
+    --admin-coffee: 0 0% 98%;
+    --admin-coffee-foreground: 0 0% 5%;
+    --admin-chocolate: 0 0% 92%;
+    --admin-chocolate-foreground: 0 0% 5%;
+    --admin-apricot: 0 0% 60%;
+    --admin-apricot-foreground: 0 0% 5%;
 
-    /* Custom Design Tokens */
-    --gradient-accent: linear-gradient(135deg, hsl(35 70% 50%), hsl(25 75% 55%));
-    --gradient-dark: linear-gradient(180deg, hsl(30 10% 12%), hsl(30 10% 8%));
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(30 8% 98%));
+    /* Design Tokens */
+    --gradient-accent: linear-gradient(135deg, hsl(0 0% 15%), hsl(0 0% 5%));
+    --gradient-dark: linear-gradient(180deg, hsl(0 0% 5%), hsl(0 0% 0%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(0 0% 98%));
 
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-accent: 0 8px 32px -8px hsl(35 70% 50% / 0.3);
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.08), 0 2px 4px -2px hsl(0 0% 0% / 0.05);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.08), 0 4px 6px -4px hsl(0 0% 0% / 0.05);
+    --shadow-accent: 0 8px 32px -8px hsl(0 0% 0% / 0.15);
 
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -92,93 +88,94 @@
     --font-display: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
 
-    /* Rank Colors - 8 Tier System */
-    /* Foundation Ranks */
-    --rank-f1: 280 75% 55%;
-    --rank-f1-glow: 280 75% 65%;
-    --rank-f2: 260 65% 50%;
-    --rank-f2-glow: 260 65% 60%;
+    /* Rank Colors - Grayscale System */
+    --rank-f1: 0 0% 10%;
+    --rank-f1-glow: 0 0% 20%;
+    --rank-f2: 0 0% 15%;
+    --rank-f2-glow: 0 0% 25%;
+    --rank-novice: 0 0% 70%;
+    --rank-apprentice: 0 0% 60%;
+    --rank-designer: 0 0% 50%;
+    --rank-senior: 0 0% 40%;
+    --rank-lead: 0 0% 25%;
+    --rank-elite: 0 0% 10%;
+    --rank-bronze: 0 0% 65%;
+    --rank-silver: 0 0% 55%;
+    --rank-gold: 0 0% 35%;
+    --rank-platinum: 0 0% 25%;
+    --rank-diamond: 0 0% 10%;
 
-    /* Standard Ranks */
-    --rank-novice: 30 45% 50%;
-    --rank-apprentice: 30 55% 55%;
-    --rank-designer: 220 15% 55%;
-    --rank-senior: 45 85% 55%;
-    --rank-lead: 200 25% 72%;
-    --rank-elite: 200 80% 60%;
+    /* Chart Colors - Grayscale */
+    --chart-1: 0 0% 20%;
+    --chart-2: 0 0% 35%;
+    --chart-3: 0 0% 50%;
+    --chart-4: 0 0% 65%;
+    --chart-5: 0 0% 80%;
 
-    /* Legacy (for backwards compat) */
-    --rank-bronze: 30 60% 45%;
-    --rank-silver: 220 10% 60%;
-    --rank-gold: 45 85% 55%;
-    --rank-platinum: 200 20% 75%;
-    --rank-diamond: 200 80% 65%;
-    --chart-1: 158 64% 51%;
-    --chart-2: 141 69% 58%;
-    --chart-3: 172 66% 50%;
-    --chart-4: 82 77% 55%;
-    --chart-5: 0 0% 45%;
     --sidebar: 0 0% 98%;
-    --font-sans: 'Work Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-    --font-serif: 'Lora', ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif;
-    --font-mono: 'Inconsolata', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+    --shadow-2xs: 0 1px 2px 0 hsl(0 0% 0% / 0.03);
+    --shadow-xs: 0 1px 3px 0 hsl(0 0% 0% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.08), 0 8px 10px -6px hsl(0 0% 0% / 0.05);
+    --shadow-2xl: 0 25px 50px -12px hsl(0 0% 0% / 0.15);
     --tracking-normal: 0em;
     --spacing: 0.25rem;
   }
 
   .dark {
-    --background: 0 0% 9%;
+    --background: 0 0% 5%;
     --foreground: 0 0% 98%;
 
-    --card: 0 0% 14%;
+    --card: 0 0% 8%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 0 0% 25%;
+    --popover: 0 0% 8%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 158 64% 51%;
-    --primary-foreground: 165 91% 9%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 5%;
 
-    --secondary: 0 0% 45%;
+    --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 0 0% 45%;
-    --muted-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 178 84% 10%;
-    --accent-foreground: 172 66% 50%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 98%;
 
-    --border: 0 0% 32%;
-    --input: 0 0% 32%;
-    --ring: 158 64% 51%;
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 85% 97%;
-    --chart-1: 156 71% 66%;
-    --chart-2: 141 76% 73%;
-    --chart-3: 170 76% 64%;
-    --chart-4: 81 84% 67%;
-    --chart-5: 0 0% 45%;
-    --sidebar: 0 0% 14%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 85%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --chart-1: 0 0% 80%;
+    --chart-2: 0 0% 65%;
+    --chart-3: 0 0% 50%;
+    --chart-4: 0 0% 35%;
+    --chart-5: 0 0% 20%;
+
+    --sidebar: 0 0% 8%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 158 64% 51%;
-    --sidebar-primary-foreground: 165 91% 9%;
-    --sidebar-accent: 172 66% 50%;
-    --sidebar-accent-foreground: 178 84% 10%;
-    --sidebar-border: 0 0% 32%;
-    --sidebar-ring: 158 64% 51%;
-    --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
-    --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
-    --shadow-md: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 2px 4px -1px hsl(0 0% 0% / 0.1);
-    --shadow-lg: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 4px 6px -1px hsl(0 0% 0% / 0.1);
-    --shadow-xl: 0 1px 3px 0px hsl(0 0% 0% / 0.1), 0 8px 10px -1px hsl(0 0% 0% / 0.1);
-    --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 0 0% 5%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 0 0% 85%;
+
+    /* Admin Dark Mode */
+    --admin-wine: 0 0% 98%;
+    --admin-wine-foreground: 0 0% 5%;
+    --admin-camel: 0 0% 65%;
+    --admin-camel-foreground: 0 0% 5%;
+    --admin-coffee: 0 0% 8%;
+    --admin-coffee-foreground: 0 0% 98%;
+    --admin-chocolate: 0 0% 15%;
+    --admin-chocolate-foreground: 0 0% 98%;
+    --admin-apricot: 0 0% 50%;
+    --admin-apricot-foreground: 0 0% 98%;
   }
 }
 
@@ -194,6 +191,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
+    letter-spacing: -0.02em;
   }
 }
 
@@ -208,7 +206,7 @@
 
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: var(--gradient-accent);
+    background-image: linear-gradient(135deg, hsl(0 0% 15%), hsl(0 0% 35%));
   }
 
   .bg-gradient-accent {

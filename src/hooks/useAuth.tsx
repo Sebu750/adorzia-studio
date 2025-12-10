@@ -89,10 +89,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (error) throw error;
 
-      // Log signup
+      // Log signup (without PII)
       await supabase.from('auth_logs').insert({
         action: 'signup',
-        metadata: { email },
+        metadata: { timestamp: new Date().toISOString() },
         user_agent: navigator.userAgent,
       });
 
@@ -110,10 +110,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (error) {
-        // Log failed attempt
+        // Log failed attempt (without PII - only error type)
         await supabase.from('auth_logs').insert({
           action: 'login_failed',
-          metadata: { email, error: error.message },
+          metadata: { error_type: error.message?.includes('Invalid') ? 'invalid_credentials' : 'unknown' },
           user_agent: navigator.userAgent,
         });
         throw error;

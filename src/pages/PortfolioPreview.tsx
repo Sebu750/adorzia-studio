@@ -1,23 +1,19 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { PdfExportDialog } from '@/components/portfolio/PdfExportDialog';
 import { 
   ArrowLeft, 
-  Edit2, 
-  ExternalLink, 
   Share2, 
-  Download,
   Globe,
   Mail,
   MapPin,
   Loader2
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import type { Portfolio, PortfolioProject, PortfolioAsset, PortfolioSection } from '@/lib/portfolio';
 
 export default function PortfolioPreview() {
@@ -145,14 +141,16 @@ export default function PortfolioPreview() {
             <Button variant="ghost" size="icon">
               <Share2 className="w-4 h-4" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <Download className="w-4 h-4" />
-            </Button>
+            <PdfExportDialog 
+              portfolioTitle={portfolio.title}
+              elementId="portfolio-content"
+            />
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Exportable Content Container */}
+      <div id="portfolio-content">
       <section className="relative py-24 px-4">
         <div className="container max-w-6xl mx-auto text-center">
           <motion.h1 
@@ -305,6 +303,7 @@ export default function PortfolioPreview() {
           </p>
         </div>
       </footer>
+      </div> {/* End of exportable content */}
 
       {/* Lightbox */}
       {selectedImage && (

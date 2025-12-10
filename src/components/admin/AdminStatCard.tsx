@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { LucideIcon, TrendingUp, TrendingDown } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 
 interface AdminStatCardProps {
   title: string;
@@ -15,26 +15,19 @@ interface AdminStatCardProps {
 }
 
 const variantStyles = {
-  default: {
-    container: "bg-secondary/50",
-    icon: "text-muted-foreground",
-  },
-  wine: {
-    container: "bg-foreground/5",
-    icon: "text-foreground",
-  },
-  camel: {
-    container: "bg-muted-foreground/10",
-    icon: "text-muted-foreground",
-  },
-  success: {
-    container: "bg-success/10",
-    icon: "text-success",
-  },
-  warning: {
-    container: "bg-warning/10",
-    icon: "text-warning",
-  },
+  default: "bg-secondary/50",
+  wine: "bg-admin-wine/10",
+  camel: "bg-admin-camel/10",
+  success: "bg-success/10",
+  warning: "bg-warning/10",
+};
+
+const iconVariantStyles = {
+  default: "text-muted-foreground",
+  wine: "text-admin-wine",
+  camel: "text-admin-camel",
+  success: "text-success",
+  warning: "text-warning",
 };
 
 export function AdminStatCard({
@@ -45,41 +38,30 @@ export function AdminStatCard({
   trend,
   variant = 'default',
 }: AdminStatCardProps) {
-  const styles = variantStyles[variant];
-  
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow duration-300">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div className="space-y-2 flex-1">
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
-            <p className="text-3xl font-display font-bold tracking-tight">{value}</p>
-            <div className="flex items-center gap-2">
-              {trend && (
-                <span className={cn(
-                  "inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full",
-                  trend.isPositive 
-                    ? "text-success bg-success/10" 
-                    : "text-destructive bg-destructive/10"
-                )}>
-                  {trend.isPositive ? (
-                    <TrendingUp className="h-3 w-3" />
-                  ) : (
-                    <TrendingDown className="h-3 w-3" />
-                  )}
-                  {trend.isPositive ? "+" : ""}{trend.value}%
-                </span>
-              )}
-              {subtitle && (
-                <p className="text-xs text-muted-foreground">{subtitle}</p>
-              )}
-            </div>
+    <Card>
+      <CardContent className="p-5">
+        <div className="flex items-start justify-between">
+          <div className="space-y-1">
+            <p className="text-sm text-muted-foreground">{title}</p>
+            <p className="text-2xl font-display font-bold">{value}</p>
+            {subtitle && (
+              <p className="text-xs text-muted-foreground">{subtitle}</p>
+            )}
+            {trend && (
+              <p className={cn(
+                "text-xs font-medium",
+                trend.isPositive ? "text-success" : "text-destructive"
+              )}>
+                {trend.isPositive ? "+" : ""}{trend.value}% from last week
+              </p>
+            )}
           </div>
           <div className={cn(
-            "h-12 w-12 rounded-xl flex items-center justify-center shrink-0",
-            styles.container
+            "h-11 w-11 rounded-xl flex items-center justify-center",
+            variantStyles[variant]
           )}>
-            <Icon className={cn("h-6 w-6", styles.icon)} />
+            <Icon className={cn("h-5 w-5", iconVariantStyles[variant])} />
           </div>
         </div>
       </CardContent>

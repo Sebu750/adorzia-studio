@@ -350,172 +350,6 @@ export type Database = {
         }
         Relationships: []
       }
-      portfolio_analytics: {
-        Row: {
-          created_at: string | null
-          event_type: string
-          id: string
-          metadata: Json | null
-          portfolio_id: string
-          visitor_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          event_type: string
-          id?: string
-          metadata?: Json | null
-          portfolio_id: string
-          visitor_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          event_type?: string
-          id?: string
-          metadata?: Json | null
-          portfolio_id?: string
-          visitor_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "portfolio_analytics_portfolio_id_fkey"
-            columns: ["portfolio_id"]
-            isOneToOne: false
-            referencedRelation: "portfolios"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      portfolio_assets: {
-        Row: {
-          alt_text: string | null
-          asset_category: string | null
-          caption: string | null
-          created_at: string | null
-          designer_id: string
-          dimensions: Json | null
-          display_order: number | null
-          file_name: string
-          file_size: number | null
-          file_type: string
-          file_url: string
-          id: string
-          metadata: Json | null
-          mime_type: string | null
-          portfolio_id: string
-          project_id: string | null
-        }
-        Insert: {
-          alt_text?: string | null
-          asset_category?: string | null
-          caption?: string | null
-          created_at?: string | null
-          designer_id: string
-          dimensions?: Json | null
-          display_order?: number | null
-          file_name: string
-          file_size?: number | null
-          file_type: string
-          file_url: string
-          id?: string
-          metadata?: Json | null
-          mime_type?: string | null
-          portfolio_id: string
-          project_id?: string | null
-        }
-        Update: {
-          alt_text?: string | null
-          asset_category?: string | null
-          caption?: string | null
-          created_at?: string | null
-          designer_id?: string
-          dimensions?: Json | null
-          display_order?: number | null
-          file_name?: string
-          file_size?: number | null
-          file_type?: string
-          file_url?: string
-          id?: string
-          metadata?: Json | null
-          mime_type?: string | null
-          portfolio_id?: string
-          project_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "portfolio_assets_portfolio_id_fkey"
-            columns: ["portfolio_id"]
-            isOneToOne: false
-            referencedRelation: "portfolios"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "portfolio_assets_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "portfolio_projects"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      portfolio_projects: {
-        Row: {
-          category: string | null
-          created_at: string | null
-          description: string | null
-          display_order: number | null
-          id: string
-          is_featured: boolean | null
-          metadata: Json | null
-          portfolio_id: string
-          source_id: string | null
-          source_type: string | null
-          tags: string[] | null
-          thumbnail_url: string | null
-          title: string
-          updated_at: string | null
-        }
-        Insert: {
-          category?: string | null
-          created_at?: string | null
-          description?: string | null
-          display_order?: number | null
-          id?: string
-          is_featured?: boolean | null
-          metadata?: Json | null
-          portfolio_id: string
-          source_id?: string | null
-          source_type?: string | null
-          tags?: string[] | null
-          thumbnail_url?: string | null
-          title: string
-          updated_at?: string | null
-        }
-        Update: {
-          category?: string | null
-          created_at?: string | null
-          description?: string | null
-          display_order?: number | null
-          id?: string
-          is_featured?: boolean | null
-          metadata?: Json | null
-          portfolio_id?: string
-          source_id?: string | null
-          source_type?: string | null
-          tags?: string[] | null
-          thumbnail_url?: string | null
-          title?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "portfolio_projects_portfolio_id_fkey"
-            columns: ["portfolio_id"]
-            isOneToOne: false
-            referencedRelation: "portfolios"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       portfolio_publications: {
         Row: {
           assigned_team: string | null
@@ -633,226 +467,36 @@ export type Database = {
           },
         ]
       }
-      portfolio_reviews: {
-        Row: {
-          action: string
-          created_at: string | null
-          feedback: Json | null
-          id: string
-          notes: string | null
-          portfolio_id: string
-          quality_score: number | null
-          reviewer_id: string
-        }
-        Insert: {
-          action: string
-          created_at?: string | null
-          feedback?: Json | null
-          id?: string
-          notes?: string | null
-          portfolio_id: string
-          quality_score?: number | null
-          reviewer_id: string
-        }
-        Update: {
-          action?: string
-          created_at?: string | null
-          feedback?: Json | null
-          id?: string
-          notes?: string | null
-          portfolio_id?: string
-          quality_score?: number | null
-          reviewer_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "portfolio_reviews_portfolio_id_fkey"
-            columns: ["portfolio_id"]
-            isOneToOne: false
-            referencedRelation: "portfolios"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      portfolio_sections: {
-        Row: {
-          content: Json | null
-          created_at: string | null
-          display_order: number | null
-          id: string
-          is_visible: boolean | null
-          portfolio_id: string
-          section_type: string | null
-          settings: Json | null
-          title: string
-          updated_at: string | null
-        }
-        Insert: {
-          content?: Json | null
-          created_at?: string | null
-          display_order?: number | null
-          id?: string
-          is_visible?: boolean | null
-          portfolio_id: string
-          section_type?: string | null
-          settings?: Json | null
-          title: string
-          updated_at?: string | null
-        }
-        Update: {
-          content?: Json | null
-          created_at?: string | null
-          display_order?: number | null
-          id?: string
-          is_visible?: boolean | null
-          portfolio_id?: string
-          section_type?: string | null
-          settings?: Json | null
-          title?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "portfolio_sections_portfolio_id_fkey"
-            columns: ["portfolio_id"]
-            isOneToOne: false
-            referencedRelation: "portfolios"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      portfolio_versions: {
-        Row: {
-          change_summary: string | null
-          created_at: string | null
-          created_by: string
-          id: string
-          portfolio_id: string
-          snapshot: Json
-          version_number: number
-        }
-        Insert: {
-          change_summary?: string | null
-          created_at?: string | null
-          created_by: string
-          id?: string
-          portfolio_id: string
-          snapshot: Json
-          version_number: number
-        }
-        Update: {
-          change_summary?: string | null
-          created_at?: string | null
-          created_by?: string
-          id?: string
-          portfolio_id?: string
-          snapshot?: Json
-          version_number?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "portfolio_versions_portfolio_id_fkey"
-            columns: ["portfolio_id"]
-            isOneToOne: false
-            referencedRelation: "portfolios"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       portfolios: {
         Row: {
-          category: string | null
-          cover_image: string | null
           created_at: string
           description: string | null
           designer_id: string
           id: string
-          is_locked: boolean | null
           items: Json | null
-          locked_at: string | null
-          locked_by: string | null
           pdf_exported: boolean | null
-          published_at: string | null
-          quality_score: number | null
-          reviewed_at: string | null
-          reviewed_by: string | null
-          reviewer_notes: string | null
-          seo_description: string | null
-          seo_title: string | null
-          settings: Json | null
-          slug: string | null
-          status: Database["public"]["Enums"]["portfolio_status"] | null
-          submitted_at: string | null
-          tagline: string | null
           title: string
           updated_at: string
-          version: number | null
-          view_count: number | null
-          visibility: Database["public"]["Enums"]["portfolio_visibility"] | null
         }
         Insert: {
-          category?: string | null
-          cover_image?: string | null
           created_at?: string
           description?: string | null
           designer_id: string
           id?: string
-          is_locked?: boolean | null
           items?: Json | null
-          locked_at?: string | null
-          locked_by?: string | null
           pdf_exported?: boolean | null
-          published_at?: string | null
-          quality_score?: number | null
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          reviewer_notes?: string | null
-          seo_description?: string | null
-          seo_title?: string | null
-          settings?: Json | null
-          slug?: string | null
-          status?: Database["public"]["Enums"]["portfolio_status"] | null
-          submitted_at?: string | null
-          tagline?: string | null
           title: string
           updated_at?: string
-          version?: number | null
-          view_count?: number | null
-          visibility?:
-            | Database["public"]["Enums"]["portfolio_visibility"]
-            | null
         }
         Update: {
-          category?: string | null
-          cover_image?: string | null
           created_at?: string
           description?: string | null
           designer_id?: string
           id?: string
-          is_locked?: boolean | null
           items?: Json | null
-          locked_at?: string | null
-          locked_by?: string | null
           pdf_exported?: boolean | null
-          published_at?: string | null
-          quality_score?: number | null
-          reviewed_at?: string | null
-          reviewed_by?: string | null
-          reviewer_notes?: string | null
-          seo_description?: string | null
-          seo_title?: string | null
-          settings?: Json | null
-          slug?: string | null
-          status?: Database["public"]["Enums"]["portfolio_status"] | null
-          submitted_at?: string | null
-          tagline?: string | null
           title?: string
           updated_at?: string
-          version?: number | null
-          view_count?: number | null
-          visibility?:
-            | Database["public"]["Enums"]["portfolio_visibility"]
-            | null
         }
         Relationships: []
       }
@@ -1445,13 +1089,6 @@ export type Database = {
       notification_status: "unread" | "read"
       notification_type: "submission" | "earnings" | "portfolio" | "marketplace"
       payout_status: "pending" | "processed" | "paid"
-      portfolio_status:
-        | "draft"
-        | "review"
-        | "approved"
-        | "published"
-        | "rejected"
-      portfolio_visibility: "private" | "public" | "marketplace_only"
       product_status: "draft" | "live" | "archived"
       publication_decision:
         | "pending"
@@ -1625,14 +1262,6 @@ export const Constants = {
       notification_status: ["unread", "read"],
       notification_type: ["submission", "earnings", "portfolio", "marketplace"],
       payout_status: ["pending", "processed", "paid"],
-      portfolio_status: [
-        "draft",
-        "review",
-        "approved",
-        "published",
-        "rejected",
-      ],
-      portfolio_visibility: ["private", "public", "marketplace_only"],
       product_status: ["draft", "live", "archived"],
       publication_decision: [
         "pending",

@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { PortfolioGrid, PortfolioItemProps } from "@/components/portfolio/PortfolioGrid";
+import { PublicationRequestForm } from "@/components/portfolio/PublicationRequestForm";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -21,7 +23,8 @@ import {
   List,
   Upload,
   FileText,
-  Clock
+  Clock,
+  Send
 } from "lucide-react";
 import { PublicationStatus } from "@/lib/publication";
 
@@ -118,6 +121,8 @@ const portfolioItems: PortfolioItemProps[] = [
 ];
 
 const Portfolio = () => {
+  const [publishFormOpen, setPublishFormOpen] = useState(false);
+
   return (
     <AppLayout>
       <div className="p-6 lg:p-8 space-y-8">
@@ -136,7 +141,15 @@ const Portfolio = () => {
               <Download className="h-4 w-4" />
               Export PDF
             </Button>
-            <Button variant="accent" className="gap-2">
+            <Button 
+              variant="accent" 
+              className="gap-2"
+              onClick={() => setPublishFormOpen(true)}
+            >
+              <Send className="h-4 w-4" />
+              Request Publish
+            </Button>
+            <Button variant="default" className="gap-2">
               <Plus className="h-4 w-4" />
               Upload Project
             </Button>
@@ -267,6 +280,12 @@ const Portfolio = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Publication Request Form Modal */}
+      <PublicationRequestForm
+        open={publishFormOpen}
+        onOpenChange={setPublishFormOpen}
+      />
     </AppLayout>
   );
 };

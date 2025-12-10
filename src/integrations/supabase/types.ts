@@ -522,6 +522,7 @@ export type Database = {
       }
       styleboxes: {
         Row: {
+          archive_date: string | null
           brief: Json | null
           category: Database["public"]["Enums"]["designer_category"]
           created_at: string
@@ -530,14 +531,23 @@ export type Database = {
           description: string | null
           difficulty: Database["public"]["Enums"]["stylebox_difficulty"]
           id: string
+          is_featured: boolean | null
           is_walkthrough: boolean
+          reference_files: Json | null
+          release_date: string | null
+          required_rank_order: number | null
+          required_subscription_tier:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
           status: Database["public"]["Enums"]["content_status"]
           steps: Json | null
           title: string
           updated_at: string
+          version: number | null
           xp_reward: number | null
         }
         Insert: {
+          archive_date?: string | null
           brief?: Json | null
           category?: Database["public"]["Enums"]["designer_category"]
           created_at?: string
@@ -546,14 +556,23 @@ export type Database = {
           description?: string | null
           difficulty?: Database["public"]["Enums"]["stylebox_difficulty"]
           id?: string
+          is_featured?: boolean | null
           is_walkthrough?: boolean
+          reference_files?: Json | null
+          release_date?: string | null
+          required_rank_order?: number | null
+          required_subscription_tier?:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
           status?: Database["public"]["Enums"]["content_status"]
           steps?: Json | null
           title: string
           updated_at?: string
+          version?: number | null
           xp_reward?: number | null
         }
         Update: {
+          archive_date?: string | null
           brief?: Json | null
           category?: Database["public"]["Enums"]["designer_category"]
           created_at?: string
@@ -562,11 +581,19 @@ export type Database = {
           description?: string | null
           difficulty?: Database["public"]["Enums"]["stylebox_difficulty"]
           id?: string
+          is_featured?: boolean | null
           is_walkthrough?: boolean
+          reference_files?: Json | null
+          release_date?: string | null
+          required_rank_order?: number | null
+          required_subscription_tier?:
+            | Database["public"]["Enums"]["subscription_tier"]
+            | null
           status?: Database["public"]["Enums"]["content_status"]
           steps?: Json | null
           title?: string
           updated_at?: string
+          version?: number | null
           xp_reward?: number | null
         }
         Relationships: []
@@ -677,31 +704,55 @@ export type Database = {
           added_to_portfolio: boolean
           completed_at: string | null
           completed_steps: Json | null
+          completion_override: boolean | null
           current_step: number
           designer_id: string
           id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          reviewer_notes: string | null
           started_at: string
           stylebox_id: string
+          submission_files: Json | null
+          submission_notes: string | null
+          xp_awarded: number | null
+          xp_override: boolean | null
         }
         Insert: {
           added_to_portfolio?: boolean
           completed_at?: string | null
           completed_steps?: Json | null
+          completion_override?: boolean | null
           current_step?: number
           designer_id: string
           id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
           started_at?: string
           stylebox_id: string
+          submission_files?: Json | null
+          submission_notes?: string | null
+          xp_awarded?: number | null
+          xp_override?: boolean | null
         }
         Update: {
           added_to_portfolio?: boolean
           completed_at?: string | null
           completed_steps?: Json | null
+          completion_override?: boolean | null
           current_step?: number
           designer_id?: string
           id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          reviewer_notes?: string | null
           started_at?: string
           stylebox_id?: string
+          submission_files?: Json | null
+          submission_notes?: string | null
+          xp_awarded?: number | null
+          xp_override?: boolean | null
         }
         Relationships: [
           {

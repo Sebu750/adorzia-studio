@@ -14,7 +14,8 @@ import {
   Settings,
   LogOut,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  BookOpen
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Link } from "react-router-dom";
@@ -40,6 +41,7 @@ const mainNavItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "Designers", url: "/admin/designers", icon: Users },
   { title: "StyleBoxes", url: "/admin/styleboxes", icon: Box },
+  { title: "Walkthroughs", url: "/admin/walkthroughs", icon: BookOpen },
   { title: "Publications", url: "/admin/publications", icon: FolderOpen },
   { title: "Marketplace", url: "/admin/marketplace", icon: Store },
 ];

@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
+import { SubscriptionProvider } from "@/hooks/useSubscription";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { ThemeProvider } from "next-themes";
 // Public Pages
@@ -24,6 +25,7 @@ import Jobs from "./pages/Jobs";
 import Analytics from "./pages/Analytics";
 import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
+import Subscription from "./pages/Subscription";
 import NotFound from "./pages/NotFound";
 
 // Admin Pages
@@ -47,14 +49,20 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Landing />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/admin/login" element={<AdminLogin />} />
-            
+          <SubscriptionProvider>
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/" element={<Landing />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/subscription" element={
+                <ProtectedRoute>
+                  <Subscription />
+                </ProtectedRoute>
+              } />
+              
             {/* Protected Studio App Routes */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
@@ -154,8 +162,9 @@ const App = () => (
               </ProtectedRoute>
             } />
             
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </SubscriptionProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

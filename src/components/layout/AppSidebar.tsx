@@ -9,7 +9,8 @@ import {
   User,
   Settings,
   LogOut,
-  BookOpen
+  BookOpen,
+  CreditCard
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
@@ -30,6 +31,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { useSubscription } from "@/hooks/useSubscription";
+import { SubscriptionBadge } from "@/components/subscription/SubscriptionBadge";
 
 const mainNavItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -42,6 +45,7 @@ const mainNavItems = [
 ];
 
 const secondaryNavItems = [
+  { title: "Subscription", url: "/subscription", icon: CreditCard },
   { title: "Profile", url: "/profile", icon: User },
   { title: "Notifications", url: "/notifications", icon: Bell },
   { title: "Settings", url: "/settings", icon: Settings },
@@ -51,6 +55,7 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
   const { user, signOut } = useAuth();
+  const { tier } = useSubscription();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -151,7 +156,7 @@ export function AppSidebar() {
               <span className="text-sm font-medium truncate">
                 {user?.email?.split("@")[0] || "Designer"}
               </span>
-              <span className="text-xs text-muted-foreground">Pro Plan</span>
+              <SubscriptionBadge size="sm" />
             </div>
           )}
         </div>

@@ -8,7 +8,7 @@ interface StyleboxCardProps {
   title: string;
   description: string;
   category: string;
-  difficulty: "easy" | "medium" | "hard" | "insane";
+  difficulty: "free" | "easy" | "medium" | "hard" | "insane";
   isPaid: boolean;
   isLocked: boolean;
   duration: string;

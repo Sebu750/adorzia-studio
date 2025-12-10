@@ -11,93 +11,64 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Filter, Sparkles, Crown } from "lucide-react";
-
-const styleboxes = [
-  {
-    id: "1",
-    title: "Sustainable Resort Collection",
-    description: "Design a complete resort wear collection using only sustainable and eco-friendly materials. Focus on versatility and timeless appeal.",
-    category: "Fashion",
-    difficulty: "hard" as const,
-    isPaid: false,
-    isLocked: false,
-    duration: "2 weeks",
-    thumbnail: "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=600",
-    participants: 1250,
-    rating: 4.8,
-    isNew: true,
-  },
-  {
-    id: "2",
-    title: "Modern Artisan Jewelry Set",
-    description: "Create a cohesive jewelry collection inspired by traditional craftsmanship with a contemporary twist.",
-    category: "Jewelry",
-    difficulty: "medium" as const,
-    isPaid: false,
-    isLocked: false,
-    duration: "1 week",
-    thumbnail: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600",
-    participants: 890,
-    rating: 4.6,
-  },
-  {
-    id: "3",
-    title: "Urban Street Style Editorial",
-    description: "Develop a street-style focused collection that bridges high fashion and urban culture.",
-    category: "Fashion",
-    difficulty: "easy" as const,
-    isPaid: false,
-    isLocked: false,
-    duration: "5 days",
-    thumbnail: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=600",
-    participants: 2100,
-    rating: 4.9,
-  },
-  {
-    id: "4",
-    title: "Avant-Garde Textile Innovation",
-    description: "Push the boundaries of textile design with experimental techniques and unconventional materials.",
-    category: "Textile",
-    difficulty: "insane" as const,
-    isPaid: true,
-    isLocked: false,
-    duration: "3 weeks",
-    thumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600",
-    participants: 340,
-    rating: 4.7,
-    isTeam: true,
-  },
-  {
-    id: "5",
-    title: "Heritage Pattern Revival",
-    description: "Reimagine traditional textile patterns for modern fashion applications.",
-    category: "Textile",
-    difficulty: "medium" as const,
-    isPaid: true,
-    isLocked: true,
-    duration: "10 days",
-    thumbnail: "https://images.unsplash.com/photo-1606722590583-3b9e9e9b9b9d?w=600",
-    participants: 560,
-    rating: 4.5,
-  },
-  {
-    id: "6",
-    title: "Statement Earring Collection",
-    description: "Design a range of bold, statement earrings that balance impact with wearability.",
-    category: "Jewelry",
-    difficulty: "easy" as const,
-    isPaid: false,
-    isLocked: false,
-    duration: "4 days",
-    thumbnail: "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600",
-    participants: 1800,
-    rating: 4.4,
-    isNew: true,
-  },
-];
+import { Search, Filter, Sparkles, Crown, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
 
 const Styleboxes = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [difficultyFilter, setDifficultyFilter] = useState("all");
+
+  const { data: styleboxes = [], isLoading } = useQuery({
+    queryKey: ["styleboxes", categoryFilter, difficultyFilter],
+    queryFn: async () => {
+      let query = supabase
+        .from("styleboxes")
+        .select("*")
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
+
+      if (categoryFilter !== "all" && (categoryFilter === "fashion" || categoryFilter === "textile" || categoryFilter === "jewelry")) {
+        query = query.eq("category", categoryFilter);
+      }
+      if (difficultyFilter !== "all" && (difficultyFilter === "free" || difficultyFilter === "easy" || difficultyFilter === "medium" || difficultyFilter === "hard" || difficultyFilter === "insane")) {
+        query = query.eq("difficulty", difficultyFilter);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  // Filter by search query
+  const filteredStyleboxes = styleboxes.filter((stylebox) =>
+    stylebox.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    stylebox.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Map database difficulty to display format
+  const mapDifficulty = (difficulty: string) => {
+    const map: Record<string, "free" | "easy" | "medium" | "hard" | "insane"> = {
+      free: "free",
+      easy: "easy",
+      medium: "medium",
+      hard: "hard",
+      insane: "insane",
+    };
+    return map[difficulty] || "easy";
+  };
+
+  // Map category to display format
+  const formatCategory = (category: string) => {
+    return category.charAt(0).toUpperCase() + category.slice(1);
+  };
+
+  // Check if stylebox is paid (based on difficulty - free tier is free, others are paid)
+  const isPaid = (difficulty: string) => difficulty !== "free";
+
   return (
     <AppLayout>
       <div className="p-6 lg:p-8 space-y-8">
@@ -162,10 +133,12 @@ const Styleboxes = () => {
             <Input
               placeholder="Search styleboxes..."
               className="pl-10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <div className="flex gap-3">
-            <Select defaultValue="all">
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
@@ -176,12 +149,13 @@ const Styleboxes = () => {
                 <SelectItem value="jewelry">Jewelry</SelectItem>
               </SelectContent>
             </Select>
-            <Select defaultValue="all">
+            <Select value={difficultyFilter} onValueChange={setDifficultyFilter}>
               <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="Difficulty" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Levels</SelectItem>
+                <SelectItem value="free">Free</SelectItem>
                 <SelectItem value="easy">Easy</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
                 <SelectItem value="hard">Hard</SelectItem>
@@ -194,47 +168,97 @@ const Styleboxes = () => {
           </div>
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && filteredStyleboxes.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">No styleboxes found. Check back soon for new challenges!</p>
+          </div>
+        )}
+
         {/* Tabs */}
-        <Tabs defaultValue="all" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="all">All Styleboxes</TabsTrigger>
-            <TabsTrigger value="free">Free</TabsTrigger>
-            <TabsTrigger value="premium">Premium</TabsTrigger>
-            <TabsTrigger value="team">Team Challenges</TabsTrigger>
-          </TabsList>
+        {!isLoading && filteredStyleboxes.length > 0 && (
+          <Tabs defaultValue="all" className="space-y-6">
+            <TabsList>
+              <TabsTrigger value="all">All Styleboxes</TabsTrigger>
+              <TabsTrigger value="free">Free</TabsTrigger>
+              <TabsTrigger value="premium">Premium</TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="all" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {styleboxes.map((stylebox) => (
-                <StyleboxCard key={stylebox.id} {...stylebox} />
-              ))}
-            </div>
-          </TabsContent>
+            <TabsContent value="all" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredStyleboxes.map((stylebox) => (
+                  <StyleboxCard
+                    key={stylebox.id}
+                    title={stylebox.title}
+                    description={stylebox.description || ""}
+                    category={formatCategory(stylebox.category)}
+                    difficulty={mapDifficulty(stylebox.difficulty)}
+                    isPaid={isPaid(stylebox.difficulty)}
+                    isLocked={false}
+                    duration={stylebox.difficulty === "insane" ? "3 weeks" : stylebox.difficulty === "hard" ? "2 weeks" : "1 week"}
+                    thumbnail={`https://images.unsplash.com/photo-1558171813-4c088753af8f?w=600&sig=${stylebox.id}`}
+                    participants={Math.floor(Math.random() * 2000) + 100}
+                    rating={4 + Math.random()}
+                    isNew={new Date(stylebox.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000}
+                  />
+                ))}
+              </div>
+            </TabsContent>
 
-          <TabsContent value="free">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {styleboxes.filter(s => !s.isPaid).map((stylebox) => (
-                <StyleboxCard key={stylebox.id} {...stylebox} />
-              ))}
-            </div>
-          </TabsContent>
+            <TabsContent value="free">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredStyleboxes
+                  .filter((s) => s.difficulty === "free")
+                  .map((stylebox) => (
+                    <StyleboxCard
+                      key={stylebox.id}
+                      title={stylebox.title}
+                      description={stylebox.description || ""}
+                      category={formatCategory(stylebox.category)}
+                      difficulty={mapDifficulty(stylebox.difficulty)}
+                      isPaid={false}
+                      isLocked={false}
+                      duration="1 week"
+                      thumbnail={`https://images.unsplash.com/photo-1558171813-4c088753af8f?w=600&sig=${stylebox.id}`}
+                      participants={Math.floor(Math.random() * 2000) + 100}
+                      rating={4 + Math.random()}
+                      isNew={new Date(stylebox.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000}
+                    />
+                  ))}
+              </div>
+            </TabsContent>
 
-          <TabsContent value="premium">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {styleboxes.filter(s => s.isPaid).map((stylebox) => (
-                <StyleboxCard key={stylebox.id} {...stylebox} />
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="team">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {styleboxes.filter(s => s.isTeam).map((stylebox) => (
-                <StyleboxCard key={stylebox.id} {...stylebox} />
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="premium">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredStyleboxes
+                  .filter((s) => s.difficulty !== "free")
+                  .map((stylebox) => (
+                    <StyleboxCard
+                      key={stylebox.id}
+                      title={stylebox.title}
+                      description={stylebox.description || ""}
+                      category={formatCategory(stylebox.category)}
+                      difficulty={mapDifficulty(stylebox.difficulty)}
+                      isPaid={true}
+                      isLocked={false}
+                      duration={stylebox.difficulty === "insane" ? "3 weeks" : stylebox.difficulty === "hard" ? "2 weeks" : "1 week"}
+                      thumbnail={`https://images.unsplash.com/photo-1558171813-4c088753af8f?w=600&sig=${stylebox.id}`}
+                      participants={Math.floor(Math.random() * 2000) + 100}
+                      rating={4 + Math.random()}
+                      isNew={new Date(stylebox.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000}
+                    />
+                  ))}
+              </div>
+            </TabsContent>
+          </Tabs>
+        )}
       </div>
     </AppLayout>
   );

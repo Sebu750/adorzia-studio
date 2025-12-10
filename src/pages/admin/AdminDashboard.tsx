@@ -5,7 +5,6 @@ import { TopDesignersCard } from "@/components/admin/TopDesignersCard";
 import { RecentActivityCard } from "@/components/admin/RecentActivityCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { 
   Users, 
   Box, 
@@ -13,11 +12,13 @@ import {
   Store,
   DollarSign,
   TrendingUp,
-  ArrowUpRight,
   Crown,
   FileCheck,
-  Clock
+  Calendar,
+  ArrowRight,
+  Zap
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 // Mock data
 const pendingPublications = [
@@ -139,26 +140,33 @@ const recentActivities = [
   },
 ];
 
+const quickActions = [
+  { label: "View Designers", icon: Users, href: "/admin/designers", color: "text-foreground" },
+  { label: "Create StyleBox", icon: Box, href: "/admin/styleboxes", color: "text-muted-foreground" },
+  { label: "Review Queue", icon: FolderOpen, href: "/admin/publications", color: "text-warning" },
+  { label: "Process Payouts", icon: DollarSign, href: "/admin/payouts", color: "text-success" },
+];
+
 const AdminDashboard = () => {
   return (
     <AdminLayout userRole="superadmin">
-      <div className="p-6 lg:p-8 space-y-8">
+      <div className="p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="font-display text-3xl font-bold tracking-tight">
-              Admin Dashboard
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Overview of Adorzia Studio operations
+            <p className="text-sm font-medium text-muted-foreground mb-1">
+              Welcome back, Admin
             </p>
+            <h1 className="font-display text-3xl font-bold tracking-tight">
+              Dashboard Overview
+            </h1>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="gap-2">
-              <Clock className="h-4 w-4" />
+            <Button variant="outline" className="gap-2 h-10">
+              <Calendar className="h-4 w-4" />
               Last 7 Days
             </Button>
-            <Button variant="accent" className="gap-2">
+            <Button className="gap-2 h-10 bg-foreground text-background hover:bg-foreground/90">
               <FileCheck className="h-4 w-4" />
               Review Queue
             </Button>
@@ -202,46 +210,46 @@ const AdminDashboard = () => {
 
         {/* Secondary Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-admin-wine/10 flex items-center justify-center">
-                <Crown className="h-5 w-5 text-admin-wine" />
+          <Card className="group hover:shadow-md transition-all duration-300">
+            <CardContent className="p-5 flex items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-foreground/5 flex items-center justify-center group-hover:bg-foreground/10 transition-colors">
+                <Crown className="h-6 w-6 text-foreground" />
               </div>
               <div>
-                <p className="text-2xl font-display font-semibold">48</p>
+                <p className="text-2xl font-display font-bold">48</p>
                 <p className="text-xs text-muted-foreground">F1/F2 Founders</p>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-success/10 flex items-center justify-center">
-                <Store className="h-5 w-5 text-success" />
+          <Card className="group hover:shadow-md transition-all duration-300">
+            <CardContent className="p-5 flex items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-success/10 flex items-center justify-center group-hover:bg-success/15 transition-colors">
+                <Store className="h-6 w-6 text-success" />
               </div>
               <div>
-                <p className="text-2xl font-display font-semibold">312</p>
+                <p className="text-2xl font-display font-bold">312</p>
                 <p className="text-xs text-muted-foreground">Live Products</p>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                <Box className="h-5 w-5 text-accent" />
+          <Card className="group hover:shadow-md transition-all duration-300">
+            <CardContent className="p-5 flex items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center group-hover:bg-muted/80 transition-colors">
+                <Box className="h-6 w-6 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-2xl font-display font-semibold">12,847</p>
+                <p className="text-2xl font-display font-bold">12,847</p>
                 <p className="text-xs text-muted-foreground">StyleBox Completions</p>
               </div>
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-admin-camel/10 flex items-center justify-center">
-                <TrendingUp className="h-5 w-5 text-admin-camel" />
+          <Card className="group hover:shadow-md transition-all duration-300">
+            <CardContent className="p-5 flex items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-muted flex items-center justify-center group-hover:bg-muted/80 transition-colors">
+                <TrendingUp className="h-6 w-6 text-muted-foreground" />
               </div>
               <div>
-                <p className="text-2xl font-display font-semibold">94%</p>
+                <p className="text-2xl font-display font-bold">94%</p>
                 <p className="text-xs text-muted-foreground">Approval Rate</p>
               </div>
             </CardContent>
@@ -269,26 +277,33 @@ const AdminDashboard = () => {
           
           {/* Quick Actions */}
           <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg">Quick Actions</CardTitle>
+            <CardHeader className="pb-4 border-b">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center">
+                  <Zap className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
+                  <p className="text-sm text-muted-foreground">Common tasks</p>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-3">
-              <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-                <Users className="h-5 w-5 text-admin-wine" />
-                <span className="text-sm">View All Designers</span>
-              </Button>
-              <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-                <Box className="h-5 w-5 text-admin-camel" />
-                <span className="text-sm">Create StyleBox</span>
-              </Button>
-              <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-                <FolderOpen className="h-5 w-5 text-warning" />
-                <span className="text-sm">Review Queue</span>
-              </Button>
-              <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-                <DollarSign className="h-5 w-5 text-success" />
-                <span className="text-sm">Process Payouts</span>
-              </Button>
+            <CardContent className="pt-4">
+              <div className="grid grid-cols-2 gap-3">
+                {quickActions.map((action) => (
+                  <Link key={action.label} to={action.href}>
+                    <Button 
+                      variant="outline" 
+                      className="w-full h-auto py-6 flex-col gap-3 hover:bg-muted/50 hover:border-border transition-all group"
+                    >
+                      <div className="h-10 w-10 rounded-xl bg-muted flex items-center justify-center group-hover:bg-background transition-colors">
+                        <action.icon className={`h-5 w-5 ${action.color}`} />
+                      </div>
+                      <span className="text-sm font-medium">{action.label}</span>
+                    </Button>
+                  </Link>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </div>

@@ -17,6 +17,7 @@ import Dashboard from "./pages/Dashboard";
 import Walkthroughs from "./pages/Walkthroughs";
 import WalkthroughDetail from "./pages/WalkthroughDetail";
 import Styleboxes from "./pages/Styleboxes";
+import Portfolio from "./pages/Portfolio";
 import PortfolioList from "./pages/PortfolioList";
 import PortfolioEditor from "./pages/PortfolioEditor";
 import PortfolioPreview from "./pages/PortfolioPreview";

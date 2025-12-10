@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { QueueStatsHeader } from "@/components/admin/QueueStatsHeader";
 import { ProductionQueueCard } from "@/components/admin/ProductionQueueCard";
+import { QueueItemDetailModal } from "@/components/admin/QueueItemDetailModal";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -64,6 +65,7 @@ export default function AdminProductionQueues() {
     title: string;
   }>({ open: false, itemId: '', action: '', title: '' });
   const [actionNotes, setActionNotes] = useState("");
+  const [detailModalId, setDetailModalId] = useState<string | null>(null);
 
   // Fetch queue items
   const { data: queueItems, isLoading } = useQuery({
@@ -422,6 +424,7 @@ export default function AdminProductionQueues() {
                       item={item}
                       queueType={activeQueue}
                       onAction={handleAction}
+                      onView={(id) => setDetailModalId(id)}
                     />
                   ))}
                 </div>
@@ -491,6 +494,19 @@ export default function AdminProductionQueues() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Item Detail Modal */}
+        <QueueItemDetailModal
+          open={!!detailModalId}
+          onOpenChange={(open) => !open && setDetailModalId(null)}
+          itemId={detailModalId}
+          onAction={(action) => {
+            if (detailModalId) {
+              handleAction(detailModalId, action);
+              setDetailModalId(null);
+            }
+          }}
+        />
       </div>
     </AdminLayout>
   );

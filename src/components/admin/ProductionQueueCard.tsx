@@ -141,6 +141,15 @@ export function ProductionQueueCard({
               </div>
 
               <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 text-xs text-admin-apricot/70 hover:text-admin-wine-foreground hover:bg-admin-chocolate"
+                  onClick={() => onView?.(item.id)}
+                >
+                  <Eye className="w-3 h-3 mr-1" />
+                  View
+                </Button>
                 {actions.secondary && (
                   <Button
                     variant="ghost"

@@ -280,30 +280,69 @@ export type Database = {
       }
       portfolio_publications: {
         Row: {
+          decision: string | null
+          decision_notes: string | null
+          design_metadata: Json | null
+          designer_revenue_share: number | null
           id: string
+          locked_at: string | null
+          marketplace_id: string | null
+          marketplace_package: Json | null
+          marketplace_status: string | null
           portfolio_id: string
+          quality_rating: number | null
+          revenue_override: boolean | null
           reviewed_at: string | null
           reviewed_by: string | null
           reviewer_notes: string | null
+          source_id: string | null
+          source_type: string | null
           status: Database["public"]["Enums"]["publication_status"]
+          submission_files: Json | null
           submitted_at: string
         }
         Insert: {
+          decision?: string | null
+          decision_notes?: string | null
+          design_metadata?: Json | null
+          designer_revenue_share?: number | null
           id?: string
+          locked_at?: string | null
+          marketplace_id?: string | null
+          marketplace_package?: Json | null
+          marketplace_status?: string | null
           portfolio_id: string
+          quality_rating?: number | null
+          revenue_override?: boolean | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           reviewer_notes?: string | null
+          source_id?: string | null
+          source_type?: string | null
           status?: Database["public"]["Enums"]["publication_status"]
+          submission_files?: Json | null
           submitted_at?: string
         }
         Update: {
+          decision?: string | null
+          decision_notes?: string | null
+          design_metadata?: Json | null
+          designer_revenue_share?: number | null
           id?: string
+          locked_at?: string | null
+          marketplace_id?: string | null
+          marketplace_package?: Json | null
+          marketplace_status?: string | null
           portfolio_id?: string
+          quality_rating?: number | null
+          revenue_override?: boolean | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           reviewer_notes?: string | null
+          source_id?: string | null
+          source_type?: string | null
           status?: Database["public"]["Enums"]["publication_status"]
+          submission_files?: Json | null
           submitted_at?: string
         }
         Relationships: [
@@ -439,6 +478,44 @@ export type Database = {
             columns: ["rank_id"]
             isOneToOne: false
             referencedRelation: "ranks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publication_reviews: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          notes: string | null
+          publication_id: string
+          quality_rating: number | null
+          reviewer_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          publication_id: string
+          quality_rating?: number | null
+          reviewer_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          publication_id?: string
+          quality_rating?: number | null
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publication_reviews_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_publications"
             referencedColumns: ["id"]
           },
         ]
@@ -782,10 +859,28 @@ export type Database = {
       content_status: "draft" | "active" | "archived"
       designer_category: "fashion" | "textile" | "jewelry"
       job_application_status: "applied" | "shortlisted" | "rejected" | "hired"
+      marketplace_status:
+        | "pending_handoff"
+        | "awaiting_sampling"
+        | "sampling_approved"
+        | "production_started"
+        | "listing_scheduled"
+        | "published"
+        | "discontinued"
       notification_status: "unread" | "read"
       notification_type: "submission" | "earnings" | "portfolio" | "marketplace"
       payout_status: "pending" | "processed" | "paid"
       product_status: "draft" | "live" | "archived"
+      publication_decision:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "revision_requested"
+      publication_source:
+        | "stylebox"
+        | "walkthrough"
+        | "independent"
+        | "portfolio"
       publication_status: "pending" | "approved" | "rejected" | "published"
       stylebox_difficulty: "free" | "easy" | "medium" | "hard" | "insane"
       submission_status: "submitted" | "approved" | "rejected"
@@ -923,10 +1018,31 @@ export const Constants = {
       content_status: ["draft", "active", "archived"],
       designer_category: ["fashion", "textile", "jewelry"],
       job_application_status: ["applied", "shortlisted", "rejected", "hired"],
+      marketplace_status: [
+        "pending_handoff",
+        "awaiting_sampling",
+        "sampling_approved",
+        "production_started",
+        "listing_scheduled",
+        "published",
+        "discontinued",
+      ],
       notification_status: ["unread", "read"],
       notification_type: ["submission", "earnings", "portfolio", "marketplace"],
       payout_status: ["pending", "processed", "paid"],
       product_status: ["draft", "live", "archived"],
+      publication_decision: [
+        "pending",
+        "approved",
+        "rejected",
+        "revision_requested",
+      ],
+      publication_source: [
+        "stylebox",
+        "walkthrough",
+        "independent",
+        "portfolio",
+      ],
       publication_status: ["pending", "approved", "rejected", "published"],
       stylebox_difficulty: ["free", "easy", "medium", "hard", "insane"],
       submission_status: ["submitted", "approved", "rejected"],

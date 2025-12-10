@@ -12,8 +12,6 @@ import {
   BarChart3,
   Shield,
   Settings,
-  LogOut,
-  ChevronRight,
   ExternalLink,
   BookOpen,
   GitBranch
@@ -71,29 +69,18 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
   const isCollapsed = state === "collapsed";
 
   return (
-    <Sidebar 
-      collapsible="icon" 
-      className="border-r-0 bg-admin-coffee"
-      style={{ 
-        '--sidebar-background': 'var(--admin-coffee)',
-        '--sidebar-foreground': 'var(--admin-wine-foreground)',
-        '--sidebar-accent': 'var(--admin-chocolate)',
-        '--sidebar-accent-foreground': 'var(--admin-wine-foreground)',
-        '--sidebar-border': 'var(--admin-chocolate)',
-        '--sidebar-primary': 'var(--admin-camel)',
-      } as React.CSSProperties}
-    >
-      <SidebarHeader className="border-b border-admin-chocolate p-4">
+    <Sidebar collapsible="icon" className="border-r bg-foreground text-background">
+      <SidebarHeader className="border-b border-background/10 p-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-admin-wine">
-            <Shield className="h-5 w-5 text-admin-wine-foreground" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-background">
+            <Shield className="h-4 w-4 text-foreground" />
           </div>
           {!isCollapsed && (
             <div className="flex flex-col">
-              <span className="font-display text-lg font-semibold text-admin-wine-foreground">
+              <span className="font-display text-lg font-semibold text-background">
                 Adorzia
               </span>
-              <span className="text-xs text-admin-apricot/70">Admin Portal</span>
+              <span className="text-xs text-background/60">Admin</span>
             </div>
           )}
         </div>
@@ -102,7 +89,7 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
       <SidebarContent className="px-2 py-4">
         {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-medium text-admin-apricot/50 uppercase tracking-wider px-3 mb-2">
+          <SidebarGroupLabel className="text-xs font-medium text-background/50 uppercase tracking-wider px-3 mb-2">
             {!isCollapsed && "Overview"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -114,13 +101,13 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
                       to={item.url}
                       end={item.url === "/admin"}
                       className={cn(
-                        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-admin-apricot/70 transition-all duration-200",
-                        "hover:bg-admin-chocolate hover:text-admin-wine-foreground"
+                        "flex items-center gap-3 rounded-md px-3 py-2 text-background/70 transition-colors",
+                        "hover:bg-background/10 hover:text-background"
                       )}
-                      activeClassName="bg-admin-wine text-admin-wine-foreground font-medium"
+                      activeClassName="bg-background text-foreground font-medium"
                     >
-                      <item.icon className="h-5 w-5 shrink-0" />
-                      {!isCollapsed && <span>{item.title}</span>}
+                      <item.icon className="h-4 w-4 shrink-0" />
+                      {!isCollapsed && <span className="text-sm">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -131,7 +118,7 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
 
         {/* Management */}
         <SidebarGroup className="mt-6">
-          <SidebarGroupLabel className="text-xs font-medium text-admin-apricot/50 uppercase tracking-wider px-3 mb-2">
+          <SidebarGroupLabel className="text-xs font-medium text-background/50 uppercase tracking-wider px-3 mb-2">
             {!isCollapsed && "Management"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -142,13 +129,13 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
                     <NavLink
                       to={item.url}
                       className={cn(
-                        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-admin-apricot/70 transition-all duration-200",
-                        "hover:bg-admin-chocolate hover:text-admin-wine-foreground"
+                        "flex items-center gap-3 rounded-md px-3 py-2 text-background/70 transition-colors",
+                        "hover:bg-background/10 hover:text-background"
                       )}
-                      activeClassName="bg-admin-wine text-admin-wine-foreground font-medium"
+                      activeClassName="bg-background text-foreground font-medium"
                     >
-                      <item.icon className="h-5 w-5 shrink-0" />
-                      {!isCollapsed && <span>{item.title}</span>}
+                      <item.icon className="h-4 w-4 shrink-0" />
+                      {!isCollapsed && <span className="text-sm">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -159,7 +146,7 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
 
         {/* System */}
         <SidebarGroup className="mt-6">
-          <SidebarGroupLabel className="text-xs font-medium text-admin-apricot/50 uppercase tracking-wider px-3 mb-2">
+          <SidebarGroupLabel className="text-xs font-medium text-background/50 uppercase tracking-wider px-3 mb-2">
             {!isCollapsed && "System"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -170,13 +157,13 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
                     <NavLink
                       to={item.url}
                       className={cn(
-                        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-admin-apricot/70 transition-all duration-200",
-                        "hover:bg-admin-chocolate hover:text-admin-wine-foreground"
+                        "flex items-center gap-3 rounded-md px-3 py-2 text-background/70 transition-colors",
+                        "hover:bg-background/10 hover:text-background"
                       )}
-                      activeClassName="bg-admin-wine text-admin-wine-foreground font-medium"
+                      activeClassName="bg-background text-foreground font-medium"
                     >
-                      <item.icon className="h-5 w-5 shrink-0" />
-                      {!isCollapsed && <span>{item.title}</span>}
+                      <item.icon className="h-4 w-4 shrink-0" />
+                      {!isCollapsed && <span className="text-sm">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -186,14 +173,14 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-admin-chocolate p-4 space-y-3">
+      <SidebarFooter className="border-t border-background/10 p-4 space-y-3">
         {/* Switch to Studio */}
         {!isCollapsed && (
           <Link to="/">
             <Button 
               variant="outline" 
               size="sm" 
-              className="w-full gap-2 border-admin-chocolate text-admin-apricot hover:bg-admin-chocolate hover:text-admin-wine-foreground"
+              className="w-full gap-2 border-background/20 text-background bg-transparent hover:bg-background/10 hover:text-background"
             >
               <ExternalLink className="h-4 w-4" />
               Switch to Studio
@@ -206,23 +193,24 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
           "flex items-center gap-3",
           isCollapsed && "justify-center"
         )}>
-          <Avatar className="h-9 w-9 border-2 border-admin-camel/30">
+          <Avatar className="h-8 w-8">
             <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100" />
-            <AvatarFallback className="bg-admin-wine text-admin-wine-foreground text-xs">
+            <AvatarFallback className="bg-background text-foreground text-xs">
               AD
             </AvatarFallback>
           </Avatar>
           {!isCollapsed && (
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-medium text-admin-wine-foreground truncate">
+              <span className="text-sm font-medium text-background truncate">
                 Admin User
               </span>
               <Badge 
+                variant="secondary"
                 className={cn(
                   "text-[10px] px-1.5 py-0 w-fit",
                   userRole === 'superadmin' 
-                    ? "bg-admin-wine text-admin-wine-foreground" 
-                    : "bg-admin-chocolate text-admin-apricot"
+                    ? "bg-background text-foreground" 
+                    : "bg-background/20 text-background"
                 )}
               >
                 {userRole === 'superadmin' ? 'Superadmin' : 'Admin'}

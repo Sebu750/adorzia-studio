@@ -13,10 +13,12 @@ import {
   Store,
   DollarSign,
   TrendingUp,
-  ArrowUpRight,
   Crown,
   FileCheck,
-  Clock
+  Clock,
+  ChevronRight,
+  Sparkles,
+  Zap
 } from "lucide-react";
 
 // Mock data
@@ -142,156 +144,154 @@ const recentActivities = [
 const AdminDashboard = () => {
   return (
     <AdminLayout userRole="superadmin">
-      <div className="p-6 lg:p-8 space-y-8">
+      <div className="p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="font-display text-3xl font-bold tracking-tight">
-              Admin Dashboard
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Overview of Adorzia Studio operations
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-1">
+            <div className="flex items-center gap-3">
+              <h1 className="font-display text-3xl font-bold tracking-tight">
+                Dashboard
+              </h1>
+              <Badge variant="outline" className="h-6 px-2.5 text-xs font-medium bg-success/10 text-success border-success/20">
+                Live
+              </Badge>
+            </div>
+            <p className="text-muted-foreground">
+              Overview of Adorzia Studio operations • Last updated just now
             </p>
           </div>
           <div className="flex gap-3">
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 h-10 px-4 hover:bg-secondary">
               <Clock className="h-4 w-4" />
               Last 7 Days
             </Button>
-            <Button variant="accent" className="gap-2">
+            <Button className="gap-2 h-10 px-4 bg-foreground text-background hover:bg-foreground/90">
               <FileCheck className="h-4 w-4" />
               Review Queue
+              <Badge className="ml-1 bg-background/20 text-background h-5 px-1.5">23</Badge>
             </Button>
           </div>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <AdminStatCard
-            title="Total Designers"
-            value="1,247"
-            subtitle="Active accounts"
-            icon={Users}
-            trend={{ value: 12, isPositive: true }}
-            variant="wine"
-          />
-          <AdminStatCard
-            title="Active StyleBoxes"
-            value="3,892"
-            subtitle="In progress"
-            icon={Box}
-            trend={{ value: 8, isPositive: true }}
-            variant="camel"
-          />
-          <AdminStatCard
-            title="Pending Publications"
-            value="23"
-            subtitle="Awaiting review"
-            icon={FolderOpen}
-            variant="warning"
-          />
-          <AdminStatCard
-            title="Revenue This Month"
-            value="$89,420"
-            subtitle="Across all designers"
-            icon={DollarSign}
-            trend={{ value: 18, isPositive: true }}
-            variant="success"
-          />
-        </div>
-
-        {/* Secondary Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-admin-wine/10 flex items-center justify-center">
-                <Crown className="h-5 w-5 text-admin-wine" />
-              </div>
-              <div>
-                <p className="text-2xl font-display font-semibold">48</p>
-                <p className="text-xs text-muted-foreground">F1/F2 Founders</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-success/10 flex items-center justify-center">
-                <Store className="h-5 w-5 text-success" />
-              </div>
-              <div>
-                <p className="text-2xl font-display font-semibold">312</p>
-                <p className="text-xs text-muted-foreground">Live Products</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-accent/10 flex items-center justify-center">
-                <Box className="h-5 w-5 text-accent" />
-              </div>
-              <div>
-                <p className="text-2xl font-display font-semibold">12,847</p>
-                <p className="text-xs text-muted-foreground">StyleBox Completions</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-4 flex items-center gap-3">
-              <div className="h-10 w-10 rounded-lg bg-admin-camel/10 flex items-center justify-center">
-                <TrendingUp className="h-5 w-5 text-admin-camel" />
-              </div>
-              <div>
-                <p className="text-2xl font-display font-semibold">94%</p>
-                <p className="text-xs text-muted-foreground">Approval Rate</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Pending Queue - Takes 2 columns */}
-          <div className="lg:col-span-2">
-            <PendingQueueCard 
-              items={pendingPublications}
+        {/* Primary Stats Grid */}
+        <section className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-muted-foreground" />
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Key Metrics</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <AdminStatCard
+              title="Total Designers"
+              value="1,247"
+              subtitle="Active accounts"
+              icon={Users}
+              trend={{ value: 12, isPositive: true }}
+              variant="wine"
+            />
+            <AdminStatCard
+              title="Active StyleBoxes"
+              value="3,892"
+              subtitle="In progress"
+              icon={Box}
+              trend={{ value: 8, isPositive: true }}
+              variant="camel"
+            />
+            <AdminStatCard
               title="Pending Publications"
-              viewAllLink="/admin/publications"
+              value="23"
+              subtitle="Awaiting review"
+              icon={FolderOpen}
+              variant="warning"
+            />
+            <AdminStatCard
+              title="Revenue This Month"
+              value="$89,420"
+              subtitle="Across all designers"
+              icon={DollarSign}
+              trend={{ value: 18, isPositive: true }}
+              variant="success"
             />
           </div>
+        </section>
 
-          {/* Top Designers */}
-          <TopDesignersCard designers={topDesigners} />
-        </div>
+        {/* Secondary Stats */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { icon: Crown, value: "48", label: "F1/F2 Founders", color: "bg-foreground text-background" },
+            { icon: Store, value: "312", label: "Live Products", color: "bg-success/10 text-success" },
+            { icon: Box, value: "12,847", label: "StyleBox Completions", color: "bg-foreground/5 text-foreground" },
+            { icon: TrendingUp, value: "94%", label: "Approval Rate", color: "bg-foreground/5 text-foreground/70" },
+          ].map((stat, index) => (
+            <Card 
+              key={stat.label} 
+              className="group hover:shadow-md transition-all cursor-pointer animate-in fade-in slide-in-from-bottom-2"
+              style={{ animationDelay: `${index * 50}ms` }}
+            >
+              <CardContent className="p-5 flex items-center gap-4">
+                <div className={`h-12 w-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105 ${stat.color}`}>
+                  <stat.icon className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-2xl font-display font-bold">{stat.value}</p>
+                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </section>
 
-        {/* Recent Activity */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Main Content Grid */}
+        <section className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Zap className="h-4 w-4 text-muted-foreground" />
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Action Center</h2>
+          </div>
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            {/* Pending Queue - Takes 2 columns */}
+            <div className="xl:col-span-2">
+              <PendingQueueCard 
+                items={pendingPublications}
+                title="Pending Publications"
+                viewAllLink="/admin/publications"
+              />
+            </div>
+
+            {/* Top Designers */}
+            <TopDesignersCard designers={topDesigners} />
+          </div>
+        </section>
+
+        {/* Bottom Section */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <RecentActivityCard activities={recentActivities} />
           
           {/* Quick Actions */}
-          <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-lg">Quick Actions</CardTitle>
+          <Card className="overflow-hidden">
+            <CardHeader className="pb-4 border-b bg-secondary/30">
+              <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
+              <p className="text-sm text-muted-foreground">Common administrative tasks</p>
             </CardHeader>
-            <CardContent className="grid grid-cols-2 gap-3">
-              <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-                <Users className="h-5 w-5 text-admin-wine" />
-                <span className="text-sm">View All Designers</span>
-              </Button>
-              <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-                <Box className="h-5 w-5 text-admin-camel" />
-                <span className="text-sm">Create StyleBox</span>
-              </Button>
-              <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-                <FolderOpen className="h-5 w-5 text-warning" />
-                <span className="text-sm">Review Queue</span>
-              </Button>
-              <Button variant="outline" className="h-auto py-4 flex-col gap-2">
-                <DollarSign className="h-5 w-5 text-success" />
-                <span className="text-sm">Process Payouts</span>
-              </Button>
+            <CardContent className="p-4">
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { icon: Users, label: "View All Designers", color: "bg-foreground/5 hover:bg-foreground/10 text-foreground" },
+                  { icon: Box, label: "Create StyleBox", color: "bg-foreground/5 hover:bg-foreground/10 text-foreground/80" },
+                  { icon: FolderOpen, label: "Review Queue", color: "bg-warning/5 hover:bg-warning/10 text-warning" },
+                  { icon: DollarSign, label: "Process Payouts", color: "bg-success/5 hover:bg-success/10 text-success" },
+                ].map((action) => (
+                  <Button 
+                    key={action.label}
+                    variant="ghost" 
+                    className={`h-auto py-5 flex-col gap-3 rounded-xl border border-transparent hover:border-border transition-all ${action.color}`}
+                  >
+                    <action.icon className="h-6 w-6" />
+                    <span className="text-sm font-medium">{action.label}</span>
+                  </Button>
+                ))}
+              </div>
             </CardContent>
           </Card>
-        </div>
+        </section>
       </div>
     </AdminLayout>
   );

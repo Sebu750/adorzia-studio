@@ -9,8 +9,11 @@ import {
   ChevronDown,
   Settings,
   LogOut,
-  Command
+  Command,
+  Sun,
+  Moon
 } from "lucide-react";
+import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,7 +35,7 @@ interface AdminLayoutProps {
 export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-
+  const { theme, setTheme } = useTheme();
   const handleSignOut = async () => {
     if (user) {
       await supabase.from("admin_logs").insert({
@@ -79,6 +82,18 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
             </div>
 
             <div className="flex items-center gap-2 ml-auto">
+              {/* Theme Toggle */}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-10 w-10 hover:bg-secondary transition-colors"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              >
+                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+
               {/* Notifications */}
               <Button 
                 variant="ghost" 

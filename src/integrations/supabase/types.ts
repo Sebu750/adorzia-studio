@@ -171,6 +171,78 @@ export type Database = {
         }
         Relationships: []
       }
+      marketplace_handoffs: {
+        Row: {
+          auto_approved: boolean | null
+          created_at: string | null
+          designer_approved: boolean | null
+          designer_approved_at: string | null
+          designer_revenue_share: number | null
+          final_price: number | null
+          handoff_package: Json
+          id: string
+          listing_description: string | null
+          listing_images: Json | null
+          listing_title: string | null
+          listing_variants: Json | null
+          marketplace_product_id: string | null
+          publication_id: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          auto_approved?: boolean | null
+          created_at?: string | null
+          designer_approved?: boolean | null
+          designer_approved_at?: string | null
+          designer_revenue_share?: number | null
+          final_price?: number | null
+          handoff_package?: Json
+          id?: string
+          listing_description?: string | null
+          listing_images?: Json | null
+          listing_title?: string | null
+          listing_variants?: Json | null
+          marketplace_product_id?: string | null
+          publication_id: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          auto_approved?: boolean | null
+          created_at?: string | null
+          designer_approved?: boolean | null
+          designer_approved_at?: string | null
+          designer_revenue_share?: number | null
+          final_price?: number | null
+          handoff_package?: Json
+          id?: string
+          listing_description?: string | null
+          listing_images?: Json | null
+          listing_title?: string | null
+          listing_variants?: Json | null
+          marketplace_product_id?: string | null
+          publication_id?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_handoffs_marketplace_product_id_fkey"
+            columns: ["marketplace_product_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketplace_handoffs_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_publications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketplace_products: {
         Row: {
           created_at: string
@@ -280,70 +352,110 @@ export type Database = {
       }
       portfolio_publications: {
         Row: {
+          assigned_team: string | null
+          auto_approve_at: string | null
+          costing_data: Json | null
           decision: string | null
           decision_notes: string | null
           design_metadata: Json | null
+          designer_approved_at: string | null
+          designer_notes: string | null
           designer_revenue_share: number | null
           id: string
+          listing_preview_url: string | null
           locked_at: string | null
           marketplace_id: string | null
           marketplace_package: Json | null
           marketplace_status: string | null
           portfolio_id: string
+          priority_score: number | null
+          production_stage: string | null
+          published_at: string | null
           quality_rating: number | null
           revenue_override: boolean | null
           reviewed_at: string | null
           reviewed_by: string | null
           reviewer_notes: string | null
+          sampling_status: string | null
           source_id: string | null
           source_type: string | null
           status: Database["public"]["Enums"]["publication_status"]
+          status_v2: Database["public"]["Enums"]["publication_status_v2"] | null
           submission_files: Json | null
           submitted_at: string
+          techpack_url: string | null
         }
         Insert: {
+          assigned_team?: string | null
+          auto_approve_at?: string | null
+          costing_data?: Json | null
           decision?: string | null
           decision_notes?: string | null
           design_metadata?: Json | null
+          designer_approved_at?: string | null
+          designer_notes?: string | null
           designer_revenue_share?: number | null
           id?: string
+          listing_preview_url?: string | null
           locked_at?: string | null
           marketplace_id?: string | null
           marketplace_package?: Json | null
           marketplace_status?: string | null
           portfolio_id: string
+          priority_score?: number | null
+          production_stage?: string | null
+          published_at?: string | null
           quality_rating?: number | null
           revenue_override?: boolean | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           reviewer_notes?: string | null
+          sampling_status?: string | null
           source_id?: string | null
           source_type?: string | null
           status?: Database["public"]["Enums"]["publication_status"]
+          status_v2?:
+            | Database["public"]["Enums"]["publication_status_v2"]
+            | null
           submission_files?: Json | null
           submitted_at?: string
+          techpack_url?: string | null
         }
         Update: {
+          assigned_team?: string | null
+          auto_approve_at?: string | null
+          costing_data?: Json | null
           decision?: string | null
           decision_notes?: string | null
           design_metadata?: Json | null
+          designer_approved_at?: string | null
+          designer_notes?: string | null
           designer_revenue_share?: number | null
           id?: string
+          listing_preview_url?: string | null
           locked_at?: string | null
           marketplace_id?: string | null
           marketplace_package?: Json | null
           marketplace_status?: string | null
           portfolio_id?: string
+          priority_score?: number | null
+          production_stage?: string | null
+          published_at?: string | null
           quality_rating?: number | null
           revenue_override?: boolean | null
           reviewed_at?: string | null
           reviewed_by?: string | null
           reviewer_notes?: string | null
+          sampling_status?: string | null
           source_id?: string | null
           source_type?: string | null
           status?: Database["public"]["Enums"]["publication_status"]
+          status_v2?:
+            | Database["public"]["Enums"]["publication_status_v2"]
+            | null
           submission_files?: Json | null
           submitted_at?: string
+          techpack_url?: string | null
         }
         Relationships: [
           {
@@ -419,6 +531,113 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "marketplace_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      production_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          from_stage: string | null
+          id: string
+          metadata: Json | null
+          notes: string | null
+          performed_by: string
+          publication_id: string
+          queue_id: string | null
+          to_stage: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          from_stage?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          performed_by: string
+          publication_id: string
+          queue_id?: string | null
+          to_stage?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          from_stage?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          performed_by?: string
+          publication_id?: string
+          queue_id?: string | null
+          to_stage?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "production_logs_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_publications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "production_logs_queue_id_fkey"
+            columns: ["queue_id"]
+            isOneToOne: false
+            referencedRelation: "production_queue"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      production_queue: {
+        Row: {
+          assigned_team: string | null
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          notes: string | null
+          priority: number | null
+          publication_id: string
+          stage: string
+          started_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_team?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          priority?: number | null
+          publication_id: string
+          stage?: string
+          started_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_team?: string | null
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          notes?: string | null
+          priority?: number | null
+          publication_id?: string
+          stage?: string
+          started_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "production_queue_publication_id_fkey"
+            columns: ["publication_id"]
+            isOneToOne: false
+            referencedRelation: "portfolio_publications"
             referencedColumns: ["id"]
           },
         ]
@@ -882,6 +1101,19 @@ export type Database = {
         | "independent"
         | "portfolio"
       publication_status: "pending" | "approved" | "rejected" | "published"
+      publication_status_v2:
+        | "draft"
+        | "pending_review"
+        | "revision_requested"
+        | "approved"
+        | "sampling"
+        | "sample_ready"
+        | "costing_ready"
+        | "pre_production"
+        | "marketplace_pending"
+        | "listing_preview"
+        | "published"
+        | "rejected"
       stylebox_difficulty: "free" | "easy" | "medium" | "hard" | "insane"
       submission_status: "submitted" | "approved" | "rejected"
       subscription_tier: "basic" | "pro" | "elite"
@@ -1044,6 +1276,20 @@ export const Constants = {
         "portfolio",
       ],
       publication_status: ["pending", "approved", "rejected", "published"],
+      publication_status_v2: [
+        "draft",
+        "pending_review",
+        "revision_requested",
+        "approved",
+        "sampling",
+        "sample_ready",
+        "costing_ready",
+        "pre_production",
+        "marketplace_pending",
+        "listing_preview",
+        "published",
+        "rejected",
+      ],
       stylebox_difficulty: ["free", "easy", "medium", "hard", "insane"],
       submission_status: ["submitted", "approved", "rejected"],
       subscription_tier: ["basic", "pro", "elite"],

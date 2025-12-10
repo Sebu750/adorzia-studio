@@ -36,22 +36,17 @@ import {
   Store,
   RefreshCw,
   CheckCircle,
-  XCircle,
-  Clock
+  XCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { 
+  PublicationStatus, 
+  PUBLICATION_STATUSES, 
+  PRODUCTION_STAGES,
+  ProductionStage 
+} from "@/lib/publication";
 
-type QueueTab = 'submission' | 'sampling' | 'techpack' | 'preproduction' | 'marketplace';
-
-// Map queue tabs to publication statuses (using available enum values)
-// pending = submission queue, approved = sampling/techpack/preproduction, published = marketplace complete
-const queueStatusMap: Record<QueueTab, string[]> = {
-  submission: ['pending'],
-  sampling: ['approved'],
-  techpack: ['approved'],
-  preproduction: ['approved'],
-  marketplace: ['approved'],
-};
+type QueueTab = ProductionStage;
 
 export default function AdminProductionQueues() {
   const queryClient = useQueryClient();
@@ -67,20 +62,24 @@ export default function AdminProductionQueues() {
   const [actionNotes, setActionNotes] = useState("");
   const [detailModalId, setDetailModalId] = useState<string | null>(null);
 
-  // Fetch queue items
+  // Fetch queue items based on the new status_v2 column
   const { data: queueItems, isLoading } = useQuery({
     queryKey: ['production-queues', activeQueue],
     queryFn: async () => {
-      // Use marketplace_status for queue tracking instead of status enum
+      const stageConfig = PRODUCTION_STAGES[activeQueue];
+      
       let query = supabase
         .from('portfolio_publications')
         .select(`
           id,
           status,
+          status_v2,
           marketplace_status,
           submitted_at,
           design_metadata,
           reviewer_notes,
+          priority_score,
+          assigned_team,
           portfolio:portfolios(
             id,
             title,
@@ -89,25 +88,12 @@ export default function AdminProductionQueues() {
             designer_id
           )
         `)
+        .order('priority_score', { ascending: false })
         .order('submitted_at', { ascending: true });
 
-      // Filter based on marketplace_status field
-      switch (activeQueue) {
-        case 'submission':
-          query = query.eq('status', 'pending');
-          break;
-        case 'sampling':
-          query = query.eq('marketplace_status', 'sampling');
-          break;
-        case 'techpack':
-          query = query.eq('marketplace_status', 'techpack');
-          break;
-        case 'preproduction':
-          query = query.eq('marketplace_status', 'preproduction');
-          break;
-        case 'marketplace':
-          query = query.eq('marketplace_status', 'marketplace_prep');
-          break;
+      // Filter based on status_v2 for the stage
+      if (stageConfig.statuses.length > 0) {
+        query = query.in('status_v2', stageConfig.statuses);
       }
 
       const { data, error } = await query;
@@ -120,7 +106,7 @@ export default function AdminProductionQueues() {
       if (designerIds.length > 0) {
         const { data: profilesData } = await supabase
           .from('profiles')
-          .select('user_id, name, avatar_url')
+          .select('user_id, name, avatar_url, rank_id')
           .in('user_id', designerIds);
         designers = profilesData || [];
       }
@@ -133,18 +119,23 @@ export default function AdminProductionQueues() {
     },
   });
 
-  // Fetch queue stats
+  // Fetch queue stats using new status_v2
   const { data: stats } = useQuery({
     queryKey: ['queue-stats'],
     queryFn: async () => {
-      // Get counts for each queue
-      const [submissionCount, samplingCount, techpackCount, preproductionCount, marketplaceCount] = await Promise.all([
-        supabase.from('portfolio_publications').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
-        supabase.from('portfolio_publications').select('*', { count: 'exact', head: true }).eq('marketplace_status', 'sampling'),
-        supabase.from('portfolio_publications').select('*', { count: 'exact', head: true }).eq('marketplace_status', 'techpack'),
-        supabase.from('portfolio_publications').select('*', { count: 'exact', head: true }).eq('marketplace_status', 'preproduction'),
-        supabase.from('portfolio_publications').select('*', { count: 'exact', head: true }).eq('marketplace_status', 'marketplace_prep'),
-      ]);
+      const stages = Object.keys(PRODUCTION_STAGES) as ProductionStage[];
+      const counts: Record<string, number> = {};
+      
+      for (const stage of stages) {
+        const stageConfig = PRODUCTION_STAGES[stage];
+        if (stageConfig.statuses.length > 0) {
+          const { count } = await supabase
+            .from('portfolio_publications')
+            .select('*', { count: 'exact', head: true })
+            .in('status_v2', stageConfig.statuses);
+          counts[stage] = count || 0;
+        }
+      }
 
       // Get urgent count (items older than 48 hours)
       const urgentDate = new Date();
@@ -154,7 +145,7 @@ export default function AdminProductionQueues() {
         .from('portfolio_publications')
         .select('*', { count: 'exact', head: true })
         .lt('submitted_at', urgentDate.toISOString())
-        .not('status', 'in', '(published,rejected)');
+        .not('status_v2', 'in', '(published,rejected,draft)');
 
       // Get completed today
       const today = new Date();
@@ -163,15 +154,15 @@ export default function AdminProductionQueues() {
       const { count: completedToday } = await supabase
         .from('portfolio_publications')
         .select('*', { count: 'exact', head: true })
-        .gte('reviewed_at', today.toISOString())
-        .eq('status', 'published');
+        .gte('published_at', today.toISOString())
+        .eq('status_v2', 'published');
 
       return {
-        submission: submissionCount.count || 0,
-        sampling: samplingCount.count || 0,
-        techpack: techpackCount.count || 0,
-        preproduction: preproductionCount.count || 0,
-        marketplace: marketplaceCount.count || 0,
+        submission: counts.submission || 0,
+        sampling: counts.sampling || 0,
+        techpack: counts.techpack || 0,
+        preproduction: counts.preproduction || 0,
+        marketplace: counts.marketplace || 0,
         urgent: urgentCount || 0,
         avgWaitTime: '2.4 days',
         completedToday: completedToday || 0,
@@ -179,34 +170,47 @@ export default function AdminProductionQueues() {
     },
   });
 
-  // Process queue action
+  // Process queue action with new status transitions
   const processAction = useMutation({
     mutationFn: async ({ itemId, action, notes }: { itemId: string; action: string; notes: string }) => {
-      let newStatus: 'pending' | 'approved' | 'published' | 'rejected' = 'approved';
-      let newMarketplaceStatus: string | null = null;
+      let newStatus: PublicationStatus = 'pending_review';
       
       // Determine new status based on action
       switch (action) {
         case 'Review':
+          newStatus = 'pending_review';
+          break;
         case 'Start Sampling':
-          newStatus = 'approved';
-          newMarketplaceStatus = 'sampling';
+          newStatus = 'sampling';
           break;
         case 'Generate Tech Pack':
-          newMarketplaceStatus = 'techpack';
+        case 'Complete Sampling':
+          newStatus = 'sample_ready';
+          break;
+        case 'Approve Costing':
+          newStatus = 'costing_ready';
           break;
         case 'Approve Production':
-          newMarketplaceStatus = 'preproduction';
+          newStatus = 'pre_production';
           break;
         case 'Create Listing':
-          newMarketplaceStatus = 'marketplace_prep';
+          newStatus = 'marketplace_pending';
+          break;
+        case 'Send Preview':
+          newStatus = 'listing_preview';
+          break;
+        case 'Publish':
+          newStatus = 'published';
           break;
         case 'Quick Reject':
         case 'Reject':
           newStatus = 'rejected';
           break;
-        case 'Hold':
-          newMarketplaceStatus = 'hold';
+        case 'Request Revision':
+          newStatus = 'revision_requested';
+          break;
+        case 'Approve':
+          newStatus = 'approved';
           break;
         default:
           throw new Error('Unknown action');
@@ -214,35 +218,42 @@ export default function AdminProductionQueues() {
 
       const { data: { user } } = await supabase.auth.getUser();
       
+      const updateData: Record<string, any> = {
+        status_v2: newStatus,
+        reviewer_notes: notes || null,
+        reviewed_at: new Date().toISOString(),
+        reviewed_by: user?.id,
+      };
+
+      // Set published_at timestamp when publishing
+      if (newStatus === 'published') {
+        updateData.published_at = new Date().toISOString();
+      }
+
       // Update publication status
       const { error: updateError } = await supabase
         .from('portfolio_publications')
-        .update({
-          status: newStatus,
-          marketplace_status: newMarketplaceStatus,
-          reviewer_notes: notes || null,
-          reviewed_at: new Date().toISOString(),
-          reviewed_by: user?.id,
-        })
+        .update(updateData)
         .eq('id', itemId);
 
       if (updateError) throw updateError;
 
-      // Log the action
+      // Log to production_logs
+      await supabase.from('production_logs').insert({
+        publication_id: itemId,
+        action: action.toLowerCase().replace(' ', '_'),
+        to_stage: newStatus,
+        performed_by: user?.id,
+        notes: notes || null,
+      });
+
+      // Log admin action
       await supabase.from('admin_logs').insert({
         admin_id: user?.id,
         action: `queue_${action.toLowerCase().replace(' ', '_')}`,
         target_type: 'publication',
         target_id: itemId,
         metadata: { notes, new_status: newStatus, queue: activeQueue },
-      });
-
-      // Log to publication reviews
-      await supabase.from('publication_reviews').insert({
-        publication_id: itemId,
-        reviewer_id: user?.id,
-        action: action.toLowerCase().replace(' ', '_'),
-        notes: notes || null,
       });
 
       return { success: true };
@@ -283,7 +294,9 @@ export default function AdminProductionQueues() {
     const hoursSinceSubmission = (Date.now() - submittedDate.getTime()) / (1000 * 60 * 60);
     
     let priority: 'low' | 'normal' | 'high' | 'urgent' = 'normal';
-    if (hoursSinceSubmission > 72) priority = 'urgent';
+    if (item.priority_score && item.priority_score > 80) priority = 'urgent';
+    else if (item.priority_score && item.priority_score > 50) priority = 'high';
+    else if (hoursSinceSubmission > 72) priority = 'urgent';
     else if (hoursSinceSubmission > 48) priority = 'high';
     else if (hoursSinceSubmission < 12) priority = 'low';
 
@@ -296,9 +309,9 @@ export default function AdminProductionQueues() {
       designer: {
         name: item.designerProfile?.name || 'Unknown',
         avatar: item.designerProfile?.avatar_url,
-        rank: undefined,
+        rank: item.designerProfile?.rank_id,
       },
-      status: item.status === 'pending' ? 'pending' : 'in_progress',
+      status: item.status_v2 || item.status || 'pending',
       priority,
       submittedAt: item.submitted_at,
       category: (item.design_metadata as any)?.category || 'fashion',
@@ -328,17 +341,16 @@ export default function AdminProductionQueues() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-display font-bold text-admin-wine-foreground">
+            <h1 className="text-2xl font-display font-bold text-foreground">
               Production Queues
             </h1>
-            <p className="text-admin-apricot/70">
+            <p className="text-muted-foreground">
               Manage the end-to-end production pipeline
             </p>
           </div>
           <Button
             variant="outline"
             size="sm"
-            className="border-admin-chocolate text-admin-apricot hover:bg-admin-chocolate"
             onClick={() => {
               queryClient.invalidateQueries({ queryKey: ['production-queues'] });
               queryClient.invalidateQueries({ queryKey: ['queue-stats'] });
@@ -354,23 +366,17 @@ export default function AdminProductionQueues() {
 
         {/* Queue Tabs */}
         <Tabs value={activeQueue} onValueChange={(v) => setActiveQueue(v as QueueTab)}>
-          <TabsList className="bg-admin-coffee border border-admin-chocolate w-full justify-start gap-1 p-1">
+          <TabsList className="w-full justify-start gap-1 p-1">
             {queueTabs.map((tab) => (
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
-                className={cn(
-                  "flex items-center gap-2 data-[state=active]:bg-admin-wine data-[state=active]:text-admin-wine-foreground",
-                  "text-admin-apricot/70 hover:text-admin-wine-foreground"
-                )}
+                className="flex items-center gap-2"
               >
                 <tab.icon className="w-4 h-4" />
                 {tab.label}
                 {tab.count !== undefined && tab.count > 0 && (
-                  <Badge 
-                    variant="secondary" 
-                    className="ml-1 h-5 px-1.5 text-[10px] bg-admin-chocolate"
-                  >
+                  <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-[10px]">
                     {tab.count}
                   </Badge>
                 )}
@@ -381,20 +387,20 @@ export default function AdminProductionQueues() {
           {/* Filters */}
           <div className="flex items-center gap-3 mt-4">
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-admin-apricot/50" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Search by title or designer..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 bg-admin-coffee border-admin-chocolate text-admin-wine-foreground placeholder:text-admin-apricot/50"
+                className="pl-9"
               />
             </div>
             <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-              <SelectTrigger className="w-40 bg-admin-coffee border-admin-chocolate text-admin-wine-foreground">
-                <Filter className="w-4 h-4 mr-2 text-admin-apricot/50" />
+              <SelectTrigger className="w-40">
+                <Filter className="w-4 h-4 mr-2 text-muted-foreground" />
                 <SelectValue placeholder="Priority" />
               </SelectTrigger>
-              <SelectContent className="bg-admin-coffee border-admin-chocolate">
+              <SelectContent>
                 <SelectItem value="all">All Priorities</SelectItem>
                 <SelectItem value="urgent">Urgent</SelectItem>
                 <SelectItem value="high">High</SelectItem>
@@ -408,13 +414,13 @@ export default function AdminProductionQueues() {
           {queueTabs.map((tab) => (
             <TabsContent key={tab.id} value={tab.id} className="mt-4">
               {isLoading ? (
-                <div className="text-center py-12 text-admin-apricot/70">
+                <div className="text-center py-12 text-muted-foreground">
                   Loading queue items...
                 </div>
               ) : filteredItems.length === 0 ? (
                 <div className="text-center py-12">
-                  <tab.icon className="w-12 h-12 mx-auto text-admin-apricot/30 mb-3" />
-                  <p className="text-admin-apricot/70">No items in this queue</p>
+                  <tab.icon className="w-12 h-12 mx-auto text-muted-foreground/30 mb-3" />
+                  <p className="text-muted-foreground">No items in this queue</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -435,37 +441,36 @@ export default function AdminProductionQueues() {
 
         {/* Action Dialog */}
         <Dialog open={actionDialog.open} onOpenChange={(open) => !open && setActionDialog({ ...actionDialog, open: false })}>
-          <DialogContent className="bg-admin-coffee border-admin-chocolate">
+          <DialogContent>
             <DialogHeader>
-              <DialogTitle className="text-admin-wine-foreground">
+              <DialogTitle>
                 {actionDialog.action}: {actionDialog.title}
               </DialogTitle>
-              <DialogDescription className="text-admin-apricot/70">
+              <DialogDescription>
                 Confirm this action and optionally add notes.
               </DialogDescription>
             </DialogHeader>
             
             <div className="space-y-4 py-4">
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-admin-chocolate/30">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted">
                 {actionDialog.action.includes('Reject') || actionDialog.action === 'Hold' ? (
-                  <XCircle className="w-5 h-5 text-red-400" />
+                  <XCircle className="w-5 h-5 text-destructive" />
                 ) : (
-                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <CheckCircle className="w-5 h-5 text-primary" />
                 )}
-                <span className="text-admin-wine-foreground">
+                <span className="text-foreground">
                   {actionDialog.action}
                 </span>
               </div>
               
               <div>
-                <label className="text-sm text-admin-apricot/70 mb-2 block">
+                <label className="text-sm text-muted-foreground mb-2 block">
                   Notes (optional)
                 </label>
                 <Textarea
                   value={actionNotes}
                   onChange={(e) => setActionNotes(e.target.value)}
                   placeholder="Add any notes for this action..."
-                  className="bg-admin-coffee border-admin-chocolate text-admin-wine-foreground placeholder:text-admin-apricot/50"
                   rows={3}
                 />
               </div>
@@ -475,19 +480,12 @@ export default function AdminProductionQueues() {
               <Button
                 variant="outline"
                 onClick={() => setActionDialog({ ...actionDialog, open: false })}
-                className="border-admin-chocolate text-admin-apricot hover:bg-admin-chocolate"
               >
                 Cancel
               </Button>
               <Button
                 onClick={confirmAction}
                 disabled={processAction.isPending}
-                className={cn(
-                  actionDialog.action.includes('Reject') || actionDialog.action === 'Hold'
-                    ? "bg-red-600 hover:bg-red-700"
-                    : "bg-admin-wine hover:bg-admin-wine/90",
-                  "text-admin-wine-foreground"
-                )}
               >
                 {processAction.isPending ? 'Processing...' : 'Confirm'}
               </Button>
@@ -495,16 +493,14 @@ export default function AdminProductionQueues() {
           </DialogContent>
         </Dialog>
 
-        {/* Item Detail Modal */}
+        {/* Detail Modal */}
         <QueueItemDetailModal
           open={!!detailModalId}
           onOpenChange={(open) => !open && setDetailModalId(null)}
-          itemId={detailModalId}
-          onAction={(action) => {
-            if (detailModalId) {
-              handleAction(detailModalId, action);
-              setDetailModalId(null);
-            }
+          itemId={detailModalId || ''}
+          onAction={(id, action) => {
+            setDetailModalId(null);
+            handleAction(id, action);
           }}
         />
       </div>

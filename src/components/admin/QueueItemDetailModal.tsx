@@ -34,8 +34,8 @@ import { cn } from "@/lib/utils";
 interface QueueItemDetailModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  itemId: string | null;
-  onAction?: (action: string) => void;
+  itemId: string;
+  onAction?: (id: string, action: string) => void;
 }
 
 const actionIcons: Record<string, typeof CheckCircle> = {
@@ -510,14 +510,12 @@ export function QueueItemDetailModal({
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            className="border-admin-chocolate text-admin-apricot hover:bg-admin-chocolate"
           >
             Close
           </Button>
-          {onAction && (
+          {onAction && itemId && (
             <Button
-              onClick={() => onAction('Review')}
-              className="bg-admin-wine text-admin-wine-foreground hover:bg-admin-wine/90"
+              onClick={() => onAction(itemId, 'Review')}
             >
               Take Action
             </Button>

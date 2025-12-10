@@ -32,6 +32,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDesigners from "./pages/admin/AdminDesigners";
 import AdminPublications from "./pages/admin/AdminPublications";
 import AdminStyleboxes from "./pages/admin/AdminStyleboxes";
+import AdminWalkthroughs from "./pages/admin/AdminWalkthroughs";
 import AdminRankings from "./pages/admin/AdminRankings";
 import AdminSettings from "./pages/admin/AdminSettings";
 
@@ -123,6 +124,11 @@ const App = () => (
             <Route path="/admin/styleboxes" element={
               <ProtectedRoute requireAdmin>
                 <AdminStyleboxes />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/walkthroughs" element={
+              <ProtectedRoute requireAdmin>
+                <AdminWalkthroughs />
               </ProtectedRoute>
             } />
             <Route path="/admin/rankings" element={

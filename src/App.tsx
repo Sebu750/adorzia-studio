@@ -31,6 +31,7 @@ import AdminLogin from "./pages/admin/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminDesigners from "./pages/admin/AdminDesigners";
 import AdminPublications from "./pages/admin/AdminPublications";
+import AdminProductionQueues from "./pages/admin/AdminProductionQueues";
 import AdminStyleboxes from "./pages/admin/AdminStyleboxes";
 import AdminWalkthroughs from "./pages/admin/AdminWalkthroughs";
 import AdminRankings from "./pages/admin/AdminRankings";
@@ -139,6 +140,11 @@ const App = () => (
             <Route path="/admin/publications" element={
               <ProtectedRoute requireAdmin>
                 <AdminPublications />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/queues" element={
+              <ProtectedRoute requireAdmin>
+                <AdminProductionQueues />
               </ProtectedRoute>
             } />
             <Route path="/admin/settings" element={

@@ -195,6 +195,123 @@
   }
 }
 
+@layer components {
+  /* Typography Scale */
+  .text-display-2xl {
+    @apply text-4xl sm:text-5xl font-display font-bold tracking-tight;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+  }
+
+  .text-display-xl {
+    @apply text-3xl sm:text-4xl font-display font-bold tracking-tight;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+
+  .text-display-lg {
+    @apply text-2xl sm:text-3xl font-display font-semibold;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .text-label {
+    @apply text-xs font-medium uppercase tracking-wider text-muted-foreground;
+  }
+
+  .text-caption {
+    @apply text-sm text-muted-foreground;
+  }
+
+  /* Interactive Card States */
+  .card-interactive {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .card-interactive:hover {
+    @apply shadow-lg -translate-y-0.5;
+  }
+
+  .card-interactive:active {
+    @apply scale-[0.98] shadow-md;
+  }
+
+  /* Button Press Effect */
+  .btn-press {
+    @apply transition-transform duration-150;
+  }
+
+  .btn-press:active {
+    @apply scale-95;
+  }
+
+  /* Focus Ring for Accessibility */
+  .focus-ring {
+    @apply outline-none ring-2 ring-offset-2 ring-offset-background ring-foreground/20;
+  }
+
+  /* Section Divider */
+  .section-divider {
+    @apply border-b border-border pb-6 mb-6;
+  }
+
+  /* Skeleton Loading */
+  .skeleton-pulse {
+    @apply animate-pulse bg-gradient-to-r from-muted via-muted/50 to-muted;
+  }
+
+  /* Progress Bar Animated */
+  .progress-animated {
+    @apply relative overflow-hidden;
+  }
+
+  .progress-animated::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(0 0% 100% / 0.3),
+      transparent
+    );
+    animation: progress-shimmer 2s ease-in-out infinite;
+  }
+
+  /* Avatar Stack */
+  .avatar-stack > * {
+    @apply ring-2 ring-background;
+  }
+
+  .avatar-stack > *:not(:first-child) {
+    @apply -ml-2;
+  }
+
+  /* Stat Value Animation */
+  .stat-value {
+    @apply font-display font-semibold tracking-tight;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Badge Pulse */
+  .badge-pulse {
+    animation: badge-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  /* Grid Pattern Background */
+  .bg-grid-pattern {
+    background-image: 
+      linear-gradient(hsl(var(--border)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Dot Pattern Background */
+  .bg-dot-pattern {
+    background-image: radial-gradient(hsl(var(--border)) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+}
+
 @layer utilities {
   .font-display {
     font-family: var(--font-display);
@@ -217,6 +334,10 @@
     background-image: var(--gradient-dark);
   }
 
+  .bg-gradient-card {
+    background-image: var(--gradient-card);
+  }
+
   .shadow-card {
     box-shadow: var(--shadow-md);
   }
@@ -225,8 +346,16 @@
     box-shadow: var(--shadow-accent);
   }
 
+  /* Stagger Animation Delays */
+  .stagger-1 { animation-delay: 50ms; }
+  .stagger-2 { animation-delay: 100ms; }
+  .stagger-3 { animation-delay: 150ms; }
+  .stagger-4 { animation-delay: 200ms; }
+  .stagger-5 { animation-delay: 250ms; }
+  .stagger-6 { animation-delay: 300ms; }
+
   .animate-in {
-    animation: fadeIn var(--transition-base) ease-out;
+    animation: fadeIn var(--transition-base) ease-out both;
   }
 
   @keyframes fadeIn {
@@ -247,6 +376,41 @@
     100% {
       background-position: 200% 0;
     }
+  }
+
+  @keyframes progress-shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(200%);
+    }
+  }
+
+  @keyframes badge-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.4s ease-out both;
   }
 
   .animate-shimmer {

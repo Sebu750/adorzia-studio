@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RankTier } from "@/lib/ranks";
+import { motion } from "framer-motion";
 
 const Dashboard = () => {
   const activeStyleboxes = [
@@ -53,76 +54,115 @@ const Dashboard = () => {
     ],
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4 },
+    },
+  };
+
   return (
     <AppLayout>
-      <div className="p-6 lg:p-8 space-y-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="font-display text-3xl font-bold tracking-tight">
-              Welcome back, Aria
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Continue your creative journey. You're on a 12-day streak! 🔥
-            </p>
+      <motion.div 
+        className="p-4 sm:p-6 lg:p-8 space-y-8"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Header Section */}
+        <motion.header 
+          variants={itemVariants}
+          className="relative overflow-hidden rounded-2xl bg-secondary/50 p-6 sm:p-8"
+          role="banner"
+        >
+          <div className="absolute inset-0 bg-dot-pattern opacity-30" />
+          <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-2">
+              <h1 className="text-display-xl">
+                Welcome back, Aria
+              </h1>
+              <p className="text-caption text-base">
+                Continue your creative journey. You're on a 12-day streak!
+              </p>
+            </div>
+            <Button variant="default" size="lg" className="gap-2 btn-press shadow-md">
+              <Sparkles className="h-4 w-4" />
+              Explore Styleboxes
+            </Button>
           </div>
-          <Button variant="accent" className="gap-2">
-            <Sparkles className="h-4 w-4" />
-            Explore New Styleboxes
-          </Button>
-        </div>
+        </motion.header>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            title="Active Styleboxes"
-            value={3}
-            subtitle="2 in progress, 1 pending"
-            icon={Box}
-            iconClassName="bg-accent/10"
-          />
-          <StatCard
-            title="Completed"
-            value={47}
-            subtitle="This year"
-            icon={Trophy}
-            trend={{ value: 12, isPositive: true }}
-            iconClassName="bg-success/10"
-          />
-          <StatCard
-            title="Portfolio Items"
-            value={89}
-            subtitle="6 published"
-            icon={FolderOpen}
-            iconClassName="bg-secondary"
-          />
-          <StatCard
-            title="Earnings"
-            value="$4,280"
-            subtitle="This month"
-            icon={DollarSign}
-            trend={{ value: 23, isPositive: true }}
-            iconClassName="bg-accent/10"
-          />
-        </div>
+        <motion.section 
+          variants={itemVariants}
+          aria-labelledby="stats-heading"
+          role="region"
+        >
+          <h2 id="stats-heading" className="sr-only">Dashboard Statistics</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
+            <StatCard
+              title="Active Styleboxes"
+              value={3}
+              subtitle="2 in progress, 1 pending"
+              icon={Box}
+            />
+            <StatCard
+              title="Completed"
+              value={47}
+              subtitle="This year"
+              icon={Trophy}
+              trend={{ value: 12, isPositive: true }}
+            />
+            <StatCard
+              title="Portfolio Items"
+              value={89}
+              subtitle="6 published"
+              icon={FolderOpen}
+            />
+            <StatCard
+              title="Earnings"
+              value="$4,280"
+              subtitle="This month"
+              icon={DollarSign}
+              trend={{ value: 23, isPositive: true }}
+            />
+          </div>
+        </motion.section>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Active Styleboxes */}
-          <div className="lg:col-span-2 space-y-6">
+          <motion.div 
+            className="lg:col-span-2 space-y-6"
+            variants={itemVariants}
+          >
             <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-4">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Box className="h-5 w-5 text-accent" />
+              <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-border">
+                <CardTitle className="flex items-center gap-2.5 text-lg">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
+                    <Box className="h-4 w-4 text-foreground" />
+                  </div>
                   Active Styleboxes
                 </CardTitle>
-                <Button variant="ghost" size="sm" className="gap-1.5">
+                <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
                   View All
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CardContent className="pt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
                   {activeStyleboxes.map((stylebox, index) => (
                     <ActiveStylebox key={index} {...stylebox} />
                   ))}
@@ -132,21 +172,25 @@ const Dashboard = () => {
 
             {/* Recent Activity */}
             <Card>
-              <CardHeader className="pb-4">
+              <CardHeader className="pb-4 border-b border-border">
                 <CardTitle className="text-lg">Recent Activity</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
+              <CardContent className="pt-4">
+                <div className="divide-y divide-border">
                   {[
                     { action: "Submitted", project: "Autumn Textile Print", time: "2 hours ago", status: "pending" },
                     { action: "Completed", project: "Minimalist Ring Collection", time: "1 day ago", status: "completed" },
                     { action: "Started", project: "Sustainable Resort Collection", time: "3 days ago", status: "active" },
                     { action: "Published", project: "Urban Street Style Series", time: "1 week ago", status: "published" },
                   ].map((activity, index) => (
-                    <div key={index} className="flex items-center justify-between py-3 border-b border-border last:border-0">
+                    <div 
+                      key={index} 
+                      className="flex items-center justify-between py-4 first:pt-0 last:pb-0 group"
+                      role="listitem"
+                    >
                       <div className="flex items-center gap-3">
-                        <div className="h-2 w-2 rounded-full bg-accent" />
-                        <div>
+                        <div className="h-2 w-2 rounded-full bg-foreground/20 group-hover:bg-foreground/40 transition-colors" />
+                        <div className="space-y-0.5">
                           <p className="text-sm">
                             <span className="text-muted-foreground">{activity.action}</span>{" "}
                             <span className="font-medium">{activity.project}</span>
@@ -157,7 +201,7 @@ const Dashboard = () => {
                       <Badge variant={
                         activity.status === "completed" ? "success" :
                         activity.status === "pending" ? "warning" :
-                        activity.status === "published" ? "accent" : "secondary"
+                        activity.status === "published" ? "default" : "secondary"
                       }>
                         {activity.status}
                       </Badge>
@@ -166,10 +210,15 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </motion.div>
 
           {/* Right Column */}
-          <div className="space-y-6">
+          <motion.aside 
+            className="space-y-6"
+            variants={itemVariants}
+            role="complementary"
+            aria-label="Sidebar widgets"
+          >
             <RankProgress {...rankData} />
             <TeamActivity {...teamData} />
             <EarningsSnapshot
@@ -179,9 +228,9 @@ const Dashboard = () => {
               productsSold={23}
               trend={23}
             />
-          </div>
+          </motion.aside>
         </div>
-      </div>
+      </motion.div>
     </AppLayout>
   );
 };

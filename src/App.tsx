@@ -3,12 +3,44 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/hooks/useAuth";
 import { SubscriptionProvider } from "@/hooks/useSubscription";
-import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { ThemeProvider } from "next-themes";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
+
 // Public Pages
-import Landing from "./pages/Landing";
+import Home from "./pages/public/Home";
+import About from "./pages/public/About";
+import StyleBoxesInfo from "./pages/public/StyleBoxesInfo";
+import MarketplacePreview from "./pages/public/MarketplacePreview";
+import Competitions from "./pages/public/Competitions";
+import StudioInfo from "./pages/public/StudioInfo";
+import Monetization from "./pages/public/Monetization";
+import Pricing from "./pages/public/Pricing";
+import ForBrands from "./pages/public/ForBrands";
+import Support from "./pages/public/Support";
+import DesignerProfiles from "./pages/public/DesignerProfiles";
+
+// Auth Pages
+import Auth from "./pages/Auth";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+
+// Studio Pages
+import Dashboard from "./pages/Dashboard";
+import Walkthroughs from "./pages/Walkthroughs";
+import WalkthroughDetail from "./pages/WalkthroughDetail";
+import Styleboxes from "./pages/Styleboxes";
+import Portfolio from "./pages/Portfolio";
+import Collections from "./pages/Collections";
+import Jobs from "./pages/Jobs";
+import Teams from "./pages/Teams";
+import Analytics from "./pages/Analytics";
+import Settings from "./pages/Settings";
+import Subscription from "./pages/Subscription";
+import Profile from "./pages/Profile";
+import Notifications from "./pages/Notifications";
+import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";

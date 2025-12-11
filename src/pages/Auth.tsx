@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Mail, Lock, User, Sparkles, FileText, Award } from "lucide-react";
+import { Loader2, Mail, Lock, User, Sparkles, FileText, Award, ArrowLeft, Home } from "lucide-react";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -178,18 +178,31 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-dark flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        {/* Logo */}
-        <div className="text-center">
-          <Link to="/" className="inline-flex items-center gap-2">
-            <div className="h-12 w-12 rounded-xl bg-gradient-accent flex items-center justify-center">
-              <Sparkles className="h-6 w-6 text-white" />
-            </div>
-            <span className="font-display text-3xl font-bold text-white">Adorzia</span>
-          </Link>
-          <p className="text-muted-foreground mt-2">Designer Studio</p>
-        </div>
+    <div className="min-h-screen bg-gradient-dark flex flex-col">
+      {/* Back to Home Header */}
+      <header className="p-4">
+        <Link 
+          to="/" 
+          className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
+        >
+          <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+          <Home className="h-4 w-4" />
+          <span className="text-sm">Back to Home</span>
+        </Link>
+      </header>
+
+      <div className="flex-1 flex items-center justify-center p-4">
+        <div className="w-full max-w-md space-y-6">
+          {/* Logo */}
+          <div className="text-center">
+            <Link to="/" className="inline-flex items-center gap-2">
+              <div className="h-12 w-12 rounded-xl bg-gradient-accent flex items-center justify-center">
+                <Sparkles className="h-6 w-6 text-white" />
+              </div>
+              <span className="font-display text-3xl font-bold text-white">Adorzia</span>
+            </Link>
+            <p className="text-muted-foreground mt-2">Designer Studio</p>
+          </div>
 
         <Card className="bg-card/95 backdrop-blur border-border/50">
           <Tabs defaultValue="login" className="w-full">
@@ -490,6 +503,7 @@ export default function Auth() {
             </CardContent>
           </Tabs>
         </Card>
+        </div>
       </div>
     </div>
   );

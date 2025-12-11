@@ -58,7 +58,7 @@
     --sidebar-border: 0 0% 90%;
     --sidebar-ring: 0 0% 5%;
 
-    /* Admin Portal - Branded Grayscale */
+    /* Admin Portal - Light Mode (Branded Grayscale) */
     --admin-background: 210 17% 98%;
     --admin-foreground: 210 11% 15%;
     --admin-card: 210 20% 99%;
@@ -69,14 +69,26 @@
     --admin-accent: 210 11% 89%;
     --admin-accent-foreground: 210 11% 15%;
     
-    /* Admin Sidebar - Branded Dark */
+    /* Admin Sidebar - Dark sidebar on light page */
     --admin-sidebar: 210 10% 23%;
     --admin-sidebar-foreground: 210 17% 98%;
-    --admin-sidebar-muted: 210 8% 31%;
-    --admin-sidebar-accent: 210 11% 15%;
-    --admin-sidebar-border: 210 8% 31%;
+    --admin-sidebar-muted: 210 8% 35%;
+    --admin-sidebar-accent: 210 17% 98%;
+    --admin-sidebar-accent-foreground: 210 10% 23%;
+    --admin-sidebar-border: 210 8% 28%;
     
-    /* Admin Status Colors */
+    /* Admin Login Page Colors - Light Mode */
+    --admin-login-background: 210 17% 98%;
+    --admin-login-card: 210 20% 99%;
+    --admin-login-card-border: 210 9% 83%;
+    --admin-login-text: 210 11% 15%;
+    --admin-login-text-muted: 210 7% 46%;
+    --admin-login-input-bg: 210 17% 98%;
+    --admin-login-input-border: 210 9% 83%;
+    --admin-login-button: 210 11% 15%;
+    --admin-login-button-foreground: 210 17% 98%;
+    
+    /* Admin Status Colors - Light Mode */
     --admin-wine: 210 11% 15%;
     --admin-wine-foreground: 210 17% 98%;
     --admin-camel: 210 7% 46%;
@@ -85,8 +97,8 @@
     --admin-coffee-foreground: 210 11% 15%;
     --admin-chocolate: 210 14% 93%;
     --admin-chocolate-foreground: 210 11% 15%;
-    --admin-apricot: 210 7% 71%;
-    --admin-apricot-foreground: 210 11% 15%;
+    --admin-apricot: 210 7% 46%;
+    --admin-apricot-foreground: 210 17% 98%;
 
     /* Design Tokens */
     --gradient-accent: linear-gradient(135deg, hsl(0 0% 15%), hsl(0 0% 5%));
@@ -194,12 +206,24 @@
     --admin-accent: 210 8% 31%;
     --admin-accent-foreground: 210 17% 98%;
     
-    /* Admin Sidebar Dark */
+    /* Admin Sidebar Dark - Darker than main area */
     --admin-sidebar: 210 11% 10%;
     --admin-sidebar-foreground: 210 14% 93%;
-    --admin-sidebar-muted: 210 11% 15%;
+    --admin-sidebar-muted: 210 11% 18%;
     --admin-sidebar-accent: 210 10% 23%;
-    --admin-sidebar-border: 210 8% 20%;
+    --admin-sidebar-accent-foreground: 210 17% 98%;
+    --admin-sidebar-border: 210 8% 18%;
+    
+    /* Admin Login Page Colors - Dark Mode */
+    --admin-login-background: 210 11% 15%;
+    --admin-login-card: 210 10% 23%;
+    --admin-login-card-border: 210 8% 31%;
+    --admin-login-text: 210 17% 98%;
+    --admin-login-text-muted: 210 7% 71%;
+    --admin-login-input-bg: 210 11% 15%;
+    --admin-login-input-border: 210 8% 31%;
+    --admin-login-button: 210 17% 98%;
+    --admin-login-button-foreground: 210 11% 15%;
     
     /* Admin Status Colors Dark */
     --admin-wine: 210 17% 98%;
@@ -210,8 +234,8 @@
     --admin-coffee-foreground: 210 17% 98%;
     --admin-chocolate: 210 8% 31%;
     --admin-chocolate-foreground: 210 17% 98%;
-    --admin-apricot: 210 7% 46%;
-    --admin-apricot-foreground: 210 17% 98%;
+    --admin-apricot: 210 7% 71%;
+    --admin-apricot-foreground: 210 11% 15%;
   }
 }
 

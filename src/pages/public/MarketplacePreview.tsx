@@ -4,54 +4,52 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
   ArrowRight, 
-  Store, 
   Star,
-  Heart,
   ShoppingBag,
   Filter,
+  Sparkles,
   TrendingUp,
-  Award,
-  Sparkles
+  Users,
+  Package
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PublicLayout from "@/components/public/PublicLayout";
+import ProductCard from "@/components/public/ProductCard";
+import TiltCard from "@/components/public/TiltCard";
+import StatsSection from "@/components/public/StatsSection";
+import AnimatedHeading from "@/components/public/AnimatedHeading";
 
 const featuredProducts = [
   { 
     id: 1, 
-    name: "Karachi Street Hoodie", 
+    title: "Karachi Street Hoodie", 
     designer: "Zain Ahmed", 
     price: "PKR 4,500", 
     category: "Streetwear",
-    rating: 4.8,
-    sold: 127
+    isNew: true,
   },
   { 
     id: 2, 
-    name: "Heritage Kurta Set", 
+    title: "Heritage Kurta Set", 
     designer: "Ayesha Khan", 
     price: "PKR 8,900", 
     category: "Traditional",
-    rating: 4.9,
-    sold: 89
+    isFeatured: true,
   },
   { 
     id: 3, 
-    name: "Urban Joggers", 
+    title: "Urban Joggers", 
     designer: "Ali Hassan", 
     price: "PKR 3,200", 
     category: "Essentials",
-    rating: 4.7,
-    sold: 256
   },
   { 
     id: 4, 
-    name: "Statement Blazer", 
+    title: "Statement Blazer", 
     designer: "Fatima Malik", 
     price: "PKR 12,500", 
     category: "Formal",
-    rating: 4.9,
-    sold: 64
+    isFeatured: true,
   },
 ];
 
@@ -76,12 +74,20 @@ const categories = [
   { name: "Sustainable", count: 85 },
 ];
 
+const marketplaceStats = [
+  { value: 450, suffix: '+', label: 'Products Live', icon: <Package className="h-6 w-6 text-muted-foreground" /> },
+  { value: 120, suffix: '+', label: 'Designers', icon: <Users className="h-6 w-6 text-muted-foreground" /> },
+  { value: 15, prefix: '', suffix: 'K+', label: 'Happy Customers', icon: <Star className="h-6 w-6 text-muted-foreground" /> },
+  { value: 98, suffix: '%', label: 'Satisfaction Rate', icon: <TrendingUp className="h-6 w-6 text-muted-foreground" /> },
+];
+
 export default function MarketplacePreview() {
   return (
     <PublicLayout>
       {/* Hero */}
-      <section className="pt-24 pb-16 md:pt-32 md:pb-24">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/10" />
+        <div className="max-w-7xl mx-auto px-6 relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -99,9 +105,9 @@ export default function MarketplacePreview() {
               Every purchase supports independent creators and sustainable fashion.
             </p>
             <div className="flex gap-4">
-              <Button size="lg">
+              <Button size="lg" className="group">
                 Browse Products
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
               <Button size="lg" variant="outline">
                 <Filter className="mr-2 h-4 w-4" />
@@ -112,19 +118,32 @@ export default function MarketplacePreview() {
         </div>
       </section>
 
+      {/* Stats */}
+      <section className="py-12 border-t border-b bg-muted/30">
+        <div className="max-w-7xl mx-auto px-6">
+          <StatsSection stats={marketplaceStats} variant="default" />
+        </div>
+      </section>
+
       {/* Featured Products */}
-      <section className="py-20 md:py-28 border-t">
+      <section className="py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between mb-12">
             <div>
-              <Badge variant="outline" className="mb-4">Top Rated</Badge>
-              <h2 className="font-display text-3xl font-bold tracking-tight">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <Badge variant="outline" className="mb-4">Top Rated</Badge>
+              </motion.div>
+              <AnimatedHeading className="font-display text-3xl font-bold tracking-tight">
                 Featured Products
-              </h2>
+              </AnimatedHeading>
             </div>
-            <Button variant="ghost">
+            <Button variant="ghost" className="group">
               View All
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Button>
           </div>
 
@@ -137,31 +156,15 @@ export default function MarketplacePreview() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Card className="h-full group cursor-pointer">
-                  <div className="aspect-[3/4] bg-secondary relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <Button 
-                      variant="secondary" 
-                      size="icon" 
-                      className="absolute top-3 right-3 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <Heart className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-1 mb-2">
-                      <Star className="h-3 w-3 fill-foreground" />
-                      <span className="text-xs">{product.rating}</span>
-                      <span className="text-xs text-muted-foreground">({product.sold} sold)</span>
-                    </div>
-                    <h3 className="font-medium mb-1">{product.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-2">by {product.designer}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-bold">{product.price}</span>
-                      <Badge variant="secondary" className="text-xs">{product.category}</Badge>
-                    </div>
-                  </CardContent>
-                </Card>
+                <ProductCard
+                  id={product.id}
+                  title={product.title}
+                  price={product.price}
+                  designer={product.designer}
+                  category={product.category}
+                  isNew={product.isNew}
+                  isFeatured={product.isFeatured}
+                />
               </motion.div>
             ))}
           </div>
@@ -172,13 +175,25 @@ export default function MarketplacePreview() {
       <section className="py-20 md:py-28 bg-secondary/50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4">Rising Stars</Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="outline" className="mb-4">Rising Stars</Badge>
+            </motion.div>
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               New Designers
-            </h2>
-            <p className="text-muted-foreground">
+            </AnimatedHeading>
+            <motion.p 
+              className="text-muted-foreground"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
               Discover emerging talent from across Pakistan.
-            </p>
+            </motion.p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -190,26 +205,31 @@ export default function MarketplacePreview() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Card className="h-full hover:shadow-md transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="h-14 w-14 rounded-full bg-secondary flex items-center justify-center">
-                        <span className="font-bold">{designer.name.split(' ').map(n => n[0]).join('')}</span>
+                <TiltCard tiltAmount={8}>
+                  <Card className="h-full hover:shadow-lg transition-shadow">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <motion.div 
+                          className="h-14 w-14 rounded-full bg-gradient-to-br from-primary/20 to-secondary flex items-center justify-center"
+                          whileHover={{ scale: 1.1 }}
+                        >
+                          <span className="font-bold">{designer.name.split(' ').map(n => n[0]).join('')}</span>
+                        </motion.div>
+                        <div>
+                          <h3 className="font-display font-semibold">{designer.name}</h3>
+                          <p className="text-sm text-muted-foreground">{designer.specialty}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-display font-semibold">{designer.name}</h3>
-                        <p className="text-sm text-muted-foreground">{designer.specialty}</p>
+                      <div className="flex items-center justify-between text-sm">
+                        <span>{designer.products} products</span>
+                        <div className="flex items-center gap-1">
+                          <Star className="h-3 w-3 fill-foreground" />
+                          {designer.rating}
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span>{designer.products} products</span>
-                      <div className="flex items-center gap-1">
-                        <Star className="h-3 w-3 fill-foreground" />
-                        {designer.rating}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </TiltCard>
               </motion.div>
             ))}
           </div>
@@ -220,13 +240,25 @@ export default function MarketplacePreview() {
       <section className="py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4">Curated</Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="outline" className="mb-4">Curated</Badge>
+            </motion.div>
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               Collections
-            </h2>
-            <p className="text-muted-foreground">
+            </AnimatedHeading>
+            <motion.p 
+              className="text-muted-foreground"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
               Curated capsules created directly through StyleBoxes.
-            </p>
+            </motion.p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -238,19 +270,24 @@ export default function MarketplacePreview() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Card className="h-full overflow-hidden group cursor-pointer">
-                  <div className="aspect-video bg-secondary relative">
-                    <div className="absolute inset-0 bg-foreground/60 flex items-center justify-center">
-                      <div className="text-center text-background">
-                        <h3 className="font-display text-xl font-bold mb-2">{collection.name}</h3>
-                        <p className="text-sm text-background/80">{collection.items} items</p>
-                      </div>
+                <TiltCard tiltAmount={6}>
+                  <Card className="h-full overflow-hidden group cursor-pointer">
+                    <div className="aspect-video bg-gradient-to-br from-muted to-muted-foreground/20 relative overflow-hidden">
+                      <motion.div 
+                        className="absolute inset-0 bg-foreground/60 flex items-center justify-center"
+                        whileHover={{ backgroundColor: 'rgba(0,0,0,0.7)' }}
+                      >
+                        <div className="text-center text-background">
+                          <h3 className="font-display text-xl font-bold mb-2">{collection.name}</h3>
+                          <p className="text-sm text-background/80">{collection.items} items</p>
+                        </div>
+                      </motion.div>
                     </div>
-                  </div>
-                  <CardContent className="p-4">
-                    <p className="text-sm text-muted-foreground">by {collection.designer}</p>
-                  </CardContent>
-                </Card>
+                    <CardContent className="p-4">
+                      <p className="text-sm text-muted-foreground">by {collection.designer}</p>
+                    </CardContent>
+                  </Card>
+                </TiltCard>
               </motion.div>
             ))}
           </div>
@@ -258,15 +295,27 @@ export default function MarketplacePreview() {
       </section>
 
       {/* Categories */}
-      <section className="py-20 md:py-28 bg-foreground text-background">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-20 md:py-28 bg-foreground text-background relative overflow-hidden">
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/10"
+          animate={{ x: ['-100%', '100%'] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+        />
+        
+        <div className="max-w-7xl mx-auto px-6 relative">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4 border-background/20 text-background">
-              Browse
-            </Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="outline" className="mb-4 border-background/20 text-background">
+                Browse
+              </Badge>
+            </motion.div>
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight text-background">
               Shop by Category
-            </h2>
+            </AnimatedHeading>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -277,7 +326,8 @@ export default function MarketplacePreview() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
-                className="bg-background/10 rounded-xl p-6 text-center hover:bg-background/20 transition-colors cursor-pointer"
+                whileHover={{ scale: 1.05, y: -4 }}
+                className="bg-background/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-background/20 transition-colors cursor-pointer border border-background/10"
               >
                 <h3 className="font-medium mb-1">{cat.name}</h3>
                 <p className="text-sm text-background/60">{cat.count} items</p>
@@ -291,11 +341,15 @@ export default function MarketplacePreview() {
       <section className="py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
               <Badge variant="outline" className="mb-4">Quality Assurance</Badge>
-              <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+              <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
                 Production-Ready Products
-              </h2>
+              </AnimatedHeading>
               <p className="text-muted-foreground mb-6">
                 Every item on our marketplace is backed by Adorzia's manufacturing pipeline. 
                 From design to delivery, we ensure quality at every step.
@@ -307,58 +361,95 @@ export default function MarketplacePreview() {
                   "Local manufacturing excellence",
                   "Secure checkout and delivery"
                 ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3">
-                    <div className="h-6 w-6 rounded-full bg-secondary flex items-center justify-center">
-                      <Sparkles className="h-3 w-3" />
+                  <motion.li 
+                    key={i} 
+                    className="flex items-center gap-3"
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Sparkles className="h-3 w-3 text-primary" />
                     </div>
                     <span>{item}</span>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
-            </div>
+            </motion.div>
 
-            <Card className="overflow-hidden">
-              <div className="aspect-square bg-secondary p-8 flex items-center justify-center">
-                <ShoppingBag className="h-24 w-24 text-muted-foreground/30" />
-              </div>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Badge>New</Badge>
-                  <Badge variant="secondary">Verified</Badge>
-                </div>
-                <h3 className="font-display text-xl font-semibold mb-2">Sample Product</h3>
-                <p className="text-muted-foreground text-sm mb-4">
-                  Each product comes with full provenance—you know exactly who designed it 
-                  and how it was made.
-                </p>
-                <Button className="w-full">Add to Cart</Button>
-              </CardContent>
-            </Card>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+            >
+              <TiltCard tiltAmount={8}>
+                <Card className="overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-muted to-muted-foreground/10 p-8 flex items-center justify-center relative">
+                    <motion.div
+                      animate={{ y: [0, -10, 0] }}
+                      transition={{ duration: 3, repeat: Infinity }}
+                    >
+                      <ShoppingBag className="h-24 w-24 text-muted-foreground/30" />
+                    </motion.div>
+                  </div>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Badge>New</Badge>
+                      <Badge variant="secondary">Verified</Badge>
+                    </div>
+                    <h3 className="font-display text-xl font-semibold mb-2">Sample Product</h3>
+                    <p className="text-muted-foreground text-sm mb-4">
+                      Each product comes with full provenance—you know exactly who designed it 
+                      and how it was made.
+                    </p>
+                    <Button className="w-full group">
+                      Add to Cart
+                      <ShoppingBag className="ml-2 h-4 w-4 transition-transform group-hover:scale-110" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              </TiltCard>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-28 border-t">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+      <section className="py-20 md:py-28 border-t relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />
+        <div className="max-w-3xl mx-auto px-6 text-center relative">
+          <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
             Start Shopping
-          </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
+          </AnimatedHeading>
+          <motion.p 
+            className="text-muted-foreground max-w-xl mx-auto mb-8"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
             Support independent designers. Discover unique fashion.
-          </p>
+          </motion.p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg">
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            <Button size="lg" className="group">
               <ShoppingBag className="mr-2 h-4 w-4" />
               Browse All Products
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Button>
             <Link to="/auth">
               <Button size="lg" variant="outline">
                 Become a Designer
               </Button>
             </Link>
-          </div>
+          </motion.div>
         </div>
       </section>
     </PublicLayout>

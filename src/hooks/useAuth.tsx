@@ -7,7 +7,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   isAdmin: boolean;
-  signUp: (email: string, password: string, name: string, category: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, name: string, category: string, bio?: string, skills?: string[]) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
 }
@@ -71,11 +71,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const signUp = async (email: string, password: string, name: string, category: string) => {
+  const signUp = async (email: string, password: string, name: string, category: string, bio?: string, skills?: string[]) => {
     try {
       const redirectUrl = `${window.location.origin}/`;
       
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -88,6 +88,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (error) throw error;
+
+      // Update profile with bio and skills if provided
+      if (data.user && (bio || skills)) {
+        await supabase
+          .from('profiles')
+          .update({ 
+            bio: bio || null, 
+            skills: skills || [] 
+          })
+          .eq('user_id', data.user.id);
+
+      }
 
       // Log signup (without PII)
       await supabase.from('auth_logs').insert({

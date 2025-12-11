@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,7 +18,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Mail, Lock, User, Sparkles } from "lucide-react";
+import { Loader2, Mail, Lock, User, Sparkles, FileText, Award } from "lucide-react";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -29,7 +31,15 @@ const signupSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   category: z.enum(["fashion", "textile", "jewelry"]),
+  bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
+  skills: z.array(z.string()).optional(),
 });
+
+const availableSkills = [
+  "Sketching", "Pattern Making", "Draping", "CAD Design", 
+  "Textile Design", "Color Theory", "Trend Forecasting",
+  "Jewelry Design", "3D Modeling", "Embroidery", "Hand Illustration"
+];
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -43,11 +53,15 @@ export default function Auth() {
     email: string; 
     password: string; 
     category: "fashion" | "textile" | "jewelry";
+    bio: string;
+    skills: string[];
   }>({ 
     name: "", 
     email: "", 
     password: "", 
-    category: "fashion"
+    category: "fashion",
+    bio: "",
+    skills: [],
   });
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -129,7 +143,9 @@ export default function Auth() {
         validated.email, 
         validated.password, 
         validated.name, 
-        validated.category
+        validated.category,
+        validated.bio,
+        validated.skills
       );
       
       if (error) {
@@ -399,6 +415,54 @@ export default function Auth() {
                         <SelectItem value="jewelry">Jewelry Design</SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-bio">Short Bio (Optional)</Label>
+                    <div className="relative">
+                      <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Textarea
+                        id="signup-bio"
+                        placeholder="Tell us about yourself and your design journey..."
+                        value={signupData.bio}
+                        onChange={(e) => setSignupData(prev => ({ ...prev, bio: e.target.value }))}
+                        className="pl-10 min-h-[80px] resize-none"
+                        maxLength={500}
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">{signupData.bio.length}/500 characters</p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Skills (Optional)</Label>
+                    <div className="flex flex-wrap gap-2">
+                      {availableSkills.map((skill) => (
+                        <Badge
+                          key={skill}
+                          variant={signupData.skills.includes(skill) ? "default" : "outline"}
+                          className="cursor-pointer transition-all hover:scale-105"
+                          onClick={() => {
+                            setSignupData(prev => ({
+                              ...prev,
+                              skills: prev.skills.includes(skill)
+                                ? prev.skills.filter(s => s !== skill)
+                                : [...prev.skills, skill]
+                            }));
+                          }}
+                        >
+                          {skill}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* F1 Rank Badge Info */}
+                  <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 flex items-start gap-3">
+                    <Award className="h-5 w-5 text-accent mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-foreground">F1 Foundation Rank</p>
+                      <p className="text-xs text-muted-foreground">As an early joiner, you'll be automatically assigned the exclusive F1 rank with 50% revenue share!</p>
+                    </div>
                   </div>
 
                   <div className="flex items-start gap-2">

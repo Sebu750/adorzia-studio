@@ -1001,12 +1001,14 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           category: Database["public"]["Enums"]["designer_category"] | null
           created_at: string
           email: string | null
           id: string
           name: string | null
           rank_id: string | null
+          skills: string[] | null
           status: Database["public"]["Enums"]["user_status"] | null
           subscription_tier:
             | Database["public"]["Enums"]["subscription_tier"]
@@ -1017,12 +1019,14 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           category?: Database["public"]["Enums"]["designer_category"] | null
           created_at?: string
           email?: string | null
           id?: string
           name?: string | null
           rank_id?: string | null
+          skills?: string[] | null
           status?: Database["public"]["Enums"]["user_status"] | null
           subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
@@ -1033,12 +1037,14 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           category?: Database["public"]["Enums"]["designer_category"] | null
           created_at?: string
           email?: string | null
           id?: string
           name?: string | null
           rank_id?: string | null
+          skills?: string[] | null
           status?: Database["public"]["Enums"]["user_status"] | null
           subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]

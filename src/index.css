@@ -58,17 +58,35 @@
     --sidebar-border: 0 0% 90%;
     --sidebar-ring: 0 0% 5%;
 
-    /* Admin Portal - Minimal Black & White */
-    --admin-wine: 0 0% 5%;
-    --admin-wine-foreground: 0 0% 100%;
-    --admin-camel: 0 0% 45%;
-    --admin-camel-foreground: 0 0% 100%;
-    --admin-coffee: 0 0% 98%;
-    --admin-coffee-foreground: 0 0% 5%;
-    --admin-chocolate: 0 0% 92%;
-    --admin-chocolate-foreground: 0 0% 5%;
-    --admin-apricot: 0 0% 60%;
-    --admin-apricot-foreground: 0 0% 5%;
+    /* Admin Portal - Branded Grayscale */
+    --admin-background: 210 17% 98%;
+    --admin-foreground: 210 11% 15%;
+    --admin-card: 210 20% 99%;
+    --admin-card-foreground: 210 11% 15%;
+    --admin-muted: 210 14% 93%;
+    --admin-muted-foreground: 210 7% 46%;
+    --admin-border: 210 9% 83%;
+    --admin-accent: 210 11% 89%;
+    --admin-accent-foreground: 210 11% 15%;
+    
+    /* Admin Sidebar - Branded Dark */
+    --admin-sidebar: 210 10% 23%;
+    --admin-sidebar-foreground: 210 17% 98%;
+    --admin-sidebar-muted: 210 8% 31%;
+    --admin-sidebar-accent: 210 11% 15%;
+    --admin-sidebar-border: 210 8% 31%;
+    
+    /* Admin Status Colors */
+    --admin-wine: 210 11% 15%;
+    --admin-wine-foreground: 210 17% 98%;
+    --admin-camel: 210 7% 46%;
+    --admin-camel-foreground: 210 17% 98%;
+    --admin-coffee: 210 17% 98%;
+    --admin-coffee-foreground: 210 11% 15%;
+    --admin-chocolate: 210 14% 93%;
+    --admin-chocolate-foreground: 210 11% 15%;
+    --admin-apricot: 210 7% 71%;
+    --admin-apricot-foreground: 210 11% 15%;
 
     /* Design Tokens */
     --gradient-accent: linear-gradient(135deg, hsl(0 0% 15%), hsl(0 0% 5%));
@@ -165,17 +183,35 @@
     --sidebar-border: 0 0% 20%;
     --sidebar-ring: 0 0% 85%;
 
-    /* Admin Dark Mode */
-    --admin-wine: 0 0% 98%;
-    --admin-wine-foreground: 0 0% 5%;
-    --admin-camel: 0 0% 65%;
-    --admin-camel-foreground: 0 0% 5%;
-    --admin-coffee: 0 0% 8%;
-    --admin-coffee-foreground: 0 0% 98%;
-    --admin-chocolate: 0 0% 15%;
-    --admin-chocolate-foreground: 0 0% 98%;
-    --admin-apricot: 0 0% 50%;
-    --admin-apricot-foreground: 0 0% 98%;
+    /* Admin Dark Mode - Branded */
+    --admin-background: 210 11% 15%;
+    --admin-foreground: 210 17% 98%;
+    --admin-card: 210 10% 23%;
+    --admin-card-foreground: 210 17% 98%;
+    --admin-muted: 210 8% 31%;
+    --admin-muted-foreground: 210 7% 71%;
+    --admin-border: 210 8% 31%;
+    --admin-accent: 210 8% 31%;
+    --admin-accent-foreground: 210 17% 98%;
+    
+    /* Admin Sidebar Dark */
+    --admin-sidebar: 210 11% 10%;
+    --admin-sidebar-foreground: 210 14% 93%;
+    --admin-sidebar-muted: 210 11% 15%;
+    --admin-sidebar-accent: 210 10% 23%;
+    --admin-sidebar-border: 210 8% 20%;
+    
+    /* Admin Status Colors Dark */
+    --admin-wine: 210 17% 98%;
+    --admin-wine-foreground: 210 11% 15%;
+    --admin-camel: 210 7% 71%;
+    --admin-camel-foreground: 210 11% 15%;
+    --admin-coffee: 210 11% 15%;
+    --admin-coffee-foreground: 210 17% 98%;
+    --admin-chocolate: 210 8% 31%;
+    --admin-chocolate-foreground: 210 17% 98%;
+    --admin-apricot: 210 7% 46%;
+    --admin-apricot-foreground: 210 17% 98%;
   }
 }
 

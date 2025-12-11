@@ -62,21 +62,21 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-secondary/30">
+      <div className="min-h-screen flex w-full bg-admin-background">
         <AdminSidebar userRole={userRole} />
         <SidebarInset className="flex-1 flex flex-col">
           {/* Top Header */}
-          <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur-sm px-6 shadow-sm">
-            <SidebarTrigger className="-ml-2 hover:bg-secondary transition-colors" />
+          <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-admin-border bg-admin-card/95 backdrop-blur-sm px-6 shadow-sm">
+            <SidebarTrigger className="-ml-2 hover:bg-admin-muted transition-colors rounded-lg" />
             
             {/* Search */}
             <div className="relative flex-1 max-w-lg">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-admin-muted-foreground" />
               <Input
                 placeholder="Search designers, styleboxes, publications..."
-                className="pl-10 pr-12 h-10 bg-secondary/50 border-0 focus:bg-background focus:ring-2 focus:ring-foreground/10 transition-all"
+                className="pl-10 pr-12 h-10 bg-admin-muted border-admin-border focus:bg-admin-card focus:ring-2 focus:ring-admin-foreground/10 transition-all text-admin-foreground placeholder:text-admin-muted-foreground"
               />
-              <kbd className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+              <kbd className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-admin-border bg-admin-muted px-1.5 font-mono text-[10px] font-medium text-admin-muted-foreground">
                 <Command className="h-3 w-3" />K
               </kbd>
             </div>
@@ -86,7 +86,7 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-10 w-10 hover:bg-secondary transition-colors"
+                className="h-10 w-10 hover:bg-admin-muted text-admin-foreground transition-colors rounded-lg"
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               >
                 <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -98,10 +98,10 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="relative h-10 w-10 hover:bg-secondary transition-colors"
+                className="relative h-10 w-10 hover:bg-admin-muted text-admin-foreground transition-colors rounded-lg"
               >
                 <Bell className="h-5 w-5" />
-                <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-foreground ring-2 ring-background" />
+                <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-admin-foreground ring-2 ring-admin-card" />
               </Button>
 
               {/* User Menu */}
@@ -109,50 +109,50 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className="gap-3 px-3 h-10 hover:bg-secondary transition-colors"
+                    className="gap-3 px-3 h-10 hover:bg-admin-muted text-admin-foreground transition-colors rounded-lg"
                   >
-                    <Avatar className="h-8 w-8 ring-2 ring-border">
+                    <Avatar className="h-8 w-8 ring-2 ring-admin-border">
                       <AvatarImage src="" />
-                      <AvatarFallback className="bg-foreground text-background text-xs font-semibold">
+                      <AvatarFallback className="bg-admin-foreground text-admin-background text-xs font-semibold">
                         {getInitials()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="hidden md:flex flex-col items-start">
-                      <span className="text-sm font-medium leading-tight">
+                      <span className="text-sm font-medium leading-tight text-admin-foreground">
                         {user?.user_metadata?.name || "Admin"}
                       </span>
-                      <span className="text-xs text-muted-foreground leading-tight">
+                      <span className="text-xs text-admin-muted-foreground leading-tight">
                         {userRole === 'superadmin' ? 'Superadmin' : 'Admin'}
                       </span>
                     </div>
-                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                    <ChevronDown className="h-4 w-4 text-admin-muted-foreground" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64 bg-background border shadow-lg">
+                <DropdownMenuContent align="end" className="w-64 bg-admin-card border-admin-border shadow-lg">
                   <DropdownMenuLabel className="pb-3">
                     <div className="flex flex-col gap-1.5">
-                      <span className="font-semibold">{user?.user_metadata?.name || "Admin User"}</span>
-                      <span className="text-xs font-normal text-muted-foreground">
+                      <span className="font-semibold text-admin-foreground">{user?.user_metadata?.name || "Admin User"}</span>
+                      <span className="text-xs font-normal text-admin-muted-foreground">
                         {user?.email}
                       </span>
                       <Badge 
                         variant="secondary" 
-                        className="w-fit text-xs mt-1 bg-foreground/5"
+                        className="w-fit text-xs mt-1 bg-admin-muted text-admin-foreground"
                       >
                         {userRole === 'superadmin' ? 'Superadmin' : 'Admin'}
                       </Badge>
                     </div>
                   </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/admin/settings" className="flex items-center gap-2.5 cursor-pointer py-2.5">
-                      <Settings className="h-4 w-4 text-muted-foreground" />
+                  <DropdownMenuSeparator className="bg-admin-border" />
+                  <DropdownMenuItem asChild className="focus:bg-admin-muted">
+                    <Link to="/admin/settings" className="flex items-center gap-2.5 cursor-pointer py-2.5 text-admin-foreground">
+                      <Settings className="h-4 w-4 text-admin-muted-foreground" />
                       Account Settings
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator className="bg-admin-border" />
                   <DropdownMenuItem 
-                    className="text-destructive flex items-center gap-2.5 cursor-pointer py-2.5 focus:text-destructive"
+                    className="text-destructive flex items-center gap-2.5 cursor-pointer py-2.5 focus:text-destructive focus:bg-destructive/10"
                     onClick={handleSignOut}
                   >
                     <LogOut className="h-4 w-4" />
@@ -164,7 +164,7 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
           </header>
 
           {/* Main Content */}
-          <main className="flex-1 overflow-auto">
+          <main className="flex-1 overflow-auto bg-admin-background">
             {children}
           </main>
         </SidebarInset>

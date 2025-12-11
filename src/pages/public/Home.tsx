@@ -24,6 +24,8 @@ import AnimatedHeading from "@/components/public/AnimatedHeading";
 import AnimatedCounter from "@/components/public/AnimatedCounter";
 import ParallaxSection from "@/components/public/ParallaxSection";
 import TestimonialCarousel from "@/components/public/TestimonialCarousel";
+import WaveDivider from "@/components/public/WaveDivider";
+import { designerImages, productImages } from "@/lib/images";
 
 const howItWorks = [
   { 
@@ -71,21 +73,30 @@ const whyPakistan = [
   { icon: Globe, title: "Global Reach", desc: "Strategic location connecting East and West markets" },
 ];
 
+const marketplaceProducts = [
+  { id: 1, title: "Karachi Street Hoodie", price: "PKR 4,500", image: productImages.streetwearHoodie },
+  { id: 2, title: "Heritage Kurta Set", price: "PKR 8,900", image: productImages.heritageKurta },
+  { id: 3, title: "Urban Joggers", price: "PKR 3,200", image: productImages.urbanJoggers },
+];
+
 const testimonials = [
   {
     quote: "Adorzia transformed my freelance career. The StyleBox challenges pushed my creativity while the marketplace gave me a platform to sell globally.",
     author: "Sarah Ahmed",
     role: "Fashion Designer • Elite Designer",
+    avatar: designerImages.sarahAhmed,
   },
   {
     quote: "From novice to Lead Designer in 8 months. The ranking system keeps me motivated and the revenue share is unmatched.",
     author: "Kamran Malik",
     role: "Textile Artist • Lead Designer",
+    avatar: designerImages.kamranMalik,
   },
   {
     quote: "Finally a platform that understands Pakistani designers. The Academy modules are practical and the community is supportive.",
     author: "Zara Hussain",
     role: "Jewelry Designer • Senior Designer",
+    avatar: designerImages.zaraHussain,
   },
 ];
 
@@ -319,9 +330,9 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
-            {[1, 2, 3].map((i) => (
+            {marketplaceProducts.map((product, i) => (
               <motion.div
-                key={i}
+                key={product.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -329,7 +340,14 @@ export default function Home() {
                 whileHover={{ y: -8 }}
               >
                 <Card className="bg-background/5 border-background/10 overflow-hidden group cursor-pointer">
-                  <div className="aspect-[3/4] bg-background/10 relative overflow-hidden">
+                  <div className="aspect-[3/4] relative overflow-hidden">
+                    <motion.img 
+                      src={product.image}
+                      alt={product.title}
+                      className="w-full h-full object-cover"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.4 }}
+                    />
                     <motion.div 
                       className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
                     />
@@ -342,8 +360,8 @@ export default function Home() {
                     </motion.div>
                   </div>
                   <CardContent className="p-4">
-                    <p className="font-medium text-background">Designer Collection #{i}</p>
-                    <p className="text-sm text-background/60">Starting at PKR 2,500</p>
+                    <p className="font-medium text-background">{product.title}</p>
+                    <p className="text-sm text-background/60">{product.price}</p>
                   </CardContent>
                 </Card>
               </motion.div>

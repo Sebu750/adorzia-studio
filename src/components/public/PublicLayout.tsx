@@ -1,24 +1,39 @@
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import PublicNav from "./PublicNav";
 import PublicFooter from "./PublicFooter";
 import AnnouncementBanner from "./AnnouncementBanner";
+import ScrollProgress from "./ScrollProgress";
+import PageTransition from "./PageTransition";
+import Preloader from "./Preloader";
 import { useAuth } from "@/hooks/useAuth";
 
 interface PublicLayoutProps {
   children: ReactNode;
   showBanner?: boolean;
+  showPreloader?: boolean;
 }
 
-export default function PublicLayout({ children, showBanner = true }: PublicLayoutProps) {
+export default function PublicLayout({ 
+  children, 
+  showBanner = true,
+  showPreloader = false 
+}: PublicLayoutProps) {
   const { user } = useAuth();
-  
+  const [isLoading, setIsLoading] = useState(showPreloader);
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Show announcement banner only for logged-out users */}
-      {showBanner && !user && <AnnouncementBanner />}
-      <PublicNav />
-      <main className="flex-1">{children}</main>
-      <PublicFooter />
-    </div>
+    <>
+      {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+      <div className="min-h-screen bg-background flex flex-col">
+        <ScrollProgress />
+        {/* Show announcement banner only for logged-out users */}
+        {showBanner && !user && <AnnouncementBanner />}
+        <PublicNav />
+        <main className="flex-1">
+          <PageTransition>{children}</PageTransition>
+        </main>
+        <PublicFooter />
+      </div>
+    </>
   );
 }

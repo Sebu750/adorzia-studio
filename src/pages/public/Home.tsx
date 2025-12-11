@@ -11,25 +11,19 @@ import {
   GraduationCap,
   Store,
   Crown,
-  Play,
   Zap,
-  Target,
-  TrendingUp,
-  Globe,
   Users,
   Factory,
-  Smartphone
+  Smartphone,
+  Globe
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PublicLayout from "@/components/public/PublicLayout";
-import heroImage from "@/assets/hero-workspace.jpg";
-
-const stats = [
-  { value: "2,500+", label: "Designers" },
-  { value: "15,000+", label: "Projects" },
-  { value: "500+", label: "Products Live" },
-  { value: "50%", label: "Max Revenue" },
-];
+import HeroSection from "@/components/public/HeroSection";
+import AnimatedHeading from "@/components/public/AnimatedHeading";
+import AnimatedCounter from "@/components/public/AnimatedCounter";
+import ParallaxSection from "@/components/public/ParallaxSection";
+import TestimonialCarousel from "@/components/public/TestimonialCarousel";
 
 const howItWorks = [
   { 
@@ -79,140 +73,77 @@ const whyPakistan = [
 
 const testimonials = [
   {
-    name: "Sarah Ahmed",
-    role: "Fashion Designer",
     quote: "Adorzia transformed my freelance career. The StyleBox challenges pushed my creativity while the marketplace gave me a platform to sell globally.",
-    avatar: "SA",
-    rank: "Elite Designer"
+    author: "Sarah Ahmed",
+    role: "Fashion Designer • Elite Designer",
   },
   {
-    name: "Kamran Malik",
-    role: "Textile Artist",
     quote: "From novice to Lead Designer in 8 months. The ranking system keeps me motivated and the revenue share is unmatched.",
-    avatar: "KM",
-    rank: "Lead Designer"
+    author: "Kamran Malik",
+    role: "Textile Artist • Lead Designer",
   },
   {
-    name: "Zara Hussain",
-    role: "Jewelry Designer",
     quote: "Finally a platform that understands Pakistani designers. The Academy modules are practical and the community is supportive.",
-    avatar: "ZH",
-    rank: "Senior Designer"
+    author: "Zara Hussain",
+    role: "Jewelry Designer • Senior Designer",
   },
 ];
 
 export default function Home() {
   return (
-    <PublicLayout>
+    <PublicLayout showPreloader={true}>
       {/* Hero Section */}
-      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <Badge variant="secondary" className="mb-6">
-                The World's First Fashion Creation Ecosystem
-              </Badge>
-
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
-                Learn. Create.
-                <br />
-                <span className="text-muted-foreground">Publish. Earn.</span>
-              </h1>
-
-              <p className="text-lg text-muted-foreground max-w-lg mb-8 leading-relaxed">
-                Adorzia is the integrated pipeline where designers learn through gamified StyleBoxes, 
-                create production-ready assets, publish to the marketplace, and earn from real sales. 
-                Built in Pakistan. Engineered for global scale.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 mb-12">
-                <Link to="/auth">
-                  <Button size="lg" className="h-12 px-8">
-                    Start Your Journey
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link to="/about">
-                  <Button size="lg" variant="outline" className="h-12 px-8 gap-2">
-                    <Play className="h-4 w-4" />
-                    Watch Story
-                  </Button>
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-4 gap-4">
-                {stats.map((stat, i) => (
-                  <div key={i}>
-                    <p className="text-2xl font-bold">{stat.value}</p>
-                    <p className="text-xs text-muted-foreground">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
-                <img 
-                  src={heroImage} 
-                  alt="Fashion design workspace" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="absolute -bottom-4 -left-4 bg-background border rounded-xl p-4 shadow-lg">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
-                    <Crown className="h-5 w-5 text-primary-foreground" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-sm">Elite Designer</p>
-                    <p className="text-xs text-muted-foreground">50% Revenue Share</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      <HeroSection />
 
       {/* How Adorzia Works */}
-      <section className="py-20 md:py-28 border-t">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-20 md:py-28 border-t relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 dot-pattern opacity-30" />
+        
+        <div className="max-w-7xl mx-auto px-6 relative">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4">The Unified Journey</Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="outline" className="mb-4">The Unified Journey</Badge>
+            </motion.div>
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               How Adorzia Works
-            </h2>
-            <p className="text-muted-foreground">
+            </AnimatedHeading>
+            <motion.p 
+              className="text-muted-foreground"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
               A seamless pipeline from learning to earning—no gatekeeping, no barriers.
-            </p>
+            </motion.p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {howItWorks.map((step, i) => (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
               >
-                <Card className="h-full border hover:shadow-md hover:border-foreground/20 transition-all duration-300 relative overflow-hidden">
-                  <div className="absolute top-4 right-4 text-6xl font-display font-bold text-muted-foreground/10">
+                <Card className="h-full border hover:shadow-lg hover:border-primary/20 transition-all duration-500 relative overflow-hidden group">
+                  <div className="absolute top-4 right-4 text-6xl font-display font-bold text-muted-foreground/10 group-hover:text-primary/10 transition-colors">
                     {String(i + 1).padStart(2, '0')}
                   </div>
                   <CardContent className="p-6 relative">
-                    <div className="h-12 w-12 rounded-lg bg-secondary flex items-center justify-center mb-4">
+                    <motion.div 
+                      className="h-12 w-12 rounded-lg bg-secondary flex items-center justify-center mb-4"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                    >
                       <step.icon className="h-6 w-6" />
-                    </div>
+                    </motion.div>
                     <h3 className="font-display text-lg font-semibold mb-2">{step.title}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">{step.description}</p>
                   </CardContent>
@@ -224,32 +155,55 @@ export default function Home() {
       </section>
 
       {/* StyleBoxes Overview */}
-      <section className="py-20 md:py-28 bg-secondary/50">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-20 md:py-28 bg-secondary/50 relative overflow-hidden">
+        {/* Animated background gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/20" />
+        
+        <div className="max-w-7xl mx-auto px-6 relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <Badge variant="outline" className="mb-4">Gamified Learning</Badge>
-              <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+              >
+                <Badge variant="outline" className="mb-4">Gamified Learning</Badge>
+              </motion.div>
+              <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
                 StyleBoxes Overview
-              </h2>
-              <p className="text-muted-foreground mb-6">
+              </AnimatedHeading>
+              <motion.p 
+                className="text-muted-foreground mb-6"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
                 Hands-on challenges that build true industry skills. Every completed box 
                 becomes a portfolio asset and a potential product on the marketplace.
-              </p>
+              </motion.p>
               
               <div className="grid grid-cols-2 gap-3 mb-8">
-                {styleboxCategories.map((cat) => (
-                  <div key={cat.name} className="flex items-center justify-between p-3 bg-background rounded-lg border">
-                    <span className="font-medium text-sm">{cat.name}</span>
+                {styleboxCategories.map((cat, i) => (
+                  <motion.div 
+                    key={cat.name} 
+                    className="flex items-center justify-between p-3 bg-background rounded-lg border hover:border-primary/30 transition-colors cursor-pointer group"
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
+                    whileHover={{ x: 4 }}
+                  >
+                    <span className="font-medium text-sm group-hover:text-primary transition-colors">{cat.name}</span>
                     <Badge variant="secondary" className="text-xs">{cat.count}</Badge>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
 
               <Link to="/styleboxes-info">
-                <Button>
+                <Button className="group">
                   Explore StyleBoxes
-                  <ChevronRight className="ml-2 h-4 w-4" />
+                  <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
             </div>
@@ -262,9 +216,12 @@ export default function Home() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
-                  className="aspect-square bg-background border rounded-xl p-6 flex flex-col justify-between"
+                  whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                  className="aspect-square bg-background border rounded-xl p-6 flex flex-col justify-between shadow-sm hover:shadow-xl transition-shadow cursor-pointer"
                 >
-                  <Zap className="h-8 w-8 text-muted-foreground" />
+                  <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.5 }}>
+                    <Zap className="h-8 w-8 text-muted-foreground" />
+                  </motion.div>
                   <p className="font-medium text-sm">{skill}</p>
                 </motion.div>
               ))}
@@ -274,16 +231,28 @@ export default function Home() {
       </section>
 
       {/* Designer Success Path */}
-      <section className="py-20 md:py-28">
+      <section className="py-20 md:py-28 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4">Progression System</Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="outline" className="mb-4">Progression System</Badge>
+            </motion.div>
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               Designer Success Path
-            </h2>
-            <p className="text-muted-foreground">
+            </AnimatedHeading>
+            <motion.p 
+              className="text-muted-foreground"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
               From beginner to fashionpreneur: level-based progression with practical tasks and real-world output.
-            </p>
+            </motion.p>
           </div>
 
           <div className="grid md:grid-cols-4 gap-6">
@@ -296,11 +265,14 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="relative"
               >
-                <div className="h-full p-6 border rounded-xl bg-background">
+                <motion.div 
+                  className="h-full p-6 border rounded-xl bg-background hover:bg-secondary/30 transition-colors"
+                  whileHover={{ y: -4 }}
+                >
                   <Badge variant="secondary" className="mb-4">{stage.level}</Badge>
                   <h3 className="font-display text-lg font-semibold mb-2">{stage.title}</h3>
                   <p className="text-sm text-muted-foreground">{stage.desc}</p>
-                </div>
+                </motion.div>
                 {i < successPath.length - 1 && (
                   <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2">
                     <ChevronRight className="h-6 w-6 text-muted-foreground" />
@@ -313,55 +285,115 @@ export default function Home() {
       </section>
 
       {/* Marketplace Preview */}
-      <section className="py-20 md:py-28 bg-foreground text-background">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-20 md:py-28 bg-foreground text-background relative overflow-hidden">
+        {/* Animated gradient overlay */}
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-primary/20"
+          animate={{ x: ['-100%', '100%'] }}
+          transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+        />
+        
+        <div className="max-w-7xl mx-auto px-6 relative">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4 border-background/20 text-background">
-              Designer Marketplace
-            </Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="outline" className="mb-4 border-background/20 text-background">
+                Designer Marketplace
+              </Badge>
+            </motion.div>
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight text-background">
               Marketplace Preview
-            </h2>
-            <p className="text-background/60">
+            </AnimatedHeading>
+            <motion.p 
+              className="text-background/60"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
               Showcase of designer-made collections, limited drops, and next-gen fashion talent.
-            </p>
+            </motion.p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             {[1, 2, 3].map((i) => (
-              <Card key={i} className="bg-background/5 border-background/10 overflow-hidden">
-                <div className="aspect-[3/4] bg-background/10" />
-                <CardContent className="p-4">
-                  <p className="font-medium text-background">Designer Collection #{i}</p>
-                  <p className="text-sm text-background/60">Starting at PKR 2,500</p>
-                </CardContent>
-              </Card>
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ y: -8 }}
+              >
+                <Card className="bg-background/5 border-background/10 overflow-hidden group cursor-pointer">
+                  <div className="aspect-[3/4] bg-background/10 relative overflow-hidden">
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+                    />
+                    <motion.div 
+                      className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <Button variant="secondary" size="sm" className="w-full">
+                        Quick View
+                      </Button>
+                    </motion.div>
+                  </div>
+                  <CardContent className="p-4">
+                    <p className="font-medium text-background">Designer Collection #{i}</p>
+                    <p className="text-sm text-background/60">Starting at PKR 2,500</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
 
-          <div className="text-center">
+          <motion.div 
+            className="text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
             <Link to="/marketplace-preview">
-              <Button variant="secondary" size="lg">
+              <Button variant="secondary" size="lg" className="group">
                 Browse Marketplace
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Why Pakistan / Why Now */}
-      <section className="py-20 md:py-28">
+      <ParallaxSection 
+        backgroundImage="https://images.unsplash.com/photo-1558171813-01ed3d751c2c?w=1920&q=80"
+        className="py-20 md:py-28"
+        speed={0.3}
+      >
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4">Strategic Advantage</Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="outline" className="mb-4">Strategic Advantage</Badge>
+            </motion.div>
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               Why Pakistan. Why Now.
-            </h2>
-            <p className="text-muted-foreground">
+            </AnimatedHeading>
+            <motion.p 
+              className="text-muted-foreground"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
               A powerful combination of creative youth, manufacturing strength, and digital transformation 
               makes Pakistan the ideal launchpad for global fashion innovation.
-            </p>
+            </motion.p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -373,100 +405,117 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
               >
-                <Card className="h-full">
-                  <CardContent className="p-6">
-                    <div className="h-12 w-12 rounded-lg bg-secondary flex items-center justify-center mb-4">
-                      <item.icon className="h-6 w-6" />
-                    </div>
-                    <h3 className="font-display text-lg font-semibold mb-2">{item.title}</h3>
-                    <p className="text-muted-foreground text-sm">{item.desc}</p>
-                  </CardContent>
-                </Card>
+                <motion.div whileHover={{ y: -4 }}>
+                  <Card className="h-full bg-background/80 backdrop-blur-sm">
+                    <CardContent className="p-6">
+                      <motion.div 
+                        className="h-12 w-12 rounded-lg bg-secondary flex items-center justify-center mb-4"
+                        whileHover={{ scale: 1.1 }}
+                      >
+                        <item.icon className="h-6 w-6" />
+                      </motion.div>
+                      <h3 className="font-display text-lg font-semibold mb-2">{item.title}</h3>
+                      <p className="text-muted-foreground text-sm">{item.desc}</p>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </ParallaxSection>
 
       {/* Testimonials */}
       <section className="py-20 md:py-28 bg-secondary/50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4">Success Stories</Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="outline" className="mb-4">Success Stories</Badge>
+            </motion.div>
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               Designer Testimonials
-            </h2>
-            <p className="text-muted-foreground">
+            </AnimatedHeading>
+            <motion.p 
+              className="text-muted-foreground"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
               Early creators proving Adorzia's model through real products and global-ready portfolios.
-            </p>
+            </motion.p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((testimonial, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-              >
-                <Card className="h-full">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-1 mb-4">
-                      {[...Array(5)].map((_, j) => (
-                        <Star key={j} className="h-4 w-4 fill-foreground text-foreground" />
-                      ))}
-                    </div>
-                    <p className="text-muted-foreground mb-6 text-sm leading-relaxed">"{testimonial.quote}"</p>
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
-                        <span className="text-sm font-medium">{testimonial.avatar}</span>
-                      </div>
-                      <div>
-                        <p className="font-medium text-sm">{testimonial.name}</p>
-                        <p className="text-xs text-muted-foreground">{testimonial.role}</p>
-                      </div>
-                    </div>
-                    <Badge variant="secondary" className="mt-4 text-xs">{testimonial.rank}</Badge>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+          <TestimonialCarousel testimonials={testimonials} />
         </div>
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-28">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+      <section className="py-20 md:py-28 relative overflow-hidden">
+        {/* Animated background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />
+        <motion.div 
+          className="absolute inset-0"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary/20 rounded-full blur-3xl" />
+        </motion.div>
+        
+        <div className="max-w-3xl mx-auto px-6 text-center relative">
+          <AnimatedHeading className="font-display text-3xl md:text-5xl font-bold mb-4 tracking-tight">
             Join the Next Era of Fashion Creation
-          </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
+          </AnimatedHeading>
+          <motion.p 
+            className="text-muted-foreground max-w-xl mx-auto mb-8"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
             Be part of the ecosystem that's redefining how designers learn, create, and earn.
-          </p>
+          </motion.p>
           
-          <Link to="/auth">
-            <Button size="lg" className="h-12 px-8">
-              Start Free Today
-              <ChevronRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+          >
+            <Link to="/auth">
+              <Button size="lg" className="h-14 px-10 text-lg group">
+                Start Free Today
+                <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+          </motion.div>
 
-          <div className="flex items-center justify-center gap-6 mt-8 text-sm text-muted-foreground">
+          <motion.div 
+            className="flex flex-wrap items-center justify-center gap-6 mt-8 text-sm text-muted-foreground"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+          >
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4" />
+              <CheckCircle2 className="h-4 w-4 text-primary" />
               Free to start
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4" />
+              <CheckCircle2 className="h-4 w-4 text-primary" />
               No credit card
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4" />
+              <CheckCircle2 className="h-4 w-4 text-primary" />
               Cancel anytime
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </PublicLayout>

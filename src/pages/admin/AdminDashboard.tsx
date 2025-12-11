@@ -160,15 +160,15 @@ const AdminDashboard = () => {
   };
 
   const secondaryStats = [
-    { icon: Crown, value: "48", label: "F1/F2 Founders", color: "bg-foreground text-background" },
+    { icon: Crown, value: "48", label: "F1/F2 Founders", color: "bg-admin-foreground text-admin-background" },
     { icon: Store, value: "312", label: "Live Products", color: "bg-success/10 text-success" },
-    { icon: Box, value: "12,847", label: "StyleBox Completions", color: "bg-secondary text-foreground" },
-    { icon: TrendingUp, value: "94%", label: "Approval Rate", color: "bg-secondary text-foreground/70" },
+    { icon: Box, value: "12,847", label: "StyleBox Completions", color: "bg-admin-muted text-admin-foreground" },
+    { icon: TrendingUp, value: "94%", label: "Approval Rate", color: "bg-admin-muted text-admin-foreground/70" },
   ];
 
   const quickActions = [
-    { icon: Users, label: "View All Designers", color: "hover:bg-foreground hover:text-background" },
-    { icon: Box, label: "Create StyleBox", color: "hover:bg-foreground hover:text-background" },
+    { icon: Users, label: "View All Designers", color: "hover:bg-admin-foreground hover:text-admin-background" },
+    { icon: Box, label: "Create StyleBox", color: "hover:bg-admin-foreground hover:text-admin-background" },
     { icon: FolderOpen, label: "Review Queue", color: "hover:bg-warning/10 hover:text-warning" },
     { icon: DollarSign, label: "Process Payouts", color: "hover:bg-success/10 hover:text-success" },
   ];
@@ -184,31 +184,31 @@ const AdminDashboard = () => {
         {/* Header */}
         <motion.header 
           variants={itemVariants}
-          className="relative overflow-hidden rounded-2xl bg-secondary/50 p-6 sm:p-8"
+          className="relative overflow-hidden rounded-2xl bg-admin-muted/50 p-6 sm:p-8"
           role="banner"
         >
           <div className="absolute inset-0 bg-dot-pattern opacity-30" />
           <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
-                <h1 className="text-display-xl">Dashboard</h1>
+                <h1 className="text-display-xl text-admin-foreground">Dashboard</h1>
                 <Badge variant="outline" className="h-6 px-2.5 text-xs font-medium bg-success/10 text-success border-success/20">
                   Live
                 </Badge>
               </div>
-              <p className="text-caption text-base">
+              <p className="text-caption text-base text-admin-muted-foreground">
                 Overview of Adorzia Studio operations
               </p>
             </div>
             <div className="flex gap-3">
-              <Button variant="outline" className="gap-2 h-10 px-4 btn-press">
+              <Button variant="outline" className="gap-2 h-10 px-4 btn-press border-admin-border text-admin-foreground hover:bg-admin-muted">
                 <Clock className="h-4 w-4" />
                 Last 7 Days
               </Button>
-              <Button className="gap-2 h-10 px-4 bg-foreground text-background hover:bg-foreground/90 btn-press shadow-md">
+              <Button className="gap-2 h-10 px-4 bg-admin-foreground text-admin-background hover:bg-admin-foreground/90 btn-press shadow-md">
                 <FileCheck className="h-4 w-4" />
                 Review Queue
-                <Badge className="ml-1 bg-background/20 text-background h-5 px-1.5">23</Badge>
+                <Badge className="ml-1 bg-admin-background/20 text-admin-background h-5 px-1.5">23</Badge>
               </Button>
             </div>
           </div>
@@ -222,8 +222,8 @@ const AdminDashboard = () => {
           role="region"
         >
           <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-muted-foreground" />
-            <h2 id="metrics-heading" className="text-label">Key Metrics</h2>
+            <Sparkles className="h-4 w-4 text-admin-muted-foreground" />
+            <h2 id="metrics-heading" className="text-label text-admin-muted-foreground">Key Metrics</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
             <AdminStatCard
@@ -271,7 +271,7 @@ const AdminDashboard = () => {
             <Card 
               key={stat.label} 
               hover
-              className="group card-interactive"
+              className="group card-interactive bg-admin-card border-admin-border"
               tabIndex={0}
               role="article"
               aria-label={`${stat.label}: ${stat.value}`}
@@ -281,8 +281,8 @@ const AdminDashboard = () => {
                   <stat.icon className="h-5 w-5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="stat-value text-2xl truncate">{stat.value}</p>
-                  <p className="text-caption text-xs truncate">{stat.label}</p>
+                  <p className="stat-value text-2xl truncate text-admin-foreground">{stat.value}</p>
+                  <p className="text-caption text-xs truncate text-admin-muted-foreground">{stat.label}</p>
                 </div>
               </CardContent>
             </Card>
@@ -297,8 +297,8 @@ const AdminDashboard = () => {
           role="region"
         >
           <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-muted-foreground" />
-            <h2 id="action-heading" className="text-label">Action Center</h2>
+            <Zap className="h-4 w-4 text-admin-muted-foreground" />
+            <h2 id="action-heading" className="text-label text-admin-muted-foreground">Action Center</h2>
           </div>
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 sm:gap-6">
             {/* Pending Queue - Takes 2 columns */}
@@ -325,10 +325,10 @@ const AdminDashboard = () => {
           <RecentActivityCard activities={recentActivities} />
           
           {/* Quick Actions */}
-          <Card className="overflow-hidden">
-            <CardHeader className="pb-4 border-b border-border">
-              <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
-              <p className="text-caption">Common administrative tasks</p>
+          <Card className="overflow-hidden bg-admin-card border-admin-border">
+            <CardHeader className="pb-4 border-b border-admin-border">
+              <CardTitle className="text-lg font-semibold text-admin-foreground">Quick Actions</CardTitle>
+              <p className="text-caption text-admin-muted-foreground">Common administrative tasks</p>
             </CardHeader>
             <CardContent className="p-4 sm:p-5">
               <div className="grid grid-cols-2 gap-3">
@@ -336,7 +336,7 @@ const AdminDashboard = () => {
                   <Button 
                     key={action.label}
                     variant="ghost" 
-                    className={`h-auto py-5 flex-col gap-3 rounded-xl border border-border/50 bg-secondary/30 transition-all btn-press ${action.color}`}
+                    className={`h-auto py-5 flex-col gap-3 rounded-xl border border-admin-border bg-admin-muted/30 text-admin-foreground transition-all btn-press ${action.color}`}
                   >
                     <action.icon className="h-6 w-6" />
                     <span className="text-sm font-medium">{action.label}</span>

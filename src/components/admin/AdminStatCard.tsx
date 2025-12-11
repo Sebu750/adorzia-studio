@@ -15,17 +15,17 @@ interface AdminStatCardProps {
 }
 
 const variantStyles = {
-  default: "bg-secondary",
-  wine: "bg-foreground/5",
-  camel: "bg-foreground/5",
+  default: "bg-admin-muted",
+  wine: "bg-admin-foreground/5",
+  camel: "bg-admin-muted",
   success: "bg-success/10",
   warning: "bg-warning/10",
 };
 
 const iconVariantStyles = {
-  default: "text-muted-foreground",
-  wine: "text-foreground",
-  camel: "text-foreground/70",
+  default: "text-admin-muted-foreground",
+  wine: "text-admin-foreground",
+  camel: "text-admin-muted-foreground",
   success: "text-success",
   warning: "text-warning",
 };
@@ -41,22 +41,22 @@ export function AdminStatCard({
   return (
     <Card 
       hover
-      className="group relative overflow-hidden card-interactive"
+      className="group relative overflow-hidden card-interactive bg-admin-card border-admin-border"
       tabIndex={0}
       role="article"
       aria-label={`${title}: ${value}`}
     >
       {/* Subtle gradient overlay on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-admin-foreground/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       
       <CardContent className="relative p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1.5 flex-1 min-w-0">
-            <p className="text-label">{title}</p>
-            <p className="stat-value text-3xl sm:text-4xl truncate">{value}</p>
+            <p className="text-label text-admin-muted-foreground">{title}</p>
+            <p className="stat-value text-3xl sm:text-4xl truncate text-admin-foreground">{value}</p>
             <div className="flex items-center gap-3 flex-wrap">
               {subtitle && (
-                <span className="text-caption text-xs">{subtitle}</span>
+                <span className="text-caption text-xs text-admin-muted-foreground">{subtitle}</span>
               )}
               {trend && (
                 <span className={cn(
@@ -76,7 +76,7 @@ export function AdminStatCard({
             </div>
           </div>
           <div className={cn(
-            "h-12 w-12 sm:h-14 sm:w-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 border border-border/50",
+            "h-12 w-12 sm:h-14 sm:w-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-105 border border-admin-border",
             variantStyles[variant]
           )}>
             <Icon className={cn("h-5 w-5 sm:h-6 sm:w-6", iconVariantStyles[variant])} />

@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/hooks/useAuth";
 import { SubscriptionProvider } from "@/hooks/useSubscription";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 
 // Public Pages
 import Home from "./pages/public/Home";
@@ -26,25 +26,6 @@ import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 
-// Studio Pages
-import Dashboard from "./pages/Dashboard";
-import Walkthroughs from "./pages/Walkthroughs";
-import WalkthroughDetail from "./pages/WalkthroughDetail";
-import Styleboxes from "./pages/Styleboxes";
-import Portfolio from "./pages/Portfolio";
-import Collections from "./pages/Collections";
-import Jobs from "./pages/Jobs";
-import Teams from "./pages/Teams";
-import Analytics from "./pages/Analytics";
-import Settings from "./pages/Settings";
-import Subscription from "./pages/Subscription";
-import Profile from "./pages/Profile";
-import Notifications from "./pages/Notifications";
-import NotFound from "./pages/NotFound";
-import Auth from "./pages/Auth";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-
 // Studio Pages (Protected)
 import Dashboard from "./pages/Dashboard";
 import Walkthroughs from "./pages/Walkthroughs";
@@ -52,13 +33,13 @@ import WalkthroughDetail from "./pages/WalkthroughDetail";
 import Styleboxes from "./pages/Styleboxes";
 import Portfolio from "./pages/Portfolio";
 import Collections from "./pages/Collections";
-import Profile from "./pages/Profile";
-import Teams from "./pages/Teams";
 import Jobs from "./pages/Jobs";
+import Teams from "./pages/Teams";
 import Analytics from "./pages/Analytics";
-import Notifications from "./pages/Notifications";
 import Settings from "./pages/Settings";
 import Subscription from "./pages/Subscription";
+import Profile from "./pages/Profile";
+import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 
 // Admin Pages
@@ -82,137 +63,149 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-        <AuthProvider>
-          <SubscriptionProvider>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Landing />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/subscription" element={
-                <ProtectedRoute>
-                  <Subscription />
-                </ProtectedRoute>
-              } />
-              
-            {/* Protected Studio App Routes */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/walkthroughs" element={
-              <ProtectedRoute>
-                <Walkthroughs />
-              </ProtectedRoute>
-            } />
-            <Route path="/walkthroughs/:id" element={
-              <ProtectedRoute>
-                <WalkthroughDetail />
-              </ProtectedRoute>
-            } />
-            <Route path="/styleboxes" element={
-              <ProtectedRoute>
-                <Styleboxes />
-              </ProtectedRoute>
-            } />
-            <Route path="/portfolio" element={
-              <ProtectedRoute>
-                <Portfolio />
-              </ProtectedRoute>
-            } />
-            <Route path="/collections" element={
-              <ProtectedRoute>
-                <Collections />
-              </ProtectedRoute>
-            } />
-            <Route path="/profile" element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            } />
-            <Route path="/teams" element={
-              <ProtectedRoute>
-                <Teams />
-              </ProtectedRoute>
-            } />
-            <Route path="/jobs" element={
-              <ProtectedRoute>
-                <Jobs />
-              </ProtectedRoute>
-            } />
-            <Route path="/analytics" element={
-              <ProtectedRoute>
-                <Analytics />
-              </ProtectedRoute>
-            } />
-            <Route path="/notifications" element={
-              <ProtectedRoute>
-                <Notifications />
-              </ProtectedRoute>
-            } />
-            <Route path="/settings" element={
-              <ProtectedRoute>
-                <Settings />
-              </ProtectedRoute>
-            } />
-            
-            {/* Protected Admin Portal Routes */}
-            <Route path="/admin" element={
-              <ProtectedRoute requireAdmin>
-                <AdminDashboard />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/designers" element={
-              <ProtectedRoute requireAdmin>
-                <AdminDesigners />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/styleboxes" element={
-              <ProtectedRoute requireAdmin>
-                <AdminStyleboxes />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/walkthroughs" element={
-              <ProtectedRoute requireAdmin>
-                <AdminWalkthroughs />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/rankings" element={
-              <ProtectedRoute requireAdmin>
-                <AdminRankings />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/publications" element={
-              <ProtectedRoute requireAdmin>
-                <AdminPublications />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/queues" element={
-              <ProtectedRoute requireAdmin>
-                <AdminProductionQueues />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/settings" element={
-              <ProtectedRoute requireAdmin>
-                <AdminSettings />
-              </ProtectedRoute>
-            } />
-            <Route path="/admin/collections" element={
-              <ProtectedRoute requireAdmin>
-                <AdminCollections />
-              </ProtectedRoute>
-            } />
-            
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </SubscriptionProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+          <AuthProvider>
+            <SubscriptionProvider>
+              <Routes>
+                {/* Public Website Routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/styleboxes-info" element={<StyleBoxesInfo />} />
+                <Route path="/marketplace-preview" element={<MarketplacePreview />} />
+                <Route path="/competitions" element={<Competitions />} />
+                <Route path="/studio-info" element={<StudioInfo />} />
+                <Route path="/monetization" element={<Monetization />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/brands" element={<ForBrands />} />
+                <Route path="/support" element={<Support />} />
+                <Route path="/designers" element={<DesignerProfiles />} />
+                
+                {/* Auth Routes */}
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/admin/login" element={<AdminLogin />} />
+                
+                {/* Protected Studio App Routes */}
+                <Route path="/subscription" element={
+                  <ProtectedRoute>
+                    <Subscription />
+                  </ProtectedRoute>
+                } />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/walkthroughs" element={
+                  <ProtectedRoute>
+                    <Walkthroughs />
+                  </ProtectedRoute>
+                } />
+                <Route path="/walkthroughs/:id" element={
+                  <ProtectedRoute>
+                    <WalkthroughDetail />
+                  </ProtectedRoute>
+                } />
+                <Route path="/styleboxes" element={
+                  <ProtectedRoute>
+                    <Styleboxes />
+                  </ProtectedRoute>
+                } />
+                <Route path="/portfolio" element={
+                  <ProtectedRoute>
+                    <Portfolio />
+                  </ProtectedRoute>
+                } />
+                <Route path="/collections" element={
+                  <ProtectedRoute>
+                    <Collections />
+                  </ProtectedRoute>
+                } />
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                } />
+                <Route path="/teams" element={
+                  <ProtectedRoute>
+                    <Teams />
+                  </ProtectedRoute>
+                } />
+                <Route path="/jobs" element={
+                  <ProtectedRoute>
+                    <Jobs />
+                  </ProtectedRoute>
+                } />
+                <Route path="/analytics" element={
+                  <ProtectedRoute>
+                    <Analytics />
+                  </ProtectedRoute>
+                } />
+                <Route path="/notifications" element={
+                  <ProtectedRoute>
+                    <Notifications />
+                  </ProtectedRoute>
+                } />
+                <Route path="/settings" element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Protected Admin Portal Routes */}
+                <Route path="/admin" element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/designers" element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminDesigners />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/styleboxes" element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminStyleboxes />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/walkthroughs" element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminWalkthroughs />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/rankings" element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminRankings />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/publications" element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminPublications />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/queues" element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminProductionQueues />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/settings" element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminSettings />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/collections" element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminCollections />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </SubscriptionProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
   </ThemeProvider>
 );
 

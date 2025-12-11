@@ -76,10 +76,11 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
           to={item.url}
           end={item.url === "/admin"}
           className={cn(
-            "flex items-center gap-3 rounded-lg px-3 py-2.5 text-admin-sidebar-foreground/70 transition-all duration-200",
-            "hover:bg-admin-sidebar-muted/50 hover:text-admin-sidebar-foreground group"
+            "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
+            "text-[hsl(var(--admin-sidebar-foreground))]/70",
+            "hover:bg-[hsl(var(--admin-sidebar-muted))] hover:text-[hsl(var(--admin-sidebar-foreground))] group"
           )}
-          activeClassName="bg-admin-sidebar-foreground text-admin-sidebar font-medium shadow-sm"
+          activeClassName="bg-[hsl(var(--admin-sidebar-accent))] text-[hsl(var(--admin-sidebar-accent-foreground))] font-medium shadow-sm"
         >
           <item.icon className="h-[18px] w-[18px] shrink-0" />
           {!isCollapsed && (
@@ -98,18 +99,18 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
   );
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-admin-sidebar-border bg-admin-sidebar text-admin-sidebar-foreground">
-      <SidebarHeader className="border-b border-admin-sidebar-border p-4">
+    <Sidebar collapsible="icon" className="border-r border-[hsl(var(--admin-sidebar-border))] bg-[hsl(var(--admin-sidebar))] text-[hsl(var(--admin-sidebar-foreground))]">
+      <SidebarHeader className="border-b border-[hsl(var(--admin-sidebar-border))] p-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-admin-sidebar-foreground shadow-sm">
-            <Shield className="h-5 w-5 text-admin-sidebar" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[hsl(var(--admin-sidebar-foreground))] shadow-sm">
+            <Shield className="h-5 w-5 text-[hsl(var(--admin-sidebar))]" />
           </div>
           {!isCollapsed && (
             <div className="flex flex-col">
-              <span className="font-display text-lg font-bold text-admin-sidebar-foreground tracking-tight">
+              <span className="font-display text-lg font-bold text-[hsl(var(--admin-sidebar-foreground))] tracking-tight">
                 Adorzia
               </span>
-              <span className="text-xs text-admin-sidebar-foreground/50 font-medium">Admin Portal</span>
+              <span className="text-xs text-[hsl(var(--admin-sidebar-foreground))]/50 font-medium">Admin Portal</span>
             </div>
           )}
         </div>
@@ -118,7 +119,7 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
       <SidebarContent className="px-3 py-4">
         {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[11px] font-semibold text-admin-sidebar-foreground/40 uppercase tracking-widest px-3 mb-3">
+          <SidebarGroupLabel className="text-[11px] font-semibold text-[hsl(var(--admin-sidebar-foreground))]/40 uppercase tracking-widest px-3 mb-3">
             {!isCollapsed && "Overview"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -132,7 +133,7 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
 
         {/* Management */}
         <SidebarGroup className="mt-8">
-          <SidebarGroupLabel className="text-[11px] font-semibold text-admin-sidebar-foreground/40 uppercase tracking-widest px-3 mb-3">
+          <SidebarGroupLabel className="text-[11px] font-semibold text-[hsl(var(--admin-sidebar-foreground))]/40 uppercase tracking-widest px-3 mb-3">
             {!isCollapsed && "Management"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -146,7 +147,7 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
 
         {/* System */}
         <SidebarGroup className="mt-8">
-          <SidebarGroupLabel className="text-[11px] font-semibold text-admin-sidebar-foreground/40 uppercase tracking-widest px-3 mb-3">
+          <SidebarGroupLabel className="text-[11px] font-semibold text-[hsl(var(--admin-sidebar-foreground))]/40 uppercase tracking-widest px-3 mb-3">
             {!isCollapsed && "System"}
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -159,14 +160,14 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-admin-sidebar-border p-4 space-y-4">
+      <SidebarFooter className="border-t border-[hsl(var(--admin-sidebar-border))] p-4 space-y-4">
         {/* Switch to Studio */}
         {!isCollapsed && (
           <Link to="/">
             <Button 
               variant="outline" 
               size="sm" 
-              className="w-full gap-2 border-admin-sidebar-foreground/20 text-admin-sidebar-foreground bg-transparent hover:bg-admin-sidebar-foreground hover:text-admin-sidebar transition-all"
+              className="w-full gap-2 border-[hsl(var(--admin-sidebar-foreground))]/20 text-[hsl(var(--admin-sidebar-foreground))] bg-transparent hover:bg-[hsl(var(--admin-sidebar-foreground))] hover:text-[hsl(var(--admin-sidebar))] transition-all"
             >
               <ExternalLink className="h-4 w-4" />
               Switch to Studio
@@ -177,18 +178,18 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
         
         {/* User Info */}
         <div className={cn(
-          "flex items-center gap-3 p-2 rounded-lg bg-admin-sidebar-muted/30",
+          "flex items-center gap-3 p-2 rounded-lg bg-[hsl(var(--admin-sidebar-muted))]/30",
           isCollapsed && "justify-center p-2"
         )}>
-          <Avatar className="h-9 w-9 ring-2 ring-admin-sidebar-foreground/20">
+          <Avatar className="h-9 w-9 ring-2 ring-[hsl(var(--admin-sidebar-foreground))]/20">
             <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100" />
-            <AvatarFallback className="bg-admin-sidebar-foreground text-admin-sidebar text-xs font-semibold">
+            <AvatarFallback className="bg-[hsl(var(--admin-sidebar-foreground))] text-[hsl(var(--admin-sidebar))] text-xs font-semibold">
               AD
             </AvatarFallback>
           </Avatar>
           {!isCollapsed && (
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-sm font-medium text-admin-sidebar-foreground truncate">
+              <span className="text-sm font-medium text-[hsl(var(--admin-sidebar-foreground))] truncate">
                 Admin User
               </span>
               <Badge 
@@ -196,8 +197,8 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
                 className={cn(
                   "text-[10px] px-1.5 py-0 w-fit font-medium",
                   userRole === 'superadmin' 
-                    ? "bg-admin-sidebar-foreground text-admin-sidebar" 
-                    : "bg-admin-sidebar-muted text-admin-sidebar-foreground"
+                    ? "bg-[hsl(var(--admin-sidebar-foreground))] text-[hsl(var(--admin-sidebar))]" 
+                    : "bg-[hsl(var(--admin-sidebar-muted))] text-[hsl(var(--admin-sidebar-foreground))]"
                 )}
               >
                 {userRole === 'superadmin' ? 'Superadmin' : 'Admin'}

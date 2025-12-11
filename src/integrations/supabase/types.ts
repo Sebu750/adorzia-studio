@@ -74,6 +74,63 @@ export type Database = {
         }
         Relationships: []
       }
+      collection_submissions: {
+        Row: {
+          admin_feedback: string | null
+          category: string
+          concept_notes: string | null
+          created_at: string
+          description: string | null
+          designer_id: string
+          files: Json | null
+          id: string
+          inspiration: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          submitted_at: string | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          admin_feedback?: string | null
+          category?: string
+          concept_notes?: string | null
+          created_at?: string
+          description?: string | null
+          designer_id: string
+          files?: Json | null
+          id?: string
+          inspiration?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitted_at?: string | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          admin_feedback?: string | null
+          category?: string
+          concept_notes?: string | null
+          created_at?: string
+          description?: string | null
+          designer_id?: string
+          files?: Json | null
+          id?: string
+          inspiration?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitted_at?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       earnings: {
         Row: {
           amount: number

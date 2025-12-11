@@ -19,6 +19,7 @@ import Walkthroughs from "./pages/Walkthroughs";
 import WalkthroughDetail from "./pages/WalkthroughDetail";
 import Styleboxes from "./pages/Styleboxes";
 import Portfolio from "./pages/Portfolio";
+import Collections from "./pages/Collections";
 import Profile from "./pages/Profile";
 import Teams from "./pages/Teams";
 import Jobs from "./pages/Jobs";
@@ -87,6 +88,11 @@ const App = () => (
             <Route path="/portfolio" element={
               <ProtectedRoute>
                 <Portfolio />
+              </ProtectedRoute>
+            } />
+            <Route path="/collections" element={
+              <ProtectedRoute>
+                <Collections />
               </ProtectedRoute>
             } />
             <Route path="/profile" element={

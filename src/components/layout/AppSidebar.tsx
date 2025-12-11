@@ -10,7 +10,8 @@ import {
   Settings,
   LogOut,
   BookOpen,
-  CreditCard
+  CreditCard,
+  Palette
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
@@ -38,6 +39,7 @@ const mainNavItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Walkthroughs", url: "/walkthroughs", icon: BookOpen },
   { title: "Stylebox Library", url: "/styleboxes", icon: Box },
+  { title: "My Collections", url: "/collections", icon: Palette },
   { title: "Portfolio", url: "/portfolio", icon: FolderOpen },
   { title: "Teams", url: "/teams", icon: Users },
   { title: "Job Portal", url: "/jobs", icon: Briefcase },

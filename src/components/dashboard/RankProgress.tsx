@@ -84,24 +84,26 @@ export function RankProgress({
   const style = rankStyles[currentRank];
 
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Crown className={cn("h-5 w-5", style.text)} />
+    <Card className="overflow-hidden" role="region" aria-labelledby="rank-title">
+      <CardHeader className="pb-4 border-b border-border">
+        <CardTitle id="rank-title" className="flex items-center gap-2.5 text-lg">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
+            <Crown className="h-4 w-4 text-foreground" />
+          </div>
           Designer Rank
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="p-5 sm:p-6 space-y-5">
         {/* Rank Display */}
         <div className="flex items-center gap-4">
           <motion.div 
-            className="relative"
+            className="relative flex-shrink-0"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <div className={cn(
-              "h-16 w-16 rounded-2xl flex items-center justify-center border-2",
+              "h-14 w-14 sm:h-16 sm:w-16 rounded-2xl flex items-center justify-center border-2 transition-all duration-300",
               style.bg,
               style.border,
               style.glow
@@ -112,31 +114,31 @@ export function RankProgress({
             </div>
             {rankDef.isFoundation && (
               <div className="absolute -top-1 -right-1">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-rank-f1 text-[10px] font-bold text-white">
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-[10px] font-bold text-background shadow-md">
                   ★
                 </span>
               </div>
             )}
           </motion.div>
           
-          <div className="flex-1 space-y-1">
+          <div className="flex-1 min-w-0 space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
               <span className={cn("font-display text-xl font-semibold", style.text)}>
                 {rankDef.name}
               </span>
               {rankDef.isFoundation && (
-                <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-rank-f1/40 text-rank-f1">
+                <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-foreground/30 text-foreground/70">
                   FOUNDER
                 </Badge>
               )}
             </div>
-            <p className="text-sm text-muted-foreground">{rankDef.description}</p>
+            <p className="text-sm text-muted-foreground line-clamp-2">{rankDef.description}</p>
           </div>
         </div>
 
         {/* Revenue Share Highlight */}
         <div className={cn(
-          "flex items-center justify-between p-3 rounded-xl border",
+          "flex items-center justify-between p-3 rounded-xl border transition-all duration-300 hover:shadow-sm",
           style.bg,
           style.border
         )}>
@@ -144,23 +146,23 @@ export function RankProgress({
             <Percent className={cn("h-4 w-4", style.text)} />
             <span className="text-sm font-medium">Revenue Share</span>
           </div>
-          <span className={cn("text-2xl font-display font-bold", style.text)}>
+          <span className={cn("text-2xl font-display font-bold tabular-nums", style.text)}>
             {rankDef.revenueShare}%
           </span>
         </div>
 
         {/* Progress to Next Rank */}
         {nextRank && !rankDef.isFoundation && (
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-1.5">
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
                 <span className="text-muted-foreground">Progress to {nextRank.name}</span>
               </div>
-              <span className="font-medium">{progressPercent}%</span>
+              <span className="font-semibold tabular-nums">{progressPercent}%</span>
             </div>
-            <Progress value={progressPercent} className="h-2" />
-            <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <Progress value={progressPercent} className="h-2" animated />
+            <div className="flex items-center justify-between text-xs text-muted-foreground tabular-nums">
               <span>{xp.toLocaleString()} XP</span>
               <span>{xpToNextLevel.toLocaleString()} XP needed</span>
             </div>
@@ -169,23 +171,26 @@ export function RankProgress({
 
         {/* Foundation Rank Lifetime Badge */}
         {rankDef.isFoundation && (
-          <div className="flex items-center gap-2 p-3 rounded-xl bg-rank-f1/10 border border-rank-f1/20">
-            <Gift className="h-4 w-4 text-rank-f1" />
-            <span className="text-sm font-medium text-rank-f1">Lifetime benefits locked in</span>
+          <div className="flex items-center gap-2.5 p-3 rounded-xl bg-secondary border border-border">
+            <Gift className="h-4 w-4 text-foreground" />
+            <span className="text-sm font-medium">Lifetime benefits locked in</span>
           </div>
         )}
 
         {/* Badges */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium text-muted-foreground">Recent Badges</h4>
-            <button className="text-xs text-accent hover:underline">View all</button>
+            <h4 className="text-label">Recent Badges</h4>
+            <button className="text-xs text-muted-foreground hover:text-foreground transition-colors">
+              View all
+            </button>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2" role="list" aria-label="Earned badges">
             {badges.map((badge, index) => (
               <div
                 key={index}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary border border-border"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary border border-border/50 transition-all duration-200 hover:border-border hover:shadow-sm"
+                role="listitem"
               >
                 <span className="text-base">{badge.icon}</span>
                 <span className="text-xs font-medium">{badge.name}</span>
@@ -196,13 +201,13 @@ export function RankProgress({
 
         {/* Next Unlock */}
         {nextRank && (
-          <div className="pt-2 border-t border-border">
+          <div className="pt-3 border-t border-border">
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-1.5 text-muted-foreground">
-                <Star className="h-4 w-4 text-accent" />
+                <Star className="h-4 w-4" />
                 <span>Next unlock:</span>
               </div>
-              <span className="font-medium">{nextRank.perks[0]}</span>
+              <span className="font-medium text-foreground">{nextRank.perks[0]}</span>
             </div>
           </div>
         )}

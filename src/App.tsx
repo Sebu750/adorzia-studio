@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/hooks/useAuth";
 import { SubscriptionProvider } from "@/hooks/useSubscription";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import ScrollToTop from "@/components/public/ScrollToTop";
 
 // Public Pages
 import Home from "./pages/public/Home";
@@ -63,6 +64,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <AuthProvider>
             <SubscriptionProvider>
               <Routes>

@@ -15,7 +15,7 @@ interface PublicLayoutProps {
 
 export default function PublicLayout({ 
   children, 
-  showBanner = true,
+  showBanner = false,
   showPreloader = false 
 }: PublicLayoutProps) {
   const { user } = useAuth();

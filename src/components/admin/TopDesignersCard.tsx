@@ -29,32 +29,30 @@ const rankColors: Record<string, string> = {
 
 export function TopDesignersCard({ designers }: TopDesignersCardProps) {
   return (
-    <Card className="overflow-hidden">
-      <CardHeader className="pb-4 border-b bg-secondary/30">
+    <Card className="overflow-hidden" role="region" aria-labelledby="designers-title">
+      <CardHeader className="pb-4 border-b border-border">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-foreground/5 flex items-center justify-center">
+          <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
             <Crown className="h-5 w-5 text-foreground/70" />
           </div>
           <div>
-            <CardTitle className="text-lg font-semibold">Top Designers</CardTitle>
-            <p className="text-sm text-muted-foreground">By revenue this month</p>
+            <CardTitle id="designers-title" className="text-lg font-semibold">Top Designers</CardTitle>
+            <p className="text-caption text-xs">By revenue this month</p>
           </div>
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="divide-y divide-border">
+        <div className="divide-y divide-border" role="list">
           {designers.map((designer, index) => (
             <div 
               key={designer.id}
-              className={cn(
-                "flex items-center gap-4 p-4 hover:bg-secondary/50 transition-all cursor-pointer group",
-                "animate-in fade-in slide-in-from-bottom-2"
-              )}
-              style={{ animationDelay: `${index * 50}ms` }}
+              className="flex items-center gap-3 sm:gap-4 p-4 hover:bg-secondary/50 transition-all cursor-pointer group"
+              role="listitem"
+              tabIndex={0}
             >
               {/* Rank Position */}
               <div className={cn(
-                "h-10 w-10 rounded-xl flex items-center justify-center text-sm font-bold transition-transform group-hover:scale-105",
+                "h-9 w-9 sm:h-10 sm:w-10 rounded-xl flex items-center justify-center text-sm font-bold transition-transform duration-300 group-hover:scale-105",
                 index === 0 && "bg-foreground text-background",
                 index === 1 && "bg-foreground/20 text-foreground",
                 index === 2 && "bg-foreground/10 text-foreground/80",
@@ -63,9 +61,9 @@ export function TopDesignersCard({ designers }: TopDesignersCardProps) {
                 {index + 1}
               </div>
 
-              <Avatar className="h-11 w-11 ring-2 ring-border">
-                <AvatarImage src={designer.avatar} />
-                <AvatarFallback className="text-sm font-medium">
+              <Avatar className="h-10 w-10 sm:h-11 sm:w-11 ring-2 ring-border/50">
+                <AvatarImage src={designer.avatar} alt={designer.name} />
+                <AvatarFallback className="text-sm font-medium bg-secondary">
                   {designer.name.slice(0, 2)}
                 </AvatarFallback>
               </Avatar>
@@ -76,24 +74,24 @@ export function TopDesignersCard({ designers }: TopDesignersCardProps) {
                   <Badge 
                     variant="outline" 
                     className={cn(
-                      "text-xs capitalize font-medium",
+                      "text-[10px] sm:text-xs capitalize font-medium",
                       rankColors[designer.rank.toLowerCase()] || "text-muted-foreground"
                     )}
                   >
                     {designer.rank}
                   </Badge>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-muted-foreground hidden sm:inline">
                     {designer.publishedItems} published
                   </span>
                 </div>
               </div>
 
-              <div className="text-right flex items-center gap-3">
+              <div className="text-right flex items-center gap-2 sm:gap-3">
                 <div>
-                  <p className="font-display font-bold text-lg text-success">
+                  <p className="font-display font-bold text-base sm:text-lg text-success tabular-nums">
                     ${designer.revenue.toLocaleString()}
                   </p>
-                  <div className="flex items-center gap-1 text-xs text-success justify-end">
+                  <div className="hidden sm:flex items-center gap-1 text-xs text-success justify-end">
                     <TrendingUp className="h-3 w-3" />
                     <span>+12%</span>
                   </div>

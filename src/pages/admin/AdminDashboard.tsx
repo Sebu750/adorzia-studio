@@ -16,10 +16,10 @@ import {
   Crown,
   FileCheck,
   Clock,
-  ChevronRight,
   Sparkles,
   Zap
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 // Mock data
 const pendingPublications = [
@@ -142,44 +142,90 @@ const recentActivities = [
 ];
 
 const AdminDashboard = () => {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.06 },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 12 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4 },
+    },
+  };
+
+  const secondaryStats = [
+    { icon: Crown, value: "48", label: "F1/F2 Founders", color: "bg-foreground text-background" },
+    { icon: Store, value: "312", label: "Live Products", color: "bg-success/10 text-success" },
+    { icon: Box, value: "12,847", label: "StyleBox Completions", color: "bg-secondary text-foreground" },
+    { icon: TrendingUp, value: "94%", label: "Approval Rate", color: "bg-secondary text-foreground/70" },
+  ];
+
+  const quickActions = [
+    { icon: Users, label: "View All Designers", color: "hover:bg-foreground hover:text-background" },
+    { icon: Box, label: "Create StyleBox", color: "hover:bg-foreground hover:text-background" },
+    { icon: FolderOpen, label: "Review Queue", color: "hover:bg-warning/10 hover:text-warning" },
+    { icon: DollarSign, label: "Process Payouts", color: "hover:bg-success/10 hover:text-success" },
+  ];
+
   return (
     <AdminLayout userRole="superadmin">
-      <div className="p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto">
+      <motion.div 
+        className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-1">
-            <div className="flex items-center gap-3">
-              <h1 className="font-display text-3xl font-bold tracking-tight">
-                Dashboard
-              </h1>
-              <Badge variant="outline" className="h-6 px-2.5 text-xs font-medium bg-success/10 text-success border-success/20">
-                Live
-              </Badge>
+        <motion.header 
+          variants={itemVariants}
+          className="relative overflow-hidden rounded-2xl bg-secondary/50 p-6 sm:p-8"
+          role="banner"
+        >
+          <div className="absolute inset-0 bg-dot-pattern opacity-30" />
+          <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <h1 className="text-display-xl">Dashboard</h1>
+                <Badge variant="outline" className="h-6 px-2.5 text-xs font-medium bg-success/10 text-success border-success/20">
+                  Live
+                </Badge>
+              </div>
+              <p className="text-caption text-base">
+                Overview of Adorzia Studio operations
+              </p>
             </div>
-            <p className="text-muted-foreground">
-              Overview of Adorzia Studio operations • Last updated just now
-            </p>
+            <div className="flex gap-3">
+              <Button variant="outline" className="gap-2 h-10 px-4 btn-press">
+                <Clock className="h-4 w-4" />
+                Last 7 Days
+              </Button>
+              <Button className="gap-2 h-10 px-4 bg-foreground text-background hover:bg-foreground/90 btn-press shadow-md">
+                <FileCheck className="h-4 w-4" />
+                Review Queue
+                <Badge className="ml-1 bg-background/20 text-background h-5 px-1.5">23</Badge>
+              </Button>
+            </div>
           </div>
-          <div className="flex gap-3">
-            <Button variant="outline" className="gap-2 h-10 px-4 hover:bg-secondary">
-              <Clock className="h-4 w-4" />
-              Last 7 Days
-            </Button>
-            <Button className="gap-2 h-10 px-4 bg-foreground text-background hover:bg-foreground/90">
-              <FileCheck className="h-4 w-4" />
-              Review Queue
-              <Badge className="ml-1 bg-background/20 text-background h-5 px-1.5">23</Badge>
-            </Button>
-          </div>
-        </div>
+        </motion.header>
 
         {/* Primary Stats Grid */}
-        <section className="space-y-4">
+        <motion.section 
+          variants={itemVariants}
+          className="space-y-4"
+          aria-labelledby="metrics-heading"
+          role="region"
+        >
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-muted-foreground" />
-            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Key Metrics</h2>
+            <h2 id="metrics-heading" className="text-label">Key Metrics</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
             <AdminStatCard
               title="Total Designers"
               value="1,247"
@@ -212,41 +258,49 @@ const AdminDashboard = () => {
               variant="success"
             />
           </div>
-        </section>
+        </motion.section>
 
         {/* Secondary Stats */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { icon: Crown, value: "48", label: "F1/F2 Founders", color: "bg-foreground text-background" },
-            { icon: Store, value: "312", label: "Live Products", color: "bg-success/10 text-success" },
-            { icon: Box, value: "12,847", label: "StyleBox Completions", color: "bg-foreground/5 text-foreground" },
-            { icon: TrendingUp, value: "94%", label: "Approval Rate", color: "bg-foreground/5 text-foreground/70" },
-          ].map((stat, index) => (
+        <motion.section 
+          variants={itemVariants}
+          className="grid grid-cols-2 xl:grid-cols-4 gap-4"
+          role="region"
+          aria-label="Secondary statistics"
+        >
+          {secondaryStats.map((stat, index) => (
             <Card 
               key={stat.label} 
-              className="group hover:shadow-md transition-all cursor-pointer animate-in fade-in slide-in-from-bottom-2"
-              style={{ animationDelay: `${index * 50}ms` }}
+              hover
+              className="group card-interactive"
+              tabIndex={0}
+              role="article"
+              aria-label={`${stat.label}: ${stat.value}`}
             >
-              <CardContent className="p-5 flex items-center gap-4">
-                <div className={`h-12 w-12 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105 ${stat.color}`}>
+              <CardContent className="p-4 sm:p-5 flex items-center gap-4">
+                <div className={`h-11 w-11 sm:h-12 sm:w-12 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105 ${stat.color}`}>
                   <stat.icon className="h-5 w-5" />
                 </div>
-                <div>
-                  <p className="text-2xl font-display font-bold">{stat.value}</p>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                <div className="min-w-0">
+                  <p className="stat-value text-2xl truncate">{stat.value}</p>
+                  <p className="text-caption text-xs truncate">{stat.label}</p>
                 </div>
               </CardContent>
             </Card>
           ))}
-        </section>
+        </motion.section>
 
         {/* Main Content Grid */}
-        <section className="space-y-4">
+        <motion.section 
+          variants={itemVariants}
+          className="space-y-4"
+          aria-labelledby="action-heading"
+          role="region"
+        >
           <div className="flex items-center gap-2">
             <Zap className="h-4 w-4 text-muted-foreground" />
-            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Action Center</h2>
+            <h2 id="action-heading" className="text-label">Action Center</h2>
           </div>
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 sm:gap-6">
             {/* Pending Queue - Takes 2 columns */}
             <div className="xl:col-span-2">
               <PendingQueueCard 
@@ -259,30 +313,30 @@ const AdminDashboard = () => {
             {/* Top Designers */}
             <TopDesignersCard designers={topDesigners} />
           </div>
-        </section>
+        </motion.section>
 
         {/* Bottom Section */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <motion.section 
+          variants={itemVariants}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6"
+          role="region"
+          aria-label="Activity and quick actions"
+        >
           <RecentActivityCard activities={recentActivities} />
           
           {/* Quick Actions */}
           <Card className="overflow-hidden">
-            <CardHeader className="pb-4 border-b bg-secondary/30">
+            <CardHeader className="pb-4 border-b border-border">
               <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
-              <p className="text-sm text-muted-foreground">Common administrative tasks</p>
+              <p className="text-caption">Common administrative tasks</p>
             </CardHeader>
-            <CardContent className="p-4">
+            <CardContent className="p-4 sm:p-5">
               <div className="grid grid-cols-2 gap-3">
-                {[
-                  { icon: Users, label: "View All Designers", color: "bg-foreground/5 hover:bg-foreground/10 text-foreground" },
-                  { icon: Box, label: "Create StyleBox", color: "bg-foreground/5 hover:bg-foreground/10 text-foreground/80" },
-                  { icon: FolderOpen, label: "Review Queue", color: "bg-warning/5 hover:bg-warning/10 text-warning" },
-                  { icon: DollarSign, label: "Process Payouts", color: "bg-success/5 hover:bg-success/10 text-success" },
-                ].map((action) => (
+                {quickActions.map((action) => (
                   <Button 
                     key={action.label}
                     variant="ghost" 
-                    className={`h-auto py-5 flex-col gap-3 rounded-xl border border-transparent hover:border-border transition-all ${action.color}`}
+                    className={`h-auto py-5 flex-col gap-3 rounded-xl border border-border/50 bg-secondary/30 transition-all btn-press ${action.color}`}
                   >
                     <action.icon className="h-6 w-6" />
                     <span className="text-sm font-medium">{action.label}</span>
@@ -291,8 +345,8 @@ const AdminDashboard = () => {
               </div>
             </CardContent>
           </Card>
-        </section>
-      </div>
+        </motion.section>
+      </motion.div>
     </AdminLayout>
   );
 };

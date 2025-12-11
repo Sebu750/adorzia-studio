@@ -40,6 +40,7 @@ import { cn } from "@/lib/utils";
 const mainNavItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "Designers", url: "/admin/designers", icon: Users },
+  { title: "Collections", url: "/admin/collections", icon: FolderOpen, badge: "New" },
   { title: "StyleBoxes", url: "/admin/styleboxes", icon: Box },
   { title: "Walkthroughs", url: "/admin/walkthroughs", icon: BookOpen },
   { title: "Publications", url: "/admin/publications", icon: FolderOpen, badge: "23" },

@@ -39,6 +39,7 @@ import AdminStyleboxes from "./pages/admin/AdminStyleboxes";
 import AdminWalkthroughs from "./pages/admin/AdminWalkthroughs";
 import AdminRankings from "./pages/admin/AdminRankings";
 import AdminSettings from "./pages/admin/AdminSettings";
+import AdminCollections from "./pages/admin/AdminCollections";
 
 const queryClient = new QueryClient();
 
@@ -165,6 +166,11 @@ const App = () => (
             <Route path="/admin/settings" element={
               <ProtectedRoute requireAdmin>
                 <AdminSettings />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/collections" element={
+              <ProtectedRoute requireAdmin>
+                <AdminCollections />
               </ProtectedRoute>
             } />
             

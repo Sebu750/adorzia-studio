@@ -1240,75 +1240,120 @@ export type Database = {
           archive_date: string | null
           brief: Json | null
           category: Database["public"]["Enums"]["designer_category"]
+          collection_size: number | null
+          color_system: Json | null
           created_at: string
           created_by: string | null
           deliverables: Json | null
           description: string | null
+          design_guidelines: Json | null
           difficulty: Database["public"]["Enums"]["stylebox_difficulty"]
+          evaluation_criteria: Json | null
+          global_drivers: string | null
           id: string
           is_featured: boolean | null
           is_walkthrough: boolean
+          local_relevance: string | null
+          material_direction: Json | null
+          moodboard_images: Json | null
+          pdf_url: string | null
           reference_files: Json | null
           release_date: string | null
           required_rank_order: number | null
           required_subscription_tier:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          season: string | null
           status: Database["public"]["Enums"]["content_status"]
           steps: Json | null
+          submission_deadline: string | null
+          technical_requirements: Json | null
+          thumbnail_url: string | null
           title: string
+          trend_narrative: string | null
           updated_at: string
           version: number | null
+          visual_keywords: Json | null
           xp_reward: number | null
         }
         Insert: {
           archive_date?: string | null
           brief?: Json | null
           category?: Database["public"]["Enums"]["designer_category"]
+          collection_size?: number | null
+          color_system?: Json | null
           created_at?: string
           created_by?: string | null
           deliverables?: Json | null
           description?: string | null
+          design_guidelines?: Json | null
           difficulty?: Database["public"]["Enums"]["stylebox_difficulty"]
+          evaluation_criteria?: Json | null
+          global_drivers?: string | null
           id?: string
           is_featured?: boolean | null
           is_walkthrough?: boolean
+          local_relevance?: string | null
+          material_direction?: Json | null
+          moodboard_images?: Json | null
+          pdf_url?: string | null
           reference_files?: Json | null
           release_date?: string | null
           required_rank_order?: number | null
           required_subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          season?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           steps?: Json | null
+          submission_deadline?: string | null
+          technical_requirements?: Json | null
+          thumbnail_url?: string | null
           title: string
+          trend_narrative?: string | null
           updated_at?: string
           version?: number | null
+          visual_keywords?: Json | null
           xp_reward?: number | null
         }
         Update: {
           archive_date?: string | null
           brief?: Json | null
           category?: Database["public"]["Enums"]["designer_category"]
+          collection_size?: number | null
+          color_system?: Json | null
           created_at?: string
           created_by?: string | null
           deliverables?: Json | null
           description?: string | null
+          design_guidelines?: Json | null
           difficulty?: Database["public"]["Enums"]["stylebox_difficulty"]
+          evaluation_criteria?: Json | null
+          global_drivers?: string | null
           id?: string
           is_featured?: boolean | null
           is_walkthrough?: boolean
+          local_relevance?: string | null
+          material_direction?: Json | null
+          moodboard_images?: Json | null
+          pdf_url?: string | null
           reference_files?: Json | null
           release_date?: string | null
           required_rank_order?: number | null
           required_subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          season?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           steps?: Json | null
+          submission_deadline?: string | null
+          technical_requirements?: Json | null
+          thumbnail_url?: string | null
           title?: string
+          trend_narrative?: string | null
           updated_at?: string
           version?: number | null
+          visual_keywords?: Json | null
           xp_reward?: number | null
         }
         Relationships: []

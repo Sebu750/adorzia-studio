@@ -74,7 +74,7 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
               transition={{ delay: 0.5, duration: 0.5 }}
               className="text-muted-foreground text-sm tracking-widest uppercase"
             >
-              Design Your Future
+              IGNITE YOUR VISION
             </motion.p>
           </div>
         </motion.div>

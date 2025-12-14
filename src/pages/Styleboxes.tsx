@@ -196,6 +196,7 @@ const Styleboxes = () => {
                 {filteredStyleboxes.map((stylebox) => (
                   <StyleboxCard
                     key={stylebox.id}
+                    id={stylebox.id}
                     title={stylebox.title}
                     description={stylebox.description || ""}
                     category={formatCategory(stylebox.category)}
@@ -219,6 +220,7 @@ const Styleboxes = () => {
                   .map((stylebox) => (
                     <StyleboxCard
                       key={stylebox.id}
+                      id={stylebox.id}
                       title={stylebox.title}
                       description={stylebox.description || ""}
                       category={formatCategory(stylebox.category)}
@@ -242,6 +244,7 @@ const Styleboxes = () => {
                   .map((stylebox) => (
                     <StyleboxCard
                       key={stylebox.id}
+                      id={stylebox.id}
                       title={stylebox.title}
                       description={stylebox.description || ""}
                       category={formatCategory(stylebox.category)}

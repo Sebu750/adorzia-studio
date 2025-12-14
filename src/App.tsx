@@ -32,6 +32,7 @@ import Dashboard from "./pages/Dashboard";
 import Walkthroughs from "./pages/Walkthroughs";
 import WalkthroughDetail from "./pages/WalkthroughDetail";
 import Styleboxes from "./pages/Styleboxes";
+import StyleboxPreview from "./pages/StyleboxPreview";
 import Portfolio from "./pages/Portfolio";
 import Collections from "./pages/Collections";
 import Jobs from "./pages/Jobs";
@@ -111,6 +112,11 @@ const App = () => (
                 <Route path="/styleboxes" element={
                   <ProtectedRoute>
                     <Styleboxes />
+                  </ProtectedRoute>
+                } />
+                <Route path="/styleboxes/:id" element={
+                  <ProtectedRoute>
+                    <StyleboxPreview />
                   </ProtectedRoute>
                 } />
                 <Route path="/portfolio" element={

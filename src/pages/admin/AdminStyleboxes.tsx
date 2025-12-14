@@ -51,7 +51,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { StyleboxModal } from "@/components/admin/StyleboxModal";
+import { StyleboxWizard } from "@/components/admin/stylebox-wizard/StyleboxWizard";
 import { format } from "date-fns";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -479,7 +479,7 @@ export default function AdminStyleboxes() {
       </div>
 
       {/* Create/Edit Modal */}
-      <StyleboxModal
+      <StyleboxWizard
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         stylebox={editingStylebox}

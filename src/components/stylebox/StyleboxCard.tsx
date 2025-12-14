@@ -3,8 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Lock, Clock, Sparkles, Users, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 interface StyleboxCardProps {
+  id?: string;
   title: string;
   description: string;
   category: string;
@@ -20,6 +22,7 @@ interface StyleboxCardProps {
 }
 
 export function StyleboxCard({
+  id,
   title,
   description,
   category,
@@ -33,11 +36,19 @@ export function StyleboxCard({
   isNew,
   isTeam,
 }: StyleboxCardProps) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (!isLocked && id) {
+      navigate(`/styleboxes/${id}`);
+    }
+  };
+
   return (
     <Card hover className={cn(
-      "overflow-hidden group relative",
-      isLocked && "opacity-75"
-    )}>
+      "overflow-hidden group relative cursor-pointer",
+      isLocked && "opacity-75 cursor-not-allowed"
+    )} onClick={handleClick}>
       <div className="aspect-[4/3] relative overflow-hidden">
         <img
           src={thumbnail}
@@ -128,8 +139,12 @@ export function StyleboxCard({
           variant={isLocked ? "secondary" : "default"} 
           className="w-full"
           disabled={isLocked}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleClick();
+          }}
         >
-          {isLocked ? "Locked" : isPaid ? "Purchase & Start" : "Start Challenge"}
+          {isLocked ? "Locked" : "View Challenge"}
         </Button>
       </CardContent>
     </Card>

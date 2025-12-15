@@ -362,9 +362,9 @@ export default function Landing() {
             <span className="font-display text-xl font-bold">Adorzia</span>
             
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <a href="#" className="hover:text-foreground transition-colors">Terms</a>
-              <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
-              <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+              <Link to="/support#policies" className="hover:text-foreground transition-colors">Terms</Link>
+              <Link to="/support#policies" className="hover:text-foreground transition-colors">Privacy</Link>
+              <Link to="/support#contact" className="hover:text-foreground transition-colors">Contact</Link>
             </div>
 
             <p className="text-sm text-muted-foreground">

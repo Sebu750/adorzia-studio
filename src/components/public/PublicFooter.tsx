@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,9 +8,13 @@ import {
   Linkedin, 
   Youtube,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  Loader2
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { SOCIAL_LINKS } from "@/lib/social-links";
 
 const footerLinks = {
   Platform: [
@@ -38,14 +43,73 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Youtube, href: "#", label: "YouTube" },
+  { icon: Instagram, href: SOCIAL_LINKS.instagram, label: "Instagram" },
+  { icon: Twitter, href: SOCIAL_LINKS.twitter, label: "Twitter" },
+  { icon: Linkedin, href: SOCIAL_LINKS.linkedin, label: "LinkedIn" },
+  { icon: Youtube, href: SOCIAL_LINKS.youtube, label: "YouTube" },
 ];
+
+// Email validation regex
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function PublicFooter() {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    const trimmedEmail = email.trim();
+    
+    // Client-side validation
+    if (!trimmedEmail) {
+      toast({
+        title: "Email required",
+        description: "Please enter your email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!emailRegex.test(trimmedEmail)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("newsletter-subscribe", {
+        body: { email: trimmedEmail, source: "footer" },
+      });
+
+      if (error) {
+        throw new Error(error.message || "Subscription failed");
+      }
+
+      toast({
+        title: "Subscribed!",
+        description: data.message || "Thank you for subscribing to our newsletter.",
+      });
+      
+      setEmail("");
+    } catch (err: any) {
+      console.error("Newsletter subscription error:", err);
+      toast({
+        title: "Subscription failed",
+        description: err.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <footer className="bg-foreground text-background">
@@ -94,17 +158,31 @@ export default function PublicFooter() {
                 Get updates on new StyleBoxes, competitions, and designer success stories.
               </p>
             </div>
-            <div className="flex gap-3">
+            <form onSubmit={handleSubscribe} className="flex gap-3">
               <Input 
                 type="email" 
-                placeholder="Enter your email" 
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                disabled={isSubmitting}
                 className="bg-background/10 border-background/20 text-background placeholder:text-background/40"
               />
-              <Button variant="secondary" className="shrink-0">
-                Subscribe
-                <ArrowRight className="ml-2 h-4 w-4" />
+              <Button 
+                type="submit" 
+                variant="secondary" 
+                className="shrink-0"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    Subscribe
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
               </Button>
-            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -125,6 +203,8 @@ export default function PublicFooter() {
                 <a
                   key={social.label}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={social.label}
                   className="h-9 w-9 rounded-full bg-background/10 flex items-center justify-center hover:bg-background/20 transition-colors"
                 >

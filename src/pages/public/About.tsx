@@ -22,6 +22,7 @@ import TiltCard from "@/components/public/TiltCard";
 import StatsSection from "@/components/public/StatsSection";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import ParallaxSection from "@/components/public/ParallaxSection";
+import { SOCIAL_LINKS } from "@/lib/social-links";
 
 const uniquePoints = [
   {
@@ -338,14 +339,18 @@ export default function About() {
                     <p className="text-xs text-background/50">{member.bio}</p>
                     <div className="flex justify-center gap-2 mt-4">
                       <motion.a 
-                        href="#" 
+                        href={SOCIAL_LINKS.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="h-8 w-8 rounded-full bg-background/10 flex items-center justify-center hover:bg-background/20 transition-colors"
                         whileHover={{ scale: 1.1 }}
                       >
                         <Linkedin className="h-4 w-4" />
                       </motion.a>
                       <motion.a 
-                        href="#" 
+                        href={SOCIAL_LINKS.twitter}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="h-8 w-8 rounded-full bg-background/10 flex items-center justify-center hover:bg-background/20 transition-colors"
                         whileHover={{ scale: 1.1 }}
                       >

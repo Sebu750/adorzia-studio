@@ -85,17 +85,25 @@ export default function PublicFooter() {
     setIsSubmitting(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke("newsletter-subscribe", {
+      const response = await supabase.functions.invoke("newsletter-subscribe", {
         body: { email: trimmedEmail, source: "footer" },
       });
 
-      if (error) {
-        throw new Error(error.message || "Subscription failed");
+      console.log("Newsletter response:", response);
+
+      // Check for function invocation error
+      if (response.error) {
+        throw new Error(response.error.message || "Subscription failed");
+      }
+
+      // Check for API error in response data
+      if (response.data?.error) {
+        throw new Error(response.data.error);
       }
 
       toast({
         title: "Subscribed!",
-        description: data.message || "Thank you for subscribing to our newsletter.",
+        description: response.data?.message || "Thank you for subscribing to our newsletter.",
       });
       
       setEmail("");

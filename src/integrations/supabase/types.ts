@@ -131,6 +131,45 @@ export type Database = {
         }
         Relationships: []
       }
+      designer_scores: {
+        Row: {
+          created_at: string
+          designer_id: string
+          id: string
+          last_calculated_at: string | null
+          portfolio_score: number
+          publication_score: number
+          selling_score: number
+          stylebox_score: number
+          updated_at: string
+          weighted_total: number | null
+        }
+        Insert: {
+          created_at?: string
+          designer_id: string
+          id?: string
+          last_calculated_at?: string | null
+          portfolio_score?: number
+          publication_score?: number
+          selling_score?: number
+          stylebox_score?: number
+          updated_at?: string
+          weighted_total?: number | null
+        }
+        Update: {
+          created_at?: string
+          designer_id?: string
+          id?: string
+          last_calculated_at?: string | null
+          portfolio_score?: number
+          publication_score?: number
+          selling_score?: number
+          stylebox_score?: number
+          updated_at?: string
+          weighted_total?: number | null
+        }
+        Relationships: []
+      }
       earnings: {
         Row: {
           amount: number
@@ -162,6 +201,47 @@ export type Database = {
             columns: ["product_id"]
             isOneToOne: false
             referencedRelation: "marketplace_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      foundation_purchases: {
+        Row: {
+          amount_usd: number
+          created_at: string
+          designer_id: string
+          id: string
+          purchased_at: string | null
+          rank_id: string
+          status: string
+          stripe_payment_id: string | null
+        }
+        Insert: {
+          amount_usd: number
+          created_at?: string
+          designer_id: string
+          id?: string
+          purchased_at?: string | null
+          rank_id: string
+          status?: string
+          stripe_payment_id?: string | null
+        }
+        Update: {
+          amount_usd?: number
+          created_at?: string
+          designer_id?: string
+          id?: string
+          purchased_at?: string | null
+          rank_id?: string
+          status?: string
+          stripe_payment_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "foundation_purchases_rank_id_fkey"
+            columns: ["rank_id"]
+            isOneToOne: false
+            referencedRelation: "ranks"
             referencedColumns: ["id"]
           },
         ]
@@ -1196,9 +1276,16 @@ export type Database = {
       }
       ranks: {
         Row: {
+          bonus_percentage: number | null
           created_at: string
+          description: string | null
           id: string
+          is_foundation: boolean | null
+          max_slots: number | null
+          min_time_in_rank_days: number | null
+          min_weighted_score: number | null
           name: string
+          price_usd: number | null
           priority_queue: boolean
           rank_order: number
           requirements: Json | null
@@ -1206,9 +1293,16 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          bonus_percentage?: number | null
           created_at?: string
+          description?: string | null
           id?: string
+          is_foundation?: boolean | null
+          max_slots?: number | null
+          min_time_in_rank_days?: number | null
+          min_weighted_score?: number | null
           name: string
+          price_usd?: number | null
           priority_queue?: boolean
           rank_order?: number
           requirements?: Json | null
@@ -1216,9 +1310,16 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          bonus_percentage?: number | null
           created_at?: string
+          description?: string | null
           id?: string
+          is_foundation?: boolean | null
+          max_slots?: number | null
+          min_time_in_rank_days?: number | null
+          min_weighted_score?: number | null
           name?: string
+          price_usd?: number | null
           priority_queue?: boolean
           rank_order?: number
           requirements?: Json | null
@@ -1226,6 +1327,62 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      stylebox_evaluation_scores: {
+        Row: {
+          craftsmanship_score: number
+          created_at: string
+          creative_innovation_score: number
+          difficulty_points: number
+          evaluated_at: string | null
+          evaluated_by: string | null
+          final_weighted_score: number | null
+          id: string
+          quality_multiplier: number
+          submission_id: string
+          technical_execution_score: number
+          timeliness_bonus: number
+          trend_alignment_score: number
+        }
+        Insert: {
+          craftsmanship_score?: number
+          created_at?: string
+          creative_innovation_score?: number
+          difficulty_points?: number
+          evaluated_at?: string | null
+          evaluated_by?: string | null
+          final_weighted_score?: number | null
+          id?: string
+          quality_multiplier?: number
+          submission_id: string
+          technical_execution_score?: number
+          timeliness_bonus?: number
+          trend_alignment_score?: number
+        }
+        Update: {
+          craftsmanship_score?: number
+          created_at?: string
+          creative_innovation_score?: number
+          difficulty_points?: number
+          evaluated_at?: string | null
+          evaluated_by?: string | null
+          final_weighted_score?: number | null
+          id?: string
+          quality_multiplier?: number
+          submission_id?: string
+          technical_execution_score?: number
+          timeliness_bonus?: number
+          trend_alignment_score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stylebox_evaluation_scores_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: true
+            referencedRelation: "stylebox_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       stylebox_submissions: {
         Row: {

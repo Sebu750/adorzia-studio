@@ -1,12 +1,14 @@
 import { cn } from "@/lib/utils";
-import { RANKS, RankTier } from "@/lib/ranks";
-import { Crown, Star, Sparkles, Check, Lock } from "lucide-react";
+import { RANKS, RankTier, calculateEffectiveRevenueShare } from "@/lib/ranks";
+import { Crown, Star, Sparkles, Check, Lock, DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface RankTierCardProps {
   rank: RankTier;
   isCurrentRank?: boolean;
   isUnlocked?: boolean;
+  foundationRank?: 'f1' | 'f2' | null;
+  showEffectiveShare?: boolean;
 }
 
 const rankStyles: Record<RankTier, { bg: string; border: string; text: string; iconBg: string }> = {
@@ -69,9 +71,20 @@ const RankIcon = ({ rank }: { rank: RankTier }) => {
   return <Star className="h-5 w-5" />;
 };
 
-export function RankTierCard({ rank, isCurrentRank = false, isUnlocked = false }: RankTierCardProps) {
+export function RankTierCard({ 
+  rank, 
+  isCurrentRank = false, 
+  isUnlocked = false,
+  foundationRank,
+  showEffectiveShare = false,
+}: RankTierCardProps) {
   const rankDef = RANKS[rank];
   const style = rankStyles[rank];
+  
+  // Calculate effective share if foundation rank is provided and this is a standard rank
+  const effectiveShare = !rankDef.isFoundation && foundationRank 
+    ? calculateEffectiveRevenueShare(rank, foundationRank)
+    : rankDef.revenueShare;
 
   return (
     <motion.div
@@ -128,14 +141,51 @@ export function RankTierCard({ rank, isCurrentRank = false, isUnlocked = false }
             )}
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">{rankDef.title}</p>
+          
+          {/* Min weighted score for standard ranks */}
+          {!rankDef.isFoundation && rankDef.minWeightedScore > 0 && (
+            <p className="text-[10px] text-muted-foreground mt-1">
+              Min Score: {rankDef.minWeightedScore}
+            </p>
+          )}
+          
+          {/* Price for foundation ranks */}
+          {rankDef.isFoundation && rankDef.priceUsd && (
+            <div className="flex items-center gap-1 mt-1">
+              <DollarSign className="h-3 w-3 text-muted-foreground" />
+              <span className="text-[10px] text-muted-foreground">
+                ${rankDef.priceUsd} one-time
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Revenue Share */}
         <div className="text-right">
-          <span className={cn("text-xl font-display font-bold", style.text)}>
-            {rankDef.revenueShare}%
-          </span>
-          <p className="text-[10px] text-muted-foreground">share</p>
+          {showEffectiveShare && !rankDef.isFoundation && foundationRank ? (
+            <>
+              <span className={cn("text-xl font-display font-bold", style.text)}>
+                {effectiveShare}%
+              </span>
+              <p className="text-[10px] text-muted-foreground">
+                {rankDef.revenueShare}% + {RANKS[foundationRank].bonusPercentage}%
+              </p>
+            </>
+          ) : rankDef.isFoundation ? (
+            <>
+              <span className={cn("text-xl font-display font-bold", style.text)}>
+                +{rankDef.bonusPercentage}%
+              </span>
+              <p className="text-[10px] text-muted-foreground">bonus</p>
+            </>
+          ) : (
+            <>
+              <span className={cn("text-xl font-display font-bold", style.text)}>
+                {rankDef.revenueShare}%
+              </span>
+              <p className="text-[10px] text-muted-foreground">share</p>
+            </>
+          )}
         </div>
       </div>
 

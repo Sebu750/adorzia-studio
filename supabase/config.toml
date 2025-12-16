@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.newsletter-subscribe]
 verify_jwt = false
+
+[functions.calculate-designer-score]
+verify_jwt = true

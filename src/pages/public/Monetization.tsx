@@ -15,6 +15,10 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PublicLayout from "@/components/public/PublicLayout";
+import AnimatedHeading from "@/components/public/AnimatedHeading";
+import TiltCard from "@/components/public/TiltCard";
+import ParallaxSection from "@/components/public/ParallaxSection";
+import { monetizationImages, backgroundImages } from "@/lib/images";
 
 const publishingSteps = [
   { step: 1, title: "Create", description: "Complete StyleBox challenges and build portfolio" },
@@ -28,12 +32,12 @@ const publishingSteps = [
 ];
 
 const revenueShare = [
-  { rank: "Novice", share: "20%", description: "Starting designers" },
-  { rank: "Apprentice", share: "25%", description: "Building skills" },
-  { rank: "Designer", share: "30%", description: "Consistent quality" },
-  { rank: "Senior", share: "35%", description: "Proven track record" },
-  { rank: "Lead", share: "40%", description: "Industry expert" },
-  { rank: "Elite", share: "50%", description: "Top performer" },
+  { rank: "Novice", share: "10%", description: "Starting designers" },
+  { rank: "Apprentice", share: "15%", description: "Building skills" },
+  { rank: "Designer", share: "20%", description: "Consistent quality" },
+  { rank: "Senior", share: "28%", description: "Proven track record" },
+  { rank: "Lead", share: "34%", description: "Industry expert" },
+  { rank: "Elite", share: "40%", description: "Top performer" },
 ];
 
 const manufacturingBenefits = [
@@ -55,9 +59,21 @@ const earningsDashboard = [
 export default function Monetization() {
   return (
     <PublicLayout>
-      {/* Hero */}
-      <section className="pt-24 pb-16 md:pt-32 md:pb-24">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* Hero with animated gradient */}
+      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10" />
+        <motion.div 
+          className="absolute top-10 right-10 w-80 h-80 bg-green-500/10 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div 
+          className="absolute bottom-10 left-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
+          animate={{ scale: [1.3, 1, 1.3], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 10, repeat: Infinity }}
+        />
+        
+        <div className="max-w-7xl mx-auto px-6 relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -72,26 +88,26 @@ export default function Monetization() {
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed mb-8">
               From design to doorstep—we handle production, fulfillment, and sales. 
-              You keep up to 50% of every product sold.
+              You keep up to 40% of every product sold.
             </p>
             <Link to="/auth">
-              <Button size="lg">
+              <Button size="lg" className="group">
                 Start Earning
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           </motion.div>
         </div>
       </section>
 
-      {/* How Publishing Works */}
+      {/* How Publishing Works with animated steps */}
       <section className="py-20 md:py-28 border-t">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <Badge variant="outline" className="mb-4">Publication Pipeline</Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               How Publishing Works
-            </h2>
+            </AnimatedHeading>
             <p className="text-muted-foreground">
               Submit your StyleBox output. Adorzia handles refinement, tech packs, and production.
             </p>
@@ -106,32 +122,41 @@ export default function Monetization() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
               >
-                <Card className="h-full">
-                  <CardContent className="p-4">
-                    <div className="text-3xl font-display font-bold text-muted-foreground/20 mb-2">
-                      {String(item.step).padStart(2, '0')}
-                    </div>
-                    <h3 className="font-semibold mb-1">{item.title}</h3>
-                    <p className="text-xs text-muted-foreground">{item.description}</p>
-                  </CardContent>
-                </Card>
+                <TiltCard tiltAmount={8}>
+                  <Card className="h-full hover:shadow-lg transition-shadow">
+                    <CardContent className="p-4">
+                      <motion.div 
+                        className="text-3xl font-display font-bold text-primary/20 mb-2"
+                        whileHover={{ scale: 1.2, color: 'var(--primary)' }}
+                      >
+                        {String(item.step).padStart(2, '0')}
+                      </motion.div>
+                      <h3 className="font-semibold mb-1">{item.title}</h3>
+                      <p className="text-xs text-muted-foreground">{item.description}</p>
+                    </CardContent>
+                  </Card>
+                </TiltCard>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Revenue Share */}
-      <section className="py-20 md:py-28 bg-foreground text-background">
+      {/* Revenue Share with parallax */}
+      <ParallaxSection
+        backgroundImage={backgroundImages.fashion}
+        className="py-20 md:py-28"
+        speed={0.3}
+      >
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <Badge variant="outline" className="mb-4 border-background/20 text-background">
+            <Badge variant="outline" className="mb-4">
               Transparent Earnings
             </Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               Revenue Share by Rank
-            </h2>
-            <p className="text-background/60">
+            </AnimatedHeading>
+            <p className="text-muted-foreground">
               Creators keep the majority. Higher ranks earn more per sale.
             </p>
           </div>
@@ -145,146 +170,194 @@ export default function Monetization() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
               >
-                <Card className={`bg-background/5 border-background/10 ${
-                  tier.rank === 'Elite' ? 'ring-2 ring-background/30' : ''
-                }`}>
-                  <CardContent className="p-6 text-center">
-                    {tier.rank === 'Elite' && (
-                      <Crown className="h-5 w-5 mx-auto mb-2" />
-                    )}
-                    <h3 className="font-display font-semibold mb-1">{tier.rank}</h3>
-                    <p className="text-3xl font-bold mb-2">{tier.share}</p>
-                    <p className="text-xs text-background/60">{tier.description}</p>
-                  </CardContent>
-                </Card>
+                <TiltCard tiltAmount={12} glareEnabled={tier.rank === 'Elite'}>
+                  <Card className={`backdrop-blur-sm bg-background/90 ${
+                    tier.rank === 'Elite' ? 'ring-2 ring-primary/50' : ''
+                  }`}>
+                    <CardContent className="p-6 text-center">
+                      {tier.rank === 'Elite' && (
+                        <motion.div
+                          animate={{ rotate: [0, 10, -10, 0] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          <Crown className="h-5 w-5 mx-auto mb-2 text-warning" />
+                        </motion.div>
+                      )}
+                      <h3 className="font-display font-semibold mb-1">{tier.rank}</h3>
+                      <p className="text-3xl font-bold mb-2">{tier.share}</p>
+                      <p className="text-xs text-muted-foreground">{tier.description}</p>
+                    </CardContent>
+                  </Card>
+                </TiltCard>
               </motion.div>
             ))}
           </div>
 
-          <div className="text-center mt-12">
-            <p className="text-background/60 text-sm">
-              Early F1/F2 founders receive 45-50% lifetime revenue share regardless of rank.
+          <motion.div 
+            className="text-center mt-12"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <p className="text-muted-foreground text-sm backdrop-blur-sm bg-background/80 inline-block px-4 py-2 rounded-lg">
+              Early F1/F2 founders receive +5% to +10% bonus on top of their rank share.
             </p>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </ParallaxSection>
 
-      {/* Manufacturing & Fulfillment */}
+      {/* Manufacturing & Fulfillment with images */}
       <section className="py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
               <Badge variant="outline" className="mb-4">End-to-End Production</Badge>
-              <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+              <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
                 Manufacturing & Fulfillment
-              </h2>
+              </AnimatedHeading>
               <p className="text-muted-foreground mb-6">
                 Local production strength connected directly to designers. We handle everything 
                 from sourcing to shipping—you focus on design.
               </p>
               <ul className="space-y-3">
                 {manufacturingBenefits.map((benefit, i) => (
-                  <li key={i} className="flex items-center gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-muted-foreground" />
+                  <motion.li 
+                    key={i} 
+                    className="flex items-center gap-3"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
                     <span>{benefit}</span>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <Card>
-                <CardContent className="p-6 text-center">
-                  <Factory className="h-10 w-10 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="font-semibold">Local Production</h3>
-                  <p className="text-sm text-muted-foreground">Made in Pakistan</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6 text-center">
-                  <Truck className="h-10 w-10 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="font-semibold">Fast Shipping</h3>
-                  <p className="text-sm text-muted-foreground">Nationwide delivery</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6 text-center">
-                  <PieChart className="h-10 w-10 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="font-semibold">Transparent Pricing</h3>
-                  <p className="text-sm text-muted-foreground">Know your margins</p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardContent className="p-6 text-center">
-                  <TrendingUp className="h-10 w-10 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="font-semibold">Scale Ready</h3>
-                  <p className="text-sm text-muted-foreground">Grow with demand</p>
-                </CardContent>
-              </Card>
+              {[
+                { icon: Factory, title: "Local Production", desc: "Made in Pakistan" },
+                { icon: Truck, title: "Fast Shipping", desc: "Nationwide delivery" },
+                { icon: PieChart, title: "Transparent Pricing", desc: "Know your margins" },
+                { icon: TrendingUp, title: "Scale Ready", desc: "Grow with demand" },
+              ].map((item, i) => (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <TiltCard tiltAmount={15}>
+                    <Card className="hover:shadow-lg transition-shadow">
+                      <CardContent className="p-6 text-center">
+                        <motion.div
+                          whileHover={{ scale: 1.2, rotate: 10 }}
+                          className="inline-block"
+                        >
+                          <item.icon className="h-10 w-10 mx-auto mb-4 text-primary" />
+                        </motion.div>
+                        <h3 className="font-semibold">{item.title}</h3>
+                        <p className="text-sm text-muted-foreground">{item.desc}</p>
+                      </CardContent>
+                    </Card>
+                  </TiltCard>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Earnings Dashboard Preview */}
+      {/* Earnings Dashboard Preview with animations */}
       <section className="py-20 md:py-28 bg-secondary/50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <Badge variant="outline" className="mb-4">Real-Time Tracking</Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               Earnings Dashboard
-            </h2>
+            </AnimatedHeading>
             <p className="text-muted-foreground">
               Track sales, royalties, and performance in real-time.
             </p>
           </div>
 
-          <Card className="max-w-3xl mx-auto">
-            <CardContent className="p-8">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-                {earningsDashboard.map((item, i) => (
-                  <div key={item.metric} className="text-center">
-                    <p className="text-sm text-muted-foreground mb-1">{item.metric}</p>
-                    <p className="text-2xl font-bold">{item.value}</p>
-                  </div>
-                ))}
-              </div>
+          <TiltCard tiltAmount={5} className="max-w-3xl mx-auto">
+            <Card className="overflow-hidden">
+              <CardContent className="p-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+                  {earningsDashboard.map((item, i) => (
+                    <motion.div 
+                      key={item.metric} 
+                      className="text-center"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1 }}
+                    >
+                      <p className="text-sm text-muted-foreground mb-1">{item.metric}</p>
+                      <p className="text-2xl font-bold">{item.value}</p>
+                    </motion.div>
+                  ))}
+                </div>
 
-              <div className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between text-sm mb-2">
-                    <span>Monthly Goal Progress</span>
-                    <span className="font-medium">65%</span>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-center justify-between text-sm mb-2">
+                      <span>Monthly Goal Progress</span>
+                      <span className="font-medium">65%</span>
+                    </div>
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: '100%' }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 1 }}
+                    >
+                      <Progress value={65} className="h-2" />
+                    </motion.div>
                   </div>
-                  <Progress value={65} className="h-2" />
-                </div>
-                <div>
-                  <div className="flex items-center justify-between text-sm mb-2">
+                  <div className="flex items-center justify-between text-sm">
                     <span>Next Payout</span>
-                    <span className="font-medium">Dec 1, 2024</span>
+                    <motion.span 
+                      className="font-medium flex items-center gap-2"
+                      animate={{ opacity: [1, 0.5, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <div className="h-2 w-2 rounded-full bg-green-500" />
+                      Dec 1, 2024
+                    </motion.span>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </TiltCard>
         </div>
       </section>
 
       {/* CTA */}
       <section className="py-20 md:py-28">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <DollarSign className="h-12 w-12 mx-auto mb-6 text-muted-foreground" />
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+          <motion.div
+            initial={{ scale: 0 }}
+            whileInView={{ scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 200 }}
+          >
+            <DollarSign className="h-12 w-12 mx-auto mb-6 text-primary" />
+          </motion.div>
+          <AnimatedHeading as="h2" className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
             Start Monetizing Your Designs
-          </h2>
+          </AnimatedHeading>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
             Join thousands of designers already earning from their creativity.
           </p>
           
           <Link to="/auth">
-            <Button size="lg" className="h-12 px-8">
+            <Button size="lg" className="h-12 px-8 group">
               Create Account
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
         </div>

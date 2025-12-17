@@ -45,3 +45,46 @@ export const backgroundImages = {
   textile: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=1920&q=80",
   studio: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80",
 };
+
+// New categories for enhanced pages
+
+export const styleboxImages = {
+  streetwear: "https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=800&q=80",
+  couture: "https://images.unsplash.com/photo-1509631179647-0177331693ae?w=800&q=80",
+  essentials: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800&q=80",
+  formal: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&q=80",
+  avantGarde: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=800&q=80",
+  sustainable: "https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?w=800&q=80",
+};
+
+export const studioToolImages = {
+  patternDesign: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+  moodboard: "https://images.unsplash.com/photo-1542621334-a254cf47733d?w=800&q=80",
+  mockup: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=800&q=80",
+  techPack: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&q=80",
+};
+
+export const competitionImages = {
+  arena: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200&q=80",
+  winners: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80",
+  leaderboard: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80",
+  liveChallenge: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=800&q=80",
+};
+
+export const brandPartnershipImages = {
+  collaboration: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&q=80",
+  manufacturing: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&q=80",
+  brandMeeting: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
+  production: "https://images.unsplash.com/photo-1558171813-01ed3d751c2c?w=800&q=80",
+};
+
+export const monetizationImages = {
+  earnings: "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800&q=80",
+  production: "https://images.unsplash.com/photo-1558171813-01ed3d751c2c?w=1200&q=80",
+  fulfillment: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&q=80",
+};
+
+export const supportImages = {
+  helpCenter: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80",
+  contact: "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=800&q=80",
+};

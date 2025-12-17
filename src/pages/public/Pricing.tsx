@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PublicLayout from "@/components/public/PublicLayout";
+import AnimatedHeading from "@/components/public/AnimatedHeading";
+import TiltCard from "@/components/public/TiltCard";
 
 const plans = [
   {
@@ -107,9 +109,16 @@ const faqs = [
 export default function Pricing() {
   return (
     <PublicLayout>
-      {/* Hero */}
-      <section className="pt-24 pb-16 md:pt-32 md:pb-24">
-        <div className="max-w-7xl mx-auto px-6 text-center">
+      {/* Hero with animated gradient */}
+      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />
+        <motion.div 
+          className="absolute top-10 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl"
+          animate={{ x: [0, 50, 0], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 12, repeat: Infinity }}
+        />
+        
+        <div className="max-w-7xl mx-auto px-6 text-center relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -127,7 +136,7 @@ export default function Pricing() {
         </div>
       </section>
 
-      {/* Pricing Cards */}
+      {/* Pricing Cards with TiltCard */}
       <section className="pb-20 md:pb-28">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8">
@@ -139,59 +148,73 @@ export default function Pricing() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Card className={`h-full relative ${
-                  plan.popular ? 'border-foreground shadow-lg' : ''
-                }`}>
-                  {plan.popular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge className="bg-foreground text-background">
-                        <Star className="h-3 w-3 mr-1" />
-                        Most Popular
-                      </Badge>
-                    </div>
-                  )}
-                  <CardHeader className="text-center pb-4">
-                    <div className="h-12 w-12 rounded-xl bg-secondary flex items-center justify-center mx-auto mb-4">
-                      {plan.name === 'Elite' ? (
-                        <Crown className="h-6 w-6" />
-                      ) : plan.name === 'Pro' ? (
-                        <Zap className="h-6 w-6" />
-                      ) : (
-                        <Star className="h-6 w-6" />
-                      )}
-                    </div>
-                    <h3 className="font-display text-2xl font-bold">{plan.name}</h3>
-                    <div className="mt-4">
-                      <span className="text-4xl font-bold">{plan.price}</span>
-                      <span className="text-muted-foreground">{plan.period}</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <ul className="space-y-3 mb-8">
-                      {plan.features.map((feature, j) => (
-                        <li key={j} className="flex items-center gap-3">
-                          {feature.included ? (
-                            <Check className="h-4 w-4 text-foreground" />
-                          ) : (
-                            <X className="h-4 w-4 text-muted-foreground/50" />
-                          )}
-                          <span className={feature.included ? '' : 'text-muted-foreground/50'}>
-                            {feature.text}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Link to="/auth">
-                      <Button 
-                        className="w-full" 
-                        variant={plan.popular ? 'default' : 'outline'}
+                <TiltCard tiltAmount={plan.popular ? 8 : 5} glareEnabled={plan.popular}>
+                  <Card className={`h-full relative ${
+                    plan.popular ? 'border-foreground shadow-xl' : ''
+                  }`}>
+                    {plan.popular && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <Badge className="bg-foreground text-background">
+                          <Star className="h-3 w-3 mr-1" />
+                          Most Popular
+                        </Badge>
+                      </div>
+                    )}
+                    <CardHeader className="text-center pb-4">
+                      <motion.div 
+                        className="h-12 w-12 rounded-xl bg-secondary flex items-center justify-center mx-auto mb-4"
+                        whileHover={{ rotate: 360, scale: 1.1 }}
+                        transition={{ duration: 0.5 }}
                       >
-                        Get Started
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
+                        {plan.name === 'Elite' ? (
+                          <Crown className="h-6 w-6" />
+                        ) : plan.name === 'Pro' ? (
+                          <Zap className="h-6 w-6" />
+                        ) : (
+                          <Star className="h-6 w-6" />
+                        )}
+                      </motion.div>
+                      <h3 className="font-display text-2xl font-bold">{plan.name}</h3>
+                      <div className="mt-4">
+                        <span className="text-4xl font-bold">{plan.price}</span>
+                        <span className="text-muted-foreground">{plan.period}</span>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <ul className="space-y-3 mb-8">
+                        {plan.features.map((feature, j) => (
+                          <motion.li 
+                            key={j} 
+                            className="flex items-center gap-3"
+                            initial={{ opacity: 0, x: -10 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: j * 0.05 }}
+                          >
+                            {feature.included ? (
+                              <Check className="h-4 w-4 text-foreground" />
+                            ) : (
+                              <X className="h-4 w-4 text-muted-foreground/50" />
+                            )}
+                            <span className={feature.included ? '' : 'text-muted-foreground/50'}>
+                              {feature.text}
+                            </span>
+                          </motion.li>
+                        ))}
+                      </ul>
+                      <Link to="/auth">
+                        <Button 
+                          className="w-full group" 
+                          variant={plan.popular ? 'default' : 'outline'}
+                        >
+                          Get Started
+                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </TiltCard>
               </motion.div>
             ))}
           </div>
@@ -203,12 +226,12 @@ export default function Pricing() {
         <div className="max-w-5xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <Badge variant="outline" className="mb-4">Feature Comparison</Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               Compare Plans
-            </h2>
+            </AnimatedHeading>
           </div>
 
-          <Card>
+          <Card className="overflow-hidden">
             <CardContent className="p-0 overflow-x-auto">
               <table className="w-full">
                 <thead>
@@ -221,12 +244,19 @@ export default function Pricing() {
                 </thead>
                 <tbody>
                   {comparisonFeatures.map((row, i) => (
-                    <tr key={row.feature} className={i < comparisonFeatures.length - 1 ? 'border-b' : ''}>
-                      <td className="p-4 text-sm">{row.feature}</td>
+                    <motion.tr 
+                      key={row.feature} 
+                      className={`${i < comparisonFeatures.length - 1 ? 'border-b' : ''} hover:bg-muted/50 transition-colors`}
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.05 }}
+                    >
+                      <td className="p-4 text-sm font-medium">{row.feature}</td>
                       <td className="p-4 text-center text-sm text-muted-foreground">{row.basic}</td>
-                      <td className="p-4 text-center text-sm bg-secondary/50">{row.pro}</td>
+                      <td className="p-4 text-center text-sm bg-secondary/50 font-medium">{row.pro}</td>
                       <td className="p-4 text-center text-sm">{row.elite}</td>
-                    </tr>
+                    </motion.tr>
                   ))}
                 </tbody>
               </table>
@@ -240,9 +270,9 @@ export default function Pricing() {
         <div className="max-w-3xl mx-auto px-6">
           <div className="text-center mb-16">
             <Badge variant="outline" className="mb-4">Questions?</Badge>
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               Frequently Asked Questions
-            </h2>
+            </AnimatedHeading>
           </div>
 
           <div className="space-y-4">
@@ -254,7 +284,7 @@ export default function Pricing() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <Card>
+                <Card className="hover:shadow-md transition-shadow">
                   <CardContent className="p-6">
                     <h3 className="font-semibold mb-2">{faq.q}</h3>
                     <p className="text-muted-foreground text-sm">{faq.a}</p>
@@ -266,20 +296,32 @@ export default function Pricing() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 md:py-28 bg-foreground text-background">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+      {/* CTA with animated gradient */}
+      <section className="relative py-20 md:py-28 bg-foreground text-background overflow-hidden">
+        <motion.div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            background: 'linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.1) 50%, transparent 75%)',
+            backgroundSize: '200% 200%',
+          }}
+          animate={{
+            backgroundPosition: ['0% 0%', '100% 100%'],
+          }}
+          transition={{ duration: 3, repeat: Infinity, repeatType: 'reverse' }}
+        />
+        
+        <div className="max-w-3xl mx-auto px-6 text-center relative">
+          <AnimatedHeading as="h2" className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
             Ready to Start?
-          </h2>
+          </AnimatedHeading>
           <p className="text-background/60 max-w-xl mx-auto mb-8">
             Choose your plan and start building your fashion brand today.
           </p>
           
           <Link to="/auth">
-            <Button size="lg" variant="secondary" className="h-12 px-8">
+            <Button size="lg" variant="secondary" className="h-12 px-8 group">
               Get Started Free
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
         </div>

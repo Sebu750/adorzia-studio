@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.calculate-designer-score]
 verify_jwt = true
+
+[functions.purchase-foundation-rank]
+verify_jwt = false

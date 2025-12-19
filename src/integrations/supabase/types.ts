@@ -1433,19 +1433,23 @@ export type Database = {
           archive_date: string | null
           brief: Json | null
           category: Database["public"]["Enums"]["designer_category"]
+          client_name: string | null
           collection_size: number | null
           color_system: Json | null
+          constraints: Json | null
           created_at: string
           created_by: string | null
           deliverables: Json | null
           description: string | null
           design_guidelines: Json | null
+          detailed_deliverables: Json | null
           difficulty: Database["public"]["Enums"]["stylebox_difficulty"]
           evaluation_criteria: Json | null
           global_drivers: string | null
           id: string
           is_featured: boolean | null
           is_walkthrough: boolean
+          level_number: number | null
           local_relevance: string | null
           material_direction: Json | null
           moodboard_images: Json | null
@@ -1456,12 +1460,16 @@ export type Database = {
           required_subscription_tier:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          scenario: Json | null
           season: string | null
           status: Database["public"]["Enums"]["content_status"]
           steps: Json | null
+          studio_name: string | null
           submission_deadline: string | null
+          target_role: string | null
           technical_requirements: Json | null
           thumbnail_url: string | null
+          time_limit_hours: number | null
           title: string
           trend_narrative: string | null
           updated_at: string
@@ -1473,19 +1481,23 @@ export type Database = {
           archive_date?: string | null
           brief?: Json | null
           category?: Database["public"]["Enums"]["designer_category"]
+          client_name?: string | null
           collection_size?: number | null
           color_system?: Json | null
+          constraints?: Json | null
           created_at?: string
           created_by?: string | null
           deliverables?: Json | null
           description?: string | null
           design_guidelines?: Json | null
+          detailed_deliverables?: Json | null
           difficulty?: Database["public"]["Enums"]["stylebox_difficulty"]
           evaluation_criteria?: Json | null
           global_drivers?: string | null
           id?: string
           is_featured?: boolean | null
           is_walkthrough?: boolean
+          level_number?: number | null
           local_relevance?: string | null
           material_direction?: Json | null
           moodboard_images?: Json | null
@@ -1496,12 +1508,16 @@ export type Database = {
           required_subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          scenario?: Json | null
           season?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           steps?: Json | null
+          studio_name?: string | null
           submission_deadline?: string | null
+          target_role?: string | null
           technical_requirements?: Json | null
           thumbnail_url?: string | null
+          time_limit_hours?: number | null
           title: string
           trend_narrative?: string | null
           updated_at?: string
@@ -1513,19 +1529,23 @@ export type Database = {
           archive_date?: string | null
           brief?: Json | null
           category?: Database["public"]["Enums"]["designer_category"]
+          client_name?: string | null
           collection_size?: number | null
           color_system?: Json | null
+          constraints?: Json | null
           created_at?: string
           created_by?: string | null
           deliverables?: Json | null
           description?: string | null
           design_guidelines?: Json | null
+          detailed_deliverables?: Json | null
           difficulty?: Database["public"]["Enums"]["stylebox_difficulty"]
           evaluation_criteria?: Json | null
           global_drivers?: string | null
           id?: string
           is_featured?: boolean | null
           is_walkthrough?: boolean
+          level_number?: number | null
           local_relevance?: string | null
           material_direction?: Json | null
           moodboard_images?: Json | null
@@ -1536,12 +1556,16 @@ export type Database = {
           required_subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+          scenario?: Json | null
           season?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           steps?: Json | null
+          studio_name?: string | null
           submission_deadline?: string | null
+          target_role?: string | null
           technical_requirements?: Json | null
           thumbnail_url?: string | null
+          time_limit_hours?: number | null
           title?: string
           trend_narrative?: string | null
           updated_at?: string

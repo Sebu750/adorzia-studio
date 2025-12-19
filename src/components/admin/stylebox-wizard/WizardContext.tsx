@@ -1,17 +1,11 @@
 import { createContext, useContext, useState, ReactNode } from "react";
 import type { 
   StyleBoxTemplate, 
-  ColorEntry, 
-  MoodboardImage, 
-  MaterialDirection, 
-  TechnicalRequirements, 
-  DesignGuidelines, 
-  EvaluationCriterion, 
-  DeliverableItem,
   StyleBoxCategory,
   DifficultyLevel,
+  StyleBoxScenario,
 } from "@/lib/stylebox-template";
-import { 
+import {
   createEmptyStyleBoxTemplate, 
   DIFFICULTY_PRESETS,
   DEFAULT_EVALUATION_CRITERIA,

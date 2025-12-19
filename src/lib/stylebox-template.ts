@@ -1,6 +1,7 @@
 /**
  * Standardized StyleBox Template Type Definitions
  * For Fashion / Textile / Jewelry — All Difficulty Levels
+ * Production-Grade Structure for MVP Launch
  */
 
 // ============================================
@@ -149,6 +150,38 @@ export interface DesignGuidelines {
 }
 
 // ============================================
+// PRODUCTION-GRADE TYPES (NEW)
+// ============================================
+
+export type StudioName = 'bridal-series' | 'maria-b' | 'botanic-illusion' | 'neo-deco';
+export type LevelNumber = 1 | 2 | 3 | 4;
+export type ConstraintType = 'silhouette' | 'fabric' | 'structure' | 'technique' | 'sizing' | 'innovation' | 'colors' | 'motifs' | 'application' | 'mechanism' | 'format' | 'stone' | 'metal';
+
+export interface StyleBoxScenario {
+  context: string;      // "Engagement Party", "The Print Concept"
+  theme: string;        // "Romantic Minimalism", "Moorish Architecture"
+  difficulty_spike: string; // The key challenge/complexity
+}
+
+export interface StyleBoxConstraint {
+  type: ConstraintType;
+  label: string;
+  value: string;
+  is_required?: boolean;
+}
+
+export interface DetailedDeliverable {
+  id: string;
+  name: string;
+  description: string;
+  specifications: string[];
+  file_format?: string;
+  dimensions?: string;
+  required: boolean;
+  category: 'illustration' | 'technical' | 'documentation' | 'digital' | 'sample';
+}
+
+// ============================================
 // EVALUATION & DELIVERABLES TYPES
 // ============================================
 
@@ -183,6 +216,16 @@ export interface StyleBoxTemplate {
   collection_size?: number;
   is_featured?: boolean;
   is_walkthrough?: boolean;
+  
+  // === Production-Grade Fields (NEW) ===
+  studio_name?: StudioName;
+  client_name?: string;
+  scenario?: StyleBoxScenario;
+  target_role?: string;
+  time_limit_hours?: number;
+  level_number?: LevelNumber;
+  constraints?: StyleBoxConstraint[];
+  detailed_deliverables?: DetailedDeliverable[];
   
   // === Trend Direction ===
   description?: string; // Short description
@@ -311,6 +354,36 @@ export const SEASON_OPTIONS = [
   'Capsule', 'Timeless',
 ];
 
+export const STUDIO_OPTIONS: { value: StudioName; label: string; category: StyleBoxCategory }[] = [
+  { value: 'bridal-series', label: 'Bridal Series', category: 'fashion' },
+  { value: 'maria-b', label: 'Maria B. Collection', category: 'fashion' },
+  { value: 'botanic-illusion', label: 'Botanic Illusion', category: 'textile' },
+  { value: 'neo-deco', label: 'Neo-Deco 2026', category: 'jewelry' },
+];
+
+export const TARGET_ROLE_OPTIONS = [
+  'Junior Designer',
+  'Junior Illustrator',
+  'Mid-Level Designer',
+  'Fashion Designer',
+  'Textile Designer',
+  'Textile Artist',
+  'Senior Designer',
+  'Senior Technical Designer',
+  'Embroidery Specialist',
+  'Lead Product Developer',
+  'CAD Specialist',
+  'Production Manager',
+  'Master Jeweler',
+];
+
+export const LEVEL_LABELS: Record<LevelNumber, { label: string; color: string }> = {
+  1: { label: 'Level 1: EASY', color: 'bg-blue-500' },
+  2: { label: 'Level 2: MEDIUM', color: 'bg-amber-500' },
+  3: { label: 'Level 3: HARD', color: 'bg-orange-500' },
+  4: { label: 'Level 4: INSANE', color: 'bg-red-500' },
+};
+
 // ============================================
 // HELPER FUNCTIONS
 // ============================================
@@ -322,15 +395,15 @@ export function createEmptyStyleBoxTemplate(category: StyleBoxCategory = 'fashio
   return {
     title: '',
     category,
-    difficulty: 'easy',
+    difficulty: 'free',
     moodboard_images: [],
     visual_keywords: [],
     color_system: [],
     material_direction: {},
     design_guidelines: {
       ...DIFFICULTY_PRESETS.easy,
-      difficulty_level: 'easy',
-      complexity_notes: DIFFICULTY_PRESETS.easy.complexity_notes || '',
+      difficulty_level: 'free',
+      complexity_notes: DIFFICULTY_PRESETS.free.complexity_notes || '',
     },
     technical_requirements: {
       file_formats: [...DEFAULT_FILE_FORMATS],
@@ -341,6 +414,10 @@ export function createEmptyStyleBoxTemplate(category: StyleBoxCategory = 'fashio
     xp_reward: 100,
     status: 'draft',
     version: 1,
+    // Production-grade defaults
+    level_number: 1,
+    constraints: [],
+    detailed_deliverables: [],
   };
 }
 
@@ -400,4 +477,24 @@ export function mapDatabaseCategory(dbCategory: string): StyleBoxCategory {
     'jewelry': 'jewelry',
   };
   return map[dbCategory.toLowerCase()] || 'fashion';
+}
+
+/**
+ * Maps level number to difficulty
+ */
+export function levelToDifficulty(level: LevelNumber): DifficultyLevel {
+  const map: Record<LevelNumber, DifficultyLevel> = {
+    1: 'easy',
+    2: 'medium',
+    3: 'hard',
+    4: 'insane',
+  };
+  return map[level];
+}
+
+/**
+ * Gets studio display info
+ */
+export function getStudioInfo(studioName: StudioName) {
+  return STUDIO_OPTIONS.find(s => s.value === studioName);
 }

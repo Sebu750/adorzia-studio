@@ -20,6 +20,7 @@ import Monetization from "./pages/public/Monetization";
 import Pricing from "./pages/public/Pricing";
 import ForBrands from "./pages/public/ForBrands";
 import Support from "./pages/public/Support";
+import Studios from "./pages/Studios";
 import DesignerProfiles from "./pages/public/DesignerProfiles";
 
 // Auth Pages
@@ -81,6 +82,7 @@ const App = () => (
                 <Route path="/brands" element={<ForBrands />} />
                 <Route path="/support" element={<Support />} />
                 <Route path="/designers" element={<DesignerProfiles />} />
+                <Route path="/studios" element={<Studios />} />
                 
                 {/* Auth Routes */}
                 <Route path="/auth" element={<Auth />} />

@@ -16,16 +16,18 @@ import type { Json } from "@/integrations/supabase/types";
 
 import { WizardProvider, useWizardContext } from "./WizardContext";
 import { BasicSetupTab } from "./tabs/BasicSetupTab";
+import { ScenarioTab } from "./tabs/ScenarioTab";
+import { ConstraintsTab } from "./tabs/ConstraintsTab";
 import { TrendDirectionTab } from "./tabs/TrendDirectionTab";
 import { VisualDirectionTab } from "./tabs/VisualDirectionTab";
 import { ColorSystemTab } from "./tabs/ColorSystemTab";
 import { MaterialDirectionTab } from "./tabs/MaterialDirectionTab";
 import { DesignGuidelinesTab } from "./tabs/DesignGuidelinesTab";
 import { TechnicalRequirementsTab } from "./tabs/TechnicalRequirementsTab";
-import { DeliverablesTab } from "./tabs/DeliverablesTab";
+import { DetailedDeliverablesTab } from "./tabs/DetailedDeliverablesTab";
 import { EvaluationTab } from "./tabs/EvaluationTab";
 import { TimelineTab } from "./tabs/TimelineTab";
-import type { StyleBoxTemplate } from "@/lib/stylebox-template";
+import type { StyleBoxTemplate, StudioName, LevelNumber } from "@/lib/stylebox-template";
 
 type Stylebox = Database["public"]["Tables"]["styleboxes"]["Row"];
 type StyleboxInsert = Database["public"]["Tables"]["styleboxes"]["Insert"];
@@ -40,6 +42,8 @@ interface StyleboxWizardProps {
 
 const TABS = [
   { id: "basic", label: "Basic" },
+  { id: "scenario", label: "Scenario" },
+  { id: "constraints", label: "Constraints" },
   { id: "trend", label: "Trend" },
   { id: "visual", label: "Visual" },
   { id: "colors", label: "Colors" },
@@ -263,6 +267,12 @@ function WizardContent({
           <TabsContent value="basic" className="m-0 mt-0">
             <BasicSetupTab />
           </TabsContent>
+          <TabsContent value="scenario" className="m-0 mt-0">
+            <ScenarioTab />
+          </TabsContent>
+          <TabsContent value="constraints" className="m-0 mt-0">
+            <ConstraintsTab />
+          </TabsContent>
           <TabsContent value="trend" className="m-0 mt-0">
             <TrendDirectionTab />
           </TabsContent>
@@ -282,7 +292,7 @@ function WizardContent({
             <TechnicalRequirementsTab />
           </TabsContent>
           <TabsContent value="deliverables" className="m-0 mt-0">
-            <DeliverablesTab />
+            <DetailedDeliverablesTab />
           </TabsContent>
           <TabsContent value="evaluation" className="m-0 mt-0">
             <EvaluationTab />

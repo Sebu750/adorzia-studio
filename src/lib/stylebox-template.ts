@@ -377,11 +377,11 @@ export const TARGET_ROLE_OPTIONS = [
   'Master Jeweler',
 ];
 
-export const LEVEL_LABELS: Record<LevelNumber, { label: string; color: string }> = {
-  1: { label: 'Level 1: EASY', color: 'bg-blue-500' },
-  2: { label: 'Level 2: MEDIUM', color: 'bg-amber-500' },
-  3: { label: 'Level 3: HARD', color: 'bg-orange-500' },
-  4: { label: 'Level 4: INSANE', color: 'bg-red-500' },
+export const LEVEL_LABELS: Record<LevelNumber, { label: string; color: string; difficulty: DifficultyLevel }> = {
+  1: { label: 'EASY', color: 'bg-blue-500', difficulty: 'easy' },
+  2: { label: 'MEDIUM', color: 'bg-amber-500', difficulty: 'medium' },
+  3: { label: 'HARD', color: 'bg-orange-500', difficulty: 'hard' },
+  4: { label: 'INSANE', color: 'bg-red-500', difficulty: 'insane' },
 };
 
 // ============================================

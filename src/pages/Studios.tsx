@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
-import { PublicLayout } from "@/components/public/PublicLayout";
+import PublicLayout from "@/components/public/PublicLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, Users, Trophy, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
-import { STUDIOS_INFO, LEVEL_LABELS, getStyleBoxesByStudio } from "@/lib/stylebox-content";
+import { STUDIOS_INFO, getStyleBoxesByStudio } from "@/lib/stylebox-content";
+import { LEVEL_LABELS } from "@/lib/stylebox-template";
 import type { StudioName, LevelNumber } from "@/lib/stylebox-template";
 
 export default function Studios() {

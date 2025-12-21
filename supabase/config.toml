@@ -17,3 +17,6 @@ verify_jwt = true
 
 [functions.purchase-foundation-rank]
 verify_jwt = false
+
+[functions.submit-stylebox-entry]
+verify_jwt = true

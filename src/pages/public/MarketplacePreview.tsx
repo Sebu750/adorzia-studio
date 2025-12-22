@@ -18,6 +18,12 @@ import ProductCard from "@/components/public/ProductCard";
 import TiltCard from "@/components/public/TiltCard";
 import StatsSection from "@/components/public/StatsSection";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
+import { 
+  productImages, 
+  designerImages, 
+  collectionImages, 
+  backgroundImages 
+} from "@/lib/images";
 
 const featuredProducts = [
   { 
@@ -27,6 +33,7 @@ const featuredProducts = [
     price: "PKR 4,500", 
     category: "Streetwear",
     isNew: true,
+    image: productImages.streetwearHoodie,
   },
   { 
     id: 2, 
@@ -35,6 +42,7 @@ const featuredProducts = [
     price: "PKR 8,900", 
     category: "Traditional",
     isFeatured: true,
+    image: productImages.heritageKurta,
   },
   { 
     id: 3, 
@@ -42,6 +50,7 @@ const featuredProducts = [
     designer: "Ali Hassan", 
     price: "PKR 3,200", 
     category: "Essentials",
+    image: productImages.urbanJoggers,
   },
   { 
     id: 4, 
@@ -50,19 +59,109 @@ const featuredProducts = [
     price: "PKR 12,500", 
     category: "Formal",
     isFeatured: true,
+    image: productImages.statementBlazer,
+  },
+  { 
+    id: 5, 
+    title: "Denim Jacket", 
+    designer: "Kamran Malik", 
+    price: "PKR 6,800", 
+    category: "Streetwear",
+    isNew: true,
+    image: productImages.denimJacket,
+  },
+  { 
+    id: 6, 
+    title: "Casual Tee Collection", 
+    designer: "Zara Hussain", 
+    price: "PKR 2,200", 
+    category: "Essentials",
+    image: productImages.casualTee,
+  },
+  { 
+    id: 7, 
+    title: "Floral Summer Dress", 
+    designer: "Sarah Ahmed", 
+    price: "PKR 7,500", 
+    category: "Traditional",
+    isFeatured: true,
+    image: productImages.floralDress,
+  },
+  { 
+    id: 8, 
+    title: "Leather Tote Bag", 
+    designer: "Hira Noor", 
+    price: "PKR 9,200", 
+    category: "Accessories",
+    isNew: true,
+    image: productImages.leatherBag,
   },
 ];
 
 const newDesigners = [
-  { name: "Sarah Iqbal", specialty: "Sustainable Fashion", products: 8, rating: 4.8 },
-  { name: "Usman Tariq", specialty: "Streetwear", products: 12, rating: 4.7 },
-  { name: "Hira Noor", specialty: "Couture", products: 5, rating: 4.9 },
+  { 
+    name: "Sarah Iqbal", 
+    specialty: "Sustainable Fashion", 
+    products: 8, 
+    rating: 4.8,
+    image: designerImages.sarahIqbal,
+  },
+  { 
+    name: "Usman Tariq", 
+    specialty: "Streetwear", 
+    products: 12, 
+    rating: 4.7,
+    image: designerImages.usmanTariq,
+  },
+  { 
+    name: "Hira Noor", 
+    specialty: "Couture", 
+    products: 5, 
+    rating: 4.9,
+    image: designerImages.hiraNoor,
+  },
+  { 
+    name: "Zain Ahmed", 
+    specialty: "Urban Design", 
+    products: 15, 
+    rating: 4.6,
+    image: designerImages.zainAhmed,
+  },
+  { 
+    name: "Ayesha Khan", 
+    specialty: "Traditional Wear", 
+    products: 10, 
+    rating: 4.8,
+    image: designerImages.ayeshaKhan,
+  },
+  { 
+    name: "Fatima Malik", 
+    specialty: "Formal Collection", 
+    products: 7, 
+    rating: 4.9,
+    image: designerImages.fatimaMalik,
+  },
 ];
 
 const collections = [
-  { name: "Summer Essentials 2024", designer: "Multiple Artists", items: 24 },
-  { name: "Lahore Street Style", designer: "Urban Collective", items: 18 },
-  { name: "Sustainable Basics", designer: "Eco Designers", items: 15 },
+  { 
+    name: "Summer Essentials 2024", 
+    designer: "Multiple Artists", 
+    items: 24,
+    image: collectionImages.summerEssentials,
+  },
+  { 
+    name: "Lahore Street Style", 
+    designer: "Urban Collective", 
+    items: 18,
+    image: collectionImages.lahoreStreet,
+  },
+  { 
+    name: "Sustainable Basics", 
+    designer: "Eco Designers", 
+    items: 15,
+    image: collectionImages.sustainableBasics,
+  },
 ];
 
 const categories = [
@@ -84,40 +183,84 @@ const marketplaceStats = [
 export default function MarketplacePreview() {
   return (
     <PublicLayout>
-      {/* Hero */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-10"
+          style={{ backgroundImage: `url(${backgroundImages.fashion})` }}
+        />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/10" />
         <div className="max-w-7xl mx-auto px-6 relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="max-w-3xl"
-          >
-            <Badge variant="secondary" className="mb-6">Designer Marketplace</Badge>
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
-              Shop Designer
-              <br />
-              <span className="text-muted-foreground">Made in Pakistan</span>
-            </h1>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-              Discover unique fashion pieces created by emerging Pakistani designers. 
-              Every purchase supports independent creators and sustainable fashion.
-            </p>
-            <div className="flex gap-4">
-              <Button size="lg" className="group">
-                Browse Products
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-              <Button size="lg" variant="outline">
-                <Filter className="mr-2 h-4 w-4" />
-                Filter
-              </Button>
-            </div>
-          </motion.div>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <Badge variant="secondary" className="mb-6">Designer Marketplace</Badge>
+              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
+                Shop Designer
+                <br />
+                <span className="text-muted-foreground">Made in Pakistan</span>
+              </h1>
+              <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+                Discover unique fashion pieces created by emerging Pakistani designers. 
+                Every purchase supports independent creators and sustainable fashion.
+              </p>
+              <div className="flex gap-4">
+                <Button size="lg" className="group">
+                  Browse Products
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+                <Button size="lg" variant="outline">
+                  <Filter className="mr-2 h-4 w-4" />
+                  Filter
+                </Button>
+              </div>
+            </motion.div>
+
+            {/* Hero Image Grid */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="hidden lg:grid grid-cols-2 gap-4"
+            >
+              <div className="space-y-4">
+                <div className="aspect-[4/5] rounded-2xl overflow-hidden">
+                  <img 
+                    src={productImages.floralDress} 
+                    alt="Floral Dress" 
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden">
+                  <img 
+                    src={productImages.leatherBag} 
+                    alt="Leather Bag" 
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+              <div className="space-y-4 pt-8">
+                <div className="aspect-[4/3] rounded-2xl overflow-hidden">
+                  <img 
+                    src={productImages.streetwearHoodie} 
+                    alt="Street Hoodie" 
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+                <div className="aspect-[4/5] rounded-2xl overflow-hidden">
+                  <img 
+                    src={productImages.statementBlazer} 
+                    alt="Statement Blazer" 
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
-
       {/* Stats */}
       <section className="py-12 border-t border-b bg-muted/30">
         <div className="max-w-7xl mx-auto px-6">
@@ -148,18 +291,19 @@ export default function MarketplacePreview() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product, i) => (
+            {featuredProducts.slice(0, 8).map((product, i) => (
               <motion.div
                 key={product.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: i * 0.05 }}
               >
                 <ProductCard
                   id={product.id}
                   title={product.title}
                   price={product.price}
+                  image={product.image}
                   designer={product.designer}
                   category={product.category}
                   isNew={product.isNew}
@@ -196,35 +340,35 @@ export default function MarketplacePreview() {
             </motion.p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {newDesigners.map((designer, i) => (
               <motion.div
                 key={designer.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: i * 0.05 }}
               >
                 <TiltCard tiltAmount={8}>
-                  <Card className="h-full hover:shadow-lg transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <motion.div 
-                          className="h-14 w-14 rounded-full bg-gradient-to-br from-primary/20 to-secondary flex items-center justify-center"
-                          whileHover={{ scale: 1.1 }}
-                        >
-                          <span className="font-bold">{designer.name.split(' ').map(n => n[0]).join('')}</span>
-                        </motion.div>
-                        <div>
-                          <h3 className="font-display font-semibold">{designer.name}</h3>
-                          <p className="text-sm text-muted-foreground">{designer.specialty}</p>
-                        </div>
+                  <Card className="h-full hover:shadow-lg transition-shadow overflow-hidden">
+                    <div className="aspect-[16/9] relative overflow-hidden">
+                      <img 
+                        src={designer.image} 
+                        alt={designer.name}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <h3 className="font-display font-semibold text-lg">{designer.name}</h3>
+                        <p className="text-sm text-muted-foreground">{designer.specialty}</p>
                       </div>
+                    </div>
+                    <CardContent className="p-4">
                       <div className="flex items-center justify-between text-sm">
-                        <span>{designer.products} products</span>
+                        <span className="text-muted-foreground">{designer.products} products</span>
                         <div className="flex items-center gap-1">
-                          <Star className="h-3 w-3 fill-foreground" />
-                          {designer.rating}
+                          <Star className="h-4 w-4 fill-primary text-primary" />
+                          <span className="font-medium">{designer.rating}</span>
                         </div>
                       </div>
                     </CardContent>
@@ -272,16 +416,18 @@ export default function MarketplacePreview() {
               >
                 <TiltCard tiltAmount={6}>
                   <Card className="h-full overflow-hidden group cursor-pointer">
-                    <div className="aspect-video bg-gradient-to-br from-muted to-muted-foreground/20 relative overflow-hidden">
-                      <motion.div 
-                        className="absolute inset-0 bg-foreground/60 flex items-center justify-center"
-                        whileHover={{ backgroundColor: 'rgba(0,0,0,0.7)' }}
-                      >
+                    <div className="aspect-video relative overflow-hidden">
+                      <img 
+                        src={collection.image}
+                        alt={collection.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-foreground/50 group-hover:bg-foreground/60 transition-colors flex items-center justify-center">
                         <div className="text-center text-background">
                           <h3 className="font-display text-xl font-bold mb-2">{collection.name}</h3>
                           <p className="text-sm text-background/80">{collection.items} items</p>
                         </div>
-                      </motion.div>
+                      </div>
                     </div>
                     <CardContent className="p-4">
                       <p className="text-sm text-muted-foreground">by {collection.designer}</p>

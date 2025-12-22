@@ -45,28 +45,74 @@ const uniquePoints = [
 
 const leadership = [
   {
-    name: "Founder & CEO",
-    role: "Vision & Strategy",
-    bio: "Building the infrastructure for Pakistan's creative economy",
-    avatar: "CEO"
+    name: "Haseeb Malik",
+    role: "Founder & CEO",
+    bio: "A contrarian at heart, Haseeb built Adorzia with a single mission: to prove that designers don't need to starve to succeed. With a background in fashion-tech and entrepreneurship, he realized the fashion industry was broken—prioritizing platforms over people. Adorzia is his answer to the 'Exposure Economy.'",
+    avatar: "HM",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80"
   },
   {
-    name: "Co-Founder & CTO",
-    role: "Technology",
-    bio: "Scaling fashion-tech for millions of designers worldwide",
-    avatar: "CTO"
+    name: "Ahmed Raza",
+    role: "Co-Founder & CTO",
+    bio: "The architect of the 'Adorzia Cloud.' Ahmed bridges the gap between complex logistics and seamless user experience. Passionate about using technology to remove friction, he ensures that while designers focus on art, the code handles the business.",
+    avatar: "AR",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80"
+  }
+];
+
+const featuredArticles = [
+  {
+    outlet: "FashionTech Daily",
+    title: "Meet Haseeb Malik: The Contrarian Betting on the 'Artist,' Not the Algorithm",
+    excerpt: "In a world obsessed with fast fashion and faster algorithms, Haseeb Malik is hitting the brakes. As the founder of Adorzia, Malik isn't just building another marketplace; he is engineering a rescue mission for the independent designer.",
+    content: `The fashion industry has long operated on a brutal, unspoken rule: designers are disposable. Platforms demand high fees, retailers demand 60% margins, and everyone pays the creator in "exposure."
+
+Haseeb Malik decided that math didn't work.
+
+"I looked at the industry and saw brilliant people quitting not because they lacked talent, but because they were drowning in logistics," Malik says. "We built Adorzia to prove that you can treat designers like partners, not inventory, and still build a massive business."
+
+Malik's background gave him a unique vantage point—seeing the gap between creative genius and operational reality. Adorzia was born from his refusal to accept the status quo. His vision was to create a "Cloud" for fashion—an infrastructure that handles the boring, difficult parts of business (shipping, tech, payments) so the designer can simply create.
+
+Under Malik's leadership, Adorzia has adopted a "Contrarian" approach. While competitors squeeze margins, Adorzia offers revenue splits up to 50%. While others automate support, Adorzia offers partnership.
+
+"We aren't looking for the ones who want to make a quick buck," Malik notes. "We are looking for the designers who want to build a legacy. Adorzia is just the foundation they stand on."`,
+    category: "Founder Profile"
   },
   {
-    name: "Head of Design",
-    role: "Creative Direction",
-    bio: "Crafting the aesthetic and experience of fashion creation",
-    avatar: "HD"
+    outlet: "The Startup Insider",
+    title: "Why 90% of Fashion Startups Fail (And How Adorzia is Fixing the Odds)",
+    excerpt: "The statistics are grim. Nine out of ten independent fashion brands will close their doors within the first three years. The reason is rarely 'bad design.' The killer is almost always 'bad operations.'",
+    content: `For a young designer, launching a brand involves a paralyzing checklist: sourcing fabric, managing inventory, building a website, fighting algorithms for traffic, and handling returns. It is a CEO's job forced onto an Artist's shoulders.
+
+Adorzia creates a new category in the market: The Fashion Accelerator Platform.
+
+"We analyzed why startups fail," says the Adorzia team. "They fail because they spend 80% of their time packing boxes and fixing website bugs, and only 20% designing. We flipped that ratio."
+
+Adorzia operates as an operational backbone for these startups. By joining the platform, designers essentially outsource their headaches.
+
+• The Tech is handled: No more broken websites or invisible text.
+• The Logistics are streamlined: No more manual shipping nightmares.
+• The Money is fair: A transparent revenue model that actually leaves room for profit.
+
+For a new generation of fashion startups, Adorzia isn't just a shop window; it is a survival kit. By removing the friction of "running a business," Adorzia allows startups to do the one thing that actually scales: making great products.`,
+    category: "Industry Analysis"
   },
   {
-    name: "Head of Operations",
-    role: "Manufacturing & Logistics",
-    bio: "Connecting designers to production infrastructure",
-    avatar: "HO"
+    outlet: "Future Trends Weekly",
+    title: "The 'Cloud Dancer' Era: How Adorzia is Defining the Look of 2026 Retail",
+    excerpt: "Pantone recently announced 'Cloud Dancer' as the Color of the Year for 2026—a symbol of clarity, balance, and a fresh start. But for one company, this isn't just a color trend; it is a business model.",
+    content: `Adorzia is positioning itself as the "Cloud" behind the fashion industry's new wave.
+
+The platform's branding and philosophy align perfectly with this shift toward serenity and minimalism. In an e-commerce landscape that feels cluttered, noisy, and aggressive, Adorzia offers a "clean canvas."
+
+"We believe technology should be invisible," the company states. "Like a cloud, it should be everywhere, supporting everything, but you shouldn't have to think about it."
+
+This philosophy extends to their promotional strategy for designers. Adorzia promotes a "Quality over Quantity" approach. Instead of flooding users with cheap items, the platform curates a selection of designers who care about craft.
+
+For shoppers, it offers a premium, calm experience. For designers, it offers the freedom to "dance"—to move fluidly without being weighed down by the heavy machinery of business.
+
+As we move toward 2026, Adorzia is betting that the future belongs to those who can cut through the noise. With their advanced platform and "founder-friendly" ethos, they are poised to become the standard-bearer for the new digital fashion economy.`,
+    category: "Trend Piece"
   }
 ];
 
@@ -285,7 +331,7 @@ export default function About() {
         </div>
       </section>
 
-      {/* Leadership */}
+      {/* Leadership - The Visionaries */}
       <section className="py-20 md:py-28 bg-foreground text-background relative overflow-hidden">
         <motion.div 
           className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/10"
@@ -300,10 +346,10 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <Badge variant="outline" className="mb-4 border-background/20 text-background">Team</Badge>
+              <Badge variant="outline" className="mb-4 border-background/20 text-background">The Team</Badge>
             </motion.div>
             <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight text-background">
-              Leadership
+              The Visionaries Behind the Shift
             </AnimatedHeading>
             <motion.p 
               className="text-background/60"
@@ -316,7 +362,7 @@ export default function About() {
             </motion.p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {leadership.map((member, i) => (
               <motion.div
                 key={member.name}
@@ -326,36 +372,106 @@ export default function About() {
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ y: -8 }}
               >
-                <Card className="bg-background/5 border-background/10 backdrop-blur-sm">
-                  <CardContent className="p-6 text-center">
-                    <motion.div 
-                      className="h-16 w-16 rounded-full bg-gradient-to-br from-background/20 to-background/5 flex items-center justify-center mx-auto mb-4"
-                      whileHover={{ scale: 1.1 }}
-                    >
-                      <span className="text-lg font-bold text-background">{member.avatar}</span>
-                    </motion.div>
-                    <h3 className="font-display font-semibold text-background">{member.name}</h3>
-                    <p className="text-sm text-background/60 mb-2">{member.role}</p>
-                    <p className="text-xs text-background/50">{member.bio}</p>
-                    <div className="flex justify-center gap-2 mt-4">
-                      <motion.a 
-                        href={SOCIAL_LINKS.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="h-8 w-8 rounded-full bg-background/10 flex items-center justify-center hover:bg-background/20 transition-colors"
-                        whileHover={{ scale: 1.1 }}
-                      >
-                        <Linkedin className="h-4 w-4" />
-                      </motion.a>
-                      <motion.a 
-                        href={SOCIAL_LINKS.twitter}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="h-8 w-8 rounded-full bg-background/10 flex items-center justify-center hover:bg-background/20 transition-colors"
-                        whileHover={{ scale: 1.1 }}
-                      >
-                        <Twitter className="h-4 w-4" />
-                      </motion.a>
+                <Card className="bg-background/5 border-background/10 backdrop-blur-sm overflow-hidden">
+                  <CardContent className="p-0">
+                    {/* Photo - desaturated for premium aesthetic */}
+                    <div className="relative h-64 overflow-hidden">
+                      <img 
+                        src={member.image} 
+                        alt={member.name}
+                        className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 to-transparent" />
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <h3 className="font-display text-xl font-bold text-background">{member.name}</h3>
+                        <p className="text-sm text-background/80">{member.role}</p>
+                      </div>
+                    </div>
+                    {/* Bio */}
+                    <div className="p-6">
+                      <p className="text-sm text-background/70 leading-relaxed">{member.bio}</p>
+                      <div className="flex gap-2 mt-4">
+                        <motion.a 
+                          href={SOCIAL_LINKS.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="h-8 w-8 rounded-full bg-background/10 flex items-center justify-center hover:bg-background/20 transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                        >
+                          <Linkedin className="h-4 w-4" />
+                        </motion.a>
+                        <motion.a 
+                          href={SOCIAL_LINKS.twitter}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="h-8 w-8 rounded-full bg-background/10 flex items-center justify-center hover:bg-background/20 transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                        >
+                          <Twitter className="h-4 w-4" />
+                        </motion.a>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Articles */}
+      <section className="py-20 md:py-28 bg-muted/30">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <Badge variant="outline" className="mb-4">Featured Stories</Badge>
+            </motion.div>
+            <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
+              The Adorzia Story
+            </AnimatedHeading>
+            <motion.p 
+              className="text-muted-foreground"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+            >
+              Deep dives into our mission, vision, and the future we're building.
+            </motion.p>
+          </div>
+
+          <div className="space-y-8">
+            {featuredArticles.map((article, i) => (
+              <motion.div
+                key={article.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+              >
+                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-0">
+                    <div className="grid md:grid-cols-3 gap-0">
+                      {/* Article Header */}
+                      <div className="p-8 bg-gradient-to-br from-primary/5 to-secondary/10 flex flex-col justify-center">
+                        <Badge variant="secondary" className="w-fit mb-4">{article.category}</Badge>
+                        <p className="text-sm text-muted-foreground mb-2">{article.outlet}</p>
+                        <h3 className="font-display text-xl font-bold leading-tight">{article.title}</h3>
+                      </div>
+                      {/* Article Content */}
+                      <div className="md:col-span-2 p-8">
+                        <p className="text-muted-foreground font-medium mb-4 text-lg">{article.excerpt}</p>
+                        <div className="text-sm text-muted-foreground/80 leading-relaxed whitespace-pre-line line-clamp-6">
+                          {article.content}
+                        </div>
+                        <Button variant="link" className="mt-4 p-0 h-auto text-primary">
+                          Read Full Article <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>

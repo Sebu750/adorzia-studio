@@ -25,6 +25,9 @@ import AnimatedCounter from "@/components/public/AnimatedCounter";
 import ParallaxSection from "@/components/public/ParallaxSection";
 import TestimonialCarousel from "@/components/public/TestimonialCarousel";
 import WaveDivider from "@/components/public/WaveDivider";
+import MarqueeText from "@/components/public/MarqueeText";
+import ScrollReveal from "@/components/public/ScrollReveal";
+import SEOHead from "@/components/public/SEOHead";
 import { designerImages, productImages } from "@/lib/images";
 
 const howItWorks = [
@@ -103,8 +106,32 @@ const testimonials = [
 export default function Home() {
   return (
     <PublicLayout showPreloader={true}>
+      <SEOHead 
+        title="Adorzia Studio - Design, Create, Collaborate"
+        description="The central platform for fashion, textile, and jewelry designers. Create with Styleboxes, build your portfolio, collaborate with teams, and publish to the marketplace."
+        url="https://studio.adorzia.com"
+      />
+      
       {/* Hero Section */}
       <HeroSection />
+
+      {/* Brand Marquee */}
+      <div className="py-6 border-y bg-muted/30 overflow-hidden">
+        <MarqueeText speed={25} className="text-muted-foreground/60 font-medium text-sm uppercase tracking-widest">
+          <span className="mx-8">Fashion Design</span>
+          <span className="mx-8">•</span>
+          <span className="mx-8">Textile Innovation</span>
+          <span className="mx-8">•</span>
+          <span className="mx-8">Jewelry Creation</span>
+          <span className="mx-8">•</span>
+          <span className="mx-8">Portfolio Building</span>
+          <span className="mx-8">•</span>
+          <span className="mx-8">Marketplace Publishing</span>
+          <span className="mx-8">•</span>
+          <span className="mx-8">Revenue Sharing</span>
+          <span className="mx-8">•</span>
+        </MarqueeText>
+      </div>
 
       {/* How Adorzia Works */}
       <section className="py-20 md:py-28 border-t relative overflow-hidden">

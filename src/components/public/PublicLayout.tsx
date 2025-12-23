@@ -5,6 +5,7 @@ import AnnouncementBanner from "./AnnouncementBanner";
 import ScrollProgress from "./ScrollProgress";
 import PageTransition from "./PageTransition";
 import Preloader from "./Preloader";
+import SmoothScrollProvider from "./SmoothScrollProvider";
 import { useAuth } from "@/hooks/useAuth";
 
 interface PublicLayoutProps {
@@ -22,7 +23,7 @@ export default function PublicLayout({
   const [isLoading, setIsLoading] = useState(showPreloader);
 
   return (
-    <>
+    <SmoothScrollProvider>
       {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
       <div className="min-h-screen bg-background flex flex-col">
         <ScrollProgress />
@@ -34,6 +35,6 @@ export default function PublicLayout({
         </main>
         <PublicFooter />
       </div>
-    </>
+    </SmoothScrollProvider>
   );
 }

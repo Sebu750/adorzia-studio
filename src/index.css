@@ -591,13 +591,178 @@
     transition: 0s;
   }
 
+  /* Glass morphism */
+  .glass {
+    background: hsl(var(--background) / 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--border) / 0.5);
+  }
+
+  .glass-dark {
+    background: hsl(var(--foreground) / 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid hsl(var(--foreground) / 0.1);
+  }
+
+  /* Gradient border */
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.3));
+    -webkit-mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    mask: 
+      linear-gradient(#fff 0 0) content-box, 
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* Text shine effect */
+  @keyframes text-shine {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  .text-shine {
+    background: linear-gradient(
+      120deg,
+      hsl(var(--foreground)) 0%,
+      hsl(var(--foreground)) 40%,
+      hsl(var(--primary)) 50%,
+      hsl(var(--foreground)) 60%,
+      hsl(var(--foreground)) 100%
+    );
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: text-shine 3s linear infinite;
+  }
+
+  /* Blur reveal animation */
+  @keyframes blur-reveal {
+    0% { 
+      filter: blur(10px);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% { 
+      filter: blur(0);
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-blur-reveal {
+    animation: blur-reveal 0.8s ease-out forwards;
+  }
+
+  /* Scale fade animation */
+  @keyframes scale-fade-in {
+    0% { 
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    100% { 
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-scale-fade {
+    animation: scale-fade-in 0.5s ease-out forwards;
+  }
+
+  /* Staggered entrance delays */
+  .stagger-1 { animation-delay: 0.05s; }
+  .stagger-2 { animation-delay: 0.1s; }
+  .stagger-3 { animation-delay: 0.15s; }
+  .stagger-4 { animation-delay: 0.2s; }
+  .stagger-5 { animation-delay: 0.25s; }
+  .stagger-6 { animation-delay: 0.3s; }
+  .stagger-7 { animation-delay: 0.35s; }
+  .stagger-8 { animation-delay: 0.4s; }
+
+  /* Underline animation for links */
+  .link-underline {
+    position: relative;
+  }
+
+  .link-underline::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+
+  .link-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Premium shadows */
+  .shadow-premium {
+    box-shadow: 
+      0 0 0 1px hsl(var(--border) / 0.1),
+      0 2px 4px hsl(var(--foreground) / 0.02),
+      0 8px 16px hsl(var(--foreground) / 0.04),
+      0 16px 32px hsl(var(--foreground) / 0.06);
+  }
+
+  .shadow-premium-hover {
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .shadow-premium-hover:hover {
+    box-shadow: 
+      0 0 0 1px hsl(var(--border) / 0.15),
+      0 4px 8px hsl(var(--foreground) / 0.04),
+      0 16px 32px hsl(var(--foreground) / 0.08),
+      0 32px 64px hsl(var(--foreground) / 0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Noise texture overlay */
+  .noise-texture {
+    position: relative;
+  }
+
+  .noise-texture::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+  }
+
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     .animate-float,
     .animate-pulse-glow,
     .animate-gradient,
     .ken-burns,
-    .animate-shimmer {
+    .animate-shimmer,
+    .animate-blur-reveal,
+    .animate-scale-fade,
+    .text-shine {
       animation: none;
     }
     
@@ -607,6 +772,14 @@
 
     .btn-ripple::after {
       display: none;
+    }
+
+    .link-underline::after {
+      transition: none;
+    }
+
+    .shadow-premium-hover:hover {
+      transform: none;
     }
   }
 }

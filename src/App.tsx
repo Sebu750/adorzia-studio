@@ -8,6 +8,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { SubscriptionProvider } from "@/hooks/useSubscription";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import ScrollToTop from "@/components/public/ScrollToTop";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 // Public Pages
 import Home from "./pages/public/Home";
@@ -65,6 +66,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <SpeedInsights />
         <BrowserRouter>
           <ScrollToTop />
           <AuthProvider>

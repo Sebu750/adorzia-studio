@@ -52,6 +52,7 @@ import AdminDesigners from "./pages/admin/AdminDesigners";
 import AdminPublications from "./pages/admin/AdminPublications";
 import AdminProductionQueues from "./pages/admin/AdminProductionQueues";
 import AdminStyleboxes from "./pages/admin/AdminStyleboxes";
+import AdminStyleboxSubmissions from "./pages/admin/AdminStyleboxSubmissions";
 import AdminWalkthroughs from "./pages/admin/AdminWalkthroughs";
 import AdminRankings from "./pages/admin/AdminRankings";
 import AdminSettings from "./pages/admin/AdminSettings";
@@ -176,6 +177,11 @@ const App = () => (
                 <Route path="/admin/styleboxes" element={
                   <ProtectedRoute requireAdmin>
                     <AdminStyleboxes />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/stylebox-submissions" element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminStyleboxSubmissions />
                   </ProtectedRoute>
                 } />
                 <Route path="/admin/walkthroughs" element={

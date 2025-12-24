@@ -15,7 +15,8 @@ import {
   ExternalLink,
   BookOpen,
   GitBranch,
-  ChevronRight
+  ChevronRight,
+  FileText
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Link } from "react-router-dom";
@@ -42,8 +43,9 @@ const mainNavItems = [
   { title: "Designers", url: "/admin/designers", icon: Users },
   { title: "Collections", url: "/admin/collections", icon: FolderOpen, badge: "New" },
   { title: "StyleBoxes", url: "/admin/styleboxes", icon: Box },
+  { title: "Submissions", url: "/admin/stylebox-submissions", icon: FileText },
   { title: "Walkthroughs", url: "/admin/walkthroughs", icon: BookOpen },
-  { title: "Publications", url: "/admin/publications", icon: FolderOpen, badge: "23" },
+  { title: "Publications", url: "/admin/publications", icon: FolderOpen },
   { title: "Production Queues", url: "/admin/queues", icon: GitBranch },
   { title: "Marketplace", url: "/admin/marketplace", icon: Store },
 ];

@@ -13,51 +13,49 @@ import {
   Send,
   BookOpen,
   Shield,
-  CreditCard
+  CreditCard,
+  Box,
+  Crown,
+  Users,
+  Wallet,
+  Award,
+  Clock
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PublicLayout from "@/components/public/PublicLayout";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
-
-const faqs = [
-  { 
-    q: "How do I get started?", 
-    a: "Create a free account and complete your first StyleBox challenge. Our onboarding guide will walk you through the process.",
-    icon: BookOpen
-  },
-  { 
-    q: "When do I get paid?", 
-    a: "Payouts are processed monthly for all sales from the previous month. You can track earnings in your dashboard.",
-    icon: CreditCard
-  },
-  { 
-    q: "Can I cancel anytime?", 
-    a: "Yes, you can cancel your subscription at any time with no penalties. Your portfolio and published designs remain active.",
-    icon: Shield
-  },
-  { 
-    q: "How does publishing work?", 
-    a: "Submit your designs through Studio, our team reviews for marketplace fit, and approved designs go into production.",
-    icon: FileText
-  },
-  { 
-    q: "What subscription do I need?", 
-    a: "Pro and Elite subscriptions unlock publishing rights. Basic is great for learning and building skills.",
-    icon: HelpCircle
-  },
-  { 
-    q: "How do I contact support?", 
-    a: "Use the form below, email us directly, or join our community Discord for faster responses.",
-    icon: MessageCircle
-  },
-];
+import { DESIGNER_FAQS, FAQ_CATEGORIES, FAQCategory } from "@/lib/founder-tiers";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const quickLinks = [
   { title: "Getting Started Guide", href: "#", icon: BookOpen },
   { title: "Publishing Guidelines", href: "#", icon: FileText },
   { title: "Community Discord", href: "#", icon: MessageCircle },
 ];
+
+const categoryIcons: Record<FAQCategory, React.ComponentType<{ className?: string }>> = {
+  general: HelpCircle,
+  styleboxes: Box,
+  'ip-ranks': Crown,
+  teaming: Users,
+  financials: Wallet,
+  founders: Award,
+};
+
+// Group FAQs by category
+const groupedFaqs = DESIGNER_FAQS.reduce((acc, faq) => {
+  if (!acc[faq.category]) {
+    acc[faq.category] = [];
+  }
+  acc[faq.category].push(faq);
+  return acc;
+}, {} as Record<FAQCategory, typeof DESIGNER_FAQS>);
 
 export default function Support() {
   return (
@@ -80,10 +78,10 @@ export default function Support() {
           >
             <Badge variant="secondary" className="mb-6">Support Center</Badge>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
-              How Can We Help?
+              The Designer's FAQ
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              Find answers, get support, and connect with our team. We're here to help you succeed.
+              Everything you need to know about IP, profit sharing, teaming, and the Adorzia platform.
             </p>
           </motion.div>
         </div>
@@ -118,42 +116,60 @@ export default function Support() {
         </div>
       </section>
 
-      {/* FAQs */}
+      {/* Comprehensive FAQ by Category */}
       <section id="faq" className="py-20 md:py-28">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">FAQs</Badge>
+            <Badge variant="outline" className="mb-4">Comprehensive FAQ</Badge>
             <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               Frequently Asked Questions
             </AnimatedHeading>
+            <p className="text-muted-foreground">
+              Addressing the hard questions about IP, payouts, and our unique model.
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
-            {faqs.map((faq, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <TiltCard tiltAmount={5}>
-                  <Card className="h-full hover:shadow-md transition-shadow">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                          <faq.icon className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold mb-2">{faq.q}</h3>
-                          <p className="text-muted-foreground text-sm">{faq.a}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TiltCard>
-              </motion.div>
-            ))}
+          <div className="space-y-12">
+            {(Object.keys(groupedFaqs) as FAQCategory[]).map((category, categoryIndex) => {
+              const CategoryIcon = categoryIcons[category];
+              const categoryInfo = FAQ_CATEGORIES[category];
+              
+              return (
+                <motion.div
+                  key={category}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: categoryIndex * 0.1 }}
+                >
+                  {/* Category Header */}
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <CategoryIcon className="h-5 w-5 text-primary" />
+                    </div>
+                    <h3 className="font-display text-xl font-bold">{categoryInfo.label}</h3>
+                  </div>
+
+                  {/* Category FAQs */}
+                  <Accordion type="single" collapsible className="space-y-3">
+                    {groupedFaqs[category].map((faq, i) => (
+                      <AccordionItem 
+                        key={i} 
+                        value={`${category}-${i}`} 
+                        className="bg-background rounded-xl border px-6 shadow-sm hover:shadow-md transition-shadow"
+                      >
+                        <AccordionTrigger className="text-left font-semibold hover:no-underline py-5">
+                          {faq.question}
+                        </AccordionTrigger>
+                        <AccordionContent className="text-muted-foreground pb-5 whitespace-pre-line">
+                          {faq.answer}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -164,12 +180,40 @@ export default function Support() {
           <div className="text-center mb-12">
             <Badge variant="outline" className="mb-4">Contact Us</Badge>
             <AnimatedHeading className="font-display text-3xl font-bold mb-4 tracking-tight">
-              Still Need Help?
+              Have More Questions?
             </AnimatedHeading>
             <p className="text-muted-foreground">
               Send us a message and we'll get back to you within 24 hours.
             </p>
           </div>
+
+          {/* Direct Email Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-8"
+          >
+            <Card className="bg-primary/5 border-primary/20">
+              <CardContent className="p-6 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Mail className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Email us directly</p>
+                    <a href="mailto:hello@adorzia.com" className="text-primary hover:underline text-lg">
+                      hello@adorzia.com
+                    </a>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="h-4 w-4" />
+                  <span>24hr response</span>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
           <TiltCard tiltAmount={3}>
             <Card>
@@ -224,20 +268,6 @@ export default function Support() {
               </CardContent>
             </Card>
           </TiltCard>
-
-          <motion.div 
-            className="text-center mt-8"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <p className="text-sm text-muted-foreground">
-              Or email us directly at{' '}
-              <a href="mailto:support@adorzia.com" className="text-primary hover:underline">
-                support@adorzia.com
-              </a>
-            </p>
-          </motion.div>
         </div>
       </section>
 

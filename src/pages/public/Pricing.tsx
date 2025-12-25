@@ -20,13 +20,16 @@ import {
   Gift,
   Award,
   Target,
-  Mail
+  Mail,
+  HelpCircle,
+  Box,
+  Wallet
 } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import PublicLayout from "@/components/public/PublicLayout";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
-import { FOUNDER_TIERS, EARNING_LADDER, PRICING_FAQS } from "@/lib/founder-tiers";
+import { FOUNDER_TIERS, EARNING_LADDER, DESIGNER_FAQS, FAQ_CATEGORIES, FAQCategory } from "@/lib/founder-tiers";
 import { SUBSCRIPTION_TIERS, SubscriptionTier } from "@/lib/subscription";
 import { useFounderSlots } from "@/hooks/useFounderSlots";
 import {
@@ -722,34 +725,99 @@ export default function Pricing() {
 
       {/* FAQs */}
       <section className="py-20 md:py-28 bg-secondary/20">
-        <div className="max-w-3xl mx-auto px-6">
+        <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-14">
-            <Badge variant="outline" className="mb-4 px-4 py-1.5">Questions?</Badge>
+            <Badge variant="outline" className="mb-4 px-4 py-1.5">Designer's FAQ</Badge>
             <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               Frequently Asked Questions
             </AnimatedHeading>
+            <p className="text-muted-foreground">
+              Everything about IP, profit sharing, and the Adorzia model.
+            </p>
           </div>
 
-          <Accordion type="single" collapsible className="space-y-4">
-            {PRICING_FAQS.map((faq, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <AccordionItem value={`faq-${i}`} className="bg-background rounded-xl border px-6 shadow-sm hover:shadow-md transition-shadow">
-                  <AccordionTrigger className="text-left font-semibold hover:no-underline py-5">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground pb-5">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              </motion.div>
-            ))}
-          </Accordion>
+          {/* Category Icons Map */}
+          {(() => {
+            const categoryIcons: Record<FAQCategory, React.ComponentType<{ className?: string }>> = {
+              general: HelpCircle,
+              styleboxes: Box,
+              'ip-ranks': Crown,
+              teaming: Users,
+              financials: Wallet,
+              founders: Award,
+            };
+
+            // Group FAQs by category
+            const groupedFaqs = DESIGNER_FAQS.reduce((acc, faq) => {
+              if (!acc[faq.category]) acc[faq.category] = [];
+              acc[faq.category].push(faq);
+              return acc;
+            }, {} as Record<FAQCategory, typeof DESIGNER_FAQS>);
+
+            return (
+              <div className="space-y-10">
+                {(Object.keys(groupedFaqs) as FAQCategory[]).map((category, categoryIndex) => {
+                  const CategoryIcon = categoryIcons[category];
+                  const categoryInfo = FAQ_CATEGORIES[category];
+                  
+                  return (
+                    <motion.div
+                      key={category}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: categoryIndex * 0.05 }}
+                    >
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <CategoryIcon className="h-4 w-4 text-primary" />
+                        </div>
+                        <h3 className="font-semibold text-lg">{categoryInfo.label}</h3>
+                      </div>
+
+                      <Accordion type="single" collapsible className="space-y-3">
+                        {groupedFaqs[category].map((faq, i) => (
+                          <AccordionItem 
+                            key={i} 
+                            value={`${category}-${i}`} 
+                            className="bg-background rounded-xl border px-6 shadow-sm hover:shadow-md transition-shadow"
+                          >
+                            <AccordionTrigger className="text-left font-semibold hover:no-underline py-5">
+                              {faq.question}
+                            </AccordionTrigger>
+                            <AccordionContent className="text-muted-foreground pb-5 whitespace-pre-line">
+                              {faq.answer}
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            );
+          })()}
+
+          {/* Contact CTA */}
+          <motion.div
+            className="mt-12 text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <p className="text-muted-foreground mb-4">
+              Have more questions? Contact us at{' '}
+              <a href="mailto:hello@adorzia.com" className="text-primary hover:underline font-medium">
+                hello@adorzia.com
+              </a>
+            </p>
+            <Link to="/support">
+              <Button variant="outline">
+                <Mail className="h-4 w-4 mr-2" />
+                Go to Support Center
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 

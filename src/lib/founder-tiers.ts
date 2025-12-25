@@ -128,39 +128,119 @@ export const EARNING_LADDER: EarningTier[] = [
   { rank: 'Creative Director', scRange: '5,000+', baseShare: 40, f2Share: 45, f1Share: 50 },
 ];
 
-// FAQ content for pricing page
-export interface FAQ {
+// FAQ Categories
+export type FAQCategory = 
+  | 'general'
+  | 'styleboxes'
+  | 'ip-ranks'
+  | 'teaming'
+  | 'financials'
+  | 'founders';
+
+export interface FAQItem {
   question: string;
   answer: string;
+  category: FAQCategory;
 }
 
-export const PRICING_FAQS: FAQ[] = [
+export const FAQ_CATEGORIES: Record<FAQCategory, { label: string; icon: string }> = {
+  general: { label: 'General Concept', icon: 'HelpCircle' },
+  styleboxes: { label: 'StyleBoxes & Challenges', icon: 'Box' },
+  'ip-ranks': { label: 'IP, Ranks & Profit Sharing', icon: 'Crown' },
+  teaming: { label: 'Teaming & Collaboration', icon: 'Users' },
+  financials: { label: 'Financials & Career', icon: 'Wallet' },
+  founders: { label: 'The Foundational Ranks', icon: 'Award' },
+};
+
+// Comprehensive Designer's FAQ
+export const DESIGNER_FAQS: FAQItem[] = [
+  // General Concept
   {
+    category: 'general',
+    question: 'Is Adorzia a design agency or a software company?',
+    answer: 'Neither. Adorzia is a decentralized Fashion R&D Lab. We provide the infrastructure (briefs, assets, and technical constraints) for designers to solve high-level fashion challenges. Think of us as the "Intel" inside the fashion industry—we create the logic that brands then use to manufacture physical products.',
+  },
+  {
+    category: 'general',
+    question: 'Do I have to use specific software like CLO3D or Browzwear?',
+    answer: 'No. Adorzia is tool-agnostic. Whether you use industry-standard tools, Blender, or custom-coded engines, we only care about the Final Result (the render) and your Proof of Logic (the technical exploded view and Hack Log).',
+  },
+  // StyleBoxes & Challenges
+  {
+    category: 'styleboxes',
+    question: 'What is a "StyleBox"?',
+    answer: 'A StyleBox is a technical mission briefing. It includes a trend direction, a standardized 3D avatar, fabric PBR maps, and a set of "Hard Constraints" (e.g., specific pattern limits or physics requirements). Your goal is to "hack" the brief to create the best variation.',
+  },
+  {
+    category: 'styleboxes',
+    question: 'What is the "Hack Log"?',
+    answer: 'The Hack Log is a short text submission where you explain the technical math and logic behind your design. It\'s where you prove how you solved the challenge (e.g., "I used a double-bonded heat seal to handle the weight of the digital velvet"). This is often more important than the visual render.',
+  },
+  // IP, Ranks & Profit Sharing
+  {
+    category: 'ip-ranks',
+    question: 'Who owns the Intellectual Property (IP) of my designs?',
+    answer: 'It depends on the StyleBox type:\n\n• Seasonal/Core Briefs: You own the IP. If Adorzia chooses to manufacture your design, we pay you a royalty based on your rank.\n\n• Sponsored/Branded Briefs: The Sponsoring Brand owns the IP. In exchange, these boxes offer high Cash Bounties paid out immediately upon winning.',
+  },
+  {
+    category: 'ip-ranks',
+    question: 'How does the "Profit Share" system work?',
+    answer: 'Adorzia rewards experience. Your base profit share starts at 8% (Apprentice) and increases as you Rank Up by earning Style Credits (SC):\n\n• Apprentice: 8%\n• Patternist: 12%\n• Stylist: 18%\n• Couturier: 25%\n• Visionary: 32%\n• Creative Director: 40%\n\nFounder bonuses stack on top: F2 Pioneer adds +5% (max 45%), F1 Founding Legacy adds +10% (max 50% platform cap).',
+  },
+  // Teaming & Collaboration
+  {
+    category: 'teaming',
+    question: 'Can I work with other designers on a StyleBox?',
+    answer: 'Yes! We encourage Teaming. You can form a "House" (team) with specialists—for example, one Pattern Architect, one Material Alchemist, and one Creative Lead. Teams receive a +15% Synergy Bonus on all SC earned.',
+  },
+  {
+    category: 'teaming',
+    question: 'How do we split the rewards if we work in a team?',
+    answer: 'The SC and profit share are split equally among tagged members, or according to the "Team Contract" set by the Lead Designer. Every member\'s individual rank will progress based on their contribution.',
+  },
+  // Financials & Career
+  {
+    category: 'financials',
+    question: 'What are Style Credits (SC), and can I cash them out?',
+    answer: 'SC is your Reputation Currency. It cannot be cashed out directly, but it is the only way to unlock higher Profit Share tiers and access to "Insane" difficulty StyleBoxes with larger cash bounties.',
+  },
+  {
+    category: 'financials',
+    question: 'How do I get paid?',
+    answer: 'Payouts are triggered in two ways:\n\n• Winning a Bounty: Immediate payment for Sponsored StyleBoxes.\n\n• Marketplace Sales: Quarterly royalty payouts for any of your designs that Adorzia produces and sells.',
+  },
+  // Foundational Ranks
+  {
+    category: 'founders',
+    question: 'Why should I pay PKR 50,000 for an F1 "Founding Legacy" rank?',
+    answer: 'The F1 and F2 ranks are limited-edition "Stakeholder" positions:\n\n• F1 — Founding Legacy (PKR 50,000): Permanent +10% profit bonus for life, "Founding Legacy" Gold Badge, first-in-line production queue, only 50 slots available.\n\n• F2 — The Pioneer (PKR 25,000): Permanent +5% profit bonus, "Pioneer" Silver Badge, priority queue access, 100 slots available.\n\nThese give you higher visibility in the Discover directory and guaranteed production priority.',
+  },
+  {
+    category: 'founders',
     question: 'Can I upgrade from Free to F1 later?',
     answer: 'Only if slots are remaining. There are strictly 50 F1 Founding Legacy slots. Once they are sold out, they will never be created again.',
   },
   {
-    question: 'What\'s the difference between F1 and F2?',
+    category: 'founders',
+    question: "What's the difference between F1 and F2?",
     answer: 'F1 gives you +10% lifetime bonus, gold badge, and first-in-line production. F2 gives you +5% lifetime bonus, silver badge, and priority queue access. F1 is for serious professionals who want maximum earnings.',
   },
   {
+    category: 'founders',
     question: 'Do I need a subscription AND a founder title?',
     answer: 'The subscription (when launched) gives you ACCESS to tools and challenges. The founder title gives you PROFITABILITY through permanent bonus commission. Serious designers will want both.',
   },
   {
-    question: 'What does "First-in-Line Production" mean?',
-    answer: 'We have limited manufacturing capacity per season. F1 members\' designs are reviewed and sent to the factory first, before anyone else. This guarantees your designs get produced.',
-  },
-  {
+    category: 'founders',
     question: 'Is the founder payment refundable?',
     answer: 'No. The F1/F2 fee is a license purchase that immediately unlocks digital assets, higher access levels, and permanent account upgrades. All sales are final.',
   },
   {
-    question: 'When will subscriptions launch?',
-    answer: 'Monthly subscriptions (Cadet, Pro Artisan, Elite Studio) are coming soon. Current founder purchases lock in your lifetime bonus before subscriptions go live.',
-  },
-  {
+    category: 'founders',
     question: 'How do I pay?',
     answer: 'We accept Credit/Debit Cards and Bank Transfers. All prices are in PKR (Pakistani Rupee). Contact hello@adorzia.com for bank transfer details.',
   },
 ];
+
+// Legacy export for backwards compatibility
+export const PRICING_FAQS = DESIGNER_FAQS.filter(faq => faq.category === 'founders');

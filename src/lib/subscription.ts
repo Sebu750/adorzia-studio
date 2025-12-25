@@ -1,97 +1,109 @@
-// Subscription tier configuration
-export type SubscriptionTier = 'basic' | 'pro' | 'elite';
+// Subscription tier configuration - Adorzia Studio Access
+export type SubscriptionTier = 'cadet' | 'pro' | 'elite';
 
 export interface TierConfig {
   id: SubscriptionTier;
   name: string;
-  price: number;
+  subtitle: string;
+  price: number; // PKR
+  priceFormatted: string;
   priceId: string;
   productId: string;
   features: string[];
   limits: {
     styleboxes: number | 'unlimited';
     portfolioProjects: number | 'unlimited';
+    productionRequests: number;
     canPublish: boolean;
     prioritySupport: boolean;
-    mentorship: boolean;
-    earlyAccess: boolean;
+    curatorReview: boolean;
+    earnFromSales: boolean;
   };
 }
 
 export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, TierConfig> = {
-  basic: {
-    id: 'basic',
-    name: 'Designer Basic',
-    price: 19,
-    priceId: 'price_1ScpN2K03OkAk5KYe1LSlOVt',
-    productId: 'prod_TZzLhzjouHHnzj',
+  cadet: {
+    id: 'cadet',
+    name: 'Cadet',
+    subtitle: 'Start Learning',
+    price: 0,
+    priceFormatted: 'FREE',
+    priceId: '', // Free tier, no price ID
+    productId: '',
     features: [
-      '5 StyleBox challenges per month',
-      '10 Portfolio projects',
-      'Basic design tools',
-      'Community access',
-      'Email support',
+      'Basic StyleBox challenges only',
+      '3 portfolio designs max',
+      'Community forum access',
+      'Learn design fundamentals',
+      'No marketplace earnings',
     ],
     limits: {
-      styleboxes: 5,
-      portfolioProjects: 10,
+      styleboxes: 3,
+      portfolioProjects: 3,
+      productionRequests: 0,
       canPublish: false,
       prioritySupport: false,
-      mentorship: false,
-      earlyAccess: false,
+      curatorReview: false,
+      earnFromSales: false,
     },
   },
   pro: {
     id: 'pro',
-    name: 'Pro Creator',
-    price: 49,
-    priceId: 'price_1ScpNJK03OkAk5KYLuMBjFeW',
+    name: 'Pro Artisan',
+    subtitle: 'Build Your Career',
+    price: 4200,
+    priceFormatted: 'PKR 4,200/mo',
+    priceId: 'price_1ScpNJK03OkAk5KYLuMBjFeW', // Update with actual Stripe price ID
     productId: 'prod_TZzMUrCNQhoSkG',
     features: [
-      'Unlimited StyleBox challenges',
-      'Unlimited Portfolio projects',
-      'Request Publish to marketplace',
-      'Styleathon participation',
-      'Revenue dashboard',
-      'Priority support',
+      'Full StyleBox challenge access',
+      'Up to 20 portfolio designs',
+      '1 production request/month',
+      'Revenue dashboard access',
+      'Earn from marketplace sales',
+      'Priority email support',
     ],
     limits: {
       styleboxes: 'unlimited',
-      portfolioProjects: 'unlimited',
+      portfolioProjects: 20,
+      productionRequests: 1,
       canPublish: true,
       prioritySupport: true,
-      mentorship: false,
-      earlyAccess: false,
+      curatorReview: false,
+      earnFromSales: true,
     },
   },
   elite: {
     id: 'elite',
-    name: 'Elite',
-    price: 99,
-    priceId: 'price_1ScpNcK03OkAk5KY6O0YcXzZ',
+    name: 'Elite Studio',
+    subtitle: 'Lead the Industry',
+    price: 11000,
+    priceFormatted: 'PKR 11,000/mo',
+    priceId: 'price_1ScpNcK03OkAk5KY6O0YcXzZ', // Update with actual Stripe price ID
     productId: 'prod_TZzMnU22Ntmp89',
     features: [
-      'Everything in Pro Creator',
-      'Priority publishing queue',
-      'Monthly mentorship calls',
-      'Early access to events',
-      'Higher revenue share',
-      'Exclusive Elite badge',
+      'All StyleBox challenges (incl. Team)',
+      'Unlimited portfolio designs',
+      '5 production requests/month',
+      'Dedicated curator review',
+      'Priority production queue',
+      'Early access to new features',
+      'Higher algorithm visibility',
     ],
     limits: {
       styleboxes: 'unlimited',
       portfolioProjects: 'unlimited',
+      productionRequests: 5,
       canPublish: true,
       prioritySupport: true,
-      mentorship: true,
-      earlyAccess: true,
+      curatorReview: true,
+      earnFromSales: true,
     },
   },
 };
 
 // Map product IDs to tier IDs
 export const PRODUCT_TO_TIER: Record<string, SubscriptionTier> = {
-  'prod_TZzLhzjouHHnzj': 'basic',
   'prod_TZzMUrCNQhoSkG': 'pro',
   'prod_TZzMnU22Ntmp89': 'elite',
 };
@@ -119,7 +131,7 @@ export function canAccessStylebox(
   if (!requiredTier) return true; // No restriction
   if (!userTier) return false;
   
-  const tierOrder: SubscriptionTier[] = ['basic', 'pro', 'elite'];
+  const tierOrder: SubscriptionTier[] = ['cadet', 'pro', 'elite'];
   const userTierIndex = tierOrder.indexOf(userTier);
   const requiredTierIndex = tierOrder.indexOf(requiredTier);
   
@@ -130,4 +142,9 @@ export function canAccessStylebox(
 export function getStyleboxLimit(userTier: SubscriptionTier | null): number | 'unlimited' {
   if (!userTier) return 0;
   return SUBSCRIPTION_TIERS[userTier]?.limits.styleboxes ?? 0;
+}
+
+// Format price for display
+export function formatPKR(amount: number): string {
+  return `PKR ${amount.toLocaleString()}`;
 }

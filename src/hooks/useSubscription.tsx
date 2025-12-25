@@ -47,18 +47,18 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
 
       if (data.subscribed && data.product_id) {
         const tierFromProduct = PRODUCT_TO_TIER[data.product_id];
-        setTier(tierFromProduct || 'basic');
+        setTier(tierFromProduct || 'cadet');
         setIsSubscribed(true);
         setSubscriptionEnd(data.subscription_end);
       } else {
-        setTier('basic');
+        setTier('cadet');
         setIsSubscribed(false);
         setSubscriptionEnd(null);
       }
     } catch (err) {
       console.error('Error checking subscription:', err);
       setError(err instanceof Error ? err.message : 'Failed to check subscription');
-      setTier('basic');
+      setTier('cadet');
       setIsSubscribed(false);
     } finally {
       setLoading(false);

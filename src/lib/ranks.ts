@@ -1,4 +1,5 @@
 // Adorzia Designer Rank System v3 - SC-based
+// Updated with new rank names: Apprentice, Patternist, Stylist, Couturier, Visionary, Creative Director
 
 export type RankTier = 'f1' | 'f2' | 'apprentice' | 'patternist' | 'stylist' | 'couturier' | 'visionary' | 'creative_director';
 
@@ -17,23 +18,162 @@ export interface RankDefinition {
   perks: string[];
   isFoundation: boolean;
   priceUsd?: number;
+  pricePkr?: number;
   maxSlots?: number;
   order: number;
 }
 
-const createRank = (id: RankTier, name: string, title: string, commission: number, bonus: number, minSC: number, maxSC: number, desc: string, reqs: string[], perks: string[], isFoundation: boolean, order: number, priceUsd?: number, maxSlots?: number): RankDefinition => ({
-  id, name, title, commission, revenueShare: commission, bonusPercentage: bonus, minSC, maxSC, minWeightedScore: minSC, description: desc, requirements: reqs, perks, isFoundation, order, priceUsd, maxSlots
+const createRank = (
+  id: RankTier, 
+  name: string, 
+  title: string, 
+  commission: number, 
+  bonus: number, 
+  minSC: number, 
+  maxSC: number, 
+  desc: string, 
+  reqs: string[], 
+  perks: string[], 
+  isFoundation: boolean, 
+  order: number, 
+  pricePkr?: number, 
+  maxSlots?: number
+): RankDefinition => ({
+  id, 
+  name, 
+  title, 
+  commission, 
+  revenueShare: commission, 
+  bonusPercentage: bonus, 
+  minSC, 
+  maxSC, 
+  minWeightedScore: minSC, 
+  description: desc, 
+  requirements: reqs, 
+  perks, 
+  isFoundation, 
+  order, 
+  pricePkr, 
+  maxSlots
 });
 
 export const RANKS: Record<RankTier, RankDefinition> = {
-  f1: createRank('f1', 'Founder Circle', 'F1', 10, 10, 0, Infinity, 'Exclusive founding members with +10% lifetime commission bonus', ['One-time $299 payment', 'Limited to first 1,000 designers'], ['+10% bonus on all commissions', 'Priority production queue', 'Founding badge'], true, 0, 299, 1000),
-  f2: createRank('f2', 'Pioneer Designer', 'F2', 5, 5, 0, Infinity, 'Pioneer designers with +5% lifetime commission bonus', ['One-time $499 payment', 'Limited to first 500 designers'], ['+5% bonus on all commissions', 'Priority support', 'Early access'], true, 1, 499, 500),
-  apprentice: createRank('apprentice', 'Apprentice', 'SC 0-300', 8, 0, 0, 300, 'Learning the software and basic garment construction', ['SC Range: 0-300'], ['8% base commission', 'Access to Free & Easy StyleBoxes'], false, 2),
-  patternist: createRank('patternist', 'Patternist', 'SC 301-800', 12, 0, 301, 800, 'Able to handle Medium difficulty (Complex patterns)', ['SC Range: 301-800'], ['12% base commission', 'Access to Medium StyleBoxes'], false, 3),
-  stylist: createRank('stylist', 'Stylist', 'SC 801-2,000', 18, 0, 801, 2000, 'Proven ability to handle Hard/Insane briefs', ['SC Range: 801-2,000'], ['18% base commission', 'Access to Hard StyleBoxes'], false, 4),
-  couturier: createRank('couturier', 'Couturier', 'SC 2,001-3,200', 25, 0, 2001, 3200, 'Expert level; focus on luxury and high-detail designs', ['SC Range: 2,001-3,200'], ['25% base commission', 'Priority production queue'], false, 5),
-  visionary: createRank('visionary', 'Visionary', 'SC 3,201-5,000', 32, 0, 3201, 5000, 'Trend-setter; designs have high artistic value', ['SC Range: 3,201-5,000'], ['32% base commission', 'Algorithm priority'], false, 6),
-  creative_director: createRank('creative_director', 'Creative Director', 'SC 5,000+', 40, 0, 5001, Infinity, 'The Master level; leading the Adorzia aesthetic', ['SC Range: 5,000+'], ['40% base commission (up to 50% with F1)'], false, 7),
+  f1: createRank(
+    'f1', 
+    'Founding Legacy', 
+    'F1', 
+    10, 
+    10, 
+    0, 
+    Infinity, 
+    'Exclusive founding members with +10% lifetime commission bonus', 
+    ['One-time PKR 50,000 payment', 'Limited to first 50 designers'], 
+    ['+10% bonus on all commissions', 'First-in-line production queue', 'Gold Founding Legacy badge'], 
+    true, 
+    0, 
+    50000, 
+    50
+  ),
+  f2: createRank(
+    'f2', 
+    'The Pioneer', 
+    'F2', 
+    5, 
+    5, 
+    0, 
+    Infinity, 
+    'Pioneer designers with +5% lifetime commission bonus', 
+    ['One-time PKR 25,000 payment', 'Limited to first 100 designers'], 
+    ['+5% bonus on all commissions', 'Priority queue access', 'Silver Pioneer badge'], 
+    true, 
+    1, 
+    25000, 
+    100
+  ),
+  apprentice: createRank(
+    'apprentice', 
+    'Apprentice', 
+    'SC 0-300', 
+    8, 
+    0, 
+    0, 
+    300, 
+    'Learning the software and basic garment construction', 
+    ['SC Range: 0-300'], 
+    ['8% base commission', 'Access to Easy StyleBoxes'], 
+    false, 
+    2
+  ),
+  patternist: createRank(
+    'patternist', 
+    'Patternist', 
+    'SC 301-800', 
+    12, 
+    0, 
+    301, 
+    800, 
+    'Able to handle Medium difficulty (Complex patterns)', 
+    ['SC Range: 301-800'], 
+    ['12% base commission', 'Access to Medium StyleBoxes'], 
+    false, 
+    3
+  ),
+  stylist: createRank(
+    'stylist', 
+    'Stylist', 
+    'SC 801-2,000', 
+    18, 
+    0, 
+    801, 
+    2000, 
+    'Proven ability to handle Hard/Insane briefs', 
+    ['SC Range: 801-2,000'], 
+    ['18% base commission', 'Access to Hard StyleBoxes'], 
+    false, 
+    4
+  ),
+  couturier: createRank(
+    'couturier', 
+    'Couturier', 
+    'SC 2,001-3,200', 
+    25, 
+    0, 
+    2001, 
+    3200, 
+    'Expert level; focus on luxury and high-detail designs', 
+    ['SC Range: 2,001-3,200'], 
+    ['25% base commission', 'Priority production queue'], 
+    false, 
+    5
+  ),
+  visionary: createRank(
+    'visionary', 
+    'Visionary', 
+    'SC 3,201-5,000', 
+    32, 
+    0, 
+    3201, 
+    5000, 
+    'Trend-setter; designs have high artistic value', 
+    ['SC Range: 3,201-5,000'], 
+    ['32% base commission', 'Algorithm priority'], 
+    false, 
+    6
+  ),
+  creative_director: createRank(
+    'creative_director', 
+    'Creative Director', 
+    'SC 5,000+', 
+    40, 
+    0, 
+    5001, 
+    Infinity, 
+    'The Master level; leading the Adorzia aesthetic', 
+    ['SC Range: 5,000+'], 
+    ['40% base commission (up to 50% with F1)'], 
+    false, 
+    7
+  ),
 };
 
 export const RANK_ORDER: RankTier[] = ['f1', 'f2', 'apprentice', 'patternist', 'stylist', 'couturier', 'visionary', 'creative_director'];
@@ -81,7 +221,11 @@ export function calculateEffectiveCommission(standardRank: RankTier, foundationR
 }
 
 export const calculateEffectiveRevenueShare = calculateEffectiveCommission;
-export function formatSC(sc: number): string { return sc.toLocaleString(); }
+
+export function formatSC(sc: number): string { 
+  return sc.toLocaleString(); 
+}
+
 export function getSCNeededForNextRank(currentRank: RankTier, currentSC: number): number {
   const next = getNextStandardRank(currentRank);
   return next ? Math.max(0, next.minSC - currentSC) : 0;

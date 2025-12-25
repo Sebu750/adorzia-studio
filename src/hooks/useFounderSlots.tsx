@@ -33,8 +33,9 @@ export const useFounderSlots = () => {
         console.error('Error fetching slot counts:', f1Error || f2Error);
       }
 
-      const f1Total = FOUNDER_TIERS.f1.maxSlots || 1000;
-      const f2Total = FOUNDER_TIERS.f2.maxSlots || 500;
+      // F1 = 50 slots, F2 = 100 slots (updated limits)
+      const f1Total = FOUNDER_TIERS.f1.maxSlots || 50;
+      const f2Total = FOUNDER_TIERS.f2.maxSlots || 100;
       const f1Sold = f1Count || 0;
       const f2Sold = f2Count || 0;
 

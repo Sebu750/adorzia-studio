@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievement_badges: {
+        Row: {
+          category: string | null
+          created_at: string
+          criteria: Json | null
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          criteria?: Json | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          criteria?: Json | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       admin_logs: {
         Row: {
           action: string
@@ -1448,10 +1478,12 @@ export type Database = {
           global_drivers: string | null
           id: string
           is_featured: boolean | null
+          is_team_challenge: boolean | null
           is_walkthrough: boolean
           level_number: number | null
           local_relevance: string | null
           material_direction: Json | null
+          minimum_team_rank_order: number | null
           moodboard_images: Json | null
           pdf_url: string | null
           reference_files: Json | null
@@ -1467,6 +1499,8 @@ export type Database = {
           studio_name: string | null
           submission_deadline: string | null
           target_role: string | null
+          team_role_requirements: Json | null
+          team_size: number | null
           technical_requirements: Json | null
           thumbnail_url: string | null
           time_limit_hours: number | null
@@ -1496,10 +1530,12 @@ export type Database = {
           global_drivers?: string | null
           id?: string
           is_featured?: boolean | null
+          is_team_challenge?: boolean | null
           is_walkthrough?: boolean
           level_number?: number | null
           local_relevance?: string | null
           material_direction?: Json | null
+          minimum_team_rank_order?: number | null
           moodboard_images?: Json | null
           pdf_url?: string | null
           reference_files?: Json | null
@@ -1515,6 +1551,8 @@ export type Database = {
           studio_name?: string | null
           submission_deadline?: string | null
           target_role?: string | null
+          team_role_requirements?: Json | null
+          team_size?: number | null
           technical_requirements?: Json | null
           thumbnail_url?: string | null
           time_limit_hours?: number | null
@@ -1544,10 +1582,12 @@ export type Database = {
           global_drivers?: string | null
           id?: string
           is_featured?: boolean | null
+          is_team_challenge?: boolean | null
           is_walkthrough?: boolean
           level_number?: number | null
           local_relevance?: string | null
           material_direction?: Json | null
+          minimum_team_rank_order?: number | null
           moodboard_images?: Json | null
           pdf_url?: string | null
           reference_files?: Json | null
@@ -1563,6 +1603,8 @@ export type Database = {
           studio_name?: string | null
           submission_deadline?: string | null
           target_role?: string | null
+          team_role_requirements?: Json | null
+          team_size?: number | null
           technical_requirements?: Json | null
           thumbnail_url?: string | null
           time_limit_hours?: number | null
@@ -1607,6 +1649,75 @@ export type Database = {
           },
         ]
       }
+      team_stylebox_submissions: {
+        Row: {
+          admin_feedback: Json | null
+          created_at: string
+          deadline: string | null
+          id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          role_assignments: Json | null
+          role_submissions: Json | null
+          started_at: string | null
+          status: string
+          stylebox_id: string
+          submitted_at: string | null
+          team_id: string
+          total_score: number | null
+          updated_at: string
+        }
+        Insert: {
+          admin_feedback?: Json | null
+          created_at?: string
+          deadline?: string | null
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          role_assignments?: Json | null
+          role_submissions?: Json | null
+          started_at?: string | null
+          status?: string
+          stylebox_id: string
+          submitted_at?: string | null
+          team_id: string
+          total_score?: number | null
+          updated_at?: string
+        }
+        Update: {
+          admin_feedback?: Json | null
+          created_at?: string
+          deadline?: string | null
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          role_assignments?: Json | null
+          role_submissions?: Json | null
+          started_at?: string | null
+          status?: string
+          stylebox_id?: string
+          submitted_at?: string | null
+          team_id?: string
+          total_score?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_stylebox_submissions_stylebox_id_fkey"
+            columns: ["stylebox_id"]
+            isOneToOne: false
+            referencedRelation: "styleboxes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "team_stylebox_submissions_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       teams: {
         Row: {
           category: Database["public"]["Enums"]["designer_category"] | null
@@ -1633,6 +1744,51 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      user_achievement_badges: {
+        Row: {
+          awarded_at: string
+          awarded_by: string | null
+          badge_id: string
+          id: string
+          notes: string | null
+          team_submission_id: string | null
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          awarded_by?: string | null
+          badge_id: string
+          id?: string
+          notes?: string | null
+          team_submission_id?: string | null
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string
+          awarded_by?: string | null
+          badge_id?: string
+          id?: string
+          notes?: string | null
+          team_submission_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievement_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "achievement_badges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_achievement_badges_team_submission_id_fkey"
+            columns: ["team_submission_id"]
+            isOneToOne: false
+            referencedRelation: "team_stylebox_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_badges: {
         Row: {

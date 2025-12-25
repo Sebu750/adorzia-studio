@@ -30,15 +30,24 @@ export default function AdminJobs() {
     },
   });
 
-  // Fetch applications with profiles
+  // Fetch applications - fetch profiles separately since no direct FK
   const { data: applications = [], isLoading: appsLoading } = useQuery({
     queryKey: ['admin-applications', selectedJobFilter],
     queryFn: async () => {
-      let query = supabase.from('job_applications').select(`*, jobs(title, company_name), profiles!job_applications_designer_id_fkey(name, email, avatar_url, category)`).order('applied_at', { ascending: false });
+      let query = supabase.from('job_applications').select(`*, jobs(title, company_name)`).order('applied_at', { ascending: false });
       if (selectedJobFilter) query = query.eq('job_id', selectedJobFilter);
       const { data, error } = await query;
       if (error) throw error;
-      return data;
+      
+      // Fetch profiles for each application
+      const designerIds = [...new Set(data.map(a => a.designer_id))];
+      const { data: profiles } = await supabase.from('profiles').select('user_id, name, email, avatar_url, category').in('user_id', designerIds);
+      const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
+      
+      return data.map(app => ({
+        ...app,
+        profiles: profileMap.get(app.designer_id) || { name: null, email: null, avatar_url: null, category: null }
+      }));
     },
   });
 
@@ -94,7 +103,7 @@ export default function AdminJobs() {
 
   // Update application
   const updateAppMutation = useMutation({
-    mutationFn: async ({ id, status, notes, interviewDate }: { id: string; status: string; notes?: string; interviewDate?: string }) => {
+    mutationFn: async ({ id, status, notes, interviewDate }: { id: string; status: 'applied' | 'shortlisted' | 'rejected' | 'hired'; notes?: string; interviewDate?: string }) => {
       const { error } = await supabase.from('job_applications').update({ 
         status, 
         notes, 
@@ -151,7 +160,7 @@ export default function AdminJobs() {
               selectedJobId={selectedJobFilter}
               onJobFilter={setSelectedJobFilter}
               onUpdateStatus={async (id, status, notes, interviewDate) => {
-                await updateAppMutation.mutateAsync({ id, status, notes, interviewDate });
+                await updateAppMutation.mutateAsync({ id, status: status as 'applied' | 'shortlisted' | 'rejected' | 'hired', notes, interviewDate });
               }}
             />
           </TabsContent>

@@ -27,8 +27,9 @@ import DesignerProfiles from "./pages/public/DesignerProfiles";
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Unauthorized from "./pages/Unauthorized";
 
-// Studio Pages (Protected)
+// Studio Pages (Protected - Designer Role Required)
 import Dashboard from "./pages/Dashboard";
 import Walkthroughs from "./pages/Walkthroughs";
 import WalkthroughDetail from "./pages/WalkthroughDetail";
@@ -72,7 +73,9 @@ const App = () => (
           <AuthProvider>
             <SubscriptionProvider>
               <Routes>
-                {/* Public Website Routes */}
+                {/* ============================================ */}
+                {/* PUBLIC WEBSITE ROUTES - No Auth Required */}
+                {/* ============================================ */}
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/styleboxes-info" element={<StyleBoxesInfo />} />
@@ -86,85 +89,92 @@ const App = () => (
                 <Route path="/designers" element={<DesignerProfiles />} />
                 <Route path="/studios" element={<Studios />} />
                 
-                {/* Auth Routes */}
+                {/* ============================================ */}
+                {/* AUTH ROUTES - Public Access */}
+                {/* ============================================ */}
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/unauthorized" element={<Unauthorized />} />
                 
-                {/* Protected Studio App Routes */}
+                {/* ============================================ */}
+                {/* STUDIO ROUTES - Designer Role Required */}
+                {/* ============================================ */}
                 <Route path="/subscription" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Subscription />
                   </ProtectedRoute>
                 } />
                 <Route path="/dashboard" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Dashboard />
                   </ProtectedRoute>
                 } />
                 <Route path="/walkthroughs" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Walkthroughs />
                   </ProtectedRoute>
                 } />
                 <Route path="/walkthroughs/:id" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <WalkthroughDetail />
                   </ProtectedRoute>
                 } />
                 <Route path="/styleboxes" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Styleboxes />
                   </ProtectedRoute>
                 } />
                 <Route path="/styleboxes/:id" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <StyleboxPreview />
                   </ProtectedRoute>
                 } />
                 <Route path="/portfolio" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Portfolio />
                   </ProtectedRoute>
                 } />
                 <Route path="/collections" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Collections />
                   </ProtectedRoute>
                 } />
                 <Route path="/profile" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Profile />
                   </ProtectedRoute>
                 } />
                 <Route path="/teams" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Teams />
                   </ProtectedRoute>
                 } />
                 <Route path="/jobs" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Jobs />
                   </ProtectedRoute>
                 } />
                 <Route path="/analytics" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Analytics />
                   </ProtectedRoute>
                 } />
                 <Route path="/notifications" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Notifications />
                   </ProtectedRoute>
                 } />
                 <Route path="/settings" element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireRole="designer">
                     <Settings />
                   </ProtectedRoute>
                 } />
                 
-                {/* Protected Admin Portal Routes */}
+                {/* ============================================ */}
+                {/* ADMIN ROUTES - Admin Role Required */}
+                {/* ============================================ */}
                 <Route path="/admin" element={
                   <ProtectedRoute requireAdmin>
                     <AdminDashboard />
@@ -221,6 +231,7 @@ const App = () => (
                   </ProtectedRoute>
                 } />
                 
+                {/* 404 Catch-all */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </SubscriptionProvider>

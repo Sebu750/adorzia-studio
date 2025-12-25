@@ -71,6 +71,15 @@ interface AdminSidebarProps {
 export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
+  
+  // Filter system items based on role - superadmin-only items
+  const filteredSystemItems = systemItems.filter(item => {
+    // Security settings only visible to superadmin
+    if (item.url === '/admin/security' && userRole !== 'superadmin') {
+      return false;
+    }
+    return true;
+  });
 
   const NavItem = ({ item }: { item: { title: string; url: string; icon: React.ElementType; badge?: string } }) => (
     <SidebarMenuItem>
@@ -177,7 +186,7 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-0.5">
-              {systemItems.map((item) => (
+              {filteredSystemItems.map((item) => (
                 <NavItem key={item.title} item={item} />
               ))}
             </SidebarMenu>

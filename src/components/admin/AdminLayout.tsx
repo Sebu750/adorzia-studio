@@ -29,13 +29,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
-  userRole?: 'admin' | 'superadmin';
 }
 
-export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) {
+export function AdminLayout({ children }: AdminLayoutProps) {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, signOut, userRole } = useAuth();
   const { theme, setTheme } = useTheme();
+  
+  // Derive admin role type for display
+  const adminRole = userRole === 'superadmin' ? 'superadmin' : 'admin';
   const handleSignOut = async () => {
     if (user) {
       await supabase.from("admin_logs").insert({
@@ -63,7 +65,7 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-admin-background">
-        <AdminSidebar userRole={userRole} />
+        <AdminSidebar userRole={adminRole} />
         <SidebarInset className="flex-1 flex flex-col">
           {/* Top Header */}
           <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-admin-border bg-admin-card/98 backdrop-blur-md px-6 shadow-sm">
@@ -122,7 +124,7 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
                         {user?.user_metadata?.name || "Admin"}
                       </span>
                       <span className="text-xs text-admin-muted-foreground leading-tight">
-                        {userRole === 'superadmin' ? 'Superadmin' : 'Admin'}
+                        {adminRole === 'superadmin' ? 'Superadmin' : 'Admin'}
                       </span>
                     </div>
                     <ChevronDown className="h-4 w-4 text-admin-muted-foreground" />
@@ -139,7 +141,7 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
                         variant="secondary" 
                         className="w-fit text-xs mt-1 bg-admin-muted text-admin-foreground"
                       >
-                        {userRole === 'superadmin' ? 'Superadmin' : 'Admin'}
+                        {adminRole === 'superadmin' ? 'Superadmin' : 'Admin'}
                       </Badge>
                     </div>
                   </DropdownMenuLabel>

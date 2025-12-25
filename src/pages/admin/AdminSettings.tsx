@@ -255,7 +255,7 @@ export default function AdminSettings() {
   };
 
   return (
-    <AdminLayout userRole={userRole}>
+    <AdminLayout>
       <div className="p-6 lg:p-8 space-y-8 max-w-4xl">
         {/* Header */}
         <div className="flex items-center justify-between">

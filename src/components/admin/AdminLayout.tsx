@@ -66,27 +66,27 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
         <AdminSidebar userRole={userRole} />
         <SidebarInset className="flex-1 flex flex-col">
           {/* Top Header */}
-          <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-admin-border bg-admin-card/95 backdrop-blur-sm px-6 shadow-sm">
-            <SidebarTrigger className="-ml-2 hover:bg-admin-muted transition-colors rounded-lg" />
+          <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-admin-border bg-admin-card/98 backdrop-blur-md px-6 shadow-sm">
+            <SidebarTrigger className="-ml-2 hover:bg-admin-muted transition-colors rounded-lg p-2" />
             
             {/* Search */}
-            <div className="relative flex-1 max-w-lg">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-admin-muted-foreground" />
+            <div className="relative flex-1 max-w-xl">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-admin-muted-foreground" />
               <Input
                 placeholder="Search designers, styleboxes, publications..."
-                className="pl-10 pr-12 h-10 bg-admin-muted border-admin-border focus:bg-admin-card focus:ring-2 focus:ring-admin-foreground/10 transition-all text-admin-foreground placeholder:text-admin-muted-foreground"
+                className="pl-11 pr-14 h-11 bg-admin-muted/60 border-admin-border focus:bg-admin-card focus:ring-2 focus:ring-admin-foreground/10 focus:border-admin-foreground/20 transition-all text-admin-foreground placeholder:text-admin-muted-foreground rounded-xl"
               />
-              <kbd className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-admin-border bg-admin-muted px-1.5 font-mono text-[10px] font-medium text-admin-muted-foreground">
+              <kbd className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none inline-flex h-6 select-none items-center gap-1 rounded-md border border-admin-border bg-admin-card px-2 font-mono text-[10px] font-medium text-admin-muted-foreground shadow-sm">
                 <Command className="h-3 w-3" />K
               </kbd>
             </div>
 
-            <div className="flex items-center gap-2 ml-auto">
+            <div className="flex items-center gap-1.5 ml-auto">
               {/* Theme Toggle */}
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-10 w-10 hover:bg-admin-muted text-admin-foreground transition-colors rounded-lg"
+                className="h-10 w-10 hover:bg-admin-muted text-admin-foreground transition-colors rounded-xl"
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               >
                 <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
@@ -98,10 +98,10 @@ export function AdminLayout({ children, userRole = 'admin' }: AdminLayoutProps) 
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="relative h-10 w-10 hover:bg-admin-muted text-admin-foreground transition-colors rounded-lg"
+                className="relative h-10 w-10 hover:bg-admin-muted text-admin-foreground transition-colors rounded-xl"
               >
                 <Bell className="h-5 w-5" />
-                <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-admin-foreground ring-2 ring-admin-card" />
+                <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-admin-card animate-pulse" />
               </Button>
 
               {/* User Menu */}

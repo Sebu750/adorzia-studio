@@ -69,13 +69,13 @@
     --admin-accent: 210 11% 89%;
     --admin-accent-foreground: 210 11% 15%;
     
-    /* Admin Sidebar - Dark sidebar on light page */
-    --admin-sidebar: 210 10% 23%;
-    --admin-sidebar-foreground: 210 17% 98%;
-    --admin-sidebar-muted: 210 8% 35%;
-    --admin-sidebar-accent: 210 17% 98%;
-    --admin-sidebar-accent-foreground: 210 10% 23%;
-    --admin-sidebar-border: 210 8% 28%;
+    /* Admin Sidebar - Improved Contrast Dark Sidebar */
+    --admin-sidebar: 220 15% 13%;
+    --admin-sidebar-foreground: 220 20% 98%;
+    --admin-sidebar-muted: 220 12% 22%;
+    --admin-sidebar-accent: 220 20% 25%;
+    --admin-sidebar-accent-foreground: 220 20% 100%;
+    --admin-sidebar-border: 220 10% 20%;
     
     /* Admin Login Page Colors - Light Mode */
     --admin-login-background: 210 17% 98%;
@@ -206,13 +206,13 @@
     --admin-accent: 210 8% 31%;
     --admin-accent-foreground: 210 17% 98%;
     
-    /* Admin Sidebar Dark - Darker than main area */
-    --admin-sidebar: 210 11% 10%;
-    --admin-sidebar-foreground: 210 14% 93%;
-    --admin-sidebar-muted: 210 11% 18%;
-    --admin-sidebar-accent: 210 10% 23%;
-    --admin-sidebar-accent-foreground: 210 17% 98%;
-    --admin-sidebar-border: 210 8% 18%;
+    /* Admin Sidebar Dark - Improved Contrast */
+    --admin-sidebar: 220 15% 8%;
+    --admin-sidebar-foreground: 220 20% 95%;
+    --admin-sidebar-muted: 220 12% 16%;
+    --admin-sidebar-accent: 220 15% 22%;
+    --admin-sidebar-accent-foreground: 220 20% 100%;
+    --admin-sidebar-border: 220 10% 14%;
     
     /* Admin Login Page Colors - Dark Mode */
     --admin-login-background: 210 11% 15%;

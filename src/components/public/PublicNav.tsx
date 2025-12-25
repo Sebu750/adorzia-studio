@@ -16,7 +16,7 @@ import {
   ChevronRight,
   ArrowRight
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -77,7 +77,6 @@ const moreNavItems = [
 const allNavItems = [...primaryNavItems, ...moreNavItems];
 
 export default function PublicNav() {
-  const { user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
@@ -175,26 +174,15 @@ export default function PublicNav() {
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {user ? (
-            <Link to="/dashboard">
-              <Button size="sm" className="gap-2">
-                Dashboard
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          ) : (
-            <>
-              <Link to="/auth" className="hidden sm:block">
-                <Button variant="ghost" size="sm">Sign In</Button>
-              </Link>
-              <Link to="/auth">
-                <Button size="sm" className="gap-2">
-                  Get Started
-                  <ArrowRight className="h-4 w-4 hidden sm:block" />
-                </Button>
-              </Link>
-            </>
-          )}
+          <Link to="/auth" className="hidden sm:block">
+            <Button variant="ghost" size="sm">Sign In</Button>
+          </Link>
+          <Link to="/auth">
+            <Button size="sm" className="gap-2">
+              Get Started
+              <ArrowRight className="h-4 w-4 hidden sm:block" />
+            </Button>
+          </Link>
 
           {/* Mobile Menu */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -268,28 +256,19 @@ export default function PublicNav() {
 
                 {/* Mobile Footer CTA */}
                 <div className="p-4 border-t bg-secondary/30">
-                  {user ? (
-                    <Link to="/dashboard" onClick={() => setMobileOpen(false)}>
+                  <div className="space-y-2">
+                    <Link to="/auth" onClick={() => setMobileOpen(false)}>
                       <Button className="w-full gap-2">
-                        Go to Dashboard
+                        Get Started Free
                         <ArrowRight className="h-4 w-4" />
                       </Button>
                     </Link>
-                  ) : (
-                    <div className="space-y-2">
-                      <Link to="/auth" onClick={() => setMobileOpen(false)}>
-                        <Button className="w-full gap-2">
-                          Get Started Free
-                          <ArrowRight className="h-4 w-4" />
-                        </Button>
-                      </Link>
-                      <Link to="/auth" onClick={() => setMobileOpen(false)}>
-                        <Button variant="outline" className="w-full">
-                          Sign In
-                        </Button>
-                      </Link>
-                    </div>
-                  )}
+                    <Link to="/auth" onClick={() => setMobileOpen(false)}>
+                      <Button variant="outline" className="w-full">
+                        Sign In
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               </div>
             </SheetContent>

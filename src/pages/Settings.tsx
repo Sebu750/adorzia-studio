@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   User, 
   Bell, 
@@ -26,7 +27,9 @@ import {
   LogOut,
   Loader2,
   Crown,
-  Sparkles
+  Sparkles,
+  MessageSquarePlus,
+  Send
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -72,6 +75,12 @@ const Settings = () => {
     team: true,
     marketing: false,
   });
+  const [feedbackData, setFeedbackData] = useState({
+    role: "" as "designer" | "founder" | "",
+    category: "" as "bug" | "ux" | "feature" | "other" | "",
+    message: "",
+  });
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -196,6 +205,64 @@ const Settings = () => {
     navigate("/");
   };
 
+  const handleFeedbackSubmit = async () => {
+    if (!user) return;
+    
+    if (!feedbackData.role || !feedbackData.category || !feedbackData.message.trim()) {
+      toast({
+        title: "Missing fields",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (feedbackData.message.length > 2000) {
+      toast({
+        title: "Message too long",
+        description: "Please keep your message under 2000 characters.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmittingFeedback(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("submit-feedback", {
+        body: {
+          user_name: profileData.name || "Anonymous User",
+          user_role: feedbackData.role,
+          category: feedbackData.category,
+          message: feedbackData.message.trim(),
+        },
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Thank you for your feedback!",
+        description: "We've received your submission and will review it shortly.",
+      });
+
+      // Reset form
+      setFeedbackData({
+        role: "",
+        category: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Feedback submission error:", error);
+      toast({
+        title: "Submission failed",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmittingFeedback(false);
+    }
+  };
+
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -229,7 +296,7 @@ const Settings = () => {
         </div>
 
         <Tabs defaultValue="profile" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
             <TabsTrigger value="profile" className="gap-2">
               <User className="h-4 w-4" />
               <span className="hidden sm:inline">Profile</span>
@@ -245,6 +312,10 @@ const Settings = () => {
             <TabsTrigger value="billing" className="gap-2">
               <CreditCard className="h-4 w-4" />
               <span className="hidden sm:inline">Billing</span>
+            </TabsTrigger>
+            <TabsTrigger value="feedback" className="gap-2">
+              <MessageSquarePlus className="h-4 w-4" />
+              <span className="hidden sm:inline">Feedback</span>
             </TabsTrigger>
           </TabsList>
 
@@ -487,6 +558,117 @@ const Settings = () => {
                   <Input id="paypal" type="email" placeholder="your@email.com" />
                 </div>
                 <Button className="bg-gradient-accent hover:opacity-90">Save Payout Settings</Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="feedback" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquarePlus className="h-5 w-5 text-accent" />
+                  Share Your Feedback
+                </CardTitle>
+                <CardDescription>
+                  Help us improve Adorzia! Report bugs, suggest features, or share your thoughts.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label>Your Role *</Label>
+                    <Select
+                      value={feedbackData.role}
+                      onValueChange={(v) => setFeedbackData(prev => ({ ...prev, role: v as "designer" | "founder" }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="designer">Designer</SelectItem>
+                        <SelectItem value="founder">Founder</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Category *</Label>
+                    <Select
+                      value={feedbackData.category}
+                      onValueChange={(v) => setFeedbackData(prev => ({ ...prev, category: v as "bug" | "ux" | "feature" | "other" }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="bug">🐛 Bug Report</SelectItem>
+                        <SelectItem value="ux">🎨 UX Issue</SelectItem>
+                        <SelectItem value="feature">✨ Feature Request</SelectItem>
+                        <SelectItem value="other">📝 Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label>Your Message *</Label>
+                    <span className="text-xs text-muted-foreground">
+                      {feedbackData.message.length}/2000
+                    </span>
+                  </div>
+                  <Textarea
+                    value={feedbackData.message}
+                    onChange={(e) => setFeedbackData(prev => ({ ...prev, message: e.target.value }))}
+                    placeholder="Describe your feedback in detail. What happened? What did you expect? How can we improve?"
+                    rows={6}
+                    maxLength={2000}
+                    className="resize-none"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between pt-2">
+                  <p className="text-sm text-muted-foreground">
+                    Submitting as: <span className="font-medium text-foreground">{profileData.name || "Anonymous"}</span>
+                  </p>
+                  <Button
+                    onClick={handleFeedbackSubmit}
+                    disabled={isSubmittingFeedback || !feedbackData.role || !feedbackData.category || !feedbackData.message.trim()}
+                    className="gap-2 bg-gradient-accent hover:opacity-90"
+                  >
+                    {isSubmittingFeedback ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
+                    Submit Feedback
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-accent/20 bg-accent/5">
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <div className="rounded-full bg-accent/10 p-3">
+                    <MessageSquarePlus className="h-6 w-6 text-accent" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Direct Contact</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      For urgent issues or detailed discussions, email us at{" "}
+                      <a 
+                        href="mailto:hello@adorzia.com" 
+                        className="text-accent hover:underline font-medium"
+                      >
+                        hello@adorzia.com
+                      </a>
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      We typically respond within 24 hours.
+                    </p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>

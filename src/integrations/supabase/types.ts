@@ -1912,6 +1912,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_feedback: {
+        Row: {
+          category: string
+          created_at: string
+          email_sent: boolean | null
+          id: string
+          message: string
+          user_id: string
+          user_name: string
+          user_role: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          email_sent?: boolean | null
+          id?: string
+          message: string
+          user_id: string
+          user_name: string
+          user_role: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          email_sent?: boolean | null
+          id?: string
+          message?: string
+          user_id?: string
+          user_name?: string
+          user_role?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

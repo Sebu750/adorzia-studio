@@ -24,50 +24,50 @@ const rankStyles: Record<RankTier, { bg: string; border: string; text: string; i
     text: "text-rank-f2",
     iconBg: "bg-rank-f2/20",
   },
-  novice: {
-    bg: "bg-gradient-to-br from-rank-novice/15 to-rank-novice/5",
-    border: "border-rank-novice/30",
-    text: "text-rank-novice",
-    iconBg: "bg-rank-novice/20",
-  },
   apprentice: {
     bg: "bg-gradient-to-br from-rank-apprentice/15 to-rank-apprentice/5",
     border: "border-rank-apprentice/30",
     text: "text-rank-apprentice",
     iconBg: "bg-rank-apprentice/20",
   },
-  designer: {
-    bg: "bg-gradient-to-br from-rank-designer/15 to-rank-designer/5",
-    border: "border-rank-designer/30",
-    text: "text-rank-designer",
-    iconBg: "bg-rank-designer/20",
+  patternist: {
+    bg: "bg-gradient-to-br from-rank-patternist/15 to-rank-patternist/5",
+    border: "border-rank-patternist/30",
+    text: "text-rank-patternist",
+    iconBg: "bg-rank-patternist/20",
   },
-  senior: {
-    bg: "bg-gradient-to-br from-rank-senior/15 to-rank-senior/5",
-    border: "border-rank-senior/30",
-    text: "text-rank-senior",
-    iconBg: "bg-rank-senior/20",
+  stylist: {
+    bg: "bg-gradient-to-br from-rank-stylist/15 to-rank-stylist/5",
+    border: "border-rank-stylist/30",
+    text: "text-rank-stylist",
+    iconBg: "bg-rank-stylist/20",
   },
-  lead: {
-    bg: "bg-gradient-to-br from-rank-lead/15 to-rank-lead/5",
-    border: "border-rank-lead/30",
-    text: "text-rank-lead",
-    iconBg: "bg-rank-lead/20",
+  couturier: {
+    bg: "bg-gradient-to-br from-rank-couturier/15 to-rank-couturier/5",
+    border: "border-rank-couturier/30",
+    text: "text-rank-couturier",
+    iconBg: "bg-rank-couturier/20",
   },
-  elite: {
-    bg: "bg-gradient-to-br from-rank-elite/15 to-rank-elite/5",
-    border: "border-rank-elite/30",
-    text: "text-rank-elite",
-    iconBg: "bg-rank-elite/20",
+  visionary: {
+    bg: "bg-gradient-to-br from-rank-visionary/15 to-rank-visionary/5",
+    border: "border-rank-visionary/30",
+    text: "text-rank-visionary",
+    iconBg: "bg-rank-visionary/20",
+  },
+  creative_director: {
+    bg: "bg-gradient-to-br from-rank-creative_director/15 to-rank-creative_director/5",
+    border: "border-rank-creative_director/30",
+    text: "text-rank-creative_director",
+    iconBg: "bg-rank-creative_director/20",
   },
 };
 
 const RankIcon = ({ rank }: { rank: RankTier }) => {
   const isFoundation = RANKS[rank].isFoundation;
-  const isElite = rank === 'elite';
+  const isTopRank = rank === 'creative_director';
   
   if (isFoundation) return <Sparkles className="h-5 w-5" />;
-  if (isElite) return <Crown className="h-5 w-5" />;
+  if (isTopRank) return <Crown className="h-5 w-5" />;
   return <Star className="h-5 w-5" />;
 };
 
@@ -98,8 +98,8 @@ export function RankTierCard({
         isCurrentRank && "ring-2 ring-offset-2 ring-offset-background",
         isCurrentRank && rank === 'f1' && "ring-rank-f1",
         isCurrentRank && rank === 'f2' && "ring-rank-f2",
-        isCurrentRank && rank === 'elite' && "ring-rank-elite",
-        isCurrentRank && !['f1', 'f2', 'elite'].includes(rank) && "ring-accent",
+        isCurrentRank && rank === 'creative_director' && "ring-rank-creative_director",
+        isCurrentRank && !['f1', 'f2', 'creative_director'].includes(rank) && "ring-accent",
         !isUnlocked && !isCurrentRank && "opacity-50"
       )}
     >
@@ -142,10 +142,10 @@ export function RankTierCard({
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">{rankDef.title}</p>
           
-          {/* Min weighted score for standard ranks */}
-          {!rankDef.isFoundation && rankDef.minWeightedScore > 0 && (
+          {/* Min SC for standard ranks */}
+          {!rankDef.isFoundation && rankDef.minSC > 0 && (
             <p className="text-[10px] text-muted-foreground mt-1">
-              Min Score: {rankDef.minWeightedScore}
+              Min SC: {rankDef.minSC.toLocaleString()}
             </p>
           )}
           

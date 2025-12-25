@@ -65,7 +65,7 @@ const publicationStatusIcons: Partial<Record<PublicationStatus, React.ElementTyp
 
 export function PortfolioGrid({ 
   items, 
-  currentRank = 'senior',
+  currentRank = 'stylist',
   subscriptionTier = 'pro' 
 }: PortfolioGridProps) {
   const [publishModalOpen, setPublishModalOpen] = useState(false);

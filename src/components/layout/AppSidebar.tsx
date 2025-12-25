@@ -34,6 +34,8 @@ import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
 import { useSubscription } from "@/hooks/useSubscription";
 import { SubscriptionBadge } from "@/components/subscription/SubscriptionBadge";
+import { useProfile } from "@/hooks/useProfile";
+import { useNotifications } from "@/hooks/useNotifications";
 
 const mainNavItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -58,12 +60,23 @@ export function AppSidebar() {
   const isCollapsed = state === "collapsed";
   const { user, signOut } = useAuth();
   const { tier } = useSubscription();
+  const { profile } = useProfile();
+  const { unreadCount } = useNotifications();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await signOut();
     navigate("/");
   };
+
+  const getInitials = (name?: string | null, email?: string | null) => {
+    if (name) {
+      return name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+    }
+    return email?.charAt(0).toUpperCase() || "U";
+  };
+
+  const displayName = profile?.name || user?.email?.split("@")[0] || "Designer";
 
   return (
     <Sidebar collapsible="icon" className="border-r bg-background">
@@ -128,9 +141,9 @@ export function AppSidebar() {
                     >
                       <item.icon className="h-4 w-4 shrink-0" />
                       {!isCollapsed && <span className="text-sm">{item.title}</span>}
-                      {item.title === "Notifications" && !isCollapsed && (
-                        <Badge variant="secondary" className="ml-auto text-[10px] px-1.5 py-0">
-                          3
+                      {item.title === "Notifications" && !isCollapsed && unreadCount > 0 && (
+                        <Badge variant="accent" className="ml-auto text-[10px] px-1.5 py-0">
+                          {unreadCount}
                         </Badge>
                       )}
                     </NavLink>
@@ -148,15 +161,15 @@ export function AppSidebar() {
           isCollapsed && "justify-center"
         )}>
           <Avatar className="h-8 w-8">
-            <AvatarImage src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" />
+            <AvatarImage src={profile?.avatar_url || undefined} />
             <AvatarFallback className="bg-secondary text-foreground text-xs">
-              {user?.email?.charAt(0).toUpperCase() || "U"}
+              {getInitials(profile?.name, user?.email)}
             </AvatarFallback>
           </Avatar>
           {!isCollapsed && (
             <div className="flex flex-col flex-1 min-w-0">
               <span className="text-sm font-medium truncate">
-                {user?.email?.split("@")[0] || "Designer"}
+                {displayName}
               </span>
               <SubscriptionBadge size="sm" />
             </div>

@@ -1370,8 +1370,10 @@ export type Database = {
           category: Database["public"]["Enums"]["designer_category"] | null
           created_at: string
           email: string | null
+          first_login: boolean | null
           id: string
           name: string | null
+          notification_preferences: Json | null
           rank_id: string | null
           skills: string[] | null
           status: Database["public"]["Enums"]["user_status"] | null
@@ -1388,8 +1390,10 @@ export type Database = {
           category?: Database["public"]["Enums"]["designer_category"] | null
           created_at?: string
           email?: string | null
+          first_login?: boolean | null
           id?: string
           name?: string | null
+          notification_preferences?: Json | null
           rank_id?: string | null
           skills?: string[] | null
           status?: Database["public"]["Enums"]["user_status"] | null
@@ -1406,8 +1410,10 @@ export type Database = {
           category?: Database["public"]["Enums"]["designer_category"] | null
           created_at?: string
           email?: string | null
+          first_login?: boolean | null
           id?: string
           name?: string | null
+          notification_preferences?: Json | null
           rank_id?: string | null
           skills?: string[] | null
           status?: Database["public"]["Enums"]["user_status"] | null

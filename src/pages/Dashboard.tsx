@@ -1,17 +1,77 @@
+import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { StatCard } from "@/components/dashboard/StatCard";
 import { ActiveStylebox } from "@/components/dashboard/ActiveStylebox";
 import { RankProgress } from "@/components/dashboard/RankProgress";
 import { TeamActivity } from "@/components/dashboard/TeamActivity";
 import { EarningsSnapshot } from "@/components/dashboard/EarningsSnapshot";
+import { WelcomeModal } from "@/components/WelcomeModal";
 import { Box, Trophy, FolderOpen, DollarSign, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import { RankTier } from "@/lib/ranks";
 import { motion } from "framer-motion";
+import { useProfile } from "@/hooks/useProfile";
+import { useGreeting } from "@/hooks/useGreeting";
+import { useDashboardStats } from "@/hooks/useDashboardStats";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 const Dashboard = () => {
+  const { user } = useAuth();
+  const { profile, loading: profileLoading, markFirstLoginComplete } = useProfile();
+  const { stats, loading: statsLoading } = useDashboardStats();
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [recentActivities, setRecentActivities] = useState<any[]>([]);
+
+  const greeting = useGreeting({
+    name: profile?.name,
+    isFirstLogin: false, // We handle first login with modal instead
+    joinedAt: profile?.created_at,
+  });
+
+  // Check for first login and show welcome modal
+  useEffect(() => {
+    if (profile?.first_login) {
+      setShowWelcome(true);
+    }
+  }, [profile?.first_login]);
+
+  const handleWelcomeClose = async () => {
+    setShowWelcome(false);
+    await markFirstLoginComplete();
+  };
+
+  // Fetch recent activities
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchActivities = async () => {
+      const { data: submissions } = await supabase
+        .from("stylebox_submissions")
+        .select("*, styleboxes(title)")
+        .eq("designer_id", user.id)
+        .order("submitted_at", { ascending: false })
+        .limit(4);
+
+      if (submissions) {
+        const activities = submissions.map((sub) => ({
+          action: sub.status === "approved" ? "Completed" : 
+                  sub.status === "rejected" ? "Rejected" : "Submitted",
+          project: sub.styleboxes?.title || "Stylebox",
+          time: getRelativeTime(new Date(sub.submitted_at)),
+          status: sub.status === "approved" ? "completed" : 
+                  sub.status === "rejected" ? "rejected" : "pending",
+        }));
+        setRecentActivities(activities);
+      }
+    };
+
+    fetchActivities();
+  }, [user]);
+
   const activeStyleboxes = [
     {
       title: "Sustainable Resort Collection",
@@ -43,14 +103,13 @@ const Dashboard = () => {
   };
 
   const rankData = {
-    currentRank: "stylist" as RankTier,
+    currentRank: (profile?.rank?.name?.toLowerCase() || "apprentice") as RankTier,
     foundationRank: "f1" as 'f1' | 'f2' | null,
-    styleCredits: 1250,
+    styleCredits: profile?.xp || 0,
     badges: [
       { name: "First Win", icon: "🏆" },
       { name: "Team Player", icon: "🤝" },
       { name: "Creative Spark", icon: "✨" },
-      { name: "10 Streak", icon: "🔥" },
     ],
   };
 
@@ -73,8 +132,21 @@ const Dashboard = () => {
     },
   };
 
+  const displayActivities = recentActivities.length > 0 ? recentActivities : [
+    { action: "Submitted", project: "Autumn Textile Print", time: "2 hours ago", status: "pending" },
+    { action: "Completed", project: "Minimalist Ring Collection", time: "1 day ago", status: "completed" },
+    { action: "Started", project: "Sustainable Resort Collection", time: "3 days ago", status: "active" },
+    { action: "Published", project: "Urban Street Style Series", time: "1 week ago", status: "published" },
+  ];
+
   return (
     <AppLayout>
+      <WelcomeModal
+        isOpen={showWelcome}
+        onClose={handleWelcomeClose}
+        userName={profile?.name || undefined}
+      />
+
       <motion.div 
         className="p-4 sm:p-6 lg:p-8 space-y-8"
         variants={containerVariants}
@@ -90,12 +162,17 @@ const Dashboard = () => {
           <div className="absolute inset-0 bg-dot-pattern opacity-30" />
           <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-2">
-              <h1 className="text-display-xl">
-                Welcome back, Aria
-              </h1>
-              <p className="text-caption text-base">
-                Continue your creative journey. You're on a 12-day streak!
-              </p>
+              {profileLoading ? (
+                <>
+                  <Skeleton className="h-10 w-64" />
+                  <Skeleton className="h-5 w-48" />
+                </>
+              ) : (
+                <>
+                  <h1 className="text-display-xl">{greeting.title}</h1>
+                  <p className="text-caption text-base">{greeting.subtitle}</p>
+                </>
+              )}
             </div>
             <Button variant="default" size="lg" className="gap-2 btn-press shadow-md">
               <Sparkles className="h-4 w-4" />
@@ -112,32 +189,42 @@ const Dashboard = () => {
         >
           <h2 id="stats-heading" className="sr-only">Dashboard Statistics</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
-            <StatCard
-              title="Active Styleboxes"
-              value={3}
-              subtitle="2 in progress, 1 pending"
-              icon={Box}
-            />
-            <StatCard
-              title="Completed"
-              value={47}
-              subtitle="This year"
-              icon={Trophy}
-              trend={{ value: 12, isPositive: true }}
-            />
-            <StatCard
-              title="Portfolio Items"
-              value={89}
-              subtitle="6 published"
-              icon={FolderOpen}
-            />
-            <StatCard
-              title="Earnings"
-              value="$4,280"
-              subtitle="This month"
-              icon={DollarSign}
-              trend={{ value: 23, isPositive: true }}
-            />
+            {statsLoading ? (
+              <>
+                {[1, 2, 3, 4].map((i) => (
+                  <Skeleton key={i} className="h-32 rounded-xl" />
+                ))}
+              </>
+            ) : (
+              <>
+                <StatCard
+                  title="Active Styleboxes"
+                  value={stats.activeStyleboxes}
+                  subtitle={`${stats.completedStyleboxes} completed this year`}
+                  icon={Box}
+                />
+                <StatCard
+                  title="Completed"
+                  value={stats.completedStyleboxes}
+                  subtitle="This year"
+                  icon={Trophy}
+                  trend={stats.completedStyleboxes > 0 ? { value: 12, isPositive: true } : undefined}
+                />
+                <StatCard
+                  title="Portfolio Items"
+                  value={stats.portfolioItems}
+                  subtitle={`${stats.productsSold} published`}
+                  icon={FolderOpen}
+                />
+                <StatCard
+                  title="Earnings"
+                  value={`$${stats.monthlyEarnings.toLocaleString()}`}
+                  subtitle="This month"
+                  icon={DollarSign}
+                  trend={stats.monthlyEarnings > 0 ? { value: 23, isPositive: true } : undefined}
+                />
+              </>
+            )}
           </div>
         </motion.section>
 
@@ -177,12 +264,7 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent className="pt-4">
                 <div className="divide-y divide-border">
-                  {[
-                    { action: "Submitted", project: "Autumn Textile Print", time: "2 hours ago", status: "pending" },
-                    { action: "Completed", project: "Minimalist Ring Collection", time: "1 day ago", status: "completed" },
-                    { action: "Started", project: "Sustainable Resort Collection", time: "3 days ago", status: "active" },
-                    { action: "Published", project: "Urban Street Style Series", time: "1 week ago", status: "published" },
-                  ].map((activity, index) => (
+                  {displayActivities.map((activity, index) => (
                     <div 
                       key={index} 
                       className="flex items-center justify-between py-4 first:pt-0 last:pb-0 group"
@@ -222,11 +304,11 @@ const Dashboard = () => {
             <RankProgress {...rankData} />
             <TeamActivity {...teamData} />
             <EarningsSnapshot
-              totalEarnings={18750}
-              monthlyEarnings={4280}
-              pendingPayouts={890}
-              productsSold={23}
-              trend={23}
+              totalEarnings={stats.totalEarnings}
+              monthlyEarnings={stats.monthlyEarnings}
+              pendingPayouts={stats.pendingPayouts}
+              productsSold={stats.productsSold}
+              trend={stats.monthlyEarnings > 0 ? 23 : 0}
             />
           </motion.aside>
         </div>
@@ -234,5 +316,19 @@ const Dashboard = () => {
     </AppLayout>
   );
 };
+
+// Helper function to get relative time
+function getRelativeTime(date: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 60) return `${diffMins} minutes ago`;
+  if (diffHours < 24) return `${diffHours} hours ago`;
+  if (diffDays < 7) return `${diffDays} days ago`;
+  return `${Math.floor(diffDays / 7)} weeks ago`;
+}
 
 export default Dashboard;

@@ -18,6 +18,7 @@ import PublicLayout from "@/components/public/PublicLayout";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import ParallaxSection from "@/components/public/ParallaxSection";
+import SEOHead from "@/components/public/SEOHead";
 import { studioToolImages, backgroundImages } from "@/lib/images";
 
 const tools = [
@@ -63,6 +64,12 @@ const assetLibrary = [
 export default function StudioInfo() {
   return (
     <PublicLayout>
+      <SEOHead 
+        title="Designer Studio Tools | Adorzia"
+        description="Professional design tools for every creator. Pattern tools, moodboard builders, mockup generators, and automated tech packs—all in one workspace."
+        url="https://studio.adorzia.com/studio-info"
+        keywords="fashion design tools, pattern design, moodboard builder, tech pack generator, design studio"
+      />
       {/* Hero with floating elements */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />
@@ -374,24 +381,6 @@ export default function StudioInfo() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 md:py-28 border-t">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <AnimatedHeading as="h2" className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
-            Start Creating Today
-          </AnimatedHeading>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Access professional design tools with your free account.
-          </p>
-          
-          <Link to="/auth">
-            <Button size="lg" className="h-12 px-8 group">
-              Open Studio
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
-        </div>
-      </section>
     </PublicLayout>
   );
 }

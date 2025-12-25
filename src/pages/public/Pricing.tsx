@@ -29,6 +29,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import PublicLayout from "@/components/public/PublicLayout";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
+import SEOHead from "@/components/public/SEOHead";
 import { FOUNDER_TIERS, EARNING_LADDER, DESIGNER_FAQS, FAQ_CATEGORIES, FAQCategory } from "@/lib/founder-tiers";
 import { SUBSCRIPTION_TIERS, SubscriptionTier } from "@/lib/subscription";
 import { useFounderSlots } from "@/hooks/useFounderSlots";
@@ -88,6 +89,12 @@ export default function Pricing() {
 
   return (
     <PublicLayout>
+      <SEOHead 
+        title="Pricing & Founder Access | Adorzia Studio"
+        description="Access professional design tools with monthly subscriptions. Secure lifetime profit boosts with limited Founder Titles. Up to 50% revenue share."
+        url="https://studio.adorzia.com/pricing"
+        keywords="adorzia pricing, fashion design subscription, founder access, revenue share, designer earnings"
+      />
       {/* Hero Section with Parallax */}
       <motion.section 
         ref={heroRef}
@@ -817,59 +824,6 @@ export default function Pricing() {
                 Go to Support Center
               </Button>
             </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-24 md:py-32 bg-foreground text-background overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            background: 'linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.1) 50%, transparent 75%)',
-            backgroundSize: '200% 200%',
-          }}
-          animate={{ backgroundPosition: ['0% 0%', '100% 100%'] }}
-          transition={{ duration: 3, repeat: Infinity, repeatType: 'reverse' }}
-        />
-        <motion.div 
-          className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
-          animate={{ opacity: [0.1, 0.3, 0.1] }}
-          transition={{ duration: 5, repeat: Infinity }}
-        />
-        
-        <div className="max-w-3xl mx-auto px-6 text-center relative">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <AnimatedHeading as="h2" className="font-display text-3xl md:text-5xl font-bold mb-5 tracking-tight">
-              Start Earning More Today
-            </AnimatedHeading>
-            <p className="text-background/60 text-lg max-w-xl mx-auto mb-10">
-              Join the early designers securing their lifetime advantage in the Adorzia ecosystem.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <Link to="/auth">
-                <Button size="lg" variant="secondary" className="h-14 px-10 text-base group shadow-lg">
-                  Join for Free
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <Link to="/auth">
-                <Button size="lg" variant="outline" className="h-14 px-10 text-base group border-amber-500/50 text-amber-400 hover:bg-amber-500/10">
-                  Secure F1 Rank
-                  <Crown className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-            </div>
-            
-            <p className="text-background/50 text-sm flex items-center justify-center gap-2">
-              <Mail className="h-4 w-4" />
-              Questions? Contact us at <a href="mailto:hello@adorzia.com" className="text-primary hover:underline">hello@adorzia.com</a>
-            </p>
           </motion.div>
         </div>
       </section>

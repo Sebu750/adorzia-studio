@@ -18,6 +18,7 @@ import PublicLayout from "@/components/public/PublicLayout";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import ParallaxSection from "@/components/public/ParallaxSection";
+import SEOHead from "@/components/public/SEOHead";
 import { monetizationImages, backgroundImages } from "@/lib/images";
 
 const publishingSteps = [
@@ -59,6 +60,12 @@ const earningsDashboard = [
 export default function Monetization() {
   return (
     <PublicLayout>
+      <SEOHead 
+        title="Monetize Your Designs | Adorzia Marketplace"
+        description="Turn your creativity into income. From design to doorstep, we handle production and fulfillment. Keep up to 40% revenue share on every sale."
+        url="https://studio.adorzia.com/monetization"
+        keywords="designer earnings, fashion monetization, revenue share, design income, sell designs online"
+      />
       {/* Hero with animated gradient */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10" />
@@ -336,32 +343,6 @@ export default function Monetization() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 md:py-28">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 200 }}
-          >
-            <DollarSign className="h-12 w-12 mx-auto mb-6 text-primary" />
-          </motion.div>
-          <AnimatedHeading as="h2" className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
-            Start Monetizing Your Designs
-          </AnimatedHeading>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Join thousands of designers already earning from their creativity.
-          </p>
-          
-          <Link to="/auth">
-            <Button size="lg" className="h-12 px-8 group">
-              Create Account
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
-        </div>
-      </section>
     </PublicLayout>
   );
 }

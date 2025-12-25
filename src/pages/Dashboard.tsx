@@ -43,15 +43,9 @@ const Dashboard = () => {
   };
 
   const rankData = {
-    currentRank: "senior" as RankTier,
+    currentRank: "stylist" as RankTier,
     foundationRank: "f1" as 'f1' | 'f2' | null,
-    scores: {
-      styleboxScore: 85,
-      portfolioScore: 72,
-      publicationScore: 45,
-      sellingScore: 60,
-      weightedTotal: 68.95, // (85*0.3) + (72*0.35) + (45*0.15) + (60*0.2)
-    },
+    styleCredits: 1250,
     badges: [
       { name: "First Win", icon: "🏆" },
       { name: "Team Player", icon: "🤝" },

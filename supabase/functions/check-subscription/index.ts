@@ -68,9 +68,27 @@ serve(async (req) => {
 
     if (hasActiveSub) {
       const subscription = subscriptions.data[0];
-      subscriptionEnd = new Date(subscription.current_period_end * 1000).toISOString();
-      productId = subscription.items.data[0].price.product as string;
-      priceId = subscription.items.data[0].price.id;
+      
+      // Safely parse the subscription end date
+      if (subscription.current_period_end && typeof subscription.current_period_end === 'number') {
+        try {
+          const endDate = new Date(subscription.current_period_end * 1000);
+          if (!isNaN(endDate.getTime())) {
+            subscriptionEnd = endDate.toISOString();
+          }
+        } catch (e) {
+          logStep("Warning: Could not parse subscription end date", { 
+            current_period_end: subscription.current_period_end 
+          });
+        }
+      }
+      
+      // Safely get product and price IDs
+      if (subscription.items?.data?.[0]?.price) {
+        productId = subscription.items.data[0].price.product as string;
+        priceId = subscription.items.data[0].price.id;
+      }
+      
       logStep("Active subscription found", { 
         subscriptionId: subscription.id, 
         endDate: subscriptionEnd,
@@ -84,7 +102,7 @@ serve(async (req) => {
         'prod_TZzMUrCNQhoSkG': 'pro',
         'prod_TZzMnU22Ntmp89': 'elite',
       };
-      const tier = tierMap[productId] || 'basic';
+      const tier = tierMap[productId || ''] || 'basic';
       
       await supabaseClient
         .from('profiles')

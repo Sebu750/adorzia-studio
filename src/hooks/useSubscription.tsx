@@ -43,23 +43,33 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         },
       });
 
-      if (fnError) throw fnError;
+      // Don't throw on error - just default to free tier
+      if (fnError) {
+        console.warn('Subscription check failed, defaulting to free tier:', fnError);
+        setTier('cadet');
+        setIsSubscribed(false);
+        setSubscriptionEnd(null);
+        setLoading(false);
+        return;
+      }
 
-      if (data.subscribed && data.product_id) {
+      if (data?.subscribed && data?.product_id) {
         const tierFromProduct = PRODUCT_TO_TIER[data.product_id];
         setTier(tierFromProduct || 'cadet');
         setIsSubscribed(true);
-        setSubscriptionEnd(data.subscription_end);
+        setSubscriptionEnd(data.subscription_end || null);
       } else {
         setTier('cadet');
         setIsSubscribed(false);
         setSubscriptionEnd(null);
       }
     } catch (err) {
-      console.error('Error checking subscription:', err);
+      // Gracefully handle errors - don't block the UI
+      console.warn('Error checking subscription, defaulting to free tier:', err);
       setError(err instanceof Error ? err.message : 'Failed to check subscription');
       setTier('cadet');
       setIsSubscribed(false);
+      setSubscriptionEnd(null);
     } finally {
       setLoading(false);
     }

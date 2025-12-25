@@ -161,6 +161,54 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_submissions: {
+        Row: {
+          admin_notes: string | null
+          category: string
+          created_at: string
+          email: string
+          id: string
+          ip_address: string | null
+          message: string
+          name: string
+          replied_at: string | null
+          replied_by: string | null
+          status: string
+          subject: string
+          user_agent: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          category?: string
+          created_at?: string
+          email: string
+          id?: string
+          ip_address?: string | null
+          message: string
+          name: string
+          replied_at?: string | null
+          replied_by?: string | null
+          status?: string
+          subject: string
+          user_agent?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          category?: string
+          created_at?: string
+          email?: string
+          id?: string
+          ip_address?: string | null
+          message?: string
+          name?: string
+          replied_at?: string | null
+          replied_by?: string | null
+          status?: string
+          subject?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       designer_scores: {
         Row: {
           created_at: string
@@ -234,6 +282,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      email_logs: {
+        Row: {
+          created_at: string
+          email_type: string
+          error_message: string | null
+          from_address: string
+          id: string
+          metadata: Json | null
+          resend_id: string | null
+          status: string
+          subdomain: string
+          subject: string
+          to_address: string
+        }
+        Insert: {
+          created_at?: string
+          email_type: string
+          error_message?: string | null
+          from_address: string
+          id?: string
+          metadata?: Json | null
+          resend_id?: string | null
+          status?: string
+          subdomain: string
+          subject: string
+          to_address: string
+        }
+        Update: {
+          created_at?: string
+          email_type?: string
+          error_message?: string | null
+          from_address?: string
+          id?: string
+          metadata?: Json | null
+          resend_id?: string | null
+          status?: string
+          subdomain?: string
+          subject?: string
+          to_address?: string
+        }
+        Relationships: []
       }
       foundation_purchases: {
         Row: {

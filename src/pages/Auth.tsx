@@ -117,7 +117,10 @@ export default function Auth() {
           variant: "destructive",
         });
       } else {
-        toast({ title: "Welcome back!" });
+        toast({ 
+          title: "Welcome back!",
+          description: "You've successfully signed in to The Studio."
+        });
         navigate("/dashboard");
       }
     } catch (error) {
@@ -159,10 +162,12 @@ export default function Auth() {
           variant: "destructive",
         });
       } else {
+        // With auto-confirm enabled, redirect directly to dashboard
         toast({
-          title: "Account created!",
-          description: "Please check your email to verify your account.",
+          title: "Welcome to The Studio!",
+          description: "Your account has been created successfully.",
         });
+        navigate("/dashboard");
       }
     } catch (error) {
       if (error instanceof z.ZodError) {

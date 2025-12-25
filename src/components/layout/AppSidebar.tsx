@@ -11,7 +11,8 @@ import {
   LogOut,
   BookOpen,
   CreditCard,
-  Palette
+  Palette,
+  Loader2
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
@@ -36,6 +37,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { SubscriptionBadge } from "@/components/subscription/SubscriptionBadge";
 import { useProfile } from "@/hooks/useProfile";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useToast } from "@/hooks/use-toast";
 
 const mainNavItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -58,14 +60,19 @@ const secondaryNavItems = [
 export function AppSidebar() {
   const { state } = useSidebar();
   const isCollapsed = state === "collapsed";
-  const { user, signOut } = useAuth();
+  const { user, signOut, isSigningOut } = useAuth();
   const { tier } = useSubscription();
   const { profile } = useProfile();
   const { unreadCount } = useNotifications();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleLogout = async () => {
     await signOut();
+    toast({
+      title: "Signed out",
+      description: "You've been successfully signed out. See you soon!",
+    });
     navigate("/");
   };
 
@@ -182,9 +189,14 @@ export function AppSidebar() {
             size="sm" 
             className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground"
             onClick={handleLogout}
+            disabled={isSigningOut}
           >
-            <LogOut className="h-4 w-4" />
-            Sign Out
+            {isSigningOut ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <LogOut className="h-4 w-4" />
+            )}
+            {isSigningOut ? "Signing out..." : "Sign Out"}
           </Button>
         )}
       </SidebarFooter>

@@ -22,6 +22,8 @@ export const productImages = {
   casualTee: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80",
   floralDress: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=80",
   leatherBag: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80",
+  silkScarf: "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=600&q=80",
+  sneakers: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&q=80",
 };
 
 export const eventBanners = {
@@ -37,6 +39,8 @@ export const collectionImages = {
   summerEssentials: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&q=80",
   lahoreStreet: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=800&q=80",
   sustainableBasics: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800&q=80",
+  winterCollection: "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&q=80",
+  formalWear: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80",
 };
 
 export const backgroundImages = {
@@ -44,9 +48,9 @@ export const backgroundImages = {
   fashion: "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&q=80",
   textile: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=1920&q=80",
   studio: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80",
+  workspace: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1920&q=80",
+  creative: "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=1920&q=80",
 };
-
-// New categories for enhanced pages
 
 export const styleboxImages = {
   streetwear: "https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=800&q=80",

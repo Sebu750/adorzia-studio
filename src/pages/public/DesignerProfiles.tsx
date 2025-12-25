@@ -7,6 +7,7 @@ import PublicLayout from "@/components/public/PublicLayout";
 import TiltCard from "@/components/public/TiltCard";
 import StatsSection from "@/components/public/StatsSection";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
+import SEOHead from "@/components/public/SEOHead";
 import { designerImages } from "@/lib/images";
 import { Link } from "react-router-dom";
 
@@ -86,6 +87,12 @@ const designerStats = [
 export default function DesignerProfiles() {
   return (
     <PublicLayout>
+      <SEOHead 
+        title="Designer Community | Adorzia"
+        description="Meet Pakistan's top emerging fashion designers. Discover their work, specialties, and creative journeys on Adorzia's designer platform."
+        url="https://studio.adorzia.com/designers"
+        keywords="fashion designers, pakistan designers, emerging talent, designer community, creative professionals"
+      />
       {/* Hero Section */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/10" />

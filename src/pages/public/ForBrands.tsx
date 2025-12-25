@@ -20,6 +20,7 @@ import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import ParallaxSection from "@/components/public/ParallaxSection";
 import StatsSection from "@/components/public/StatsSection";
+import SEOHead from "@/components/public/SEOHead";
 import { brandPartnershipImages, backgroundImages } from "@/lib/images";
 
 const offerings = [
@@ -75,6 +76,12 @@ const testimonials = [
 export default function ForBrands() {
   return (
     <PublicLayout>
+      <SEOHead 
+        title="Brand Partnerships | Adorzia"
+        description="Partner with Adorzia to access Pakistan's top emerging design talent and manufacturing infrastructure. Host challenges, collaborate, and scale production."
+        url="https://studio.adorzia.com/brands"
+        keywords="brand partnerships, fashion collaboration, white label production, design challenges, pakistan manufacturing"
+      />
       {/* Hero with parallax background */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
         <motion.div 
@@ -284,47 +291,6 @@ export default function ForBrands() {
         </div>
       </section>
 
-      {/* CTA with animated gradient */}
-      <section className="relative py-20 md:py-28 bg-foreground text-background overflow-hidden">
-        <motion.div 
-          className="absolute inset-0 opacity-20"
-          style={{
-            background: 'linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.1) 50%, transparent 75%)',
-            backgroundSize: '200% 200%',
-          }}
-          animate={{
-            backgroundPosition: ['0% 0%', '100% 100%'],
-          }}
-          transition={{ duration: 5, repeat: Infinity, repeatType: 'reverse' }}
-        />
-        
-        <div className="max-w-3xl mx-auto px-6 text-center relative">
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 200 }}
-          >
-            <Handshake className="h-12 w-12 mx-auto mb-6" />
-          </motion.div>
-          <AnimatedHeading as="h2" className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
-            Let's Build Together
-          </AnimatedHeading>
-          <p className="text-background/60 max-w-xl mx-auto mb-8">
-            Connect with our partnerships team to explore how Adorzia can support your brand goals.
-          </p>
-          
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" variant="secondary" className="h-12 px-8 group">
-              Schedule a Call
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button size="lg" variant="outline" className="h-12 px-8 border-background/20 text-background hover:bg-background/10">
-              Download Partnership Deck
-            </Button>
-          </div>
-        </div>
-      </section>
     </PublicLayout>
   );
 }

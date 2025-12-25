@@ -18,6 +18,7 @@ import PublicLayout from "@/components/public/PublicLayout";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import ParallaxSection from "@/components/public/ParallaxSection";
+import SEOHead from "@/components/public/SEOHead";
 import { eventBanners, competitionImages, designerImages } from "@/lib/images";
 
 const liveChallenges = [
@@ -95,6 +96,12 @@ const leaderboard = [
 export default function Competitions() {
   return (
     <PublicLayout>
+      <SEOHead 
+        title="Design Competitions | Adorzia Styleathon"
+        description="Compete in real-time fashion design challenges. Win prizes, build your reputation, and get discovered. Join live challenges and upcoming events."
+        url="https://studio.adorzia.com/competitions"
+        keywords="design competition, fashion challenge, styleathon, design contest, win prizes"
+      />
       {/* Hero with animated background */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-foreground text-background overflow-hidden">
         <motion.div 
@@ -399,32 +406,6 @@ export default function Competitions() {
         </div>
       </ParallaxSection>
 
-      {/* CTA */}
-      <section className="py-20 md:py-28">
-        <div className="max-w-3xl mx-auto px-6 text-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", stiffness: 200 }}
-          >
-            <Flame className="h-12 w-12 mx-auto mb-6 text-destructive" />
-          </motion.div>
-          <AnimatedHeading as="h2" className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
-            Enter the Arena
-          </AnimatedHeading>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Build your reputation. Win prizes. Get discovered.
-          </p>
-          
-          <Link to="/auth">
-            <Button size="lg" className="h-12 px-8 group">
-              Start Competing
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
-        </div>
-      </section>
     </PublicLayout>
   );
 }

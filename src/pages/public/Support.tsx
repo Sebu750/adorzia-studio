@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import PublicLayout from "@/components/public/PublicLayout";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
+import SEOHead from "@/components/public/SEOHead";
 import { DESIGNER_FAQS, FAQ_CATEGORIES, FAQCategory } from "@/lib/founder-tiers";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { supabase } from "@/integrations/supabase/client";
@@ -61,6 +62,12 @@ export default function Support() {
 
   return (
     <PublicLayout>
+      <SEOHead 
+        title="Help & Support | Adorzia"
+        description="Get answers to FAQs about StyleBoxes, IP ownership, profit sharing, teaming, and more. Contact our support team for personalized assistance."
+        url="https://studio.adorzia.com/support"
+        keywords="adorzia support, fashion design help, FAQs, contact support, designer help"
+      />
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />
         <motion.div className="absolute top-20 right-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 8, repeat: Infinity }} />

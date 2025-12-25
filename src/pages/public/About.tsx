@@ -22,6 +22,7 @@ import TiltCard from "@/components/public/TiltCard";
 import StatsSection from "@/components/public/StatsSection";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import ParallaxSection from "@/components/public/ParallaxSection";
+import SEOHead from "@/components/public/SEOHead";
 import { SOCIAL_LINKS } from "@/lib/social-links";
 
 const uniquePoints = [
@@ -132,6 +133,12 @@ const companyStats = [
 export default function About() {
   return (
     <PublicLayout>
+      <SEOHead 
+        title="About Adorzia | Fashion Design Platform from Pakistan"
+        description="Learn about Adorzia's mission to reinvent fashion creation. Meet our team and discover how we're building the world's first end-to-end fashion ecosystem."
+        url="https://studio.adorzia.com/about"
+        keywords="adorzia about, fashion platform, pakistan fashion tech, design ecosystem, fashion startup"
+      />
       {/* Hero */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/10" />
@@ -532,50 +539,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 md:py-28 border-t relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />
-        <motion.div 
-          className="absolute top-1/3 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl"
-          animate={{ scale: [1, 1.3, 1] }}
-          transition={{ duration: 6, repeat: Infinity }}
-        />
-        
-        <div className="max-w-3xl mx-auto px-6 text-center relative">
-          <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
-            Join the Movement
-          </AnimatedHeading>
-          <motion.p 
-            className="text-muted-foreground max-w-xl mx-auto mb-8"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            Be part of the ecosystem that's redefining fashion creation.
-          </motion.p>
-          
-          <motion.div 
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-          >
-            <Link to="/auth">
-              <Button size="lg" className="h-12 px-8 group">
-                Start Creating
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
-            <Link to="/brands">
-              <Button size="lg" variant="outline" className="h-12 px-8">
-                Partner With Us
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
     </PublicLayout>
   );
 }

@@ -19,6 +19,7 @@ import PublicLayout from "@/components/public/PublicLayout";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import ParallaxSection from "@/components/public/ParallaxSection";
+import SEOHead from "@/components/public/SEOHead";
 import { styleboxImages, backgroundImages } from "@/lib/images";
 import { SUBSCRIPTION_TIERS, type SubscriptionTier } from "@/lib/subscription";
 
@@ -87,6 +88,12 @@ const tierFeatures: Record<SubscriptionTier, string[]> = {
 export default function StyleBoxesInfo() {
   return (
     <PublicLayout>
+      <SEOHead 
+        title="StyleBoxes - Learn Fashion Design | Adorzia"
+        description="Hands-on design challenges that build real industry skills. Every completed StyleBox becomes a portfolio asset and potential marketplace product."
+        url="https://studio.adorzia.com/styleboxes-info"
+        keywords="fashion design challenges, learn fashion design, design portfolio, stylebox, gamified learning"
+      />
       {/* Hero with gradient background */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />

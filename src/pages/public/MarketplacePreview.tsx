@@ -18,6 +18,7 @@ import ProductCard from "@/components/public/ProductCard";
 import TiltCard from "@/components/public/TiltCard";
 import StatsSection from "@/components/public/StatsSection";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
+import SEOHead from "@/components/public/SEOHead";
 import { 
   productImages, 
   designerImages, 
@@ -183,6 +184,12 @@ const marketplaceStats = [
 export default function MarketplacePreview() {
   return (
     <PublicLayout>
+      <SEOHead 
+        title="Fashion Marketplace | Shop Designer Made in Pakistan"
+        description="Discover unique fashion pieces from emerging Pakistani designers. Every purchase supports independent creators and sustainable fashion."
+        url="https://studio.adorzia.com/marketplace-preview"
+        keywords="fashion marketplace, designer clothing, pakistan fashion, independent designers, sustainable fashion"
+      />
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-10"
@@ -561,43 +568,6 @@ export default function MarketplacePreview() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-20 md:py-28 border-t relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />
-        <div className="max-w-3xl mx-auto px-6 text-center relative">
-          <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
-            Start Shopping
-          </AnimatedHeading>
-          <motion.p 
-            className="text-muted-foreground max-w-xl mx-auto mb-8"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            Support independent designers. Discover unique fashion.
-          </motion.p>
-          
-          <motion.div 
-            className="flex flex-col sm:flex-row gap-4 justify-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-          >
-            <Button size="lg" className="group">
-              <ShoppingBag className="mr-2 h-4 w-4" />
-              Browse All Products
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
-            <Link to="/auth">
-              <Button size="lg" variant="outline">
-                Become a Designer
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
     </PublicLayout>
   );
 }

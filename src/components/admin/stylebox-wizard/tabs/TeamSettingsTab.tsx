@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Trash2, Users, Award } from "lucide-react";
-import { RANK_INFO } from "@/lib/ranks";
+import { RANKS, STANDARD_RANKS, type RankTier } from "@/lib/ranks";
 import { SOVEREIGN_ATELIER_ROLES } from "@/lib/sovereign-atelier";
 
 interface TeamRole {
@@ -122,11 +122,14 @@ export function TeamSettingsTab() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.entries(RANK_INFO).map(([key, rank]) => (
-                    <SelectItem key={key} value={String(rank.order)}>
-                      {rank.name} ({rank.scRequired}+ SC)
-                    </SelectItem>
-                  ))}
+                  {STANDARD_RANKS.map((key) => {
+                    const rank = RANKS[key];
+                    return (
+                      <SelectItem key={key} value={String(rank.order)}>
+                        {rank.name} ({rank.minSC}+ SC)
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>

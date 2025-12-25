@@ -12,7 +12,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import { ROLE_COLORS, ROLE_ICONS, type TeamRole } from "@/lib/team-challenges";
-import { RANK_INFO } from "@/lib/ranks";
+import { RANKS, getRankByOrder } from "@/lib/ranks";
 
 interface TeamStyleboxCardProps {
   title: string;
@@ -43,7 +43,7 @@ export function TeamStyleboxCard({
   onStartChallenge,
   onViewDetails
 }: TeamStyleboxCardProps) {
-  const requiredRank = Object.values(RANK_INFO).find(r => r.order === minimumRankOrder);
+  const requiredRank = getRankByOrder(minimumRankOrder);
   const hasFullTeam = currentTeamSize >= teamSize;
   const canStart = isTeamEligible && hasFullTeam;
 
@@ -131,7 +131,7 @@ export function TeamStyleboxCard({
           <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
             <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
             <p className="text-xs text-amber-500/90">
-              Not all team members meet the {requiredRank?.name} rank requirement ({requiredRank?.scRequired}+ SC)
+              Not all team members meet the {requiredRank?.name} rank requirement ({requiredRank?.minSC}+ SC)
             </p>
           </div>
         )}

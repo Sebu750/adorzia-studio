@@ -1,16 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Crown, Star, Sparkles, TrendingUp, Gift, Percent } from "lucide-react";
+import { Crown, Star, Sparkles, TrendingUp, Gift, Percent, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { RANKS, RankTier, getNextStandardRank, getRankProgress, calculateEffectiveCommission, formatSC } from "@/lib/ranks";
 import { motion } from "framer-motion";
 
-interface RankProgressProps {
+interface SCProgressCardProps {
+  styleCredits: number;
+  totalStyleCredits: number;
   currentRank: RankTier;
   foundationRank?: 'f1' | 'f2' | null;
-  styleCredits: number;
-  badges: { name: string; icon: string }[];
 }
 
 const rankStyles: Record<RankTier, { bg: string; border: string; text: string; glow?: string }> = {
@@ -32,30 +32,30 @@ const rankStyles: Record<RankTier, { bg: string; border: string; text: string; g
     text: "text-rank-apprentice",
   },
   patternist: {
-    bg: "bg-gradient-to-br from-muted/40 to-muted/10",
-    border: "border-muted-foreground/30",
-    text: "text-muted-foreground",
+    bg: "bg-gradient-to-br from-rank-patternist/20 to-rank-patternist/5",
+    border: "border-rank-patternist/30",
+    text: "text-rank-patternist",
   },
   stylist: {
-    bg: "bg-gradient-to-br from-muted/50 to-muted/20",
-    border: "border-muted-foreground/40",
-    text: "text-foreground",
+    bg: "bg-gradient-to-br from-rank-stylist/20 to-rank-stylist/5",
+    border: "border-rank-stylist/30",
+    text: "text-rank-stylist",
   },
   couturier: {
-    bg: "bg-gradient-to-br from-foreground/10 to-foreground/5",
-    border: "border-foreground/30",
-    text: "text-foreground",
+    bg: "bg-gradient-to-br from-rank-couturier/20 to-rank-couturier/5",
+    border: "border-rank-couturier/30",
+    text: "text-rank-couturier",
   },
   visionary: {
-    bg: "bg-gradient-to-br from-foreground/15 to-foreground/5",
-    border: "border-foreground/40",
-    text: "text-foreground",
+    bg: "bg-gradient-to-br from-rank-visionary/20 to-rank-visionary/5",
+    border: "border-rank-visionary/30",
+    text: "text-rank-visionary",
   },
   creative_director: {
-    bg: "bg-gradient-to-br from-foreground/20 to-foreground/10",
-    border: "border-foreground/50",
-    text: "text-foreground",
-    glow: "shadow-[0_0_20px_hsl(var(--foreground)/0.2)]",
+    bg: "bg-gradient-to-br from-rank-creative-director/20 to-rank-creative-director/5",
+    border: "border-rank-creative-director/40",
+    text: "text-rank-creative-director",
+    glow: "shadow-[0_0_20px_hsl(var(--rank-creative-director)/0.3)]",
   },
 };
 
@@ -63,55 +63,75 @@ const RankIcon = ({ rank }: { rank: RankTier }) => {
   const isFoundation = RANKS[rank].isFoundation;
   const isTopTier = rank === 'creative_director' || rank === 'visionary';
   
-  if (isFoundation) return <Sparkles className="h-7 w-7" />;
-  if (isTopTier) return <Crown className="h-7 w-7" />;
+  if (isFoundation) {
+    return <Sparkles className="h-7 w-7" />;
+  }
+  if (isTopTier) {
+    return <Crown className="h-7 w-7" />;
+  }
   return <Star className="h-7 w-7" />;
 };
 
-export function RankProgress({
+export function SCProgressCard({
+  styleCredits,
+  totalStyleCredits,
   currentRank,
   foundationRank,
-  styleCredits,
-  badges,
-}: RankProgressProps) {
+}: SCProgressCardProps) {
   const rankDef = RANKS[currentRank];
   const nextRank = getNextStandardRank(currentRank);
   const style = rankStyles[currentRank] || rankStyles.apprentice;
   
+  // Calculate effective commission
   const effectiveCommission = calculateEffectiveCommission(currentRank, foundationRank);
+  
+  // Calculate progress to next rank
   const progressPercent = getRankProgress(currentRank, styleCredits);
   const scNeeded = nextRank ? Math.max(0, nextRank.minSC - styleCredits) : 0;
 
   return (
-    <Card className="overflow-hidden" role="region" aria-labelledby="rank-title">
+    <Card className="overflow-hidden" role="region" aria-labelledby="sc-title">
       <CardHeader className="pb-4 border-b border-border">
-        <CardTitle id="rank-title" className="flex items-center gap-2.5 text-lg">
+        <CardTitle id="sc-title" className="flex items-center gap-2.5 text-lg">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
-            <Crown className="h-4 w-4 text-foreground" />
+            <Zap className="h-4 w-4 text-foreground" />
           </div>
-          Designer Rank
+          Style Credits
         </CardTitle>
       </CardHeader>
       <CardContent className="p-5 sm:p-6 space-y-5">
         {/* SC Display */}
-        <div className="text-center">
+        <div className="text-center space-y-2">
           <motion.div 
-            className={cn("text-4xl font-display font-bold tabular-nums", style.text)}
+            className={cn("text-5xl font-display font-bold tabular-nums", style.text)}
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            {formatSC(styleCredits)} SC
+            {formatSC(styleCredits)}
           </motion.div>
+          <p className="text-sm text-muted-foreground">
+            {formatSC(totalStyleCredits)} lifetime SC earned
+          </p>
         </div>
 
         {/* Rank Display */}
         <div className="flex items-center gap-4">
-          <motion.div className="relative flex-shrink-0">
+          <motion.div 
+            className="relative flex-shrink-0"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
+          >
             <div className={cn(
-              "h-14 w-14 rounded-2xl flex items-center justify-center border-2",
-              style.bg, style.border, style.glow
+              "h-14 w-14 rounded-2xl flex items-center justify-center border-2 transition-all duration-300",
+              style.bg,
+              style.border,
+              style.glow
             )}>
-              <span className={style.text}><RankIcon rank={currentRank} /></span>
+              <span className={style.text}>
+                <RankIcon rank={currentRank} />
+              </span>
             </div>
             {foundationRank && (
               <div className="absolute -top-1 -right-1">
@@ -124,22 +144,28 @@ export function RankProgress({
           
           <div className="flex-1 min-w-0 space-y-1">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className={cn("font-display text-xl font-semibold", style.text)}>{rankDef.name}</span>
+              <span className={cn("font-display text-xl font-semibold", style.text)}>
+                {rankDef.name}
+              </span>
               {foundationRank && (
-                <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-foreground/30 text-foreground/70">
                   {RANKS[foundationRank].name}
                 </Badge>
               )}
             </div>
-            <p className="text-sm text-muted-foreground line-clamp-2">{rankDef.description}</p>
+            <p className="text-sm text-muted-foreground line-clamp-1">{rankDef.description}</p>
           </div>
         </div>
 
         {/* Commission Highlight */}
-        <div className={cn("flex items-center justify-between p-3 rounded-xl border", style.bg, style.border)}>
+        <div className={cn(
+          "flex items-center justify-between p-3 rounded-xl border transition-all duration-300 hover:shadow-sm",
+          style.bg,
+          style.border
+        )}>
           <div className="flex items-center gap-2">
             <Percent className={cn("h-4 w-4", style.text)} />
-            <span className="text-sm font-medium">Commission</span>
+            <span className="text-sm font-medium">Commission Rate</span>
           </div>
           <div className="text-right">
             <span className={cn("text-2xl font-display font-bold tabular-nums", style.text)}>
@@ -171,7 +197,7 @@ export function RankProgress({
           </div>
         )}
 
-        {/* Foundation Badge */}
+        {/* Foundation Rank Badge */}
         {foundationRank && (
           <div className="flex items-center gap-2.5 p-3 rounded-xl bg-secondary border border-border">
             <Gift className="h-4 w-4 text-foreground" />
@@ -181,17 +207,15 @@ export function RankProgress({
           </div>
         )}
 
-        {/* Badges */}
-        {badges.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="text-label">Recent Badges</h4>
-            <div className="flex flex-wrap gap-2">
-              {badges.map((badge, index) => (
-                <div key={index} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary border border-border/50">
-                  <span className="text-base">{badge.icon}</span>
-                  <span className="text-xs font-medium">{badge.name}</span>
-                </div>
-              ))}
+        {/* Next Unlock */}
+        {nextRank && (
+          <div className="pt-3 border-t border-border">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center gap-1.5 text-muted-foreground">
+                <Star className="h-4 w-4" />
+                <span>Next unlock:</span>
+              </div>
+              <span className="font-medium text-foreground">{nextRank.perks[0]}</span>
             </div>
           </div>
         )}

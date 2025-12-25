@@ -8,7 +8,11 @@ import {
   Sparkles,
   Target,
   CheckCircle2,
-  Lock
+  Lock,
+  Crown,
+  Briefcase,
+  GraduationCap,
+  Star
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PublicLayout from "@/components/public/PublicLayout";
@@ -16,6 +20,7 @@ import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import ParallaxSection from "@/components/public/ParallaxSection";
 import { styleboxImages, backgroundImages } from "@/lib/images";
+import { SUBSCRIPTION_TIERS, type SubscriptionTier } from "@/lib/subscription";
 
 const categories = [
   { name: "Streetwear", count: 24, image: styleboxImages.streetwear, description: "Urban fashion and street culture designs" },
@@ -51,11 +56,33 @@ const skillMetrics = [
   { name: "Craftsmanship", description: "Quality of construction and finishing" },
 ];
 
-const subscriptionAccess = [
-  { tier: "Basic", access: "5 Free StyleBoxes", publishing: false, price: "PKR 1,500/mo" },
-  { tier: "Pro", access: "Unlimited StyleBoxes", publishing: true, price: "PKR 3,900/mo" },
-  { tier: "Elite", access: "Priority + Mentorship", publishing: true, price: "PKR 9,900/mo" },
-];
+// Build subscription access from centralized config
+const tierIcons: Record<SubscriptionTier, React.ReactNode> = {
+  cadet: <GraduationCap className="h-5 w-5" />,
+  pro: <Briefcase className="h-5 w-5" />,
+  elite: <Crown className="h-5 w-5" />,
+};
+
+const tierFeatures: Record<SubscriptionTier, string[]> = {
+  cadet: [
+    "3 Basic StyleBoxes",
+    "3 Portfolio Designs",
+    "Community Forum Access",
+    "No Marketplace Earnings"
+  ],
+  pro: [
+    "Full StyleBox Access",
+    "20 Portfolio Designs",
+    "1 Production Request/mo",
+    "Marketplace Earnings ✓"
+  ],
+  elite: [
+    "All Challenges (incl. Team)",
+    "Unlimited Portfolio",
+    "5 Production Requests/mo",
+    "Curator Review ✓"
+  ],
+};
 
 export default function StyleBoxesInfo() {
   return (
@@ -290,49 +317,117 @@ export default function StyleBoxesInfo() {
               Subscription Access
             </AnimatedHeading>
             <p className="text-muted-foreground">
-              Full access for Pro and Elite members with publishing rights.
+              Subscriptions unlock tools & challenges. Choose the tier that fits your journey.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {subscriptionAccess.map((tier, i) => (
-              <motion.div
-                key={tier.tier}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <TiltCard tiltAmount={5}>
-                  <Card className={`h-full ${tier.tier === 'Pro' ? 'border-foreground ring-2 ring-foreground/20' : ''}`}>
-                    <CardContent className="p-6">
-                      <h3 className="font-display text-xl font-semibold mb-2">{tier.tier}</h3>
-                      <p className="text-2xl font-bold mb-4">{tier.price}</p>
-                      <ul className="space-y-3">
-                        <li className="flex items-center gap-2 text-sm">
-                          <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
-                          {tier.access}
-                        </li>
-                        <li className="flex items-center gap-2 text-sm">
-                          {tier.publishing ? (
-                            <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {(Object.keys(SUBSCRIPTION_TIERS) as SubscriptionTier[]).map((tierId, i) => {
+              const tier = SUBSCRIPTION_TIERS[tierId];
+              const isPopular = tierId === 'pro';
+              const isElite = tierId === 'elite';
+              const features = tierFeatures[tierId];
+              
+              return (
+                <motion.div
+                  key={tierId}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                >
+                  <TiltCard tiltAmount={5}>
+                    <Card className={`h-full relative overflow-hidden ${
+                      isPopular ? 'border-primary ring-2 ring-primary/20' : 
+                      isElite ? 'border-amber-500/50 ring-1 ring-amber-500/20' : ''
+                    }`}>
+                      {/* Coming Soon Badge */}
+                      <div className="absolute top-3 right-3">
+                        <Badge variant="secondary" className="text-xs">
+                          {tier.price === 0 ? 'Free' : 'Coming Soon'}
+                        </Badge>
+                      </div>
+                      
+                      {/* Popular Badge */}
+                      {isPopular && (
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                          <Badge className="bg-primary text-primary-foreground flex items-center gap-1">
+                            <Star className="h-3 w-3" /> Popular
+                          </Badge>
+                        </div>
+                      )}
+                      
+                      <CardContent className="p-6 pt-8">
+                        {/* Icon & Title */}
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className={`h-10 w-10 rounded-full flex items-center justify-center ${
+                            isElite ? 'bg-amber-500/10 text-amber-600' :
+                            isPopular ? 'bg-primary/10 text-primary' : 
+                            'bg-muted text-muted-foreground'
+                          }`}>
+                            {tierIcons[tierId]}
+                          </div>
+                          <div>
+                            <h3 className="font-display text-lg font-semibold">{tier.name}</h3>
+                            <p className="text-xs text-muted-foreground">{tier.subtitle}</p>
+                          </div>
+                        </div>
+                        
+                        {/* Price */}
+                        <div className="mb-5">
+                          <p className="text-2xl font-bold">
+                            {tier.priceFormatted}
+                          </p>
+                        </div>
+                        
+                        {/* Features */}
+                        <ul className="space-y-2.5">
+                          {features.map((feature, idx) => (
+                            <li key={idx} className="flex items-start gap-2 text-sm">
+                              {feature.includes('No ') || feature.includes('✗') ? (
+                                <Lock className="h-4 w-4 text-muted-foreground/50 mt-0.5 shrink-0" />
+                              ) : (
+                                <CheckCircle2 className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                              )}
+                              <span className={feature.includes('No ') ? 'text-muted-foreground' : ''}>
+                                {feature}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                        
+                        {/* Publishing Status */}
+                        <div className={`mt-4 pt-4 border-t flex items-center gap-2 text-sm ${
+                          tier.limits.canPublish ? 'text-primary' : 'text-muted-foreground'
+                        }`}>
+                          {tier.limits.canPublish ? (
+                            <>
+                              <CheckCircle2 className="h-4 w-4" />
+                              Publishing Rights Included
+                            </>
                           ) : (
-                            <Lock className="h-4 w-4 text-muted-foreground" />
+                            <>
+                              <Lock className="h-4 w-4" />
+                              No Publishing Rights
+                            </>
                           )}
-                          {tier.publishing ? 'Publishing Rights' : 'No Publishing'}
-                        </li>
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </TiltCard>
-              </motion.div>
-            ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TiltCard>
+                </motion.div>
+              );
+            })}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-12 space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Subscriptions are for <span className="font-medium text-foreground">access to tools & challenges</span>. 
+              Want lifetime profit boosts? Check out our Founder Titles.
+            </p>
             <Link to="/pricing">
               <Button size="lg" className="group">
-                View Full Pricing
+                View Full Pricing & Founder Titles
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>

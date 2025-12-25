@@ -20,3 +20,18 @@ verify_jwt = false
 
 [functions.submit-stylebox-entry]
 verify_jwt = true
+
+[functions.validate-team-eligibility]
+verify_jwt = true
+
+[functions.award-team-badges]
+verify_jwt = true
+
+[functions.award-style-credits]
+verify_jwt = true
+
+[functions.calculate-designer-commission]
+verify_jwt = true
+
+[functions.reset-monthly-tokens]
+verify_jwt = true

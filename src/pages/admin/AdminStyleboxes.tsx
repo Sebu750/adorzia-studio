@@ -46,7 +46,8 @@ import {
   Filter,
   ArrowUpDown,
   Box,
-  Sparkles
+  Sparkles,
+  Users
 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -313,7 +314,7 @@ export default function AdminStyleboxes() {
         </div>
 
         {/* Stats Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
           <div className="bg-card rounded-lg border p-4">
             <p className="text-sm text-muted-foreground">Total</p>
             <p className="text-2xl font-bold">{styleboxes?.length || 0}</p>
@@ -322,6 +323,12 @@ export default function AdminStyleboxes() {
             <p className="text-sm text-muted-foreground">Active</p>
             <p className="text-2xl font-bold text-success">
               {styleboxes?.filter(s => s.status === "active").length || 0}
+            </p>
+          </div>
+          <div className="bg-card rounded-lg border p-4">
+            <p className="text-sm text-muted-foreground">Team Challenges</p>
+            <p className="text-2xl font-bold text-purple-500">
+              {styleboxes?.filter(s => s.is_team_challenge).length || 0}
             </p>
           </div>
           <div className="bg-card rounded-lg border p-4">
@@ -403,11 +410,23 @@ export default function AdminStyleboxes() {
                   <TableRow key={stylebox.id} className="group hover:bg-muted/30">
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-admin-wine/10 flex items-center justify-center">
+                        <div className="h-10 w-10 rounded-lg bg-admin-wine/10 flex items-center justify-center relative">
                           <Sparkles className="h-5 w-5 text-admin-wine" />
+                          {stylebox.is_team_challenge && (
+                            <div className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-purple-500 flex items-center justify-center">
+                              <Users className="h-2.5 w-2.5 text-white" />
+                            </div>
+                          )}
                         </div>
                         <div>
-                          <p className="font-medium">{stylebox.title}</p>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium">{stylebox.title}</p>
+                            {stylebox.is_team_challenge && (
+                              <Badge variant="secondary" className="text-[10px] px-1 py-0 bg-purple-500/20 text-purple-400 border-purple-500/30">
+                                Team
+                              </Badge>
+                            )}
+                          </div>
                           <p className="text-xs text-muted-foreground line-clamp-1 max-w-[200px]">
                             {stylebox.description}
                           </p>

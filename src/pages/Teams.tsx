@@ -13,8 +13,11 @@ import {
   Crown,
   Calendar,
   ArrowRight,
-  UserPlus
+  UserPlus,
+  Swords
 } from "lucide-react";
+import { TeamStyleboxCard } from "@/components/teams/TeamStyleboxCard";
+import { SOVEREIGN_ATELIER_CHALLENGE, SOVEREIGN_ATELIER_ROLES } from "@/lib/sovereign-atelier";
 
 const Teams = () => {
   const myTeam = {
@@ -58,6 +61,9 @@ const Teams = () => {
     },
   ];
 
+  // Mock team eligibility - in real app, this would come from the validate-team-eligibility edge function
+  const isTeamEligible = myTeam.members.length >= 4;
+
   return (
     <AppLayout>
       <div className="p-6 lg:p-8 space-y-8">
@@ -80,6 +86,10 @@ const Teams = () => {
         <Tabs defaultValue="my-team" className="space-y-6">
           <TabsList>
             <TabsTrigger value="my-team">My Team</TabsTrigger>
+            <TabsTrigger value="challenges" className="gap-1">
+              <Swords className="h-4 w-4" />
+              Team Challenges
+            </TabsTrigger>
             <TabsTrigger value="discover">Discover Teams</TabsTrigger>
             <TabsTrigger value="invitations">Invitations</TabsTrigger>
           </TabsList>
@@ -166,6 +176,58 @@ const Teams = () => {
                       </CardContent>
                     </Card>
                   ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="challenges" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Sovereign Atelier Challenge */}
+              <TeamStyleboxCard
+                title={SOVEREIGN_ATELIER_CHALLENGE.title}
+                description={SOVEREIGN_ATELIER_CHALLENGE.description}
+                difficulty="insane"
+                teamSize={SOVEREIGN_ATELIER_CHALLENGE.team_size}
+                minimumRankOrder={4}
+                timeLimit={SOVEREIGN_ATELIER_CHALLENGE.time_limit_hours}
+                xpReward={SOVEREIGN_ATELIER_CHALLENGE.xp_reward}
+                roles={SOVEREIGN_ATELIER_ROLES}
+                isTeamEligible={isTeamEligible}
+                currentTeamSize={myTeam.members.length}
+                onViewDetails={() => console.log('View details')}
+                onStartChallenge={() => console.log('Start challenge')}
+              />
+            </div>
+
+            {/* Info section */}
+            <Card className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border-purple-500/20">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 rounded-xl bg-purple-500/20">
+                    <Crown className="h-6 w-6 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-display font-semibold mb-1">Team Challenges</h3>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Complete team challenges to earn exclusive badges and unlock Rank 4+ progression. 
+                      Each team member takes on a specialized role with unique deliverables.
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      <Badge variant="outline" className="border-purple-500/30 text-purple-400">
+                        ✂️ Master Cutter
+                      </Badge>
+                      <Badge variant="outline" className="border-purple-500/30 text-purple-400">
+                        🪡 Needle Artisan
+                      </Badge>
+                      <Badge variant="outline" className="border-purple-500/30 text-purple-400">
+                        💃 Drape Stylist
+                      </Badge>
+                      <Badge variant="outline" className="border-purple-500/30 text-purple-400">
+                        👁️ Creative Lead
+                      </Badge>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>

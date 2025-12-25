@@ -125,6 +125,11 @@ serve(async (req: Request): Promise<Response> => {
 
     // Send email notification
     let emailSent = false;
+    let emailResponse: any = null;
+    let emailErrorMsg: string | null = null;
+    const emailSubject = `[Adorzia Feedback] ${categoryLabels[category]} from ${user_name}`;
+    const adminEmail = "haseeb.49251@gmail.com";
+
     try {
       const timestamp = new Date().toLocaleString("en-US", {
         dateStyle: "medium",
@@ -132,10 +137,10 @@ serve(async (req: Request): Promise<Response> => {
         timeZone: "Asia/Karachi",
       });
 
-      const emailResponse = await resend.emails.send({
-        from: "Adorzia Feedback <onboarding@resend.dev>",
-        to: ["haseeb.49251@gmail.com"],
-        subject: `[Adorzia Feedback] ${categoryLabels[category]} from ${user_name}`,
+      emailResponse = await resend.emails.send({
+        from: "Adorzia Feedback <noreply@feedback.adorzia.com>",
+        to: [adminEmail],
+        subject: emailSubject,
         html: `
           <!DOCTYPE html>
           <html>
@@ -198,9 +203,33 @@ serve(async (req: Request): Promise<Response> => {
         .update({ email_sent: true })
         .eq("id", feedbackData.id);
 
-    } catch (emailError) {
-      console.error("Failed to send email notification:", emailError);
+    } catch (err: any) {
+      emailErrorMsg = err?.message || "Unknown email error";
+      console.error("Failed to send email notification:", err);
       // Don't fail the request if email fails - feedback is still saved
+    }
+
+    // Log email to email_logs table
+    try {
+      await supabaseServiceRole.from("email_logs").insert({
+        subdomain: "feedback",
+        email_type: "feedback_notification",
+        from_address: "noreply@feedback.adorzia.com",
+        to_address: adminEmail,
+        subject: emailSubject,
+        status: emailSent ? "sent" : "failed",
+        resend_id: emailResponse?.id || null,
+        error_message: emailErrorMsg,
+        metadata: {
+          feedback_id: feedbackData.id,
+          user_id: user.id,
+          category,
+          user_role,
+        },
+      });
+      console.log("Email logged to email_logs table");
+    } catch (logError) {
+      console.error("Failed to log email:", logError);
     }
 
     return new Response(

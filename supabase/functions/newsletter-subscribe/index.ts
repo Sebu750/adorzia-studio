@@ -206,7 +206,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send welcome email via Resend API
     let emailSent = false;
-    let emailError = null;
+    let emailError: any = null;
+    let emailResult: any = null;
+    const emailSubject = "Welcome to Adorzia! 🎨";
+    const fromAddress = "hello@newsletter.adorzia.com";
     
     try {
       const emailResponse = await fetch("https://api.resend.com/emails", {
@@ -216,14 +219,14 @@ const handler = async (req: Request): Promise<Response> => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Adorzia <hello@adorzia.com>",
+          from: `Adorzia <${fromAddress}>`,
           to: [normalizedEmail],
-          subject: "Welcome to Adorzia! 🎨",
+          subject: emailSubject,
           html: getWelcomeEmailHtml(),
         }),
       });
 
-      const emailResult = await emailResponse.json();
+      emailResult = await emailResponse.json();
       
       if (!emailResponse.ok) {
         throw new Error(emailResult.message || "Failed to send email");
@@ -244,6 +247,24 @@ const handler = async (req: Request): Promise<Response> => {
       emailError = err;
       console.error("Failed to send welcome email:", err);
       // Don't fail the subscription if email fails
+    }
+
+    // Log email to email_logs table
+    try {
+      await supabase.from("email_logs").insert({
+        subdomain: "newsletter",
+        email_type: "welcome",
+        from_address: fromAddress,
+        to_address: normalizedEmail,
+        subject: emailSubject,
+        status: emailSent ? "sent" : "failed",
+        resend_id: emailResult?.id || null,
+        error_message: emailError?.message || null,
+        metadata: { source },
+      });
+      console.log("Email logged to email_logs table");
+    } catch (logError) {
+      console.error("Failed to log email:", logError);
     }
 
     return new Response(

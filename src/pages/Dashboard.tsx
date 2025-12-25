@@ -6,6 +6,7 @@ import { RankProgress } from "@/components/dashboard/RankProgress";
 import { TeamActivity } from "@/components/dashboard/TeamActivity";
 import { EarningsSnapshot } from "@/components/dashboard/EarningsSnapshot";
 import { WelcomeModal } from "@/components/WelcomeModal";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Box, Trophy, FolderOpen, DollarSign, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -104,7 +105,7 @@ const Dashboard = () => {
 
   const rankData = {
     currentRank: (profile?.rank?.name?.toLowerCase() || "apprentice") as RankTier,
-    foundationRank: "f1" as 'f1' | 'f2' | null,
+    foundationRank: null as 'f1' | 'f2' | null, // Will be fetched from foundation_purchases in future
     styleCredits: profile?.xp || 0,
     badges: [
       { name: "First Win", icon: "🏆" },
@@ -301,15 +302,21 @@ const Dashboard = () => {
             role="complementary"
             aria-label="Sidebar widgets"
           >
-            <RankProgress {...rankData} />
-            <TeamActivity {...teamData} />
-            <EarningsSnapshot
-              totalEarnings={stats.totalEarnings}
-              monthlyEarnings={stats.monthlyEarnings}
-              pendingPayouts={stats.pendingPayouts}
-              productsSold={stats.productsSold}
-              trend={stats.monthlyEarnings > 0 ? 23 : 0}
-            />
+            <ErrorBoundary>
+              <RankProgress {...rankData} />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <TeamActivity {...teamData} />
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <EarningsSnapshot
+                totalEarnings={stats.totalEarnings}
+                monthlyEarnings={stats.monthlyEarnings}
+                pendingPayouts={stats.pendingPayouts}
+                productsSold={stats.productsSold}
+                trend={stats.monthlyEarnings > 0 ? 23 : 0}
+              />
+            </ErrorBoundary>
           </motion.aside>
         </div>
       </motion.div>

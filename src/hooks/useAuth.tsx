@@ -2,11 +2,15 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
+type AppRole = 'designer' | 'admin' | 'superadmin' | null;
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
   isAdmin: boolean;
+  isDesigner: boolean;
+  userRole: AppRole;
   signUp: (email: string, password: string, name: string, category: string, bio?: string, skills?: string[]) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
@@ -18,7 +22,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [userRole, setUserRole] = useState<AppRole>(null);
+
+  const isAdmin = userRole === 'admin' || userRole === 'superadmin';
+  const isDesigner = userRole === 'designer' || isAdmin;
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -26,15 +33,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        setLoading(false);
-
-        // Check admin role with setTimeout to prevent deadlock
-        if (session?.user) {
-          setTimeout(() => {
-            checkAdminRole(session.user.id);
-          }, 0);
+        
+        if (!session?.user) {
+          setUserRole(null);
+          setLoading(false);
         } else {
-          setIsAdmin(false);
+          // Check role with setTimeout to prevent deadlock
+          setTimeout(() => {
+            checkUserRole(session.user.id);
+          }, 0);
         }
       }
     );
@@ -43,31 +50,47 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setLoading(false);
       
       if (session?.user) {
-        checkAdminRole(session.user.id);
+        checkUserRole(session.user.id);
+      } else {
+        setLoading(false);
       }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const checkAdminRole = async (userId: string) => {
+  const checkUserRole = async (userId: string) => {
     try {
+      // Get the highest privilege role for the user
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
-        .eq('user_id', userId)
-        .maybeSingle();
+        .eq('user_id', userId);
       
-      if (!error && data) {
-        setIsAdmin(data.role === 'admin' || data.role === 'superadmin');
+      if (error) {
+        console.error('Error checking user role:', error);
+        setUserRole(null);
+      } else if (data && data.length > 0) {
+        // Priority: superadmin > admin > designer
+        const roles = data.map(r => r.role);
+        if (roles.includes('superadmin')) {
+          setUserRole('superadmin');
+        } else if (roles.includes('admin')) {
+          setUserRole('admin');
+        } else if (roles.includes('designer')) {
+          setUserRole('designer');
+        } else {
+          setUserRole(null);
+        }
       } else {
-        setIsAdmin(false);
+        setUserRole(null);
       }
     } catch {
-      setIsAdmin(false);
+      setUserRole(null);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,7 +121,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             skills: skills || [] 
           })
           .eq('user_id', data.user.id);
-
       }
 
       // Log signup (without PII)
@@ -155,11 +177,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
     }
     await supabase.auth.signOut();
-    setIsAdmin(false);
+    setUserRole(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, isAdmin, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      session, 
+      loading, 
+      isAdmin, 
+      isDesigner, 
+      userRole, 
+      signUp, 
+      signIn, 
+      signOut 
+    }}>
       {children}
     </AuthContext.Provider>
   );

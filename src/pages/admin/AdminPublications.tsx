@@ -329,7 +329,7 @@ export default function AdminPublications() {
   const revisionCount = publications?.filter((p: any) => p.decision === "revision_requested").length || 0;
 
   return (
-    <AdminLayout userRole="superadmin">
+    <AdminLayout>
       <div className="p-6 lg:p-8 space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

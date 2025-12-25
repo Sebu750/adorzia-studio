@@ -181,7 +181,7 @@ const AdminDashboard = () => {
 
   if (loading) {
     return (
-      <AdminLayout userRole="superadmin">
+      <AdminLayout>
         <div className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto">
           <Skeleton className="h-32 w-full rounded-2xl" />
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -193,7 +193,7 @@ const AdminDashboard = () => {
   }
 
   return (
-    <AdminLayout userRole="superadmin">
+    <AdminLayout>
       <motion.div 
         className="p-4 sm:p-6 lg:p-8 space-y-8 max-w-[1600px] mx-auto"
         variants={containerVariants}

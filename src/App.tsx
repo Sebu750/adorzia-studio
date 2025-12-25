@@ -99,75 +99,75 @@ const App = () => (
                 <Route path="/unauthorized" element={<Unauthorized />} />
                 
                 {/* ============================================ */}
-                {/* STUDIO ROUTES - Designer Role Required */}
+                {/* STUDIO ROUTES - Authentication Required */}
                 {/* ============================================ */}
                 <Route path="/subscription" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Subscription />
                   </ProtectedRoute>
                 } />
                 <Route path="/dashboard" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Dashboard />
                   </ProtectedRoute>
                 } />
                 <Route path="/walkthroughs" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Walkthroughs />
                   </ProtectedRoute>
                 } />
                 <Route path="/walkthroughs/:id" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <WalkthroughDetail />
                   </ProtectedRoute>
                 } />
                 <Route path="/styleboxes" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Styleboxes />
                   </ProtectedRoute>
                 } />
                 <Route path="/styleboxes/:id" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <StyleboxPreview />
                   </ProtectedRoute>
                 } />
                 <Route path="/portfolio" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Portfolio />
                   </ProtectedRoute>
                 } />
                 <Route path="/collections" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Collections />
                   </ProtectedRoute>
                 } />
                 <Route path="/profile" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Profile />
                   </ProtectedRoute>
                 } />
                 <Route path="/teams" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Teams />
                   </ProtectedRoute>
                 } />
                 <Route path="/jobs" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Jobs />
                   </ProtectedRoute>
                 } />
                 <Route path="/analytics" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Analytics />
                   </ProtectedRoute>
                 } />
                 <Route path="/notifications" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Notifications />
                   </ProtectedRoute>
                 } />
                 <Route path="/settings" element={
-                  <ProtectedRoute requireRole="designer">
+                  <ProtectedRoute>
                     <Settings />
                   </ProtectedRoute>
                 } />

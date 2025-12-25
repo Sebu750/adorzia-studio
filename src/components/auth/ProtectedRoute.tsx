@@ -3,22 +3,16 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Loader2 } from 'lucide-react';
 
-type AppRole = 'designer' | 'admin' | 'superadmin';
-
 interface ProtectedRouteProps {
   children: ReactNode;
   requireAdmin?: boolean;
-  requireRole?: AppRole;
-  allowRoles?: AppRole[];
 }
 
 export function ProtectedRoute({ 
   children, 
-  requireAdmin = false,
-  requireRole,
-  allowRoles 
+  requireAdmin = false
 }: ProtectedRouteProps) {
-  const { user, loading, isAdmin, isDesigner, userRole } = useAuth();
+  const { user, loading, isAdmin } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -38,36 +32,9 @@ export function ProtectedRoute({
     return <Navigate to={loginPath} state={{ from: location.pathname }} replace />;
   }
 
-  // Check for admin requirement (backwards compatibility)
+  // Check for admin requirement (for admin routes only)
   if (requireAdmin && !isAdmin) {
     return <Navigate to="/unauthorized" state={{ attemptedPath: location.pathname }} replace />;
-  }
-
-  // Check for specific role requirement
-  if (requireRole) {
-    const hasRole = 
-      requireRole === 'designer' ? (isDesigner || isAdmin) :
-      requireRole === 'admin' ? isAdmin :
-      requireRole === 'superadmin' ? userRole === 'superadmin' :
-      false;
-    
-    if (!hasRole) {
-      return <Navigate to="/unauthorized" state={{ attemptedPath: location.pathname }} replace />;
-    }
-  }
-
-  // Check for allowed roles list
-  if (allowRoles && allowRoles.length > 0) {
-    const hasAllowedRole = allowRoles.some(role => {
-      if (role === 'designer') return isDesigner || isAdmin;
-      if (role === 'admin') return isAdmin;
-      if (role === 'superadmin') return userRole === 'superadmin';
-      return false;
-    });
-    
-    if (!hasAllowedRole) {
-      return <Navigate to="/unauthorized" state={{ attemptedPath: location.pathname }} replace />;
-    }
   }
 
   return <>{children}</>;

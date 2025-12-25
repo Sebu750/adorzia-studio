@@ -57,6 +57,7 @@ import AdminWalkthroughs from "./pages/admin/AdminWalkthroughs";
 import AdminRankings from "./pages/admin/AdminRankings";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminCollections from "./pages/admin/AdminCollections";
+import AdminJobs from "./pages/admin/AdminJobs";
 
 const queryClient = new QueryClient();
 

@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 import { RANKS, RankTier } from "@/lib/ranks";
 import { RankOverview } from "@/components/rank/RankOverview";
 
-const currentRank: RankTier = "senior";
+const currentRank: RankTier = "stylist";
 
 const Profile = () => {
   const skills = [
@@ -71,7 +71,7 @@ const Profile = () => {
               <div className="flex-1 md:pb-2">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h1 className="font-display text-2xl font-bold">Aria Kim</h1>
-                  <Badge className="gap-1 bg-rank-senior/20 text-rank-senior border-rank-senior/30">
+                  <Badge className="gap-1 bg-rank-stylist/20 text-rank-stylist border-rank-stylist/30">
                     <Crown className="h-3 w-3" />
                     {RANKS[currentRank].name}
                   </Badge>
@@ -176,45 +176,45 @@ const Profile = () => {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Crown className="h-5 w-5 text-rank-senior" />
+                    <Crown className="h-5 w-5 text-rank-stylist" />
                     Rank Status
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="text-center">
-                    <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-rank-senior/20 to-rank-senior/5 border-2 border-rank-senior/30 mb-3">
-                      <Crown className="h-10 w-10 text-rank-senior" />
+                    <div className="inline-flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-rank-stylist/20 to-rank-stylist/5 border-2 border-rank-stylist/30 mb-3">
+                      <Crown className="h-10 w-10 text-rank-stylist" />
                     </div>
-                    <h3 className="font-display text-xl font-semibold text-rank-senior">
+                    <h3 className="font-display text-xl font-semibold text-rank-stylist">
                       {RANKS[currentRank].name}
                     </h3>
                     <p className="text-sm text-muted-foreground">{RANKS[currentRank].title}</p>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-rank-senior/10 border border-rank-senior/20 text-center">
+                  <div className="p-3 rounded-xl bg-rank-stylist/10 border border-rank-stylist/20 text-center">
                     <p className="text-sm text-muted-foreground">Revenue Share</p>
-                    <p className="font-display text-3xl font-bold text-rank-senior">
+                    <p className="font-display text-3xl font-bold text-rank-stylist">
                       {RANKS[currentRank].revenueShare}%
                     </p>
                   </div>
 
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span>Progress to Lead</span>
+                      <span>Progress to Couturier</span>
                       <span className="text-muted-foreground">49%</span>
                     </div>
                     <Progress value={49} className="h-2" />
                     <p className="text-xs text-muted-foreground text-center">
-                      $2,550 more in sales to unlock Lead Designer
+                      1,200 more SC to unlock Couturier
                     </p>
                   </div>
 
                   <div className="pt-4 border-t space-y-3">
-                    <h4 className="text-sm font-medium">Next Perks at Lead</h4>
+                    <h4 className="text-sm font-medium">Next Perks at Couturier</h4>
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Percent className="h-4 w-4 text-accent" />
-                        40% Revenue Share
+                        25% Revenue Share
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Sparkles className="h-4 w-4 text-accent" />

@@ -214,6 +214,11 @@ const App = () => (
                     <AdminCollections />
                   </ProtectedRoute>
                 } />
+                <Route path="/admin/jobs" element={
+                  <ProtectedRoute requireAdmin>
+                    <AdminJobs />
+                  </ProtectedRoute>
+                } />
                 
                 <Route path="*" element={<NotFound />} />
               </Routes>

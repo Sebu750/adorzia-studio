@@ -279,23 +279,44 @@ export type Database = {
       job_applications: {
         Row: {
           applied_at: string
+          cover_letter: string | null
           designer_id: string
           id: string
+          interview_date: string | null
           job_id: string
+          notes: string | null
+          portfolio_url: string | null
+          resume_url: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           status: Database["public"]["Enums"]["job_application_status"]
         }
         Insert: {
           applied_at?: string
+          cover_letter?: string | null
           designer_id: string
           id?: string
+          interview_date?: string | null
           job_id: string
+          notes?: string | null
+          portfolio_url?: string | null
+          resume_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           status?: Database["public"]["Enums"]["job_application_status"]
         }
         Update: {
           applied_at?: string
+          cover_letter?: string | null
           designer_id?: string
           id?: string
+          interview_date?: string | null
           job_id?: string
+          notes?: string | null
+          portfolio_url?: string | null
+          resume_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           status?: Database["public"]["Enums"]["job_application_status"]
         }
         Relationships: [
@@ -310,29 +331,80 @@ export type Database = {
       }
       jobs: {
         Row: {
+          application_count: number | null
+          benefits: Json | null
           category: Database["public"]["Enums"]["designer_category"] | null
+          company_logo: string | null
+          company_name: string | null
+          contact_email: string | null
           created_at: string
+          deadline: string | null
           description: string | null
+          external_link: string | null
           id: string
+          is_featured: boolean | null
+          job_type: Database["public"]["Enums"]["job_type"] | null
+          location: string | null
+          location_type: Database["public"]["Enums"]["location_type"] | null
           posted_by: string | null
+          requirements: Json | null
+          salary_max: number | null
+          salary_min: number | null
+          salary_type: Database["public"]["Enums"]["salary_type"] | null
+          status: Database["public"]["Enums"]["job_status"] | null
+          tags: string[] | null
           title: string
           updated_at: string
         }
         Insert: {
+          application_count?: number | null
+          benefits?: Json | null
           category?: Database["public"]["Enums"]["designer_category"] | null
+          company_logo?: string | null
+          company_name?: string | null
+          contact_email?: string | null
           created_at?: string
+          deadline?: string | null
           description?: string | null
+          external_link?: string | null
           id?: string
+          is_featured?: boolean | null
+          job_type?: Database["public"]["Enums"]["job_type"] | null
+          location?: string | null
+          location_type?: Database["public"]["Enums"]["location_type"] | null
           posted_by?: string | null
+          requirements?: Json | null
+          salary_max?: number | null
+          salary_min?: number | null
+          salary_type?: Database["public"]["Enums"]["salary_type"] | null
+          status?: Database["public"]["Enums"]["job_status"] | null
+          tags?: string[] | null
           title: string
           updated_at?: string
         }
         Update: {
+          application_count?: number | null
+          benefits?: Json | null
           category?: Database["public"]["Enums"]["designer_category"] | null
+          company_logo?: string | null
+          company_name?: string | null
+          contact_email?: string | null
           created_at?: string
+          deadline?: string | null
           description?: string | null
+          external_link?: string | null
           id?: string
+          is_featured?: boolean | null
+          job_type?: Database["public"]["Enums"]["job_type"] | null
+          location?: string | null
+          location_type?: Database["public"]["Enums"]["location_type"] | null
           posted_by?: string | null
+          requirements?: Json | null
+          salary_max?: number | null
+          salary_min?: number | null
+          salary_type?: Database["public"]["Enums"]["salary_type"] | null
+          status?: Database["public"]["Enums"]["job_status"] | null
+          tags?: string[] | null
           title?: string
           updated_at?: string
         }
@@ -1358,6 +1430,35 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_jobs: {
+        Row: {
+          designer_id: string
+          id: string
+          job_id: string
+          saved_at: string
+        }
+        Insert: {
+          designer_id: string
+          id?: string
+          job_id: string
+          saved_at?: string
+        }
+        Update: {
+          designer_id?: string
+          id?: string
+          job_id?: string
+          saved_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_jobs_job_id_fkey"
+            columns: ["job_id"]
+            isOneToOne: false
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stylebox_evaluation_scores: {
         Row: {
           craftsmanship_score: number
@@ -1915,6 +2016,14 @@ export type Database = {
       content_status: "draft" | "active" | "archived"
       designer_category: "fashion" | "textile" | "jewelry"
       job_application_status: "applied" | "shortlisted" | "rejected" | "hired"
+      job_status: "draft" | "active" | "paused" | "closed" | "expired"
+      job_type:
+        | "full_time"
+        | "part_time"
+        | "contract"
+        | "freelance"
+        | "internship"
+      location_type: "onsite" | "remote" | "hybrid"
       marketplace_status:
         | "pending_handoff"
         | "awaiting_sampling"
@@ -1958,6 +2067,7 @@ export type Database = {
         | "listing_preview"
         | "published"
         | "rejected"
+      salary_type: "annual" | "monthly" | "hourly" | "project"
       stylebox_difficulty: "free" | "easy" | "medium" | "hard" | "insane"
       submission_status: "submitted" | "approved" | "rejected"
       subscription_tier: "basic" | "pro" | "elite"
@@ -2094,6 +2204,15 @@ export const Constants = {
       content_status: ["draft", "active", "archived"],
       designer_category: ["fashion", "textile", "jewelry"],
       job_application_status: ["applied", "shortlisted", "rejected", "hired"],
+      job_status: ["draft", "active", "paused", "closed", "expired"],
+      job_type: [
+        "full_time",
+        "part_time",
+        "contract",
+        "freelance",
+        "internship",
+      ],
+      location_type: ["onsite", "remote", "hybrid"],
       marketplace_status: [
         "pending_handoff",
         "awaiting_sampling",
@@ -2142,6 +2261,7 @@ export const Constants = {
         "published",
         "rejected",
       ],
+      salary_type: ["annual", "monthly", "hourly", "project"],
       stylebox_difficulty: ["free", "easy", "medium", "hard", "insane"],
       submission_status: ["submitted", "approved", "rejected"],
       subscription_tier: ["basic", "pro", "elite"],

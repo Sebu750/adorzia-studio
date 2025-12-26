@@ -6,31 +6,44 @@
 
 @layer base {
   :root {
-    /* Minimal Black & White Theme */
-    --background: 0 0% 100%;
-    --foreground: 0 0% 5%;
+    /* ========================================
+       BRANDED GRAYSCALE PALETTE
+       Bright Snow: #f8f9fa -> 210 17% 98%
+       Platinum: #e9ecef -> 210 14% 93%
+       Alabaster Grey: #dee2e6 -> 210 14% 89%
+       Pale Slate: #ced4da -> 210 14% 83%
+       Pale Slate 2: #adb5bd -> 210 10% 71%
+       Slate Grey: #6c757d -> 210 7% 46%
+       Iron Grey: #495057 -> 210 10% 33%
+       Gunmetal: #343a40 -> 210 10% 23%
+       Carbon Black: #212529 -> 210 11% 15%
+       ======================================== */
+
+    /* Studio App - Light Mode */
+    --background: 210 17% 99%;
+    --foreground: 210 11% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 5%;
+    --card-foreground: 210 11% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
+    --popover-foreground: 210 11% 15%;
 
-    /* Primary - Pure Black */
-    --primary: 0 0% 5%;
-    --primary-foreground: 0 0% 100%;
+    /* Primary - Carbon Black */
+    --primary: 210 11% 15%;
+    --primary-foreground: 210 17% 98%;
 
-    /* Secondary - Light Gray */
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 5%;
+    /* Secondary - Platinum */
+    --secondary: 210 14% 93%;
+    --secondary-foreground: 210 11% 15%;
 
-    /* Muted - Subtle Gray */
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    /* Muted - Platinum */
+    --muted: 210 14% 93%;
+    --muted-foreground: 210 7% 46%;
 
-    /* Accent - Soft Gray */
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 5%;
+    /* Accent - Alabaster Grey */
+    --accent: 210 14% 89%;
+    --accent-foreground: 210 11% 15%;
 
     /* Status Colors */
     --destructive: 0 84% 60%;
@@ -40,51 +53,51 @@
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 5%;
+    --warning-foreground: 210 11% 15%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 0 0% 5%;
+    --border: 210 14% 89%;
+    --input: 210 14% 89%;
+    --ring: 210 11% 15%;
 
     --radius: 0.5rem;
 
-    /* Sidebar - Clean White */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 0 0% 5%;
-    --sidebar-primary: 0 0% 5%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 96%;
-    --sidebar-accent-foreground: 0 0% 5%;
-    --sidebar-border: 0 0% 90%;
-    --sidebar-ring: 0 0% 5%;
+    /* Studio Sidebar - Bright Snow (matches main area) */
+    --sidebar-background: 210 17% 98%;
+    --sidebar-foreground: 210 11% 15%;
+    --sidebar-primary: 210 11% 15%;
+    --sidebar-primary-foreground: 210 17% 98%;
+    --sidebar-accent: 210 14% 93%;
+    --sidebar-accent-foreground: 210 11% 15%;
+    --sidebar-border: 210 14% 89%;
+    --sidebar-ring: 210 11% 15%;
 
-    /* Admin Portal - Light Mode (Branded Grayscale) */
+    /* Admin Portal - Light Mode (Unified Background) */
     --admin-background: 210 17% 98%;
     --admin-foreground: 210 11% 15%;
-    --admin-card: 210 20% 99%;
+    --admin-card: 0 0% 100%;
     --admin-card-foreground: 210 11% 15%;
     --admin-muted: 210 14% 93%;
     --admin-muted-foreground: 210 7% 46%;
-    --admin-border: 210 9% 83%;
-    --admin-accent: 210 11% 89%;
+    --admin-border: 210 14% 89%;
+    --admin-accent: 210 14% 93%;
     --admin-accent-foreground: 210 11% 15%;
     
-    /* Admin Sidebar - Improved Contrast Dark Sidebar */
-    --admin-sidebar: 220 15% 13%;
-    --admin-sidebar-foreground: 220 20% 98%;
-    --admin-sidebar-muted: 220 12% 22%;
-    --admin-sidebar-accent: 220 20% 25%;
-    --admin-sidebar-accent-foreground: 220 20% 100%;
-    --admin-sidebar-border: 220 10% 20%;
+    /* Admin Sidebar - Carbon Black (Dark Sidebar) */
+    --admin-sidebar: 210 11% 15%;
+    --admin-sidebar-foreground: 210 17% 98%;
+    --admin-sidebar-muted: 210 10% 23%;
+    --admin-sidebar-accent: 210 10% 28%;
+    --admin-sidebar-accent-foreground: 210 17% 98%;
+    --admin-sidebar-border: 210 10% 23%;
     
     /* Admin Login Page Colors - Light Mode */
     --admin-login-background: 210 17% 98%;
-    --admin-login-card: 210 20% 99%;
-    --admin-login-card-border: 210 9% 83%;
+    --admin-login-card: 0 0% 100%;
+    --admin-login-card-border: 210 14% 89%;
     --admin-login-text: 210 11% 15%;
     --admin-login-text-muted: 210 7% 46%;
     --admin-login-input-bg: 210 17% 98%;
-    --admin-login-input-border: 210 9% 83%;
+    --admin-login-input-border: 210 14% 89%;
     --admin-login-button: 210 11% 15%;
     --admin-login-button-foreground: 210 17% 98%;
     
@@ -101,14 +114,14 @@
     --admin-apricot-foreground: 210 17% 98%;
 
     /* Design Tokens */
-    --gradient-accent: linear-gradient(135deg, hsl(0 0% 15%), hsl(0 0% 5%));
-    --gradient-dark: linear-gradient(180deg, hsl(0 0% 5%), hsl(0 0% 0%));
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(0 0% 98%));
+    --gradient-accent: linear-gradient(135deg, hsl(210 11% 25%), hsl(210 11% 15%));
+    --gradient-dark: linear-gradient(180deg, hsl(210 11% 15%), hsl(210 11% 10%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(210 17% 98%));
 
-    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.08), 0 2px 4px -2px hsl(0 0% 0% / 0.05);
-    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.08), 0 4px 6px -4px hsl(0 0% 0% / 0.05);
-    --shadow-accent: 0 8px 32px -8px hsl(0 0% 0% / 0.15);
+    --shadow-sm: 0 1px 2px 0 hsl(210 11% 15% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(210 11% 15% / 0.08), 0 2px 4px -2px hsl(210 11% 15% / 0.05);
+    --shadow-lg: 0 10px 15px -3px hsl(210 11% 15% / 0.08), 0 4px 6px -4px hsl(210 11% 15% / 0.05);
+    --shadow-accent: 0 8px 32px -8px hsl(210 11% 15% / 0.15);
 
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -119,122 +132,124 @@
     --font-body: 'Inter', sans-serif;
 
     /* Rank Colors - Grayscale System */
-    --rank-f1: 0 0% 10%;
-    --rank-f1-glow: 0 0% 20%;
-    --rank-f2: 0 0% 15%;
-    --rank-f2-glow: 0 0% 25%;
-    --rank-novice: 0 0% 70%;
-    --rank-apprentice: 0 0% 60%;
-    --rank-designer: 0 0% 50%;
-    --rank-senior: 0 0% 40%;
-    --rank-lead: 0 0% 25%;
-    --rank-elite: 0 0% 10%;
-    --rank-bronze: 0 0% 65%;
-    --rank-silver: 0 0% 55%;
-    --rank-gold: 0 0% 35%;
-    --rank-platinum: 0 0% 25%;
-    --rank-diamond: 0 0% 10%;
+    --rank-f1: 210 11% 10%;
+    --rank-f1-glow: 210 11% 20%;
+    --rank-f2: 210 11% 15%;
+    --rank-f2-glow: 210 11% 25%;
+    --rank-novice: 210 10% 70%;
+    --rank-apprentice: 210 10% 60%;
+    --rank-designer: 210 10% 50%;
+    --rank-senior: 210 10% 40%;
+    --rank-lead: 210 10% 25%;
+    --rank-elite: 210 11% 10%;
+    --rank-bronze: 210 10% 65%;
+    --rank-silver: 210 10% 55%;
+    --rank-gold: 210 10% 35%;
+    --rank-platinum: 210 10% 25%;
+    --rank-diamond: 210 11% 10%;
 
     /* Chart Colors - Grayscale */
-    --chart-1: 0 0% 20%;
-    --chart-2: 0 0% 35%;
-    --chart-3: 0 0% 50%;
-    --chart-4: 0 0% 65%;
-    --chart-5: 0 0% 80%;
+    --chart-1: 210 11% 20%;
+    --chart-2: 210 10% 35%;
+    --chart-3: 210 10% 50%;
+    --chart-4: 210 10% 65%;
+    --chart-5: 210 10% 80%;
 
-    --sidebar: 0 0% 98%;
-    --shadow-2xs: 0 1px 2px 0 hsl(0 0% 0% / 0.03);
-    --shadow-xs: 0 1px 3px 0 hsl(0 0% 0% / 0.05);
-    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.08), 0 8px 10px -6px hsl(0 0% 0% / 0.05);
-    --shadow-2xl: 0 25px 50px -12px hsl(0 0% 0% / 0.15);
+    --sidebar: 210 17% 98%;
+    --shadow-2xs: 0 1px 2px 0 hsl(210 11% 15% / 0.03);
+    --shadow-xs: 0 1px 3px 0 hsl(210 11% 15% / 0.05);
+    --shadow-xl: 0 20px 25px -5px hsl(210 11% 15% / 0.08), 0 8px 10px -6px hsl(210 11% 15% / 0.05);
+    --shadow-2xl: 0 25px 50px -12px hsl(210 11% 15% / 0.15);
     --tracking-normal: 0em;
     --spacing: 0.25rem;
   }
 
   .dark {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 98%;
+    /* Studio App - Dark Mode */
+    --background: 210 11% 10%;
+    --foreground: 210 17% 98%;
 
-    --card: 0 0% 8%;
-    --card-foreground: 0 0% 98%;
+    --card: 210 11% 15%;
+    --card-foreground: 210 17% 98%;
 
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 210 11% 15%;
+    --popover-foreground: 210 17% 98%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 5%;
+    --primary: 210 17% 98%;
+    --primary-foreground: 210 11% 15%;
 
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 210 10% 23%;
+    --secondary-foreground: 210 17% 98%;
 
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
+    --muted: 210 10% 23%;
+    --muted-foreground: 210 10% 71%;
 
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 210 10% 23%;
+    --accent-foreground: 210 17% 98%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 85%;
+    --border: 210 10% 23%;
+    --input: 210 10% 23%;
+    --ring: 210 17% 85%;
 
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --chart-1: 0 0% 80%;
-    --chart-2: 0 0% 65%;
-    --chart-3: 0 0% 50%;
-    --chart-4: 0 0% 35%;
-    --chart-5: 0 0% 20%;
+    --chart-1: 210 10% 80%;
+    --chart-2: 210 10% 65%;
+    --chart-3: 210 10% 50%;
+    --chart-4: 210 10% 35%;
+    --chart-5: 210 11% 20%;
 
-    --sidebar: 0 0% 8%;
-    --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 0 0% 98%;
-    --sidebar-primary-foreground: 0 0% 5%;
-    --sidebar-accent: 0 0% 15%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 0 0% 85%;
+    /* Studio Sidebar - Dark (matches main area) */
+    --sidebar: 210 11% 12%;
+    --sidebar-foreground: 210 17% 98%;
+    --sidebar-primary: 210 17% 98%;
+    --sidebar-primary-foreground: 210 11% 15%;
+    --sidebar-accent: 210 10% 23%;
+    --sidebar-accent-foreground: 210 17% 98%;
+    --sidebar-border: 210 10% 23%;
+    --sidebar-ring: 210 17% 85%;
 
-    /* Admin Dark Mode - Branded */
-    --admin-background: 210 11% 15%;
+    /* Admin Portal - Dark Mode (Unified Background) */
+    --admin-background: 210 11% 10%;
     --admin-foreground: 210 17% 98%;
-    --admin-card: 210 10% 23%;
+    --admin-card: 210 11% 15%;
     --admin-card-foreground: 210 17% 98%;
-    --admin-muted: 210 8% 31%;
-    --admin-muted-foreground: 210 7% 71%;
-    --admin-border: 210 8% 31%;
-    --admin-accent: 210 8% 31%;
+    --admin-muted: 210 10% 23%;
+    --admin-muted-foreground: 210 10% 71%;
+    --admin-border: 210 10% 23%;
+    --admin-accent: 210 10% 23%;
     --admin-accent-foreground: 210 17% 98%;
     
-    /* Admin Sidebar Dark - Improved Contrast */
-    --admin-sidebar: 220 15% 8%;
-    --admin-sidebar-foreground: 220 20% 95%;
-    --admin-sidebar-muted: 220 12% 16%;
-    --admin-sidebar-accent: 220 15% 22%;
-    --admin-sidebar-accent-foreground: 220 20% 100%;
-    --admin-sidebar-border: 220 10% 14%;
+    /* Admin Sidebar - Darker Carbon (unified dark tone) */
+    --admin-sidebar: 210 11% 8%;
+    --admin-sidebar-foreground: 210 17% 98%;
+    --admin-sidebar-muted: 210 10% 18%;
+    --admin-sidebar-accent: 210 10% 22%;
+    --admin-sidebar-accent-foreground: 210 17% 98%;
+    --admin-sidebar-border: 210 10% 18%;
     
     /* Admin Login Page Colors - Dark Mode */
-    --admin-login-background: 210 11% 15%;
-    --admin-login-card: 210 10% 23%;
-    --admin-login-card-border: 210 8% 31%;
+    --admin-login-background: 210 11% 10%;
+    --admin-login-card: 210 11% 15%;
+    --admin-login-card-border: 210 10% 23%;
     --admin-login-text: 210 17% 98%;
-    --admin-login-text-muted: 210 7% 71%;
-    --admin-login-input-bg: 210 11% 15%;
-    --admin-login-input-border: 210 8% 31%;
+    --admin-login-text-muted: 210 10% 71%;
+    --admin-login-input-bg: 210 11% 10%;
+    --admin-login-input-border: 210 10% 23%;
     --admin-login-button: 210 17% 98%;
     --admin-login-button-foreground: 210 11% 15%;
     
     /* Admin Status Colors Dark */
     --admin-wine: 210 17% 98%;
     --admin-wine-foreground: 210 11% 15%;
-    --admin-camel: 210 7% 71%;
+    --admin-camel: 210 10% 71%;
     --admin-camel-foreground: 210 11% 15%;
     --admin-coffee: 210 11% 15%;
     --admin-coffee-foreground: 210 17% 98%;
-    --admin-chocolate: 210 8% 31%;
+    --admin-chocolate: 210 10% 23%;
     --admin-chocolate-foreground: 210 17% 98%;
-    --admin-apricot: 210 7% 71%;
+    --admin-apricot: 210 10% 71%;
     --admin-apricot-foreground: 210 11% 15%;
   }
 }

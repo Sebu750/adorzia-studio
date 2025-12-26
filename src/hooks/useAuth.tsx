@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -29,11 +29,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAdmin = userRole === 'admin' || userRole === 'superadmin';
   const isDesigner = userRole === 'designer' || isAdmin;
 
-  // Multi-tab sync for auth state
+  // Stable ref to prevent stale closures
+  const userRef = React.useRef<User | null>(null);
+  userRef.current = user;
+
+  // Multi-tab sync for auth state - only handle explicit sign-outs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'supabase.auth.token' && !e.newValue && user) {
-        // Token was removed in another tab, sign out here too
+      // Only sync if token was explicitly removed (sign-out)
+      if (e.key?.includes('supabase.auth.token') && e.newValue === null && userRef.current) {
         setUser(null);
         setSession(null);
         setUserRole(null);
@@ -42,40 +46,57 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, [user]);
+  }, []);
 
   useEffect(() => {
+    let isMounted = true;
+    
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+      (event, currentSession) => {
+        if (!isMounted) return;
         
-        if (!session?.user) {
+        // Ignore TOKEN_REFRESHED events that might cause flickering
+        if (event === 'TOKEN_REFRESHED' && session) {
+          setSession(currentSession);
+          return;
+        }
+        
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+        
+        if (!currentSession?.user) {
           setUserRole(null);
           setLoading(false);
         } else {
           // Check role with setTimeout to prevent deadlock
           setTimeout(() => {
-            checkUserRole(session.user.id);
+            if (isMounted) {
+              checkUserRole(currentSession.user.id);
+            }
           }, 0);
         }
       }
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+      if (!isMounted) return;
       
-      if (session?.user) {
-        checkUserRole(session.user.id);
+      setSession(existingSession);
+      setUser(existingSession?.user ?? null);
+      
+      if (existingSession?.user) {
+        checkUserRole(existingSession.user.id);
       } else {
         setLoading(false);
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const checkUserRole = async (userId: string) => {

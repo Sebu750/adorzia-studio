@@ -86,7 +86,7 @@ export function AppSidebar() {
   const displayName = profile?.name || user?.email?.split("@")[0] || "Designer";
 
   return (
-    <Sidebar collapsible="icon" className="border-r bg-background">
+    <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar">
       <SidebarHeader className="border-b p-4">
         <div className="flex items-center gap-3">
           {!isCollapsed && (

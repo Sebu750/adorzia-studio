@@ -12,14 +12,13 @@ import {
   BarChart3,
   Shield,
   Settings,
-  ExternalLink,
   BookOpen,
   GitBranch,
-  ChevronRight,
-  FileText
+  FileText,
+  LogOut
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
-import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Sidebar,
   SidebarContent,

@@ -1,7 +1,6 @@
-import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 
 type AppRole = 'designer' | 'admin' | 'superadmin' | null;
 
@@ -20,51 +19,15 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Session timeout in milliseconds (30 minutes of inactivity)
-const SESSION_TIMEOUT = 30 * 60 * 1000;
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<AppRole>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
-  const [lastActivity, setLastActivity] = useState(Date.now());
-  const { toast } = useToast();
 
   const isAdmin = userRole === 'admin' || userRole === 'superadmin';
   const isDesigner = userRole === 'designer' || isAdmin;
-
-  // Track user activity
-  const updateActivity = useCallback(() => {
-    setLastActivity(Date.now());
-  }, []);
-
-  // Check for session timeout
-  useEffect(() => {
-    if (!user) return;
-
-    const checkTimeout = setInterval(() => {
-      const timeSinceActivity = Date.now() - lastActivity;
-      if (timeSinceActivity > SESSION_TIMEOUT) {
-        toast({
-          title: "Session expired",
-          description: "You've been signed out due to inactivity.",
-          variant: "destructive",
-        });
-        supabase.auth.signOut();
-      }
-    }, 60000); // Check every minute
-
-    // Track activity events
-    const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
-    events.forEach(event => window.addEventListener(event, updateActivity));
-
-    return () => {
-      clearInterval(checkTimeout);
-      events.forEach(event => window.removeEventListener(event, updateActivity));
-    };
-  }, [user, lastActivity, updateActivity, toast]);
 
   // Multi-tab sync for auth state
   useEffect(() => {

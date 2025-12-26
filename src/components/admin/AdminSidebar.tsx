@@ -69,6 +69,7 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
   const { state } = useSidebar();
+  const { signOut, isSigningOut } = useAuth();
   const isCollapsed = state === "collapsed";
   
   // Filter system items based on role - superadmin-only items
@@ -80,6 +81,10 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
     return true;
   });
 
+  const handleLogout = async () => {
+    await signOut();
+  };
+
   const NavItem = ({ item }: { item: { title: string; url: string; icon: React.ElementType; badge?: string } }) => (
     <SidebarMenuItem>
       <SidebarMenuButton asChild tooltip={item.title}>
@@ -88,13 +93,13 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
           end={item.url === "/admin"}
           className={cn(
             "flex items-center gap-3 rounded-lg px-3 py-2.5 transition-all duration-200",
-            "text-[hsl(var(--admin-sidebar-foreground)/0.85)]",
+            "text-[hsl(var(--admin-sidebar-foreground))]",
             "hover:bg-[hsl(var(--admin-sidebar-muted))] hover:text-[hsl(var(--admin-sidebar-foreground))]",
             "group"
           )}
           activeClassName="bg-[hsl(var(--admin-sidebar-accent))] text-[hsl(var(--admin-sidebar-accent-foreground))] font-medium border-l-2 border-[hsl(var(--admin-sidebar-foreground))]"
         >
-          <item.icon className="h-5 w-5 shrink-0 text-[hsl(var(--admin-sidebar-foreground)/0.7)] group-hover:text-[hsl(var(--admin-sidebar-foreground))]" />
+          <item.icon className="h-5 w-5 shrink-0 text-[hsl(var(--admin-sidebar-foreground))] group-hover:text-[hsl(var(--admin-sidebar-foreground))]" />
           {!isCollapsed && (
             <>
               <span className="text-sm flex-1">{item.title}</span>
@@ -131,10 +136,10 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
       <SidebarContent className="px-3 py-4">
         {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[11px] font-bold text-[hsl(var(--admin-sidebar-foreground)/0.5)] uppercase tracking-widest px-3 mb-2 flex items-center gap-2">
+        <SidebarGroupLabel className="text-[11px] font-bold text-[hsl(var(--admin-sidebar-foreground)/0.7)] uppercase tracking-widest px-3 mb-2 flex items-center gap-2">
             {!isCollapsed && (
               <>
-                <div className="h-px w-2 bg-[hsl(var(--admin-sidebar-foreground)/0.3)]" />
+                <div className="h-px w-2 bg-[hsl(var(--admin-sidebar-foreground)/0.5)]" />
                 Overview
               </>
             )}
@@ -153,10 +158,10 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
 
         {/* Management */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[11px] font-bold text-[hsl(var(--admin-sidebar-foreground)/0.5)] uppercase tracking-widest px-3 mb-2 flex items-center gap-2">
+          <SidebarGroupLabel className="text-[11px] font-bold text-[hsl(var(--admin-sidebar-foreground)/0.7)] uppercase tracking-widest px-3 mb-2 flex items-center gap-2">
             {!isCollapsed && (
               <>
-                <div className="h-px w-2 bg-[hsl(var(--admin-sidebar-foreground)/0.3)]" />
+                <div className="h-px w-2 bg-[hsl(var(--admin-sidebar-foreground)/0.5)]" />
                 Management
               </>
             )}
@@ -175,10 +180,10 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
 
         {/* System */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-[11px] font-bold text-[hsl(var(--admin-sidebar-foreground)/0.5)] uppercase tracking-widest px-3 mb-2 flex items-center gap-2">
+          <SidebarGroupLabel className="text-[11px] font-bold text-[hsl(var(--admin-sidebar-foreground)/0.7)] uppercase tracking-widest px-3 mb-2 flex items-center gap-2">
             {!isCollapsed && (
               <>
-                <div className="h-px w-2 bg-[hsl(var(--admin-sidebar-foreground)/0.3)]" />
+                <div className="h-px w-2 bg-[hsl(var(--admin-sidebar-foreground)/0.5)]" />
                 System
               </>
             )}
@@ -194,21 +199,6 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
       </SidebarContent>
 
       <SidebarFooter className="border-t border-[hsl(var(--admin-sidebar-border))] p-4 space-y-4">
-        {/* Switch to Studio */}
-        {!isCollapsed && (
-          <Link to="/">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full gap-2 border-[hsl(var(--admin-sidebar-foreground)/0.25)] text-[hsl(var(--admin-sidebar-foreground))] bg-transparent hover:bg-[hsl(var(--admin-sidebar-foreground))] hover:text-[hsl(var(--admin-sidebar))] transition-all"
-            >
-              <ExternalLink className="h-4 w-4" />
-              Switch to Studio
-              <ChevronRight className="h-4 w-4 ml-auto" />
-            </Button>
-          </Link>
-        )}
-        
         {/* User Info */}
         <div className={cn(
           "flex items-center gap-3 p-2.5 rounded-lg bg-[hsl(var(--admin-sidebar-muted)/0.5)]",
@@ -231,7 +221,7 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
                   "text-[10px] px-1.5 py-0 w-fit font-semibold mt-0.5",
                   userRole === 'superadmin' 
                     ? "bg-[hsl(var(--admin-sidebar-foreground))] text-[hsl(var(--admin-sidebar))]" 
-                    : "bg-[hsl(var(--admin-sidebar-muted))] text-[hsl(var(--admin-sidebar-foreground)/0.9)]"
+                    : "bg-[hsl(var(--admin-sidebar-muted))] text-[hsl(var(--admin-sidebar-foreground))]"
                 )}
               >
                 {userRole === 'superadmin' ? 'Superadmin' : 'Admin'}
@@ -239,6 +229,21 @@ export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
             </div>
           )}
         </div>
+
+        {/* Sign Out Button */}
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={handleLogout}
+          disabled={isSigningOut}
+          className={cn(
+            "w-full gap-2 border-[hsl(var(--admin-sidebar-foreground)/0.3)] text-[hsl(var(--admin-sidebar-foreground))] bg-transparent hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all",
+            isCollapsed && "px-2"
+          )}
+        >
+          <LogOut className="h-4 w-4" />
+          {!isCollapsed && (isSigningOut ? "Signing out..." : "Sign Out")}
+        </Button>
       </SidebarFooter>
     </Sidebar>
   );

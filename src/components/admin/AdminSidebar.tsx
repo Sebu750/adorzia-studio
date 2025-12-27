@@ -18,7 +18,7 @@ import {
   LogOut
 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import {
   Sidebar,
   SidebarContent,
@@ -69,7 +69,7 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ userRole = 'admin' }: AdminSidebarProps) {
   const { state } = useSidebar();
-  const { signOut, isSigningOut } = useAuth();
+  const { signOut, isSigningOut } = useAdminAuth();
   const isCollapsed = state === "collapsed";
   
   // Filter system items based on role - superadmin-only items

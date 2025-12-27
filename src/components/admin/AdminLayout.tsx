@@ -24,8 +24,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { supabaseAdmin } from "@/integrations/supabase/admin-client";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -33,16 +33,16 @@ interface AdminLayoutProps {
 
 export function AdminLayout({ children }: AdminLayoutProps) {
   const navigate = useNavigate();
-  const { user, signOut, userRole } = useAuth();
+  const { user, signOut, adminRole: userRole } = useAdminAuth();
   const { theme, setTheme } = useTheme();
   
   // Derive admin role type for display
   const adminRole = userRole === 'superadmin' ? 'superadmin' : 'admin';
   const handleSignOut = async () => {
     if (user) {
-      await supabase.from("admin_logs").insert({
+      await supabaseAdmin.from("admin_logs").insert({
         admin_id: user.id,
-        action: "logout",
+        action: "admin_logout",
         target_type: "session",
       });
     }

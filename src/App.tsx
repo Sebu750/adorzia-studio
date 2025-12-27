@@ -2,11 +2,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/hooks/useAuth";
+import { AdminAuthProvider } from "@/hooks/useAdminAuth";
 import { SubscriptionProvider } from "@/hooks/useSubscription";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { AdminProtectedRoute } from "@/components/auth/AdminProtectedRoute";
 import ScrollToTop from "@/components/public/ScrollToTop";
 
 // Public Pages
@@ -62,6 +64,26 @@ import AdminJobs from "./pages/admin/AdminJobs";
 
 const queryClient = new QueryClient();
 
+// Wrapper component for Studio routes with Auth + Subscription providers
+function StudioProviders() {
+  return (
+    <AuthProvider>
+      <SubscriptionProvider>
+        <Outlet />
+      </SubscriptionProvider>
+    </AuthProvider>
+  );
+}
+
+// Wrapper component for Admin routes with Admin Auth provider
+function AdminProviders() {
+  return (
+    <AdminAuthProvider>
+      <Outlet />
+    </AdminAuthProvider>
+  );
+}
+
 const App = () => (
   <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
     <QueryClientProvider client={queryClient}>
@@ -70,172 +92,172 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
-          <AuthProvider>
-            <SubscriptionProvider>
-              <Routes>
-                {/* ============================================ */}
-                {/* PUBLIC WEBSITE ROUTES - No Auth Required */}
-                {/* ============================================ */}
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/styleboxes-info" element={<StyleBoxesInfo />} />
-                <Route path="/marketplace-preview" element={<MarketplacePreview />} />
-                <Route path="/competitions" element={<Competitions />} />
-                <Route path="/studio-info" element={<StudioInfo />} />
-                <Route path="/monetization" element={<Monetization />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/brands" element={<ForBrands />} />
-                <Route path="/support" element={<Support />} />
-                <Route path="/designers" element={<DesignerProfiles />} />
-                <Route path="/studios" element={<Studios />} />
-                
-                {/* ============================================ */}
-                {/* AUTH ROUTES - Public Access */}
-                {/* ============================================ */}
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/admin/login" element={<AdminLogin />} />
-                <Route path="/unauthorized" element={<Unauthorized />} />
-                
-                {/* ============================================ */}
-                {/* STUDIO ROUTES - Authentication Required */}
-                {/* ============================================ */}
-                <Route path="/subscription" element={
-                  <ProtectedRoute>
-                    <Subscription />
-                  </ProtectedRoute>
-                } />
-                <Route path="/dashboard" element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } />
-                <Route path="/walkthroughs" element={
-                  <ProtectedRoute>
-                    <Walkthroughs />
-                  </ProtectedRoute>
-                } />
-                <Route path="/walkthroughs/:id" element={
-                  <ProtectedRoute>
-                    <WalkthroughDetail />
-                  </ProtectedRoute>
-                } />
-                <Route path="/styleboxes" element={
-                  <ProtectedRoute>
-                    <Styleboxes />
-                  </ProtectedRoute>
-                } />
-                <Route path="/styleboxes/:id" element={
-                  <ProtectedRoute>
-                    <StyleboxPreview />
-                  </ProtectedRoute>
-                } />
-                <Route path="/portfolio" element={
-                  <ProtectedRoute>
-                    <Portfolio />
-                  </ProtectedRoute>
-                } />
-                <Route path="/collections" element={
-                  <ProtectedRoute>
-                    <Collections />
-                  </ProtectedRoute>
-                } />
-                <Route path="/profile" element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                } />
-                <Route path="/teams" element={
-                  <ProtectedRoute>
-                    <Teams />
-                  </ProtectedRoute>
-                } />
-                <Route path="/jobs" element={
-                  <ProtectedRoute>
-                    <Jobs />
-                  </ProtectedRoute>
-                } />
-                <Route path="/analytics" element={
-                  <ProtectedRoute>
-                    <Analytics />
-                  </ProtectedRoute>
-                } />
-                <Route path="/notifications" element={
-                  <ProtectedRoute>
-                    <Notifications />
-                  </ProtectedRoute>
-                } />
-                <Route path="/settings" element={
-                  <ProtectedRoute>
-                    <Settings />
-                  </ProtectedRoute>
-                } />
-                
-                {/* ============================================ */}
-                {/* ADMIN ROUTES - Admin Role Required */}
-                {/* ============================================ */}
-                <Route path="/admin" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/designers" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminDesigners />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/styleboxes" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminStyleboxes />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/stylebox-submissions" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminStyleboxSubmissions />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/walkthroughs" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminWalkthroughs />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/rankings" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminRankings />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/publications" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminPublications />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/queues" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminProductionQueues />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/settings" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminSettings />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/collections" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminCollections />
-                  </ProtectedRoute>
-                } />
-                <Route path="/admin/jobs" element={
-                  <ProtectedRoute requireAdmin>
-                    <AdminJobs />
-                  </ProtectedRoute>
-                } />
-                
-                {/* 404 Catch-all */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </SubscriptionProvider>
-          </AuthProvider>
+          <Routes>
+            {/* ============================================ */}
+            {/* PUBLIC WEBSITE ROUTES - No Auth Required */}
+            {/* ============================================ */}
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/styleboxes-info" element={<StyleBoxesInfo />} />
+            <Route path="/marketplace-preview" element={<MarketplacePreview />} />
+            <Route path="/competitions" element={<Competitions />} />
+            <Route path="/studio-info" element={<StudioInfo />} />
+            <Route path="/monetization" element={<Monetization />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/brands" element={<ForBrands />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/designers" element={<DesignerProfiles />} />
+            <Route path="/studios" element={<Studios />} />
+            
+            {/* ============================================ */}
+            {/* AUTH ROUTES - Public Access (wrapped in Studio providers for redirect logic) */}
+            {/* ============================================ */}
+            <Route element={<StudioProviders />}>
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
+              
+              {/* ============================================ */}
+              {/* STUDIO ROUTES - Authentication Required */}
+              {/* ============================================ */}
+              <Route path="/subscription" element={
+                <ProtectedRoute>
+                  <Subscription />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/walkthroughs" element={
+                <ProtectedRoute>
+                  <Walkthroughs />
+                </ProtectedRoute>
+              } />
+              <Route path="/walkthroughs/:id" element={
+                <ProtectedRoute>
+                  <WalkthroughDetail />
+                </ProtectedRoute>
+              } />
+              <Route path="/styleboxes" element={
+                <ProtectedRoute>
+                  <Styleboxes />
+                </ProtectedRoute>
+              } />
+              <Route path="/styleboxes/:id" element={
+                <ProtectedRoute>
+                  <StyleboxPreview />
+                </ProtectedRoute>
+              } />
+              <Route path="/portfolio" element={
+                <ProtectedRoute>
+                  <Portfolio />
+                </ProtectedRoute>
+              } />
+              <Route path="/collections" element={
+                <ProtectedRoute>
+                  <Collections />
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
+              <Route path="/teams" element={
+                <ProtectedRoute>
+                  <Teams />
+                </ProtectedRoute>
+              } />
+              <Route path="/jobs" element={
+                <ProtectedRoute>
+                  <Jobs />
+                </ProtectedRoute>
+              } />
+              <Route path="/analytics" element={
+                <ProtectedRoute>
+                  <Analytics />
+                </ProtectedRoute>
+              } />
+              <Route path="/notifications" element={
+                <ProtectedRoute>
+                  <Notifications />
+                </ProtectedRoute>
+              } />
+              <Route path="/settings" element={
+                <ProtectedRoute>
+                  <Settings />
+                </ProtectedRoute>
+              } />
+            </Route>
+            
+            {/* ============================================ */}
+            {/* ADMIN ROUTES - Separate Auth Provider */}
+            {/* ============================================ */}
+            <Route element={<AdminProviders />}>
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin" element={
+                <AdminProtectedRoute>
+                  <AdminDashboard />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/designers" element={
+                <AdminProtectedRoute>
+                  <AdminDesigners />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/styleboxes" element={
+                <AdminProtectedRoute>
+                  <AdminStyleboxes />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/stylebox-submissions" element={
+                <AdminProtectedRoute>
+                  <AdminStyleboxSubmissions />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/walkthroughs" element={
+                <AdminProtectedRoute>
+                  <AdminWalkthroughs />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/rankings" element={
+                <AdminProtectedRoute>
+                  <AdminRankings />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/publications" element={
+                <AdminProtectedRoute>
+                  <AdminPublications />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/queues" element={
+                <AdminProtectedRoute>
+                  <AdminProductionQueues />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/settings" element={
+                <AdminProtectedRoute>
+                  <AdminSettings />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/collections" element={
+                <AdminProtectedRoute>
+                  <AdminCollections />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/jobs" element={
+                <AdminProtectedRoute>
+                  <AdminJobs />
+                </AdminProtectedRoute>
+              } />
+            </Route>
+            
+            {/* 404 Catch-all */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

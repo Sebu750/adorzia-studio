@@ -216,7 +216,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           user_agent: navigator.userAgent,
         });
       }
-      await supabase.auth.signOut();
+      // Use local scope to only sign out from studio session, not admin
+      await supabase.auth.signOut({ scope: 'local' });
       setUserRole(null);
     } finally {
       setIsSigningOut(false);

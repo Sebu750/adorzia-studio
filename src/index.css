@@ -194,6 +194,12 @@
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
+    --success: 142 70% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 45%;
+    --warning-foreground: 0 0% 100%;
+
     --chart-1: 210 10% 80%;
     --chart-2: 210 10% 65%;
     --chart-3: 210 10% 50%;
@@ -201,7 +207,7 @@
     --chart-5: 210 11% 20%;
 
     /* Studio Sidebar - Dark (matches main area) */
-    --sidebar: 210 11% 12%;
+    --sidebar-background: 210 11% 12%;
     --sidebar-foreground: 210 17% 98%;
     --sidebar-primary: 210 17% 98%;
     --sidebar-primary-foreground: 210 11% 15%;
@@ -209,6 +215,9 @@
     --sidebar-accent-foreground: 210 17% 98%;
     --sidebar-border: 210 10% 23%;
     --sidebar-ring: 210 17% 85%;
+    
+    /* Keep sidebar as alias */
+    --sidebar: 210 11% 12%;
 
     /* Admin Portal - Dark Mode (Unified Background) */
     --admin-background: 210 11% 10%;

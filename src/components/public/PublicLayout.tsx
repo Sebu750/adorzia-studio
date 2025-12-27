@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useCallback } from "react";
 import PublicNav from "./PublicNav";
 import PublicFooter from "./PublicFooter";
 import AnnouncementBanner from "./AnnouncementBanner";
@@ -19,10 +19,14 @@ export default function PublicLayout({
   showPreloader = false 
 }: PublicLayoutProps) {
   const [isLoading, setIsLoading] = useState(showPreloader);
+  
+  const handlePreloaderComplete = useCallback(() => {
+    setIsLoading(false);
+  }, []);
 
   return (
     <SmoothScrollProvider>
-      {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
+      {isLoading && <Preloader onComplete={handlePreloaderComplete} />}
       <div className="min-h-screen bg-background flex flex-col">
         <ScrollProgress />
         {showBanner && <AnnouncementBanner />}

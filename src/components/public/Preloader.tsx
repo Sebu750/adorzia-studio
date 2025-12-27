@@ -15,7 +15,8 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [onComplete]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <AnimatePresence>

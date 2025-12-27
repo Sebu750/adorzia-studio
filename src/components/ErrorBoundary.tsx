@@ -25,6 +25,8 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
+    console.error('Error stack:', error.stack);
+    console.error('Component stack:', errorInfo.componentStack);
   }
 
   handleRetry = () => {
@@ -38,12 +40,17 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <Card className="border-destructive/20 bg-destructive/5">
+        <Card className="border-destructive/20 bg-destructive/5 m-4">
           <CardContent className="flex flex-col items-center justify-center py-8 text-center">
             <AlertTriangle className="h-8 w-8 text-destructive mb-3" />
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-muted-foreground mb-2">
               Something went wrong loading this section
             </p>
+            {this.state.error && (
+              <pre className="text-xs text-left bg-muted p-3 rounded-md mb-4 max-w-2xl overflow-auto">
+                <code>{this.state.error.message}</code>
+              </pre>
+            )}
             <Button
               variant="outline"
               size="sm"

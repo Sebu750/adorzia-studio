@@ -11,7 +11,6 @@ import {
   Sparkles,
   Loader2
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { SOCIAL_LINKS } from "@/lib/social-links";
@@ -53,7 +52,6 @@ const socialLinks = [
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function PublicFooter() {
-  const { user } = useAuth();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -121,38 +119,36 @@ export default function PublicFooter() {
 
   return (
     <footer className="bg-foreground text-background">
-      {/* CTA Section - Only for logged out users */}
-      {!user && (
-        <div className="border-b border-background/10">
-          <div className="max-w-7xl mx-auto px-6 py-16">
-            <div className="text-center max-w-2xl mx-auto">
-              <div className="inline-flex items-center gap-2 bg-background/10 rounded-full px-4 py-1.5 mb-6">
-                <Sparkles className="h-4 w-4" />
-                <span className="text-sm font-medium">Start Your Journey</span>
-              </div>
-              <h3 className="font-display text-3xl sm:text-4xl font-bold mb-4">
-                Ready to Build Your Fashion Brand?
-              </h3>
-              <p className="text-background/70 mb-8 text-lg">
-                Join thousands of designers learning, creating, and earning through Adorzia's integrated ecosystem.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link to="/auth">
-                  <Button size="lg" variant="secondary" className="gap-2 w-full sm:w-auto">
-                    Get Started Free
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link to="/pricing">
-                  <Button size="lg" variant="outline" className="border-background/20 text-background hover:bg-background/10 w-full sm:w-auto">
-                    View Pricing
-                  </Button>
-                </Link>
-              </div>
+      {/* CTA Section - Always show on public pages */}
+      <div className="border-b border-background/10">
+        <div className="max-w-7xl mx-auto px-6 py-16">
+          <div className="text-center max-w-2xl mx-auto">
+            <div className="inline-flex items-center gap-2 bg-background/10 rounded-full px-4 py-1.5 mb-6">
+              <Sparkles className="h-4 w-4" />
+              <span className="text-sm font-medium">Start Your Journey</span>
+            </div>
+            <h3 className="font-display text-3xl sm:text-4xl font-bold mb-4">
+              Ready to Build Your Fashion Brand?
+            </h3>
+            <p className="text-background/70 mb-8 text-lg">
+              Join thousands of designers learning, creating, and earning through Adorzia's integrated ecosystem.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link to="/auth">
+                <Button size="lg" variant="secondary" className="gap-2 w-full sm:w-auto">
+                  Get Started Free
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link to="/pricing">
+                <Button size="lg" variant="outline" className="border-background/20 text-background hover:bg-background/10 w-full sm:w-auto">
+                  View Pricing
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Newsletter Section */}
       <div className="border-b border-background/10">

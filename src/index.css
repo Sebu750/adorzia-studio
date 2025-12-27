@@ -290,12 +290,18 @@
     line-height: 1.2;
   }
 
+  .text-display-md {
+    @apply text-xl sm:text-2xl font-display font-semibold;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+  }
+
   .text-label {
     @apply text-xs font-medium uppercase tracking-wider text-muted-foreground;
   }
 
   .text-caption {
-    @apply text-sm text-muted-foreground;
+    @apply text-sm text-muted-foreground leading-relaxed;
   }
 
   /* Interactive Card States */
@@ -304,25 +310,43 @@
   }
 
   .card-interactive:hover {
-    @apply shadow-lg -translate-y-0.5;
+    @apply shadow-lg -translate-y-1;
   }
 
   .card-interactive:active {
     @apply scale-[0.98] shadow-md;
   }
 
+  /* Enhanced Card Styles */
+  .card-elevated {
+    @apply bg-card border border-border rounded-xl shadow-sm transition-all duration-300;
+  }
+
+  .card-elevated:hover {
+    @apply shadow-md border-border/80;
+  }
+
   /* Button Press Effect */
   .btn-press {
-    @apply transition-transform duration-150;
+    @apply transition-all duration-200;
+  }
+
+  .btn-press:hover {
+    @apply scale-[1.02];
   }
 
   .btn-press:active {
-    @apply scale-95;
+    @apply scale-[0.98];
   }
 
   /* Focus Ring for Accessibility */
   .focus-ring {
-    @apply outline-none ring-2 ring-offset-2 ring-offset-background ring-foreground/20;
+    @apply outline-none ring-2 ring-offset-2 ring-offset-background ring-primary/30;
+  }
+
+  /* Focus visible states */
+  .focus-visible-ring:focus-visible {
+    @apply outline-none ring-2 ring-offset-2 ring-offset-background ring-primary/50;
   }
 
   /* Section Divider */
@@ -332,7 +356,24 @@
 
   /* Skeleton Loading */
   .skeleton-pulse {
-    @apply animate-pulse bg-gradient-to-r from-muted via-muted/50 to-muted;
+    @apply animate-pulse bg-gradient-to-r from-muted via-muted/50 to-muted rounded-md;
+  }
+
+  /* Skeleton shimmer effect */
+  .skeleton-shimmer {
+    @apply relative overflow-hidden bg-muted rounded-md;
+  }
+
+  .skeleton-shimmer::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--background) / 0.4),
+      transparent
+    );
+    animation: shimmer 1.5s ease-in-out infinite;
   }
 
   /* Progress Bar Animated */
@@ -372,6 +413,12 @@
     animation: badge-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
+  /* Notification Badge */
+  .notification-badge {
+    @apply absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-[10px] font-medium text-primary-foreground flex items-center justify-center;
+    animation: badge-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
   /* Grid Pattern Background */
   .bg-grid-pattern {
     background-image: 
@@ -384,6 +431,92 @@
   .bg-dot-pattern {
     background-image: radial-gradient(hsl(var(--border)) 1px, transparent 1px);
     background-size: 16px 16px;
+  }
+
+  /* Sidebar active indicator */
+  .sidebar-active-indicator {
+    @apply relative;
+  }
+
+  .sidebar-active-indicator::before {
+    content: '';
+    @apply absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary rounded-full;
+    animation: scale-fade-in 0.2s ease-out;
+  }
+
+  /* Hero gradient background */
+  .hero-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--secondary)) 0%,
+      hsl(var(--background)) 50%,
+      hsl(var(--secondary) / 0.5) 100%
+    );
+  }
+
+  /* Page container */
+  .page-container {
+    @apply p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8;
+  }
+
+  /* Section spacing */
+  .section-gap {
+    @apply space-y-4 sm:space-y-6;
+  }
+
+  /* Card grid */
+  .card-grid {
+    @apply grid gap-4 sm:gap-5 lg:gap-6;
+  }
+
+  /* Consistent card padding */
+  .card-padding {
+    @apply p-5 sm:p-6;
+  }
+
+  /* Header with icon */
+  .header-with-icon {
+    @apply flex items-center gap-2.5;
+  }
+
+  .header-icon-container {
+    @apply flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg bg-secondary transition-colors;
+  }
+
+  /* Smooth transitions */
+  .transition-smooth {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  /* Input focus animation */
+  .input-focus-ring {
+    @apply transition-all duration-200;
+  }
+
+  .input-focus-ring:focus {
+    @apply ring-2 ring-primary/20 border-primary/50;
+  }
+
+  /* Loading spinner */
+  .loading-spinner {
+    @apply animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full;
+  }
+
+  /* Empty state */
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-12 text-center;
+  }
+
+  .empty-state-icon {
+    @apply h-12 w-12 text-muted-foreground/50 mb-4;
+  }
+
+  .empty-state-title {
+    @apply text-lg font-medium mb-1;
+  }
+
+  .empty-state-description {
+    @apply text-sm text-muted-foreground max-w-sm;
   }
 }
 

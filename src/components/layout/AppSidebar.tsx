@@ -12,9 +12,10 @@ import {
   BookOpen,
   CreditCard,
   Palette,
-  Loader2
+  Loader2,
+  ChevronRight
 } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -38,6 +39,12 @@ import { SubscriptionBadge } from "@/components/subscription/SubscriptionBadge";
 import { useProfile } from "@/hooks/useProfile";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const mainNavItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -65,6 +72,7 @@ export function AppSidebar() {
   const { profile } = useProfile();
   const { unreadCount } = useNotifications();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   const handleLogout = async () => {
@@ -84,44 +92,91 @@ export function AppSidebar() {
   };
 
   const displayName = profile?.name || user?.email?.split("@")[0] || "Designer";
+  const isActive = (url: string) => location.pathname === url || location.pathname.startsWith(url + "/");
+
+  const NavItem = ({ item, showBadge = false }: { item: typeof mainNavItems[0]; showBadge?: boolean }) => {
+    const active = item.url === "/dashboard" 
+      ? location.pathname === "/dashboard" 
+      : isActive(item.url);
+    
+    return (
+      <TooltipProvider delayDuration={0}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <NavLink
+              to={item.url}
+              className={cn(
+                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-muted-foreground transition-all duration-200",
+                "hover:bg-secondary hover:text-foreground group",
+                active && "bg-secondary text-foreground font-medium sidebar-active-indicator"
+              )}
+            >
+              <item.icon className={cn(
+                "h-4 w-4 shrink-0 transition-all duration-200",
+                active && "text-primary",
+                "group-hover:scale-105"
+              )} />
+              {!isCollapsed && (
+                <>
+                  <span className="text-sm flex-1">{item.title}</span>
+                  {showBadge && unreadCount > 0 && (
+                    <Badge variant="accent" size="sm" className="ml-auto">
+                      {unreadCount}
+                    </Badge>
+                  )}
+                  {active && (
+                    <ChevronRight className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                  )}
+                </>
+              )}
+            </NavLink>
+          </TooltipTrigger>
+          {isCollapsed && (
+            <TooltipContent side="right" className="bg-popover border-border shadow-lg">
+              <span>{item.title}</span>
+              {showBadge && unreadCount > 0 && (
+                <Badge variant="accent" size="sm" className="ml-2">
+                  {unreadCount}
+                </Badge>
+              )}
+            </TooltipContent>
+          )}
+        </Tooltip>
+      </TooltipProvider>
+    );
+  };
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border bg-sidebar">
-      <SidebarHeader className="border-b p-4">
+      {/* Header */}
+      <SidebarHeader className="border-b border-sidebar-border p-4">
         <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-display font-bold text-sm">
+            A
+          </div>
           {!isCollapsed && (
-            <span className="font-display text-xl font-bold tracking-tight">
+            <span className="font-display text-xl font-bold tracking-tight animate-fade-in">
               Adorzia
             </span>
-          )}
-          {isCollapsed && (
-            <span className="font-display text-xl font-bold">A</span>
           )}
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-2 py-4">
+      {/* Navigation Content */}
+      <SidebarContent className="px-3 py-4">
+        {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-3 mb-2">
-            {!isCollapsed && "Main"}
-          </SidebarGroupLabel>
+          {!isCollapsed && (
+            <SidebarGroupLabel className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-widest px-3 mb-2">
+              Main
+            </SidebarGroupLabel>
+          )}
           <SidebarGroupContent>
-            <SidebarMenu>
-              {mainNavItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <NavLink
-                      to={item.url}
-                      end={item.url === "/dashboard"}
-                      className={({ isActive }) => cn(
-                        "flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors",
-                        "hover:bg-secondary hover:text-foreground",
-                        isActive && "bg-secondary text-foreground font-medium"
-                      )}
-                    >
-                      <item.icon className="h-4 w-4 shrink-0" />
-                      {!isCollapsed && <span className="text-sm">{item.title}</span>}
-                    </NavLink>
+            <SidebarMenu className="space-y-1">
+              {mainNavItems.map((item, index) => (
+                <SidebarMenuItem key={item.title} style={{ animationDelay: `${index * 30}ms` }} className="animate-slide-in-from-left">
+                  <SidebarMenuButton asChild>
+                    <NavItem item={item} />
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -129,31 +184,22 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup className="mt-6">
-          <SidebarGroupLabel className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-3 mb-2">
-            {!isCollapsed && "Account"}
-          </SidebarGroupLabel>
+        {/* Divider */}
+        <div className="my-4 mx-3 border-t border-sidebar-border" />
+
+        {/* Account Navigation */}
+        <SidebarGroup>
+          {!isCollapsed && (
+            <SidebarGroupLabel className="text-[10px] font-semibold text-muted-foreground/70 uppercase tracking-widest px-3 mb-2">
+              Account
+            </SidebarGroupLabel>
+          )}
           <SidebarGroupContent>
-            <SidebarMenu>
-              {secondaryNavItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <NavLink
-                      to={item.url}
-                      className={({ isActive }) => cn(
-                        "flex items-center gap-3 rounded-md px-3 py-2 text-muted-foreground transition-colors",
-                        "hover:bg-secondary hover:text-foreground",
-                        isActive && "bg-secondary text-foreground font-medium"
-                      )}
-                    >
-                      <item.icon className="h-4 w-4 shrink-0" />
-                      {!isCollapsed && <span className="text-sm">{item.title}</span>}
-                      {item.title === "Notifications" && !isCollapsed && unreadCount > 0 && (
-                        <Badge variant="accent" className="ml-auto text-[10px] px-1.5 py-0">
-                          {unreadCount}
-                        </Badge>
-                      )}
-                    </NavLink>
+            <SidebarMenu className="space-y-1">
+              {secondaryNavItems.map((item, index) => (
+                <SidebarMenuItem key={item.title} style={{ animationDelay: `${(mainNavItems.length + index) * 30}ms` }} className="animate-slide-in-from-left">
+                  <SidebarMenuButton asChild>
+                    <NavItem item={item} showBadge={item.title === "Notifications"} />
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -162,14 +208,20 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t p-4 space-y-3">
+      {/* Footer */}
+      <SidebarFooter className="border-t border-sidebar-border p-4 space-y-3">
+        {/* User Info */}
         <div className={cn(
-          "flex items-center gap-3",
-          isCollapsed && "justify-center"
-        )}>
-          <Avatar className="h-8 w-8">
+          "flex items-center gap-3 p-2 rounded-lg transition-colors hover:bg-secondary/50 cursor-pointer",
+          isCollapsed && "justify-center p-1"
+        )}
+        onClick={() => navigate("/profile")}
+        role="button"
+        tabIndex={0}
+        >
+          <Avatar className="h-9 w-9 ring-2 ring-border/30">
             <AvatarImage src={profile?.avatar_url || undefined} />
-            <AvatarFallback className="bg-secondary text-foreground text-xs">
+            <AvatarFallback className="bg-secondary text-foreground text-xs font-medium">
               {getInitials(profile?.name, user?.email)}
             </AvatarFallback>
           </Avatar>
@@ -183,11 +235,12 @@ export function AppSidebar() {
           )}
         </div>
         
+        {/* Sign Out Button */}
         {!isCollapsed && (
           <Button 
             variant="ghost" 
             size="sm" 
-            className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground"
+            className="w-full justify-start gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all duration-200"
             onClick={handleLogout}
             disabled={isSigningOut}
           >
@@ -198,6 +251,32 @@ export function AppSidebar() {
             )}
             {isSigningOut ? "Signing out..." : "Sign Out"}
           </Button>
+        )}
+        
+        {/* Collapsed Sign Out */}
+        {isCollapsed && (
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon"
+                  className="w-full h-9 text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                  onClick={handleLogout}
+                  disabled={isSigningOut}
+                >
+                  {isSigningOut ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <LogOut className="h-4 w-4" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="bg-popover border-border shadow-lg">
+                Sign Out
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         )}
       </SidebarFooter>
     </Sidebar>

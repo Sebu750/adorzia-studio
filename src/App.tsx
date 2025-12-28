@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/hooks/useAuth";
 import { AdminAuthProvider } from "@/hooks/useAdminAuth";
+import { AdminThemeProvider } from "@/hooks/useAdminTheme";
 import { SubscriptionProvider } from "@/hooks/useSubscription";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AdminProtectedRoute } from "@/components/auth/AdminProtectedRoute";
@@ -61,6 +62,12 @@ import AdminRankings from "./pages/admin/AdminRankings";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminCollections from "./pages/admin/AdminCollections";
 import AdminJobs from "./pages/admin/AdminJobs";
+import AdminMarketplace from "./pages/admin/AdminMarketplace";
+import AdminPayouts from "./pages/admin/AdminPayouts";
+import AdminTeams from "./pages/admin/AdminTeams";
+import AdminNotifications from "./pages/admin/AdminNotifications";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminSecurity from "./pages/admin/AdminSecurity";
 
 const queryClient = new QueryClient();
 
@@ -75,11 +82,13 @@ function StudioProviders() {
   );
 }
 
-// Wrapper component for Admin routes with Admin Auth provider
+// Wrapper component for Admin routes with Admin Auth + Theme providers
 function AdminProviders() {
   return (
     <AdminAuthProvider>
-      <Outlet />
+      <AdminThemeProvider>
+        <Outlet />
+      </AdminThemeProvider>
     </AdminAuthProvider>
   );
 }
@@ -251,6 +260,36 @@ const App = () => (
               <Route path="/admin/jobs" element={
                 <AdminProtectedRoute>
                   <AdminJobs />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/marketplace" element={
+                <AdminProtectedRoute>
+                  <AdminMarketplace />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/payouts" element={
+                <AdminProtectedRoute>
+                  <AdminPayouts />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/teams" element={
+                <AdminProtectedRoute>
+                  <AdminTeams />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/notifications" element={
+                <AdminProtectedRoute>
+                  <AdminNotifications />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/analytics" element={
+                <AdminProtectedRoute>
+                  <AdminAnalytics />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/security" element={
+                <AdminProtectedRoute>
+                  <AdminSecurity />
                 </AdminProtectedRoute>
               } />
             </Route>

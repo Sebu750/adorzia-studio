@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Crown, TrendingUp, ChevronRight } from "lucide-react";
+import { Crown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface TopDesigner {
@@ -91,10 +91,9 @@ export function TopDesignersCard({ designers }: TopDesignersCardProps) {
                   <p className="font-display font-bold text-base sm:text-lg text-success tabular-nums">
                     ${designer.revenue.toLocaleString()}
                   </p>
-                  <div className="hidden sm:flex items-center gap-1 text-xs text-success justify-end">
-                    <TrendingUp className="h-3 w-3" />
-                    <span>+12%</span>
-                  </div>
+                  <p className="text-xs text-admin-muted-foreground hidden sm:block">
+                    {designer.completedStyleboxes} completed
+                  </p>
                 </div>
                 <ChevronRight className="h-5 w-5 text-admin-muted-foreground/50 group-hover:text-admin-foreground/50 group-hover:translate-x-0.5 transition-all" />
               </div>

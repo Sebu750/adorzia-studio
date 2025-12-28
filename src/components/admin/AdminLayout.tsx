@@ -13,7 +13,7 @@ import {
   Sun,
   Moon
 } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useAdminTheme } from "@/hooks/useAdminTheme";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,7 +34,7 @@ interface AdminLayoutProps {
 export function AdminLayout({ children }: AdminLayoutProps) {
   const navigate = useNavigate();
   const { user, signOut, adminRole: userRole } = useAdminAuth();
-  const { theme, setTheme } = useTheme();
+  const { theme, toggleTheme } = useAdminTheme();
   
   // Derive admin role type for display
   const adminRole = userRole === 'superadmin' ? 'superadmin' : 'admin';
@@ -89,11 +89,14 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 variant="ghost" 
                 size="icon" 
                 className="h-10 w-10 hover:bg-admin-muted text-admin-foreground transition-colors rounded-xl"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                onClick={toggleTheme}
               >
-                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                <span className="sr-only">Toggle theme</span>
+                {theme === 'dark' ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )}
+                <span className="sr-only">Toggle admin theme</span>
               </Button>
 
               {/* Notifications */}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { AdminStatCard } from "@/components/admin/AdminStatCard";
 import { PendingQueueCard } from "@/components/admin/PendingQueueCard";
@@ -23,8 +23,10 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const AdminDashboard = () => {
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalDesigners: 0,
@@ -34,126 +36,238 @@ const AdminDashboard = () => {
     founderCount: 0,
     liveProducts: 0,
     styleboxCompletions: 0,
-    approvalRate: 94,
+    approvalRate: 0,
   });
   const [pendingPublications, setPendingPublications] = useState<any[]>([]);
   const [topDesigners, setTopDesigners] = useState<any[]>([]);
   const [recentActivities, setRecentActivities] = useState<any[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch designer count
-        const { count: designerCount } = await supabase
-          .from("profiles")
-          .select("*", { count: "exact", head: true });
+  const fetchData = useCallback(async () => {
+    try {
+      // Fetch designer count
+      const { count: designerCount } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true });
 
-        // Fetch active styleboxes
-        const { count: styleboxCount } = await supabase
-          .from("styleboxes")
-          .select("*", { count: "exact", head: true })
-          .eq("status", "active");
+      // Fetch active styleboxes
+      const { count: styleboxCount } = await supabase
+        .from("styleboxes")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "active");
 
-        // Fetch pending publications
-        const { count: pendingCount, data: pendingData } = await supabase
-          .from("portfolio_publications")
-          .select("*, portfolios(designer_id, title, category)")
-          .eq("status", "pending")
-          .limit(5);
+      // Fetch pending publications
+      const { count: pendingCount, data: pendingData } = await supabase
+        .from("portfolio_publications")
+        .select("*, portfolios(designer_id, title, category)")
+        .eq("status", "pending")
+        .limit(5);
 
-        // Fetch monthly revenue
-        const startOfMonth = new Date();
-        startOfMonth.setDate(1);
-        startOfMonth.setHours(0, 0, 0, 0);
-        
-        const { data: earningsData } = await supabase
-          .from("earnings")
-          .select("amount")
-          .gte("created_at", startOfMonth.toISOString());
+      // Fetch monthly revenue
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+      
+      const { data: earningsData } = await supabase
+        .from("earnings")
+        .select("amount")
+        .gte("created_at", startOfMonth.toISOString());
 
-        const monthlyRevenue = earningsData?.reduce((sum, e) => sum + Number(e.amount), 0) || 0;
+      const monthlyRevenue = earningsData?.reduce((sum, e) => sum + Number(e.amount), 0) || 0;
 
-        // Fetch live products
-        const { count: productsCount } = await supabase
-          .from("marketplace_products")
-          .select("*", { count: "exact", head: true })
-          .eq("status", "live");
+      // Fetch live products
+      const { count: productsCount } = await supabase
+        .from("marketplace_products")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "live");
 
-        // Fetch completions
-        const { count: completionsCount } = await supabase
-          .from("stylebox_submissions")
-          .select("*", { count: "exact", head: true })
-          .eq("status", "approved");
+      // Fetch founder count from foundation_purchases
+      const { count: founderCount } = await supabase
+        .from("foundation_purchases")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "completed");
 
-        // Fetch top designers by XP
-        const { data: designers } = await supabase
-          .from("profiles")
-          .select("*")
-          .order("xp", { ascending: false })
-          .limit(5);
+      // Fetch approved and total submissions for approval rate
+      const { count: approvedCount } = await supabase
+        .from("stylebox_submissions")
+        .select("*", { count: "exact", head: true })
+        .eq("status", "approved");
 
-        setStats({
-          totalDesigners: designerCount || 0,
-          activeStyleboxes: styleboxCount || 0,
-          pendingPublications: pendingCount || 0,
-          monthlyRevenue,
-          founderCount: 48,
-          liveProducts: productsCount || 0,
-          styleboxCompletions: completionsCount || 0,
-          approvalRate: 94,
-        });
+      const { count: totalSubmissions } = await supabase
+        .from("stylebox_submissions")
+        .select("*", { count: "exact", head: true });
 
-        // Format pending publications
-        if (pendingData) {
-          setPendingPublications(pendingData.slice(0, 3).map((p) => ({
-            id: p.id,
-            title: p.portfolios?.title || "Untitled",
-            designer: { name: "Designer", avatar: "", rank: "Designer" },
-            category: p.portfolios?.category || "Fashion",
-            submittedAt: getRelativeTime(new Date(p.submitted_at)),
-            status: "pending_review" as const,
-          })));
-        }
+      const approvalRate = totalSubmissions && totalSubmissions > 0 
+        ? Math.round(((approvedCount || 0) / totalSubmissions) * 100) 
+        : 0;
 
-        // Format top designers
-        if (designers) {
-          setTopDesigners(designers.map((d) => ({
+      // Fetch top designers with real earnings data
+      const { data: designers } = await supabase
+        .from("profiles")
+        .select("id, name, avatar_url, xp, rank_id")
+        .order("xp", { ascending: false })
+        .limit(5);
+
+      // Fetch earnings for each designer
+      const designersWithEarnings = await Promise.all(
+        (designers || []).map(async (d) => {
+          const { data: earnings } = await supabase
+            .from("earnings")
+            .select("amount")
+            .eq("designer_id", d.id)
+            .gte("created_at", startOfMonth.toISOString());
+          
+          const revenue = earnings?.reduce((sum, e) => sum + Number(e.amount), 0) || 0;
+
+          const { count: completedCount } = await supabase
+            .from("stylebox_submissions")
+            .select("*", { count: "exact", head: true })
+            .eq("designer_id", d.id)
+            .eq("status", "approved");
+
+          const { count: publishedCount } = await supabase
+            .from("marketplace_products")
+            .select("*", { count: "exact", head: true })
+            .eq("designer_id", d.id)
+            .eq("status", "live");
+
+          return {
             id: d.id,
             name: d.name || "Designer",
             avatar: d.avatar_url || "",
             rank: "Designer",
-            revenue: 0,
-            completedStyleboxes: 0,
-            publishedItems: 0,
-          })));
-        }
+            revenue,
+            completedStyleboxes: completedCount || 0,
+            publishedItems: publishedCount || 0,
+          };
+        })
+      );
 
-        // Fetch recent admin logs
-        const { data: logs } = await supabase
-          .from("admin_logs")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(4);
+      setStats({
+        totalDesigners: designerCount || 0,
+        activeStyleboxes: styleboxCount || 0,
+        pendingPublications: pendingCount || 0,
+        monthlyRevenue,
+        founderCount: founderCount || 0,
+        liveProducts: productsCount || 0,
+        styleboxCompletions: approvedCount || 0,
+        approvalRate,
+      });
 
-        if (logs) {
-          setRecentActivities(logs.map((log) => ({
-            id: log.id,
-            type: "registration" as const,
-            title: log.action,
-            description: log.target_type || "",
-            timestamp: new Date(log.created_at),
-          })));
-        }
-
-      } catch (err) {
-        console.error("Error fetching admin data:", err);
-      } finally {
-        setLoading(false);
+      // Format pending publications
+      if (pendingData) {
+        setPendingPublications(pendingData.slice(0, 3).map((p) => ({
+          id: p.id,
+          title: p.portfolios?.title || "Untitled",
+          designer: { name: "Designer", avatar: "", rank: "Designer" },
+          category: p.portfolios?.category || "Fashion",
+          submittedAt: getRelativeTime(new Date(p.submitted_at)),
+          status: "pending_review" as const,
+        })));
       }
-    };
 
-    fetchData();
+      // Set top designers with real data
+      setTopDesigners(designersWithEarnings);
+
+      // Fetch recent activities - combining different activity types
+      await fetchRecentActivities();
+
+    } catch (err) {
+      console.error("Error fetching admin data:", err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  const fetchRecentActivities = async () => {
+    const activities: any[] = [];
+
+    // Fetch new designers (recent signups)
+    const { data: newDesigners } = await supabase
+      .from("profiles")
+      .select("id, name, created_at")
+      .order("created_at", { ascending: false })
+      .limit(2);
+
+    newDesigners?.forEach((d) => {
+      activities.push({
+        id: `reg-${d.id}`,
+        type: "registration" as const,
+        title: d.name || "New Designer",
+        description: "Joined Adorzia Studio",
+        timestamp: new Date(d.created_at),
+      });
+    });
+
+    // Fetch recent stylebox completions
+    const { data: completions } = await supabase
+      .from("stylebox_submissions")
+      .select("id, submitted_at, stylebox_id, styleboxes(title)")
+      .eq("status", "approved")
+      .order("submitted_at", { ascending: false })
+      .limit(2);
+
+    completions?.forEach((c) => {
+      activities.push({
+        id: `sb-${c.id}`,
+        type: "stylebox_completion" as const,
+        title: (c.styleboxes as any)?.title || "StyleBox",
+        description: "Submission approved",
+        timestamp: new Date(c.submitted_at),
+      });
+    });
+
+    // Fetch recent publication requests
+    const { data: publications } = await supabase
+      .from("portfolio_publications")
+      .select("id, submitted_at, portfolios(title)")
+      .eq("status", "pending")
+      .order("submitted_at", { ascending: false })
+      .limit(2);
+
+    publications?.forEach((p) => {
+      activities.push({
+        id: `pub-${p.id}`,
+        type: "publish_request" as const,
+        title: (p.portfolios as any)?.title || "Publication",
+        description: "Awaiting review",
+        timestamp: new Date(p.submitted_at),
+      });
+    });
+
+    // Sort by timestamp and take top 4
+    activities.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    setRecentActivities(activities.slice(0, 4));
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    // Set up realtime subscription for new designers
+    const channel = supabase
+      .channel('admin-dashboard-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'profiles'
+        },
+        (payload) => {
+          const newDesigner = payload.new as { name?: string; email?: string };
+          toast({
+            title: "New Designer Joined!",
+            description: newDesigner.name || newDesigner.email || "A new designer has registered",
+          });
+          // Refresh stats
+          fetchData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchData, toast]);
 
   const containerVariants = {
     hidden: { opacity: 0 },

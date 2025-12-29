@@ -1,5 +1,5 @@
 // Subscription tier configuration - Adorzia Studio Access
-export type SubscriptionTier = 'cadet' | 'pro' | 'elite';
+export type SubscriptionTier = 'basic' | 'pro' | 'elite';
 
 export interface TierConfig {
   id: SubscriptionTier;
@@ -22,9 +22,9 @@ export interface TierConfig {
 }
 
 export const SUBSCRIPTION_TIERS: Record<SubscriptionTier, TierConfig> = {
-  cadet: {
-    id: 'cadet',
-    name: 'Cadet',
+  basic: {
+    id: 'basic',
+    name: 'Basic',
     subtitle: 'Start Learning',
     price: 0,
     priceFormatted: 'FREE',
@@ -131,7 +131,7 @@ export function canAccessStylebox(
   if (!requiredTier) return true; // No restriction
   if (!userTier) return false;
   
-  const tierOrder: SubscriptionTier[] = ['cadet', 'pro', 'elite'];
+  const tierOrder: SubscriptionTier[] = ['basic', 'pro', 'elite'];
   const userTierIndex = tierOrder.indexOf(userTier);
   const requiredTierIndex = tierOrder.indexOf(requiredTier);
   

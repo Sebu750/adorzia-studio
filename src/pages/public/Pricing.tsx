@@ -260,7 +260,7 @@ export default function Pricing() {
             {(Object.keys(SUBSCRIPTION_TIERS) as SubscriptionTier[]).map((tierKey, index) => {
               const tier = SUBSCRIPTION_TIERS[tierKey];
               const isPopular = tierKey === 'pro';
-              const isFree = tierKey === 'cadet';
+              const isFree = tierKey === 'basic';
 
               return (
                 <motion.div
@@ -285,11 +285,11 @@ export default function Pricing() {
                     
                     <CardHeader className="text-center pb-4">
                       <div className={`h-14 w-14 rounded-2xl flex items-center justify-center mx-auto mb-4 ${
-                        tierKey === 'cadet' ? 'bg-secondary' : 
+                        tierKey === 'basic' ? 'bg-secondary' : 
                         tierKey === 'pro' ? 'bg-primary/10' : 
                         'bg-amber-100 dark:bg-amber-900/30'
                       }`}>
-                        {tierKey === 'cadet' && <Star className="h-7 w-7" />}
+                        {tierKey === 'basic' && <Star className="h-7 w-7" />}
                         {tierKey === 'pro' && <Sparkles className="h-7 w-7 text-primary" />}
                         {tierKey === 'elite' && <Crown className="h-7 w-7 text-amber-600" />}
                       </div>

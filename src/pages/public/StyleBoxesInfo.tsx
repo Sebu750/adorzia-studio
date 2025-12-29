@@ -59,13 +59,13 @@ const skillMetrics = [
 
 // Build subscription access from centralized config
 const tierIcons: Record<SubscriptionTier, React.ReactNode> = {
-  cadet: <GraduationCap className="h-5 w-5" />,
+  basic: <GraduationCap className="h-5 w-5" />,
   pro: <Briefcase className="h-5 w-5" />,
   elite: <Crown className="h-5 w-5" />,
 };
 
 const tierFeatures: Record<SubscriptionTier, string[]> = {
-  cadet: [
+  basic: [
     "3 Basic StyleBoxes",
     "3 Portfolio Designs",
     "Community Forum Access",

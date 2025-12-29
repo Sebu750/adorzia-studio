@@ -103,8 +103,9 @@ export function PortfolioGrid({
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {items.map((item) => {
-          const status = statusConfig[item.status];
+      {items.map((item) => {
+          // Safe access with fallback to draft
+          const status = statusConfig[item.status as keyof typeof statusConfig] ?? statusConfig.draft;
           const StatusIcon = status.icon;
           const hasPublication = hasActivePublication(item);
           const PublicationIcon = item.publicationStatus 

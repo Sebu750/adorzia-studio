@@ -74,8 +74,9 @@ export function RecentActivityCard({ activities }: RecentActivityCardProps) {
       </CardHeader>
       <CardContent className="p-0">
         <div className="divide-y divide-admin-border" role="list">
-          {activities.map((activity) => {
-            const config = activityConfig[activity.type];
+        {activities.map((activity) => {
+            // Safe access with fallback to registration
+            const config = activityConfig[activity.type as keyof typeof activityConfig] ?? activityConfig.registration;
             const Icon = config.icon;
             
             return (

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RankTier } from "@/lib/ranks";
+import { RankTier, isValidRankTier, STANDARD_RANKS } from "@/lib/ranks";
 import { motion } from "framer-motion";
 import { useProfile } from "@/hooks/useProfile";
 import { useGreeting } from "@/hooks/useGreeting";
@@ -103,8 +103,23 @@ const Dashboard = () => {
     unreadMessages: 5,
   };
 
+  // Safely determine current rank from profile
+  const getCurrentRank = (): RankTier => {
+    // Try to get rank from rank_order in the rank object
+    if (profile?.rank?.rank_order !== undefined) {
+      const order = profile.rank.rank_order;
+      // Map rank_order to RankTier (2=apprentice, 3=patternist, etc.)
+      const standardRankIndex = order - 2;
+      if (standardRankIndex >= 0 && standardRankIndex < STANDARD_RANKS.length) {
+        return STANDARD_RANKS[standardRankIndex];
+      }
+    }
+    // Default to apprentice
+    return 'apprentice';
+  };
+
   const rankData = {
-    currentRank: (profile?.rank?.name?.toLowerCase() || "apprentice") as RankTier,
+    currentRank: getCurrentRank(),
     foundationRank: null as 'f1' | 'f2' | null, // Will be fetched from foundation_purchases in future
     styleCredits: profile?.xp || 0,
     badges: [

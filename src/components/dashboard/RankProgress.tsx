@@ -3,7 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Star, Sparkles, TrendingUp, Gift, Percent } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { RANKS, RankTier, getNextStandardRank, getRankProgress, calculateEffectiveCommission, formatSC } from "@/lib/ranks";
+import { RANKS, RankTier, getNextStandardRank, getRankProgress, calculateEffectiveCommission, formatSC, safeGetRank, isValidRankTier } from "@/lib/ranks";
 import { motion } from "framer-motion";
 
 interface RankProgressProps {
@@ -60,10 +60,10 @@ const rankStyles: Record<RankTier, { bg: string; border: string; text: string; g
 };
 
 const RankIcon = ({ rank }: { rank: RankTier }) => {
-  const isFoundation = RANKS[rank].isFoundation;
+  const rankDef = safeGetRank(rank);
   const isTopTier = rank === 'creative_director' || rank === 'visionary';
   
-  if (isFoundation) return <Sparkles className="h-7 w-7" />;
+  if (rankDef.isFoundation) return <Sparkles className="h-7 w-7" />;
   if (isTopTier) return <Crown className="h-7 w-7" />;
   return <Star className="h-7 w-7" />;
 };
@@ -74,12 +74,14 @@ export function RankProgress({
   styleCredits,
   badges,
 }: RankProgressProps) {
-  const rankDef = RANKS[currentRank];
-  const nextRank = getNextStandardRank(currentRank);
-  const style = rankStyles[currentRank] || rankStyles.apprentice;
+  // Use safe accessor to prevent crashes on invalid rank keys
+  const safeRank: RankTier = isValidRankTier(currentRank) ? currentRank : 'apprentice';
+  const rankDef = safeGetRank(safeRank);
+  const nextRank = getNextStandardRank(safeRank);
+  const style = rankStyles[safeRank] || rankStyles.apprentice;
   
-  const effectiveCommission = calculateEffectiveCommission(currentRank, foundationRank);
-  const progressPercent = getRankProgress(currentRank, styleCredits);
+  const effectiveCommission = calculateEffectiveCommission(safeRank, foundationRank);
+  const progressPercent = getRankProgress(safeRank, styleCredits);
   const scNeeded = nextRank ? Math.max(0, nextRank.minSC - styleCredits) : 0;
 
   return (

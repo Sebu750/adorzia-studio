@@ -11,13 +11,13 @@ import { SUBSCRIPTION_TIERS, SubscriptionTier } from '@/lib/subscription';
 import { cn } from '@/lib/utils';
 
 const tierIcons: Record<SubscriptionTier, React.ReactNode> = {
-  cadet: <Star className="h-6 w-6" />,
+  basic: <Star className="h-6 w-6" />,
   pro: <Sparkles className="h-6 w-6" />,
   elite: <Crown className="h-6 w-6" />,
 };
 
 const tierColors: Record<SubscriptionTier, string> = {
-  cadet: 'bg-secondary',
+  basic: 'bg-secondary',
   pro: 'bg-primary/10 text-primary',
   elite: 'bg-amber-100 text-amber-600 dark:bg-amber-900/30',
 };
@@ -54,11 +54,11 @@ export default function Subscription() {
       return;
     }
 
-    // Cadet is free - no checkout needed
-    if (tier === 'cadet') {
+    // Basic is free - no checkout needed
+    if (tier === 'basic') {
       toast({
         title: 'Free tier',
-        description: 'You already have access to Cadet features!',
+        description: 'You already have access to Basic features!',
       });
       return;
     }
@@ -122,7 +122,7 @@ export default function Subscription() {
         {isSubscribed && subscriptionEnd && (
           <div className="mb-8 p-4 bg-secondary/50 rounded-lg text-center">
             <p className="text-sm text-muted-foreground">
-              Your current plan: <span className="font-semibold text-foreground">{SUBSCRIPTION_TIERS[currentTier || 'cadet'].name}</span>
+              Your current plan: <span className="font-semibold text-foreground">{SUBSCRIPTION_TIERS[currentTier || 'basic'].name}</span>
               {' · '}
               Renews on {new Date(subscriptionEnd).toLocaleDateString()}
             </p>
@@ -137,7 +137,7 @@ export default function Subscription() {
             const tierConfig = SUBSCRIPTION_TIERS[tierKey];
             const isCurrentPlan = currentTier === tierKey && isSubscribed;
             const isPopular = tierKey === 'pro';
-            const isFree = tierKey === 'cadet';
+            const isFree = tierKey === 'basic';
 
             return (
               <Card

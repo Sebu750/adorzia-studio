@@ -33,8 +33,9 @@ interface CollectionCardProps {
 }
 
 export function CollectionCard({ submission, statusConfig, onEdit, onDelete }: CollectionCardProps) {
-  const config = statusConfig[submission.status];
-  const StatusIcon = config.icon;
+  // Safe access with fallback to draft config
+  const config = statusConfig[submission.status] ?? statusConfig.draft;
+  const StatusIcon = config?.icon;
   const canEdit = submission.status === 'draft' || submission.status === 'revisions_required';
   const canDelete = submission.status === 'draft';
 

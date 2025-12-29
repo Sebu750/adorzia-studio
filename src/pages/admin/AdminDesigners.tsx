@@ -40,9 +40,9 @@ import {
   Mail
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { RANKS, RankTier } from "@/lib/ranks";
+import { RANKS, RankTier, safeGetRank, isValidRankTier } from "@/lib/ranks";
 
-// Mock designer data
+// Mock designer data - using valid RankTier values
 const designers = [
   {
     id: "1",
@@ -66,7 +66,7 @@ const designers = [
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100",
     country: "USA",
     category: "Fashion",
-    rank: "elite" as RankTier,
+    rank: "creative_director" as RankTier,
     subscription: "pro",
     status: "active",
     completedStyleboxes: 38,
@@ -81,7 +81,7 @@ const designers = [
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100",
     country: "France",
     category: "Textile",
-    rank: "lead" as RankTier,
+    rank: "visionary" as RankTier,
     subscription: "pro",
     status: "active",
     completedStyleboxes: 32,
@@ -96,7 +96,7 @@ const designers = [
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100",
     country: "UK",
     category: "Jewelry",
-    rank: "senior" as RankTier,
+    rank: "couturier" as RankTier,
     subscription: "pro",
     status: "active",
     completedStyleboxes: 28,
@@ -111,7 +111,7 @@ const designers = [
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100",
     country: "Spain",
     category: "Fashion",
-    rank: "designer" as RankTier,
+    rank: "patternist" as RankTier,
     subscription: "basic",
     status: "active",
     completedStyleboxes: 24,
@@ -136,15 +136,15 @@ const designers = [
   },
 ];
 
-const rankColors: Record<string, string> = {
+const rankColors: Record<RankTier, string> = {
   'f1': 'bg-rank-f1/10 text-rank-f1 border-rank-f1/30',
   'f2': 'bg-rank-f2/10 text-rank-f2 border-rank-f2/30',
-  'elite': 'bg-rank-elite/10 text-rank-elite border-rank-elite/30',
-  'lead': 'bg-rank-lead/10 text-rank-lead border-rank-lead/30',
-  'senior': 'bg-rank-senior/10 text-rank-senior border-rank-senior/30',
-  'designer': 'bg-rank-designer/10 text-rank-designer border-rank-designer/30',
   'apprentice': 'bg-rank-apprentice/10 text-rank-apprentice border-rank-apprentice/30',
-  'novice': 'bg-rank-novice/10 text-rank-novice border-rank-novice/30',
+  'patternist': 'bg-muted/20 text-muted-foreground border-muted-foreground/30',
+  'stylist': 'bg-muted/30 text-foreground border-muted-foreground/40',
+  'couturier': 'bg-foreground/10 text-foreground border-foreground/30',
+  'visionary': 'bg-foreground/15 text-foreground border-foreground/40',
+  'creative_director': 'bg-foreground/20 text-foreground border-foreground/50',
 };
 
 const AdminDesigners = () => {
@@ -257,10 +257,10 @@ const AdminDesigners = () => {
                     <TableCell>
                       <Badge 
                         variant="outline"
-                        className={cn(rankColors[designer.rank])}
+                        className={cn(rankColors[designer.rank] || rankColors.apprentice)}
                       >
                         <Crown className="h-3 w-3 mr-1" />
-                        {RANKS[designer.rank].name}
+                        {safeGetRank(designer.rank).name}
                       </Badge>
                     </TableCell>
                     <TableCell>

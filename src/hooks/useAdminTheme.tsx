@@ -44,8 +44,13 @@ export function AdminThemeProvider({ children }: { children: ReactNode }) {
 
 export function useAdminTheme() {
   const context = useContext(AdminThemeContext);
+  // Return safe defaults if used outside provider instead of crashing
   if (!context) {
-    throw new Error('useAdminTheme must be used within an AdminThemeProvider');
+    return {
+      theme: 'light' as Theme,
+      setTheme: () => {},
+      toggleTheme: () => {},
+    };
   }
   return context;
 }

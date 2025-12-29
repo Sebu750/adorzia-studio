@@ -230,3 +230,16 @@ export function getSCNeededForNextRank(currentRank: RankTier, currentSC: number)
   const next = getNextStandardRank(currentRank);
   return next ? Math.max(0, next.minSC - currentSC) : 0;
 }
+
+// Safe accessor for RANKS - always returns valid RankDefinition
+export function safeGetRank(rankKey: string | undefined | null): RankDefinition {
+  if (rankKey && rankKey in RANKS) {
+    return RANKS[rankKey as RankTier];
+  }
+  return RANKS['apprentice'];
+}
+
+// Check if a string is a valid RankTier
+export function isValidRankTier(key: string | undefined | null): key is RankTier {
+  return typeof key === 'string' && key in RANKS;
+}

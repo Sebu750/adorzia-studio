@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import {
   Dialog,
   DialogContent,
@@ -65,7 +65,7 @@ const defaultStep: WalkthroughStep = {
 
 export function WalkthroughModal({ open, onOpenChange, walkthrough }: WalkthroughModalProps) {
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user } = useAdminAuth();
   const queryClient = useQueryClient();
   
   const [title, setTitle] = useState("");

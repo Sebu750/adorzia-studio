@@ -31,7 +31,7 @@ import {
   Smartphone,
   Activity
 } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { z } from "zod";
@@ -52,7 +52,7 @@ const passwordSchema = z.object({
 
 export default function AdminSettings() {
   const navigate = useNavigate();
-  const { user, signOut, isAdmin } = useAuth();
+  const { user, signOut, isAdmin } = useAdminAuth();
   const { toast } = useToast();
   
   const [isLoading, setIsLoading] = useState(false);

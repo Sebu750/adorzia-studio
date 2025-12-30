@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { Plus, Briefcase, Users } from "lucide-react";
 
 export default function AdminJobs() {
-  const { user } = useAuth();
+  const { user } = useAdminAuth();
   const queryClient = useQueryClient();
   const [formOpen, setFormOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<any>(null);

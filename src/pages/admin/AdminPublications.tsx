@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -98,7 +98,7 @@ const sourceTypeLabels: Record<string, string> = {
 };
 
 export default function AdminPublications() {
-  const { user } = useAuth();
+  const { user } = useAdminAuth();
   const queryClient = useQueryClient();
   
   const [searchQuery, setSearchQuery] = useState("");

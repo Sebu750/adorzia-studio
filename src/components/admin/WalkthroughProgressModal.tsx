@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import {
   Dialog,
   DialogContent,
@@ -87,7 +87,7 @@ export function WalkthroughProgressModal({
   walkthrough 
 }: WalkthroughProgressModalProps) {
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user } = useAdminAuth();
   const queryClient = useQueryClient();
   
   const [searchQuery, setSearchQuery] = useState("");

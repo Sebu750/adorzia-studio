@@ -35,7 +35,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { toast } from "sonner";
 import { CollectionReviewModal } from "@/components/admin/CollectionReviewModal";
 import { format } from "date-fns";
@@ -70,7 +70,7 @@ const statusConfig: Record<string, { label: string; color: string; icon: React.E
 };
 
 const AdminCollections = () => {
-  const { user } = useAuth();
+  const { user } = useAdminAuth();
   const [submissions, setSubmissions] = useState<CollectionSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");

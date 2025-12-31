@@ -23,7 +23,8 @@ import {
   Award,
   ExternalLink,
   Sparkles,
-  Percent
+  Percent,
+  FolderOpen
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { RANKS, RankTier } from "@/lib/ranks";
@@ -33,6 +34,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { ProfileEditModal } from "@/components/profile/ProfileEditModal";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -40,6 +42,7 @@ const Profile = () => {
   const navigate = useNavigate();
   const [achievements, setAchievements] = useState<any[]>([]);
   const [portfolioProjects, setPortfolioProjects] = useState<any[]>([]);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [stats, setStats] = useState({
     styleboxes: 0,
     xpPoints: 0,
@@ -208,12 +211,18 @@ const Profile = () => {
               <Button 
                 variant="outline" 
                 className="gap-2 shrink-0"
-                onClick={() => navigate("/settings")}
+                onClick={() => setEditModalOpen(true)}
               >
                 <Edit className="h-4 w-4" />
                 Edit Profile
               </Button>
             </div>
+
+            {/* Profile Edit Modal */}
+            <ProfileEditModal 
+              open={editModalOpen} 
+              onOpenChange={setEditModalOpen} 
+            />
 
             <div className="flex flex-wrap gap-4 mt-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-1.5">
@@ -435,7 +444,5 @@ const Profile = () => {
   );
 };
 
-// Import needed for empty state icon
-import { FolderOpen } from "lucide-react";
 
 export default Profile;

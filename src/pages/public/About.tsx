@@ -2,19 +2,19 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  ArrowRight, 
-  Target, 
-  Eye, 
-  Sparkles, 
-  Users, 
+import {
+  ArrowRight,
+  Target,
+  Eye,
+  Sparkles,
+  Users,
   Newspaper,
   Linkedin,
   Twitter,
   Globe,
   Trophy,
   TrendingUp,
-  Briefcase
+  Briefcase,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import PublicLayout from "@/components/public/PublicLayout";
@@ -28,44 +28,46 @@ import { SOCIAL_LINKS } from "@/lib/social-links";
 const uniquePoints = [
   {
     title: "End-to-End Integration",
-    description: "No other platform combines education, studio tools, manufacturing automation, and monetization in one ecosystem."
+    description:
+      "No other platform combines education, studio tools, manufacturing automation, and monetization in one ecosystem.",
   },
   {
     title: "Merit-Based Progression",
-    description: "Your talent and output determine your success—not connections or traditional gatekeeping."
+    description: "Your talent and output determine your success—not connections or traditional gatekeeping.",
   },
   {
     title: "Production-Ready Output",
-    description: "Every StyleBox produces actual market-ready designs, not just practice work."
+    description: "Every StyleBox produces actual market-ready designs, not just practice work.",
   },
   {
     title: "Transparent Revenue Share",
-    description: "Clear, rank-based revenue sharing up to 50%—you always know what you'll earn."
-  }
+    description: "Clear, rank-based revenue sharing up to 50%—you always know what you'll earn.",
+  },
 ];
 
 const leadership = [
   {
     name: "Haseeb Malik",
     role: "Founder & CEO",
-    bio: "A contrarian at heart, Haseeb built Adorzia with a single mission: to prove that designers don't need to starve to succeed. With a background in fashion-tech and entrepreneurship, he realized the fashion industry was broken—prioritizing platforms over people. Adorzia is his answer to the 'Exposure Economy.'",
+    bio: "A software engineer by training and a contrarian by instinct. Without a traditional fashion background, he entered the industry to solve what others had normalized-systems that undervalue designers. Drawing from technology and entrepreneurship, he built Adorzia as an alternative to the exposure economy, where structure, ownership, and sustainability replace empty visibility.'",
     avatar: "HM",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80"
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
   },
   {
-    name: "Ahmed Raza",
-    role: "Co-Founder & CTO",
-    bio: "The architect of the 'Adorzia Cloud.' Ahmed bridges the gap between complex logistics and seamless user experience. Passionate about using technology to remove friction, he ensures that while designers focus on art, the code handles the business.",
+    name: "M. Osama Khan",
+    role: "Strategic Advisor & Friend",
+    bio: "M. Osama Khan has been an invaluable friend and supporter throughout Adorzia’s journey.His insights and encouragement helped shape both the vision and the execution of the brand.From early ideas to concrete steps, his guidance has been a constant source of inspiration and support.",
     avatar: "AR",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80"
-  }
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80",
+  },
 ];
 
 const featuredArticles = [
   {
     outlet: "FashionTech Daily",
     title: "Meet Haseeb Malik: The Contrarian Betting on the 'Artist,' Not the Algorithm",
-    excerpt: "In a world obsessed with fast fashion and faster algorithms, Haseeb Malik is hitting the brakes. As the founder of Adorzia, Malik isn't just building another marketplace; he is engineering a rescue mission for the independent designer.",
+    excerpt:
+      "In a world obsessed with fast fashion and faster algorithms, Haseeb Malik is hitting the brakes. As the founder of Adorzia, Malik isn't just building another marketplace; he is engineering a rescue mission for the independent designer.",
     content: `The fashion industry has long operated on a brutal, unspoken rule: designers are disposable. Platforms demand high fees, retailers demand 60% margins, and everyone pays the creator in "exposure."
 
 Haseeb Malik decided that math didn't work.
@@ -77,12 +79,13 @@ Malik's background gave him a unique vantage point—seeing the gap between crea
 Under Malik's leadership, Adorzia has adopted a "Contrarian" approach. While competitors squeeze margins, Adorzia offers revenue splits up to 50%. While others automate support, Adorzia offers partnership.
 
 "We aren't looking for the ones who want to make a quick buck," Malik notes. "We are looking for the designers who want to build a legacy. Adorzia is just the foundation they stand on."`,
-    category: "Founder Profile"
+    category: "Founder Profile",
   },
   {
     outlet: "The Startup Insider",
     title: "Why 90% of Fashion Startups Fail (And How Adorzia is Fixing the Odds)",
-    excerpt: "The statistics are grim. Nine out of ten independent fashion brands will close their doors within the first three years. The reason is rarely 'bad design.' The killer is almost always 'bad operations.'",
+    excerpt:
+      "The statistics are grim. Nine out of ten independent fashion brands will close their doors within the first three years. The reason is rarely 'bad design.' The killer is almost always 'bad operations.'",
     content: `For a young designer, launching a brand involves a paralyzing checklist: sourcing fabric, managing inventory, building a website, fighting algorithms for traffic, and handling returns. It is a CEO's job forced onto an Artist's shoulders.
 
 Adorzia creates a new category in the market: The Fashion Accelerator Platform.
@@ -96,12 +99,13 @@ Adorzia operates as an operational backbone for these startups. By joining the p
 • The Money is fair: A transparent revenue model that actually leaves room for profit.
 
 For a new generation of fashion startups, Adorzia isn't just a shop window; it is a survival kit. By removing the friction of "running a business," Adorzia allows startups to do the one thing that actually scales: making great products.`,
-    category: "Industry Analysis"
+    category: "Industry Analysis",
   },
   {
     outlet: "Future Trends Weekly",
     title: "The 'Cloud Dancer' Era: How Adorzia is Defining the Look of 2026 Retail",
-    excerpt: "Pantone recently announced 'Cloud Dancer' as the Color of the Year for 2026—a symbol of clarity, balance, and a fresh start. But for one company, this isn't just a color trend; it is a business model.",
+    excerpt:
+      "Pantone recently announced 'Cloud Dancer' as the Color of the Year for 2026—a symbol of clarity, balance, and a fresh start. But for one company, this isn't just a color trend; it is a business model.",
     content: `Adorzia is positioning itself as the "Cloud" behind the fashion industry's new wave.
 
 The platform's branding and philosophy align perfectly with this shift toward serenity and minimalism. In an e-commerce landscape that feels cluttered, noisy, and aggressive, Adorzia offers a "clean canvas."
@@ -113,8 +117,8 @@ This philosophy extends to their promotional strategy for designers. Adorzia pro
 For shoppers, it offers a premium, calm experience. For designers, it offers the freedom to "dance"—to move fluidly without being weighed down by the heavy machinery of business.
 
 As we move toward 2026, Adorzia is betting that the future belongs to those who can cut through the noise. With their advanced platform and "founder-friendly" ethos, they are poised to become the standard-bearer for the new digital fashion economy.`,
-    category: "Trend Piece"
-  }
+    category: "Trend Piece",
+  },
 ];
 
 const pressHighlights = [
@@ -124,16 +128,27 @@ const pressHighlights = [
 ];
 
 const companyStats = [
-  { value: 2500, suffix: '+', label: 'Designers Onboarded', icon: <Users className="h-6 w-6 text-muted-foreground" /> },
-  { value: 150, suffix: '+', label: 'StyleBoxes Created', icon: <Briefcase className="h-6 w-6 text-muted-foreground" /> },
-  { value: 50, prefix: '$', suffix: 'K+', label: 'Paid to Creators', icon: <TrendingUp className="h-6 w-6 text-muted-foreground" /> },
-  { value: 3, label: 'Countries Reached', icon: <Globe className="h-6 w-6 text-muted-foreground" /> },
+  { value: 2500, suffix: "+", label: "Designers Onboarded", icon: <Users className="h-6 w-6 text-muted-foreground" /> },
+  {
+    value: 150,
+    suffix: "+",
+    label: "StyleBoxes Created",
+    icon: <Briefcase className="h-6 w-6 text-muted-foreground" />,
+  },
+  {
+    value: 50,
+    prefix: "$",
+    suffix: "K+",
+    label: "Paid to Creators",
+    icon: <TrendingUp className="h-6 w-6 text-muted-foreground" />,
+  },
+  { value: 3, label: "Countries Reached", icon: <Globe className="h-6 w-6 text-muted-foreground" /> },
 ];
 
 export default function About() {
   return (
     <PublicLayout>
-      <SEOHead 
+      <SEOHead
         title="About Adorzia | Fashion Design Platform from Pakistan"
         description="Learn about Adorzia's mission to reinvent fashion creation. Meet our team and discover how we're building the world's first end-to-end fashion ecosystem."
         url="https://studio.adorzia.com/about"
@@ -142,12 +157,12 @@ export default function About() {
       {/* Hero */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/10" />
-        <motion.div 
+        <motion.div
           className="absolute top-1/4 right-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl"
           animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
           transition={{ duration: 8, repeat: Infinity }}
         />
-        
+
         <div className="max-w-7xl mx-auto px-6 relative">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -155,15 +170,17 @@ export default function About() {
             transition={{ duration: 0.6 }}
             className="max-w-3xl"
           >
-            <Badge variant="secondary" className="mb-6">About Adorzia</Badge>
+            <Badge variant="secondary" className="mb-6">
+              About Adorzia
+            </Badge>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6 tracking-tight">
               Reinventing Fashion
               <br />
               <span className="text-muted-foreground">From Pakistan</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              We're building the world's first end-to-end fashion creation operating system—
-              where talent, output, and merit define opportunity.
+              We're building the world's first end-to-end fashion creation operating system— where talent, output, and
+              merit define opportunity.
             </p>
           </motion.div>
         </div>
@@ -180,15 +197,11 @@ export default function About() {
       <section className="py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
               <TiltCard tiltAmount={6}>
                 <Card className="h-full hover:shadow-lg transition-shadow">
                   <CardContent className="p-8">
-                    <motion.div 
+                    <motion.div
                       className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6"
                       whileHover={{ scale: 1.1, rotate: 5 }}
                     >
@@ -196,9 +209,9 @@ export default function About() {
                     </motion.div>
                     <h2 className="font-display text-2xl font-bold mb-4">Vision</h2>
                     <p className="text-muted-foreground leading-relaxed">
-                      To build a world where every designer can create, launch, and scale their own 
-                      fashion brand without barriers. A future where geographic location, social 
-                      connections, and capital are no longer prerequisites for success in fashion.
+                      To build a world where every designer can create, launch, and scale their own fashion brand
+                      without barriers. A future where geographic location, social connections, and capital are no
+                      longer prerequisites for success in fashion.
                     </p>
                   </CardContent>
                 </Card>
@@ -214,7 +227,7 @@ export default function About() {
               <TiltCard tiltAmount={6}>
                 <Card className="h-full hover:shadow-lg transition-shadow">
                   <CardContent className="p-8">
-                    <motion.div 
+                    <motion.div
                       className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center mb-6"
                       whileHover={{ scale: 1.1, rotate: -5 }}
                     >
@@ -222,9 +235,9 @@ export default function About() {
                     </motion.div>
                     <h2 className="font-display text-2xl font-bold mb-4">Mission</h2>
                     <p className="text-muted-foreground leading-relaxed">
-                      To empower designers to become independent fashionpreneurs through a seamless 
-                      model that merges learning, creation, production, and commerce. We provide 
-                      the tools, infrastructure, and marketplace—designers provide the creativity.
+                      To empower designers to become independent fashionpreneurs through a seamless model that merges
+                      learning, creation, production, and commerce. We provide the tools, infrastructure, and
+                      marketplace—designers provide the creativity.
                     </p>
                   </CardContent>
                 </Card>
@@ -242,17 +255,15 @@ export default function About() {
       >
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <Badge variant="outline" className="mb-6">Our Story</Badge>
+            <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <Badge variant="outline" className="mb-6">
+                Our Story
+              </Badge>
             </motion.div>
             <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-8 tracking-tight">
               Replacing Gatekeeping with Merit
             </AnimatedHeading>
-            <motion.div 
+            <motion.div
               className="text-left space-y-6 text-muted-foreground leading-relaxed bg-background/80 backdrop-blur-sm rounded-2xl p-8 border"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -260,20 +271,17 @@ export default function About() {
               transition={{ delay: 0.2 }}
             >
               <p>
-                Adorzia was born from a simple observation: the fashion industry is filled with 
-                talented designers who never get a chance. Traditional paths require expensive 
-                education, industry connections, or startup capital that most creative people 
-                simply don't have.
+                Adorzia was born from a simple observation: the fashion industry is filled with talented designers who
+                never get a chance. Traditional paths require expensive education, industry connections, or startup
+                capital that most creative people simply don't have.
               </p>
               <p>
-                We asked: what if there was a system where your output was your credential? 
-                Where completing a design challenge could lead directly to a product on shelves? 
-                Where revenue share was transparent and fair?
+                We asked: what if there was a system where your output was your credential? Where completing a design
+                challenge could lead directly to a product on shelves? Where revenue share was transparent and fair?
               </p>
               <p>
-                That question became Adorzia—the world's first fashion creation operating system. 
-                Built in Pakistan, leveraging the country's manufacturing strength and creative youth, 
-                and engineered for global scale.
+                That question became Adorzia—the world's first fashion creation operating system. Built in Pakistan,
+                leveraging the country's manufacturing strength and creative youth, and engineered for global scale.
               </p>
             </motion.div>
           </div>
@@ -284,17 +292,15 @@ export default function About() {
       <section className="py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <Badge variant="outline" className="mb-4">Differentiation</Badge>
+            <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <Badge variant="outline" className="mb-4">
+                Differentiation
+              </Badge>
             </motion.div>
             <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               What Makes Adorzia Unique
             </AnimatedHeading>
-            <motion.p 
+            <motion.p
               className="text-muted-foreground"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -318,7 +324,7 @@ export default function About() {
                   <Card className="h-full hover:shadow-lg transition-shadow">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
-                        <motion.div 
+                        <motion.div
                           className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary/20 to-secondary flex items-center justify-center shrink-0"
                           whileHover={{ scale: 1.1 }}
                         >
@@ -340,25 +346,23 @@ export default function About() {
 
       {/* Leadership - The Visionaries */}
       <section className="py-20 md:py-28 bg-foreground text-background relative overflow-hidden">
-        <motion.div 
+        <motion.div
           className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/10"
-          animate={{ x: ['-100%', '100%'] }}
-          transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          animate={{ x: ["-100%", "100%"] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         />
-        
+
         <div className="max-w-7xl mx-auto px-6 relative">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <Badge variant="outline" className="mb-4 border-background/20 text-background">The Team</Badge>
+            <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <Badge variant="outline" className="mb-4 border-background/20 text-background">
+                The Team
+              </Badge>
             </motion.div>
             <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight text-background">
               The Visionaries Behind the Shift
             </AnimatedHeading>
-            <motion.p 
+            <motion.p
               className="text-background/60"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -383,8 +387,8 @@ export default function About() {
                   <CardContent className="p-0">
                     {/* Photo - desaturated for premium aesthetic */}
                     <div className="relative h-64 overflow-hidden">
-                      <img 
-                        src={member.image} 
+                      <img
+                        src={member.image}
                         alt={member.name}
                         className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
                       />
@@ -398,7 +402,7 @@ export default function About() {
                     <div className="p-6">
                       <p className="text-sm text-background/70 leading-relaxed">{member.bio}</p>
                       <div className="flex gap-2 mt-4">
-                        <motion.a 
+                        <motion.a
                           href={SOCIAL_LINKS.linkedin}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -407,7 +411,7 @@ export default function About() {
                         >
                           <Linkedin className="h-4 w-4" />
                         </motion.a>
-                        <motion.a 
+                        <motion.a
                           href={SOCIAL_LINKS.twitter}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -430,17 +434,15 @@ export default function About() {
       <section className="py-20 md:py-28 bg-muted/30">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <Badge variant="outline" className="mb-4">Featured Stories</Badge>
+            <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <Badge variant="outline" className="mb-4">
+                Featured Stories
+              </Badge>
             </motion.div>
             <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               The Adorzia Story
             </AnimatedHeading>
-            <motion.p 
+            <motion.p
               className="text-muted-foreground"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -465,7 +467,9 @@ export default function About() {
                     <div className="grid md:grid-cols-3 gap-0">
                       {/* Article Header */}
                       <div className="p-8 bg-gradient-to-br from-primary/5 to-secondary/10 flex flex-col justify-center">
-                        <Badge variant="secondary" className="w-fit mb-4">{article.category}</Badge>
+                        <Badge variant="secondary" className="w-fit mb-4">
+                          {article.category}
+                        </Badge>
                         <p className="text-sm text-muted-foreground mb-2">{article.outlet}</p>
                         <h3 className="font-display text-xl font-bold leading-tight">{article.title}</h3>
                       </div>
@@ -492,17 +496,15 @@ export default function About() {
       <section id="press" className="py-20 md:py-28">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <Badge variant="outline" className="mb-4">In The News</Badge>
+            <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+              <Badge variant="outline" className="mb-4">
+                In The News
+              </Badge>
             </motion.div>
             <AnimatedHeading className="font-display text-3xl md:text-4xl font-bold mb-4 tracking-tight">
               Press Coverage
             </AnimatedHeading>
-            <motion.p 
+            <motion.p
               className="text-muted-foreground"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -538,7 +540,6 @@ export default function About() {
           </div>
         </div>
       </section>
-
     </PublicLayout>
   );
 }

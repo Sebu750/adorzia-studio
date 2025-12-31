@@ -51,8 +51,7 @@ const leadership = [
     role: "Founder & CEO",
     bio: "A software engineer by training and a contrarian by instinct. Without a traditional fashion background, he entered the industry to solve what others had normalized-systems that undervalue designers. Drawing from technology and entrepreneurship, he built Adorzia as an alternative to the exposure economy, where structure, ownership, and sustainability replace empty visibility.'",
     avatar: "HM",
-    image:
-      "https://instagram.fkhi5-2.fna.fbcdn.net/v/t51.2885-19/609111573_17934597630135795_5490189809495227775_n.jpg?efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fkhi5-2.fna.fbcdn.net&_nc_cat=103&_nc_oc=Q6cZ2QFqKMhIPptvqHO0MFNONlMuvZMRnC8leTO1GIkV8rnjcNeU7ciKHkTXz-uV0-4mFmCTK5tV3v3r7dg1LAo8Hvhn&_nc_ohc=ivBp8ONFvdkQ7kNvwHLvXxJ&_nc_gid=UO04e0mkuhn-Kj_cvXWVeA&edm=ALGbJPMBAAAA&ccb=7-5&oh=00_AflJML7a2D4UqKHcy5bqECf0UyBEkikBrvx6IageHELknw&oe=695AC824&_nc_sid=7d3ac5",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
   },
   {
     name: "M. Osama Khan",

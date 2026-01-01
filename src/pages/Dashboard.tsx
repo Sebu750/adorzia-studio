@@ -7,29 +7,37 @@ import { TeamActivity } from "@/components/dashboard/TeamActivity";
 import { EarningsSnapshot } from "@/components/dashboard/EarningsSnapshot";
 import { WelcomeModal } from "@/components/WelcomeModal";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { EmptyActivity } from "@/components/empty-states/EmptyActivity";
 import { Box, Trophy, FolderOpen, DollarSign, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RankTier, isValidRankTier, STANDARD_RANKS } from "@/lib/ranks";
+import { RankTier, STANDARD_RANKS } from "@/lib/ranks";
 import { motion } from "framer-motion";
 import { useProfile } from "@/hooks/useProfile";
 import { useGreeting } from "@/hooks/useGreeting";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
+import { useActiveStyleboxes } from "@/hooks/useActiveStyleboxes";
+import { useTeamData } from "@/hooks/useTeamData";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { profile, loading: profileLoading, markFirstLoginComplete } = useProfile();
   const { stats, loading: statsLoading } = useDashboardStats();
+  const { styleboxes: activeStyleboxes, loading: styleboxesLoading } = useActiveStyleboxes();
+  const { team: teamData, loading: teamLoading } = useTeamData();
   const [showWelcome, setShowWelcome] = useState(false);
   const [recentActivities, setRecentActivities] = useState<any[]>([]);
+  const [activitiesLoading, setActivitiesLoading] = useState(true);
 
   const greeting = useGreeting({
     name: profile?.name,
-    isFirstLogin: false, // We handle first login with modal instead
+    isFirstLogin: false,
     joinedAt: profile?.created_at,
   });
 
@@ -47,86 +55,58 @@ const Dashboard = () => {
 
   // Fetch recent activities
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setActivitiesLoading(false);
+      return;
+    }
 
     const fetchActivities = async () => {
-      const { data: submissions } = await supabase
-        .from("stylebox_submissions")
-        .select("*, styleboxes(title)")
-        .eq("designer_id", user.id)
-        .order("submitted_at", { ascending: false })
-        .limit(4);
+      try {
+        const { data: submissions } = await supabase
+          .from("stylebox_submissions")
+          .select("*, styleboxes(title)")
+          .eq("designer_id", user.id)
+          .order("submitted_at", { ascending: false })
+          .limit(4);
 
-      if (submissions) {
-        const activities = submissions.map((sub) => ({
-          action: sub.status === "approved" ? "Completed" : 
-                  sub.status === "rejected" ? "Rejected" : "Submitted",
-          project: sub.styleboxes?.title || "Stylebox",
-          time: getRelativeTime(new Date(sub.submitted_at)),
-          status: sub.status === "approved" ? "completed" : 
-                  sub.status === "rejected" ? "rejected" : "pending",
-        }));
-        setRecentActivities(activities);
+        if (submissions && submissions.length > 0) {
+          const activities = submissions.map((sub) => ({
+            action: sub.status === "approved" ? "Completed" : 
+                    sub.status === "rejected" ? "Rejected" : "Submitted",
+            project: sub.styleboxes?.title || "Stylebox",
+            time: getRelativeTime(new Date(sub.submitted_at)),
+            status: sub.status === "approved" ? "completed" : 
+                    sub.status === "rejected" ? "rejected" : "pending",
+          }));
+          setRecentActivities(activities);
+        }
+      } catch (error) {
+        console.error("Error fetching activities:", error);
+      } finally {
+        setActivitiesLoading(false);
       }
     };
 
     fetchActivities();
   }, [user]);
 
-  const activeStyleboxes = [
-    {
-      title: "Sustainable Resort Collection",
-      category: "Fashion",
-      difficulty: "hard" as const,
-      progress: 65,
-      dueDate: "Dec 15",
-      thumbnail: "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=600",
-    },
-    {
-      title: "Modern Artisan Jewelry Set",
-      category: "Jewelry",
-      difficulty: "medium" as const,
-      progress: 30,
-      dueDate: "Dec 20",
-      thumbnail: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600",
-    },
-  ];
-
-  const teamData = {
-    teamName: "Studio Collective",
-    activeProject: "Winter Capsule Collection",
-    members: [
-      { name: "Emma Watson", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100", role: "Lead" },
-      { name: "Alex Chen", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100", role: "Designer" },
-      { name: "Sarah Kim", avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100", role: "Designer" },
-    ],
-    unreadMessages: 5,
-  };
-
   // Safely determine current rank from profile
   const getCurrentRank = (): RankTier => {
-    // Try to get rank from rank_order in the rank object
     if (profile?.rank?.rank_order !== undefined) {
       const order = profile.rank.rank_order;
-      // Map rank_order to RankTier (2=apprentice, 3=patternist, etc.)
       const standardRankIndex = order - 2;
       if (standardRankIndex >= 0 && standardRankIndex < STANDARD_RANKS.length) {
         return STANDARD_RANKS[standardRankIndex];
       }
     }
-    // Default to apprentice
     return 'apprentice';
   };
 
   const rankData = {
     currentRank: getCurrentRank(),
-    foundationRank: null as 'f1' | 'f2' | null, // Will be fetched from foundation_purchases in future
+    foundationRank: null as 'f1' | 'f2' | null,
     styleCredits: profile?.xp || 0,
-    badges: [
-      { name: "First Win", icon: "🏆" },
-      { name: "Team Player", icon: "🤝" },
-      { name: "Creative Spark", icon: "✨" },
-    ],
+    badges: [],
   };
 
   const containerVariants = {
@@ -147,13 +127,6 @@ const Dashboard = () => {
       transition: { duration: 0.4 },
     },
   };
-
-  const displayActivities = recentActivities.length > 0 ? recentActivities : [
-    { action: "Submitted", project: "Autumn Textile Print", time: "2 hours ago", status: "pending" },
-    { action: "Completed", project: "Minimalist Ring Collection", time: "1 day ago", status: "completed" },
-    { action: "Started", project: "Sustainable Resort Collection", time: "3 days ago", status: "active" },
-    { action: "Published", project: "Urban Street Style Series", time: "1 week ago", status: "published" },
-  ];
 
   return (
     <AppLayout>
@@ -190,7 +163,12 @@ const Dashboard = () => {
                 </>
               )}
             </div>
-            <Button variant="default" size="lg" className="gap-2 btn-press shadow-md">
+            <Button 
+              variant="default" 
+              size="lg" 
+              className="gap-2 btn-press shadow-md"
+              onClick={() => navigate("/styleboxes")}
+            >
               <Sparkles className="h-4 w-4" />
               Explore Styleboxes
             </Button>
@@ -259,17 +237,48 @@ const Dashboard = () => {
                   </div>
                   Active Styleboxes
                 </CardTitle>
-                <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="gap-1.5 text-muted-foreground hover:text-foreground"
+                  onClick={() => navigate("/styleboxes")}
+                >
                   View All
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </CardHeader>
               <CardContent className="pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-                  {activeStyleboxes.map((stylebox, index) => (
-                    <ActiveStylebox key={index} {...stylebox} />
-                  ))}
-                </div>
+                {styleboxesLoading ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                    <Skeleton className="h-48 rounded-xl" />
+                    <Skeleton className="h-48 rounded-xl" />
+                  </div>
+                ) : activeStyleboxes.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                    {activeStyleboxes.map((stylebox) => (
+                      <ActiveStylebox 
+                        key={stylebox.id} 
+                        title={stylebox.title}
+                        category={stylebox.category}
+                        difficulty={stylebox.difficulty}
+                        progress={stylebox.progress}
+                        dueDate={stylebox.dueDate || "No deadline"}
+                        thumbnail={stylebox.thumbnail || "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=600"}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <Box className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <h4 className="font-medium mb-2">No Active Styleboxes</h4>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Start a new challenge to build your portfolio
+                    </p>
+                    <Button onClick={() => navigate("/styleboxes")}>
+                      Browse Styleboxes
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -279,33 +288,43 @@ const Dashboard = () => {
                 <CardTitle className="text-lg">Recent Activity</CardTitle>
               </CardHeader>
               <CardContent className="pt-4">
-                <div className="divide-y divide-border">
-                  {displayActivities.map((activity, index) => (
-                    <div 
-                      key={index} 
-                      className="flex items-center justify-between py-4 first:pt-0 last:pb-0 group"
-                      role="listitem"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="h-2 w-2 rounded-full bg-foreground/20 group-hover:bg-foreground/40 transition-colors" />
-                        <div className="space-y-0.5">
-                          <p className="text-sm">
-                            <span className="text-muted-foreground">{activity.action}</span>{" "}
-                            <span className="font-medium">{activity.project}</span>
-                          </p>
-                          <p className="text-xs text-muted-foreground">{activity.time}</p>
+                {activitiesLoading ? (
+                  <div className="space-y-4">
+                    {[1, 2, 3].map((i) => (
+                      <Skeleton key={i} className="h-12" />
+                    ))}
+                  </div>
+                ) : recentActivities.length > 0 ? (
+                  <div className="divide-y divide-border">
+                    {recentActivities.map((activity, index) => (
+                      <div 
+                        key={index} 
+                        className="flex items-center justify-between py-4 first:pt-0 last:pb-0 group"
+                        role="listitem"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="h-2 w-2 rounded-full bg-foreground/20 group-hover:bg-foreground/40 transition-colors" />
+                          <div className="space-y-0.5">
+                            <p className="text-sm">
+                              <span className="text-muted-foreground">{activity.action}</span>{" "}
+                              <span className="font-medium">{activity.project}</span>
+                            </p>
+                            <p className="text-xs text-muted-foreground">{activity.time}</p>
+                          </div>
                         </div>
+                        <Badge variant={
+                          activity.status === "completed" ? "success" :
+                          activity.status === "pending" ? "warning" :
+                          activity.status === "published" ? "default" : "secondary"
+                        }>
+                          {activity.status}
+                        </Badge>
                       </div>
-                      <Badge variant={
-                        activity.status === "completed" ? "success" :
-                        activity.status === "pending" ? "warning" :
-                        activity.status === "published" ? "default" : "secondary"
-                      }>
-                        {activity.status}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <EmptyActivity />
+                )}
               </CardContent>
             </Card>
           </motion.div>
@@ -321,7 +340,23 @@ const Dashboard = () => {
               <RankProgress {...rankData} />
             </ErrorBoundary>
             <ErrorBoundary>
-              <TeamActivity {...teamData} />
+              {teamLoading ? (
+                <Skeleton className="h-48 rounded-xl" />
+              ) : teamData ? (
+                <TeamActivity {...teamData} />
+              ) : (
+                <Card>
+                  <CardContent className="py-8 text-center">
+                    <h4 className="font-medium mb-2">No Team Yet</h4>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Join or create a team to collaborate
+                    </p>
+                    <Button variant="outline" size="sm" onClick={() => navigate("/teams")}>
+                      Explore Teams
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
             </ErrorBoundary>
             <ErrorBoundary>
               <EarningsSnapshot

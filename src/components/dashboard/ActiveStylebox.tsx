@@ -7,7 +7,7 @@ import { Clock, ArrowRight } from "lucide-react";
 interface ActiveStyleboxProps {
   title: string;
   category: string;
-  difficulty: "easy" | "medium" | "hard" | "insane";
+  difficulty: "free" | "easy" | "medium" | "hard" | "insane";
   progress: number;
   dueDate: string;
   thumbnail: string;

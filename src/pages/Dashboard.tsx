@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { StatCard } from "@/components/dashboard/StatCard";
-import { ActiveStylebox } from "@/components/dashboard/ActiveStylebox";
+import { StyleboxDashboardCard } from "@/components/stylebox/StyleboxDashboardCard";
 import { RankProgress } from "@/components/dashboard/RankProgress";
 import { TeamActivity } from "@/components/dashboard/TeamActivity";
 import { EarningsSnapshot } from "@/components/dashboard/EarningsSnapshot";
@@ -23,6 +23,7 @@ import { useTeamData } from "@/hooks/useTeamData";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import type { SCDifficulty } from "@/lib/style-credits";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -256,14 +257,20 @@ const Dashboard = () => {
                 ) : activeStyleboxes.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
                     {activeStyleboxes.map((stylebox) => (
-                      <ActiveStylebox 
+                      <StyleboxDashboardCard 
                         key={stylebox.id} 
+                        id={stylebox.id}
                         title={stylebox.title}
                         category={stylebox.category}
-                        difficulty={stylebox.difficulty}
+                        difficulty={stylebox.difficulty as SCDifficulty}
+                        season={stylebox.season || undefined}
+                        levelNumber={stylebox.levelNumber}
+                        xpReward={stylebox.xpReward}
+                        deadline={stylebox.deadlineDate || undefined}
+                        thumbnail={stylebox.thumbnail || undefined}
+                        studioName={stylebox.studioName || undefined}
                         progress={stylebox.progress}
-                        dueDate={stylebox.dueDate || "No deadline"}
-                        thumbnail={stylebox.thumbnail || "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=600"}
+                        status={stylebox.status === "submitted" ? "submitted" : "active"}
                       />
                     ))}
                   </div>

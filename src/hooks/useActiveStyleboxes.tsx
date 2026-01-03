@@ -7,10 +7,18 @@ export interface ActiveStylebox {
   id: string;
   title: string;
   category: string;
-  difficulty: "easy" | "medium" | "hard" | "insane";
+  difficulty: "free" | "easy" | "medium" | "hard" | "insane";
   progress: number;
   dueDate: string | null;
   thumbnail: string | null;
+  // Enhanced fields
+  season: string | null;
+  xpReward: number;
+  levelNumber: number;
+  studioName: string | null;
+  status: "draft" | "active" | "submitted" | "approved" | "rejected";
+  submittedAt: string | null;
+  deadlineDate: Date | null;
 }
 
 export interface ActiveStyleboxesResult {
@@ -36,19 +44,24 @@ export function useActiveStyleboxes(): ActiveStyleboxesResult {
         setLoading(true);
         setError(null);
 
-        // Fetch active submissions (status = 'submitted')
+        // Fetch active submissions (status = 'submitted' or 'draft')
         const { data: submissions, error: subError } = await supabase
           .from("stylebox_submissions")
           .select(`
             id,
             status,
+            submitted_at,
             styleboxes (
               id,
               title,
               category,
               difficulty,
               submission_deadline,
-              thumbnail_url
+              thumbnail_url,
+              season,
+              xp_reward,
+              level_number,
+              studio_name
             )
           `)
           .eq("designer_id", user.id)
@@ -60,17 +73,28 @@ export function useActiveStyleboxes(): ActiveStyleboxesResult {
           const stylebox = sub.styleboxes as any;
           // Calculate progress based on status
           const progress = sub.status === "submitted" ? 75 : 50;
+          const deadlineDate = stylebox?.submission_deadline 
+            ? new Date(stylebox.submission_deadline) 
+            : null;
           
           return {
             id: sub.id,
             title: stylebox?.title || "Untitled",
-            category: stylebox?.category || "Fashion",
+            category: stylebox?.category || "fashion",
             difficulty: (stylebox?.difficulty as ActiveStylebox["difficulty"]) || "medium",
             progress,
             dueDate: stylebox?.submission_deadline 
               ? format(new Date(stylebox.submission_deadline), "MMM d")
               : null,
             thumbnail: stylebox?.thumbnail_url || null,
+            // Enhanced fields
+            season: stylebox?.season || null,
+            xpReward: stylebox?.xp_reward || 100,
+            levelNumber: stylebox?.level_number || 1,
+            studioName: stylebox?.studio_name || null,
+            status: sub.status === "submitted" ? "submitted" : "active",
+            submittedAt: sub.submitted_at || null,
+            deadlineDate,
           };
         });
 

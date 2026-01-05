@@ -28,6 +28,7 @@ import WaveDivider from "@/components/public/WaveDivider";
 import MarqueeText from "@/components/public/MarqueeText";
 import ScrollReveal from "@/components/public/ScrollReveal";
 import SEOHead from "@/components/public/SEOHead";
+import StyleathonBanner from "@/components/styleathon/StyleathonBanner";
 import { designerImages, productImages } from "@/lib/images";
 
 const howItWorks = [
@@ -114,6 +115,9 @@ export default function Home() {
       
       {/* Hero Section */}
       <HeroSection />
+
+      {/* Styleathon Banner */}
+      <StyleathonBanner />
 
       {/* Brand Marquee */}
       <div className="py-6 border-y bg-muted/30 overflow-hidden">

@@ -26,14 +26,6 @@ import Support from "./pages/public/Support";
 import Studios from "./pages/Studios";
 import DesignerProfiles from "./pages/public/DesignerProfiles";
 
-// Styleathon Pages
-import StyleathonOverview from "./pages/styleathon/StyleathonOverview";
-import StyleathonSubmit from "./pages/styleathon/StyleathonSubmit";
-import StyleathonSubmissions from "./pages/styleathon/StyleathonSubmissions";
-import StyleathonProject from "./pages/styleathon/StyleathonProject";
-import StyleathonLeaderboard from "./pages/styleathon/StyleathonLeaderboard";
-import StyleathonResults from "./pages/styleathon/StyleathonResults";
-
 // Auth Pages
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -125,14 +117,6 @@ const App = () => (
             <Route path="/support" element={<Support />} />
             <Route path="/designers" element={<DesignerProfiles />} />
             <Route path="/studios" element={<Studios />} />
-            
-            {/* Styleathon Routes */}
-            <Route path="/styleathon/01" element={<StyleathonOverview />} />
-            <Route path="/styleathon/01/submit" element={<StyleathonSubmit />} />
-            <Route path="/styleathon/01/submissions" element={<StyleathonSubmissions />} />
-            <Route path="/styleathon/01/project/:id" element={<StyleathonProject />} />
-            <Route path="/styleathon/01/leaderboard" element={<StyleathonLeaderboard />} />
-            <Route path="/styleathon/01/results" element={<StyleathonResults />} />
             
             {/* ============================================ */}
             {/* AUTH ROUTES - Public Access (wrapped in Studio providers for redirect logic) */}

@@ -26,6 +26,13 @@ import Support from "./pages/public/Support";
 import Studios from "./pages/Studios";
 import DesignerProfiles from "./pages/public/DesignerProfiles";
 
+// Marketplace Pages
+import ShopHome from "./pages/shop/ShopHome";
+import ShopProducts from "./pages/shop/ShopProducts";
+import ShopProductDetail from "./pages/shop/ShopProductDetail";
+import ShopCart from "./pages/shop/ShopCart";
+import { CartProvider } from "@/hooks/useCart";
+
 // Auth Pages
 import Auth from "./pages/Auth";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -117,6 +124,15 @@ const App = () => (
             <Route path="/support" element={<Support />} />
             <Route path="/designers" element={<DesignerProfiles />} />
             <Route path="/studios" element={<Studios />} />
+            
+            {/* ============================================ */}
+            {/* MARKETPLACE ROUTES - Public Shopping */}
+            {/* ============================================ */}
+            <Route path="/shop" element={<CartProvider><ShopHome /></CartProvider>} />
+            <Route path="/shop/products" element={<CartProvider><ShopProducts /></CartProvider>} />
+            <Route path="/shop/product/:id" element={<CartProvider><ShopProductDetail /></CartProvider>} />
+            <Route path="/shop/cart" element={<CartProvider><ShopCart /></CartProvider>} />
+            <Route path="/shop/new-arrivals" element={<CartProvider><ShopProducts /></CartProvider>} />
             
             {/* ============================================ */}
             {/* AUTH ROUTES - Public Access (wrapped in Studio providers for redirect logic) */}

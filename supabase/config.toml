@@ -44,3 +44,15 @@ verify_jwt = false
 
 [functions.send-transactional]
 verify_jwt = true
+
+[functions.marketplace-products]
+verify_jwt = false
+
+[functions.marketplace-cart]
+verify_jwt = false
+
+[functions.marketplace-checkout]
+verify_jwt = false
+
+[functions.marketplace-orders]
+verify_jwt = true

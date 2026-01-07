@@ -1,54 +1,207 @@
+import { useState } from "react";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Store, ShoppingBag, TrendingUp, Package } from "lucide-react";
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { 
+  Package, 
+  ShoppingBag, 
+  TrendingUp, 
+  Clock, 
+  Plus, 
+  Search,
+  Store,
+  Users
+} from "lucide-react";
+import { AdminProductsTable } from "@/components/admin/marketplace/AdminProductsTable";
+import { AdminProductForm } from "@/components/admin/marketplace/AdminProductForm";
+import { AdminOrdersTable } from "@/components/admin/marketplace/AdminOrdersTable";
+import { AdminCategoriesManager } from "@/components/admin/marketplace/AdminCategoriesManager";
+import { useAdminProductStats } from "@/hooks/useAdminProducts";
 
 const AdminMarketplace = () => {
-  const plannedFeatures = [
-    { icon: ShoppingBag, title: "Product Management", description: "View, edit, and manage all marketplace products" },
-    { icon: TrendingUp, title: "Sales Analytics", description: "Track sales performance and revenue metrics" },
-    { icon: Package, title: "Inventory Control", description: "Manage stock levels and product variants" },
+  const [activeTab, setActiveTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isProductFormOpen, setIsProductFormOpen] = useState(false);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
+  const { data: stats } = useAdminProductStats();
+
+  const handleEditProduct = (productId: string) => {
+    setEditingProductId(productId);
+    setIsProductFormOpen(true);
+  };
+
+  const handleCloseProductForm = () => {
+    setIsProductFormOpen(false);
+    setEditingProductId(null);
+  };
+
+  const statCards = [
+    { 
+      title: "Total Products", 
+      value: stats?.totalProducts || 0, 
+      icon: Package,
+      color: "text-blue-500"
+    },
+    { 
+      title: "Live Products", 
+      value: stats?.liveProducts || 0, 
+      icon: TrendingUp,
+      color: "text-green-500"
+    },
+    { 
+      title: "Pending Review", 
+      value: stats?.pendingReview || 0, 
+      icon: Clock,
+      color: "text-amber-500"
+    },
+    { 
+      title: "Vendor Products", 
+      value: stats?.vendorProducts || 0, 
+      icon: Users,
+      color: "text-purple-500"
+    },
   ];
+
+  const getFiltersForTab = () => {
+    const base = searchQuery ? { search: searchQuery } : {};
+    switch (activeTab) {
+      case "adorzia":
+        return { ...base, is_adorzia_product: true };
+      case "vendor":
+        return { ...base, is_adorzia_product: false };
+      case "pending":
+        return { ...base, status: "pending_review" };
+      default:
+        return base;
+    }
+  };
 
   return (
     <AdminLayout>
-      <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
-        <Card className="bg-admin-card border-admin-border">
-          <CardHeader className="text-center pb-2">
-            <div className="mx-auto h-16 w-16 rounded-2xl bg-admin-muted flex items-center justify-center mb-4">
-              <Store className="h-8 w-8 text-admin-foreground" />
-            </div>
-            <CardTitle className="text-2xl text-admin-foreground">Marketplace</CardTitle>
-            <Badge variant="outline" className="mx-auto mt-2 bg-warning/10 text-warning border-warning/20">
-              Coming Soon
-            </Badge>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <p className="text-center text-admin-muted-foreground">
-              Manage marketplace products, monitor sales, and control inventory from this dashboard.
-            </p>
-            
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-admin-foreground">Planned Features</h3>
-              <div className="grid gap-3">
-                {plannedFeatures.map((feature) => (
-                  <div 
-                    key={feature.title}
-                    className="flex items-start gap-3 p-3 rounded-lg bg-admin-muted/50 border border-admin-border"
-                  >
-                    <div className="h-9 w-9 rounded-lg bg-admin-muted flex items-center justify-center shrink-0">
-                      <feature.icon className="h-4 w-4 text-admin-foreground/70" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-admin-foreground">{feature.title}</p>
-                      <p className="text-sm text-admin-muted-foreground">{feature.description}</p>
-                    </div>
+      <div className="p-4 sm:p-6 lg:p-8 space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-admin-foreground">Marketplace</h1>
+            <p className="text-admin-muted-foreground">Manage products, orders, and categories</p>
+          </div>
+          <Button onClick={() => setIsProductFormOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Product
+          </Button>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {statCards.map((stat) => (
+            <Card key={stat.title} className="bg-admin-card border-admin-border">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-admin-muted-foreground">{stat.title}</p>
+                    <p className="text-2xl font-bold text-admin-foreground">{stat.value}</p>
                   </div>
-                ))}
+                  <div className={`h-10 w-10 rounded-lg bg-admin-muted flex items-center justify-center ${stat.color}`}>
+                    <stat.icon className="h-5 w-5" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Main Content Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <TabsList className="bg-admin-muted">
+              <TabsTrigger value="all" className="data-[state=active]:bg-admin-card">
+                All Products
+              </TabsTrigger>
+              <TabsTrigger value="adorzia" className="data-[state=active]:bg-admin-card">
+                <Store className="h-4 w-4 mr-2" />
+                Adorzia
+              </TabsTrigger>
+              <TabsTrigger value="vendor" className="data-[state=active]:bg-admin-card">
+                <Users className="h-4 w-4 mr-2" />
+                Vendor
+              </TabsTrigger>
+              <TabsTrigger value="pending" className="data-[state=active]:bg-admin-card">
+                Pending
+                {(stats?.pendingReview || 0) > 0 && (
+                  <Badge variant="secondary" className="ml-2 h-5 px-1.5 text-xs">
+                    {stats?.pendingReview}
+                  </Badge>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="orders" className="data-[state=active]:bg-admin-card">
+                Orders
+              </TabsTrigger>
+              <TabsTrigger value="categories" className="data-[state=active]:bg-admin-card">
+                Categories
+              </TabsTrigger>
+            </TabsList>
+
+            {activeTab !== "orders" && activeTab !== "categories" && (
+              <div className="relative w-full sm:w-64">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9"
+                />
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            )}
+          </div>
+
+          <TabsContent value="all" className="mt-0">
+            <AdminProductsTable filters={getFiltersForTab()} onEdit={handleEditProduct} />
+          </TabsContent>
+
+          <TabsContent value="adorzia" className="mt-0">
+            <AdminProductsTable filters={getFiltersForTab()} onEdit={handleEditProduct} />
+          </TabsContent>
+
+          <TabsContent value="vendor" className="mt-0">
+            <AdminProductsTable filters={getFiltersForTab()} onEdit={handleEditProduct} />
+          </TabsContent>
+
+          <TabsContent value="pending" className="mt-0">
+            <AdminProductsTable filters={getFiltersForTab()} onEdit={handleEditProduct} />
+          </TabsContent>
+
+          <TabsContent value="orders" className="mt-0">
+            <AdminOrdersTable />
+          </TabsContent>
+
+          <TabsContent value="categories" className="mt-0">
+            <AdminCategoriesManager />
+          </TabsContent>
+        </Tabs>
+
+        {/* Product Form Dialog */}
+        <Dialog open={isProductFormOpen} onOpenChange={setIsProductFormOpen}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>
+                {editingProductId ? "Edit Product" : "Add New Product"}
+              </DialogTitle>
+            </DialogHeader>
+            <AdminProductForm 
+              onSuccess={handleCloseProductForm}
+              onCancel={handleCloseProductForm}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     </AdminLayout>
   );

@@ -949,16 +949,20 @@ export type Database = {
       }
       marketplace_products: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           average_rating: number | null
           care_instructions: string | null
           category_id: string | null
           created_at: string
+          created_by: string | null
           description: string | null
-          designer_id: string
+          designer_id: string | null
           dimensions: Json | null
           id: string
           images: Json | null
           inventory_count: number | null
+          is_adorzia_product: boolean | null
           is_bestseller: boolean | null
           materials: string[] | null
           meta_description: string | null
@@ -981,16 +985,20 @@ export type Database = {
           weight: number | null
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           average_rating?: number | null
           care_instructions?: string | null
           category_id?: string | null
           created_at?: string
+          created_by?: string | null
           description?: string | null
-          designer_id: string
+          designer_id?: string | null
           dimensions?: Json | null
           id?: string
           images?: Json | null
           inventory_count?: number | null
+          is_adorzia_product?: boolean | null
           is_bestseller?: boolean | null
           materials?: string[] | null
           meta_description?: string | null
@@ -1013,16 +1021,20 @@ export type Database = {
           weight?: number | null
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           average_rating?: number | null
           care_instructions?: string | null
           category_id?: string | null
           created_at?: string
+          created_by?: string | null
           description?: string | null
-          designer_id?: string
+          designer_id?: string | null
           dimensions?: Json | null
           id?: string
           images?: Json | null
           inventory_count?: number | null
+          is_adorzia_product?: boolean | null
           is_bestseller?: boolean | null
           materials?: string[] | null
           meta_description?: string | null

@@ -75,7 +75,10 @@ import AdminTeams from "./pages/admin/AdminTeams";
 import AdminNotifications from "./pages/admin/AdminNotifications";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminSecurity from "./pages/admin/AdminSecurity";
-
+import AdminArticles from "./pages/admin/AdminArticles";
+import Articles from "./pages/public/Articles";
+import ArticleDetail from "./pages/public/ArticleDetail";
+import ShopCategory from "./pages/shop/ShopCategory";
 const queryClient = new QueryClient();
 
 // Wrapper component for Studio routes with Auth + Subscription providers
@@ -124,6 +127,8 @@ const App = () => (
             <Route path="/support" element={<Support />} />
             <Route path="/designers" element={<DesignerProfiles />} />
             <Route path="/studios" element={<Studios />} />
+            <Route path="/articles" element={<Articles />} />
+            <Route path="/articles/:slug" element={<ArticleDetail />} />
             
             {/* ============================================ */}
             {/* MARKETPLACE ROUTES - Public Shopping */}
@@ -131,6 +136,7 @@ const App = () => (
             <Route path="/shop" element={<CartProvider><ShopHome /></CartProvider>} />
             <Route path="/shop/products" element={<CartProvider><ShopProducts /></CartProvider>} />
             <Route path="/shop/product/:id" element={<CartProvider><ShopProductDetail /></CartProvider>} />
+            <Route path="/shop/category/:slug" element={<CartProvider><ShopCategory /></CartProvider>} />
             <Route path="/shop/cart" element={<CartProvider><ShopCart /></CartProvider>} />
             <Route path="/shop/new-arrivals" element={<CartProvider><ShopProducts /></CartProvider>} />
             
@@ -306,6 +312,11 @@ const App = () => (
               <Route path="/admin/security" element={
                 <AdminProtectedRoute>
                   <AdminSecurity />
+                </AdminProtectedRoute>
+              } />
+              <Route path="/admin/articles" element={
+                <AdminProtectedRoute>
+                  <AdminArticles />
                 </AdminProtectedRoute>
               } />
             </Route>

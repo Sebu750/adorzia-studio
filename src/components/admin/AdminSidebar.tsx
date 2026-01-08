@@ -47,6 +47,7 @@ const mainNavItems = [
   { title: "Publications", url: "/admin/publications", icon: FolderOpen },
   { title: "Production Queues", url: "/admin/queues", icon: GitBranch },
   { title: "Marketplace", url: "/admin/marketplace", icon: Store },
+  { title: "Articles", url: "/admin/articles", icon: FileText },
 ];
 
 const managementItems = [

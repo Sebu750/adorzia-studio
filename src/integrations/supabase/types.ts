@@ -74,6 +74,66 @@ export type Database = {
         }
         Relationships: []
       }
+      articles: {
+        Row: {
+          author_id: string | null
+          category: string
+          content: string | null
+          created_at: string
+          excerpt: string | null
+          featured_image: string | null
+          id: string
+          is_featured: boolean | null
+          meta_description: string | null
+          meta_title: string | null
+          published_at: string | null
+          slug: string
+          status: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          view_count: number | null
+        }
+        Insert: {
+          author_id?: string | null
+          category?: string
+          content?: string | null
+          created_at?: string
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          is_featured?: boolean | null
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          slug: string
+          status?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          view_count?: number | null
+        }
+        Update: {
+          author_id?: string | null
+          category?: string
+          content?: string | null
+          created_at?: string
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          is_featured?: boolean | null
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          slug?: string
+          status?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          view_count?: number | null
+        }
+        Relationships: []
+      }
       auth_logs: {
         Row: {
           action: string
@@ -549,40 +609,58 @@ export type Database = {
       }
       marketplace_categories: {
         Row: {
+          banner_image_url: string | null
           created_at: string
           description: string | null
           display_order: number | null
+          featured_products_count: number | null
+          focus_areas: string[] | null
           id: string
           image_url: string | null
           is_active: boolean | null
           name: string
           parent_id: string | null
+          seo_description: string | null
+          seo_title: string | null
           slug: string
           updated_at: string
+          vibe_tags: string[] | null
         }
         Insert: {
+          banner_image_url?: string | null
           created_at?: string
           description?: string | null
           display_order?: number | null
+          featured_products_count?: number | null
+          focus_areas?: string[] | null
           id?: string
           image_url?: string | null
           is_active?: boolean | null
           name: string
           parent_id?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug: string
           updated_at?: string
+          vibe_tags?: string[] | null
         }
         Update: {
+          banner_image_url?: string | null
           created_at?: string
           description?: string | null
           display_order?: number | null
+          featured_products_count?: number | null
+          focus_areas?: string[] | null
           id?: string
           image_url?: string | null
           is_active?: boolean | null
           name?: string
           parent_id?: string | null
+          seo_description?: string | null
+          seo_title?: string | null
           slug?: string
           updated_at?: string
+          vibe_tags?: string[] | null
         }
         Relationships: [
           {

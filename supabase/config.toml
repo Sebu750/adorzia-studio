@@ -1,0 +1,70 @@
+project_id = "lnrhrevpouozugsarsmz"
+
+[functions.create-checkout]
+verify_jwt = false
+
+[functions.check-subscription]
+verify_jwt = false
+
+[functions.customer-portal]
+verify_jwt = false
+
+[functions.newsletter-subscribe]
+verify_jwt = false
+
+[functions.calculate-designer-score]
+verify_jwt = true
+
+[functions.purchase-foundation-rank]
+verify_jwt = false
+
+[functions.submit-stylebox-entry]
+verify_jwt = true
+
+[functions.validate-team-eligibility]
+verify_jwt = true
+
+[functions.award-team-badges]
+verify_jwt = true
+
+[functions.award-style-credits]
+verify_jwt = true
+
+[functions.calculate-designer-commission]
+verify_jwt = true
+
+[functions.reset-monthly-tokens]
+verify_jwt = true
+
+[functions.submit-feedback]
+verify_jwt = true
+
+[functions.send-contact]
+verify_jwt = false
+
+[functions.send-transactional]
+verify_jwt = true
+
+[functions.marketplace-products]
+verify_jwt = false
+
+[functions.marketplace-cart]
+verify_jwt = false
+
+[functions.marketplace-checkout]
+verify_jwt = false
+
+[functions.marketplace-orders]
+verify_jwt = true
+
+[functions.generate-sitemap]
+verify_jwt = false
+
+[functions.manage-founding]
+verify_jwt = true
+
+[functions.broadcast-notification]
+verify_jwt = true
+
+[functions.manage-team]
+verify_jwt = true

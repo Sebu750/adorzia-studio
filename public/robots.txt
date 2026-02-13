@@ -1,0 +1,48 @@
+# Adorzia Studio Robots.txt
+# https://studio.adorzia.com
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: *
+Allow: /
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+
+# Disallow admin and auth routes
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /auth
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /settings
+Disallow: /profile
+
+# Allow public pages
+Allow: /
+Allow: /about
+Allow: /pricing
+Allow: /styleboxes-info
+Allow: /marketplace-preview
+Allow: /competitions
+Allow: /studio-info
+Allow: /designer-profiles
+Allow: /monetization
+Allow: /for-brands
+Allow: /support
+
+# Sitemap
+Sitemap: https://studio.adorzia.com/sitemap.xml
+
+# Host
+Host: https://studio.adorzia.com

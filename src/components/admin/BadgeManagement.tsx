@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
+=======
+import { supabase } from "@/integrations/supabase/client";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -183,7 +187,11 @@ export function BadgeManagement() {
       case 'master_cutter': return 'bg-amber-500/20 text-amber-500';
       case 'artisan_weaver': return 'bg-purple-500/20 text-purple-500';
       case 'draping_specialist': return 'bg-cyan-500/20 text-cyan-500';
+<<<<<<< HEAD
       case 'creative_director': return 'bg-success/20 text-success';
+=======
+      case 'creative_director': return 'bg-emerald-500/20 text-emerald-500';
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       case 'team': return 'bg-pink-500/20 text-pink-500';
       default: return 'bg-muted text-muted-foreground';
     }

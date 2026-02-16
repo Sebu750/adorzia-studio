@@ -8,7 +8,11 @@ import { EarningsSnapshot } from "@/components/dashboard/EarningsSnapshot";
 import { WelcomeModal } from "@/components/WelcomeModal";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { EmptyActivity } from "@/components/empty-states/EmptyActivity";
+<<<<<<< HEAD
 import { Box, Trophy, FolderOpen, DollarSign, ArrowRight, Sparkles, Award, Heart } from "lucide-react";
+=======
+import { Box, Trophy, FolderOpen, DollarSign, ArrowRight, Sparkles } from "lucide-react";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +24,10 @@ import { useGreeting } from "@/hooks/useGreeting";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { useActiveStyleboxes } from "@/hooks/useActiveStyleboxes";
 import { useTeamData } from "@/hooks/useTeamData";
+<<<<<<< HEAD
 import { useFoundingSubmissions } from "@/hooks/useFoundingSubmissions";
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -107,7 +114,11 @@ const Dashboard = () => {
   const rankData = {
     currentRank: getCurrentRank(),
     foundationRank: null as 'f1' | 'f2' | null,
+<<<<<<< HEAD
     styleCredits: profile?.style_credits || 0,
+=======
+    styleCredits: profile?.xp || 0,
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     badges: [],
   };
 
@@ -213,12 +224,15 @@ const Dashboard = () => {
                   icon={FolderOpen}
                 />
                 <StatCard
+<<<<<<< HEAD
                   title="Love Count"
                   value={stats.loveCount}
                   subtitle="Total followers"
                   icon={Heart}
                 />
                 <StatCard
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   title="Earnings"
                   value={`$${stats.monthlyEarnings.toLocaleString()}`}
                   subtitle="This month"
@@ -232,6 +246,7 @@ const Dashboard = () => {
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<<<<<<< HEAD
           {/* Founding Designers Program Banner */}
           <motion.div 
             className="lg:col-span-3"
@@ -266,6 +281,8 @@ const Dashboard = () => {
             </Card>
           </motion.div>
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           {/* Left Column - Active Styleboxes */}
           <motion.div 
             className="lg:col-span-2 space-y-6"

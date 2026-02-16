@@ -715,7 +715,10 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+<<<<<<< HEAD
           designer_id: string | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           id: string
           image_url: string | null
           is_active: boolean | null
@@ -727,7 +730,10 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+<<<<<<< HEAD
           designer_id?: string | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           id?: string
           image_url?: string | null
           is_active?: boolean | null
@@ -739,7 +745,10 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+<<<<<<< HEAD
           designer_id?: string | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           id?: string
           image_url?: string | null
           is_active?: boolean | null
@@ -748,6 +757,7 @@ export type Database = {
           slug?: string
           updated_at?: string
         }
+<<<<<<< HEAD
         Relationships: [
           {
             foreignKeyName: "marketplace_collections_designer_id_fkey"
@@ -757,6 +767,9 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+=======
+        Relationships: []
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       }
       marketplace_customers: {
         Row: {
@@ -1048,14 +1061,20 @@ export type Database = {
           description: string | null
           designer_id: string | null
           dimensions: Json | null
+<<<<<<< HEAD
           edition_size: number | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           id: string
           images: Json | null
           inventory_count: number | null
           is_adorzia_product: boolean | null
           is_bestseller: boolean | null
+<<<<<<< HEAD
           is_limited_edition: boolean | null
           is_made_to_order: boolean | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           materials: string[] | null
           meta_description: string | null
           meta_title: string | null
@@ -1087,14 +1106,20 @@ export type Database = {
           description?: string | null
           designer_id?: string | null
           dimensions?: Json | null
+<<<<<<< HEAD
           edition_size?: number | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           id?: string
           images?: Json | null
           inventory_count?: number | null
           is_adorzia_product?: boolean | null
           is_bestseller?: boolean | null
+<<<<<<< HEAD
           is_limited_edition?: boolean | null
           is_made_to_order?: boolean | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           materials?: string[] | null
           meta_description?: string | null
           meta_title?: string | null
@@ -1126,14 +1151,20 @@ export type Database = {
           description?: string | null
           designer_id?: string | null
           dimensions?: Json | null
+<<<<<<< HEAD
           edition_size?: number | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           id?: string
           images?: Json | null
           inventory_count?: number | null
           is_adorzia_product?: boolean | null
           is_bestseller?: boolean | null
+<<<<<<< HEAD
           is_limited_edition?: boolean | null
           is_made_to_order?: boolean | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           materials?: string[] | null
           meta_description?: string | null
           meta_title?: string | null
@@ -2022,6 +2053,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+<<<<<<< HEAD
           banner_image: string | null
           brand_name: string | null
           category: Database["public"]["Enums"]["designer_category"] | null
@@ -2040,11 +2072,22 @@ export type Database = {
           notification_preferences: Json | null
           rank_id: string | null
           shopify_store_url: string | null
+=======
+          category: Database["public"]["Enums"]["designer_category"] | null
+          created_at: string
+          email: string | null
+          first_login: boolean | null
+          id: string
+          name: string | null
+          notification_preferences: Json | null
+          rank_id: string | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           skills: string[] | null
           status: Database["public"]["Enums"]["user_status"] | null
           subscription_tier:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+<<<<<<< HEAD
           tiktok_handle: string | null
           twitter_handle: string | null
           updated_at: string
@@ -2058,10 +2101,16 @@ export type Database = {
           manufacturing_countries: string[] | null
           sustainability_practices: string[] | null
           artist_statement: string | null
+=======
+          updated_at: string
+          user_id: string
+          xp: number | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+<<<<<<< HEAD
           banner_image?: string | null
           brand_name?: string | null
           category?: Database["public"]["Enums"]["designer_category"] | null
@@ -2080,11 +2129,22 @@ export type Database = {
           notification_preferences?: Json | null
           rank_id?: string | null
           shopify_store_url?: string | null
+=======
+          category?: Database["public"]["Enums"]["designer_category"] | null
+          created_at?: string
+          email?: string | null
+          first_login?: boolean | null
+          id?: string
+          name?: string | null
+          notification_preferences?: Json | null
+          rank_id?: string | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           skills?: string[] | null
           status?: Database["public"]["Enums"]["user_status"] | null
           subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+<<<<<<< HEAD
           tiktok_handle?: string | null
           twitter_handle?: string | null
           updated_at?: string
@@ -2098,10 +2158,16 @@ export type Database = {
           manufacturing_countries?: string[] | null
           sustainability_practices?: string[] | null
           artist_statement?: string | null
+=======
+          updated_at?: string
+          user_id: string
+          xp?: number | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
+<<<<<<< HEAD
           banner_image?: string | null
           brand_name?: string | null
           category?: Database["public"]["Enums"]["designer_category"] | null
@@ -2120,11 +2186,22 @@ export type Database = {
           notification_preferences?: Json | null
           rank_id?: string | null
           shopify_store_url?: string | null
+=======
+          category?: Database["public"]["Enums"]["designer_category"] | null
+          created_at?: string
+          email?: string | null
+          first_login?: boolean | null
+          id?: string
+          name?: string | null
+          notification_preferences?: Json | null
+          rank_id?: string | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           skills?: string[] | null
           status?: Database["public"]["Enums"]["user_status"] | null
           subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+<<<<<<< HEAD
           tiktok_handle?: string | null
           twitter_handle?: string | null
           updated_at?: string
@@ -2138,6 +2215,11 @@ export type Database = {
           manufacturing_countries?: string[] | null
           sustainability_practices?: string[] | null
           artist_statement?: string | null
+=======
+          updated_at?: string
+          user_id?: string
+          xp?: number | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         }
         Relationships: [
           {
@@ -2373,12 +2455,18 @@ export type Database = {
       styleboxes: {
         Row: {
           archive_date: string | null
+<<<<<<< HEAD
           archetype: Json | null
           adorzia_deliverables: Json | null
           brief: Json | null
           category: Database["public"]["Enums"]["designer_category"]
           client_name: string | null
           collection_line: string | null
+=======
+          brief: Json | null
+          category: Database["public"]["Enums"]["designer_category"]
+          client_name: string | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           collection_size: number | null
           color_system: Json | null
           constraints: Json | null
@@ -2389,7 +2477,10 @@ export type Database = {
           design_guidelines: Json | null
           detailed_deliverables: Json | null
           difficulty: Database["public"]["Enums"]["stylebox_difficulty"]
+<<<<<<< HEAD
           display_id: string | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           evaluation_criteria: Json | null
           global_drivers: string | null
           id: string
@@ -2398,12 +2489,18 @@ export type Database = {
           is_walkthrough: boolean
           level_number: number | null
           local_relevance: string | null
+<<<<<<< HEAD
           manifestation: Json | null
           market_context: string | null
           material_direction: Json | null
           minimum_team_rank_order: number | null
           moodboard_images: Json | null
           mutation: Json | null
+=======
+          material_direction: Json | null
+          minimum_team_rank_order: number | null
+          moodboard_images: Json | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           pdf_url: string | null
           reference_files: Json | null
           release_date: string | null
@@ -2411,7 +2508,10 @@ export type Database = {
           required_subscription_tier:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+<<<<<<< HEAD
           restrictions: Json | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           scenario: Json | null
           season: string | null
           status: Database["public"]["Enums"]["content_status"]
@@ -2428,18 +2528,27 @@ export type Database = {
           trend_narrative: string | null
           updated_at: string
           version: number | null
+<<<<<<< HEAD
           visibility_tags: Json | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           visual_keywords: Json | null
           xp_reward: number | null
         }
         Insert: {
           archive_date?: string | null
+<<<<<<< HEAD
           archetype?: Json | null
           adorzia_deliverables?: Json | null
           brief?: Json | null
           category?: Database["public"]["Enums"]["designer_category"]
           client_name?: string | null
           collection_line?: string | null
+=======
+          brief?: Json | null
+          category?: Database["public"]["Enums"]["designer_category"]
+          client_name?: string | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           collection_size?: number | null
           color_system?: Json | null
           constraints?: Json | null
@@ -2450,7 +2559,10 @@ export type Database = {
           design_guidelines?: Json | null
           detailed_deliverables?: Json | null
           difficulty?: Database["public"]["Enums"]["stylebox_difficulty"]
+<<<<<<< HEAD
           display_id?: string | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           evaluation_criteria?: Json | null
           global_drivers?: string | null
           id?: string
@@ -2459,12 +2571,18 @@ export type Database = {
           is_walkthrough?: boolean
           level_number?: number | null
           local_relevance?: string | null
+<<<<<<< HEAD
           manifestation?: Json | null
           market_context?: string | null
           material_direction?: Json | null
           minimum_team_rank_order?: number | null
           moodboard_images?: Json | null
           mutation?: Json | null
+=======
+          material_direction?: Json | null
+          minimum_team_rank_order?: number | null
+          moodboard_images?: Json | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           pdf_url?: string | null
           reference_files?: Json | null
           release_date?: string | null
@@ -2472,7 +2590,10 @@ export type Database = {
           required_subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+<<<<<<< HEAD
           restrictions?: Json | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           scenario?: Json | null
           season?: string | null
           status?: Database["public"]["Enums"]["content_status"]
@@ -2489,18 +2610,27 @@ export type Database = {
           trend_narrative?: string | null
           updated_at?: string
           version?: number | null
+<<<<<<< HEAD
           visibility_tags?: Json | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           visual_keywords?: Json | null
           xp_reward?: number | null
         }
         Update: {
           archive_date?: string | null
+<<<<<<< HEAD
           archetype?: Json | null
           adorzia_deliverables?: Json | null
           brief?: Json | null
           category?: Database["public"]["Enums"]["designer_category"]
           client_name?: string | null
           collection_line?: string | null
+=======
+          brief?: Json | null
+          category?: Database["public"]["Enums"]["designer_category"]
+          client_name?: string | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           collection_size?: number | null
           color_system?: Json | null
           constraints?: Json | null
@@ -2511,7 +2641,10 @@ export type Database = {
           design_guidelines?: Json | null
           detailed_deliverables?: Json | null
           difficulty?: Database["public"]["Enums"]["stylebox_difficulty"]
+<<<<<<< HEAD
           display_id?: string | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           evaluation_criteria?: Json | null
           global_drivers?: string | null
           id?: string
@@ -2520,12 +2653,18 @@ export type Database = {
           is_walkthrough?: boolean
           level_number?: number | null
           local_relevance?: string | null
+<<<<<<< HEAD
           manifestation?: Json | null
           market_context?: string | null
           material_direction?: Json | null
           minimum_team_rank_order?: number | null
           moodboard_images?: Json | null
           mutation?: Json | null
+=======
+          material_direction?: Json | null
+          minimum_team_rank_order?: number | null
+          moodboard_images?: Json | null
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           pdf_url?: string | null
           reference_files?: Json | null
           release_date?: string | null
@@ -2533,7 +2672,10 @@ export type Database = {
           required_subscription_tier?:
             | Database["public"]["Enums"]["subscription_tier"]
             | null
+<<<<<<< HEAD
           restrictions?: Json | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           scenario?: Json | null
           season?: string | null
           status?: Database["public"]["Enums"]["content_status"]
@@ -2550,7 +2692,10 @@ export type Database = {
           trend_narrative?: string | null
           updated_at?: string
           version?: number | null
+<<<<<<< HEAD
           visibility_tags?: Json | null
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           visual_keywords?: Json | null
           xp_reward?: number | null
         }
@@ -2875,6 +3020,7 @@ export type Database = {
     }
     Functions: {
       generate_order_number: { Args: never; Returns: string }
+<<<<<<< HEAD
       get_admin_dashboard_stats: {
         Args: never
         Returns: Json
@@ -2885,6 +3031,8 @@ export type Database = {
         }
         Returns: Json
       }
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

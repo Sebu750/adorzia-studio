@@ -1,10 +1,17 @@
+<<<<<<< HEAD
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, ShoppingBag, Heart, User, Menu, X, Package, Image as ImageIcon, Users, ChevronRight } from "lucide-react";
+=======
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Search, ShoppingBag, Heart, User, Menu, X } from "lucide-react";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+<<<<<<< HEAD
 import { Card } from "@/components/ui/card";
 import { useCart } from "@/hooks/useCart";
 import { useGlobalSearch } from "@/hooks/useGlobalSearch";
@@ -18,12 +25,23 @@ const navLinks = [
   { href: "/shop/collections", label: "Collections" },
   { href: "/shop/products", label: "Categories" },
   { href: "/shop/products?featured=true", label: "Limited Editions" },
+=======
+import { useCart } from "@/hooks/useCart";
+import { CartDrawer } from "./CartDrawer";
+
+const navLinks = [
+  { href: "/shop", label: "Shop All" },
+  { href: "/shop/new-arrivals", label: "New Arrivals" },
+  { href: "/shop/designers", label: "Designers" },
+  { href: "/shop/collections", label: "Collections" },
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 ];
 
 export function MarketplaceHeader() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+<<<<<<< HEAD
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -74,6 +92,11 @@ export function MarketplaceHeader() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+=======
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+  const { cart, itemCount } = useCart();
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,6 +109,7 @@ export function MarketplaceHeader() {
 
   return (
     <>
+<<<<<<< HEAD
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           isScrolled || isSearchOpen
@@ -113,10 +137,127 @@ export function MarketplaceHeader() {
                   key={link.href}
                   to={link.href}
                   className="text-[11px] font-medium uppercase tracking-[0.2em] text-foreground/80 hover:text-foreground transition-colors duration-300 link-underline-luxury"
+=======
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        {/* Announcement Bar */}
+        <div className="bg-primary text-primary-foreground text-center py-2 text-sm">
+          <span className="font-medium">Free shipping on orders over $200</span>
+          <span className="mx-2">•</span>
+          <span>Designer pieces, curated for you</span>
+        </div>
+
+        <div className="container flex h-16 items-center justify-between">
+          {/* Mobile Menu Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+
+          {/* Logo */}
+          <Link to="/shop" className="flex items-center gap-2">
+            <span className="text-xl font-bold tracking-tight">ADORZIA</span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2">
+            {/* Search */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="hidden sm:flex"
+            >
+              <Search className="h-5 w-5" />
+            </Button>
+
+            {/* Wishlist */}
+            <Button variant="ghost" size="icon" asChild className="hidden sm:flex">
+              <Link to="/shop/wishlist">
+                <Heart className="h-5 w-5" />
+              </Link>
+            </Button>
+
+            {/* Account */}
+            <Button variant="ghost" size="icon" asChild>
+              <Link to="/shop/account">
+                <User className="h-5 w-5" />
+              </Link>
+            </Button>
+
+            {/* Cart */}
+            <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative">
+                  <ShoppingBag className="h-5 w-5" />
+                  {itemCount > 0 && (
+                    <Badge 
+                      variant="destructive" 
+                      className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                    >
+                      {itemCount}
+                    </Badge>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="w-full sm:max-w-lg">
+                <CartDrawer onClose={() => setIsCartOpen(false)} />
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+
+        {/* Search Bar */}
+        {isSearchOpen && (
+          <div className="border-t border-border bg-background">
+            <div className="container py-4">
+              <form onSubmit={handleSearch} className="flex gap-2 max-w-md mx-auto">
+                <Input
+                  type="search"
+                  placeholder="Search products, designers..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1"
+                  autoFocus
+                />
+                <Button type="submit">Search</Button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden border-t border-border bg-background">
+            <nav className="container py-4 flex flex-col gap-4">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-sm font-medium py-2 hover:text-primary transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 >
                   {link.label}
                 </Link>
               ))}
+<<<<<<< HEAD
             </nav>
 
             {/* Logo - Center */}
@@ -350,6 +491,24 @@ export function MarketplaceHeader() {
 
       {/* Spacer for fixed header */}
       <div className="h-20" />
+=======
+              <form onSubmit={handleSearch} className="flex gap-2 pt-4 border-t border-border">
+                <Input
+                  type="search"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1"
+                />
+                <Button type="submit" size="sm">
+                  <Search className="h-4 w-4" />
+                </Button>
+              </form>
+            </nav>
+          </div>
+        )}
+      </header>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     </>
   );
 }

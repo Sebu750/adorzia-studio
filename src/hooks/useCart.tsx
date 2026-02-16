@@ -5,7 +5,10 @@ import { useToast } from "@/hooks/use-toast";
 interface CartItem {
   product_id: string;
   title: string;
+<<<<<<< HEAD
   designer_name?: string;
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   price: number;
   image: string | null;
   quantity: number;
@@ -68,6 +71,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const authHeader = await getAuthHeader();
     const sessionId = getSessionId();
 
+<<<<<<< HEAD
     // Add timeout to the function call
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
@@ -96,6 +100,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       throw error;
     }
+=======
+    const response = await supabase.functions.invoke('marketplace-cart', {
+      headers: authHeader,
+      body: {
+        action,
+        session_id: sessionId,
+        ...body,
+      },
+    });
+
+    if (response.error) {
+      throw new Error(response.error.message);
+    }
+
+    return response.data;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   }, []);
 
   const refreshCart = useCallback(async () => {

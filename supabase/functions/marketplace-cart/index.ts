@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
+<<<<<<< HEAD
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-forwarded-proto, x-real-ip',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
   'Access-Control-Max-Age': '86400', // 24 hours
@@ -15,6 +16,9 @@ const createResponse = (body: string | Record<string, unknown> | null, status = 
     ...(includeCors ? corsHeaders : {})
   };
   return new Response(body ? JSON.stringify(body) : null, { status, headers });
+=======
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 };
 
 const logStep = (step: string, details?: any) => {
@@ -22,6 +26,7 @@ const logStep = (step: string, details?: any) => {
 };
 
 serve(async (req) => {
+<<<<<<< HEAD
   // OPTIONS preflight always succeeds with proper CORS headers
   if (req.method === 'OPTIONS') {
     return createResponse(null, 204, true);
@@ -36,6 +41,15 @@ serve(async (req) => {
       return createResponse({ error: 'Server configuration error' }, 500, true);
     }
     
+=======
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const authHeader = req.headers.get('Authorization');
@@ -123,15 +137,23 @@ serve(async (req) => {
         cart = await createCart();
       }
 
+<<<<<<< HEAD
       // Enrich cart items with product and designer data
+=======
+      // Enrich cart items with product data
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       if (cart && cart.items?.length > 0) {
         const productIds = cart.items.map((item: any) => item.product_id);
         const { data: products } = await supabase
           .from('marketplace_products')
+<<<<<<< HEAD
           .select(`
             id, title, price, images, inventory_count, status, designer_id,
             designer:designer_profiles!marketplace_products_designer_id_fkey(brand_name, full_name)
           `)
+=======
+          .select('id, title, price, images, inventory_count, status')
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           .in('id', productIds);
 
         const enrichedItems = cart.items.map((item: any) => {
@@ -139,7 +161,10 @@ serve(async (req) => {
           return {
             ...item,
             product,
+<<<<<<< HEAD
             designer_name: product?.designer?.brand_name || product?.designer?.full_name,
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             available: product?.status === 'active' && (product?.inventory_count || 0) >= item.quantity,
           };
         });
@@ -162,6 +187,7 @@ serve(async (req) => {
         });
       }
 
+<<<<<<< HEAD
       // Fetch product details with designer info
       const { data: product } = await supabase
         .from('marketplace_products')
@@ -169,6 +195,12 @@ serve(async (req) => {
           id, title, price, images, inventory_count, status,
           designer:designer_profiles!marketplace_products_designer_id_fkey(brand_name, full_name)
         `)
+=======
+      // Fetch product details
+      const { data: product } = await supabase
+        .from('marketplace_products')
+        .select('id, title, price, images, inventory_count, status')
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .eq('id', product_id)
         .eq('status', 'active')
         .single();
@@ -199,7 +231,10 @@ serve(async (req) => {
           title: product.title,
           price: product.price,
           image: product.images?.[0] || null,
+<<<<<<< HEAD
           designer_name: product.designer?.brand_name || product.designer?.full_name,
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           quantity,
           variant,
         });

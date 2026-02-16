@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
@@ -13,6 +17,7 @@ const logStep = (step: string, details?: any) => {
 // Foundation tier configuration
 const FOUNDATION_TIERS = {
   f1: {
+<<<<<<< HEAD
     name: 'F1 — Founding Legacy',
     priceInPKR: 50000,
     maxSlots: 50,
@@ -23,13 +28,29 @@ const FOUNDATION_TIERS = {
     priceInPKR: 25000,
     maxSlots: 100,
     bonusPercentage: 5,
+=======
+    name: 'F1 — Founder Circle',
+    priceInPKR: 25000,
+    maxSlots: 1000,
+    bonusPercentage: 5,
+  },
+  f2: {
+    name: 'F2 — Pioneer Designer',
+    priceInPKR: 50000,
+    maxSlots: 500,
+    bonusPercentage: 10,
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   },
 };
 
 // PKR to USD conversion (approximate for Stripe)
 const PKR_TO_USD_RATE = 0.0036; // ~278 PKR = 1 USD
 
+<<<<<<< HEAD
 Deno.serve(async (req) => {
+=======
+serve(async (req) => {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -39,10 +60,13 @@ Deno.serve(async (req) => {
     Deno.env.get("SUPABASE_ANON_KEY") ?? ""
   );
 
+<<<<<<< HEAD
   // Cache rank IDs to avoid repeated queries
   let f1RankId: string | null = null;
   let f2RankId: string | null = null;
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   try {
     logStep("Starting foundation rank purchase flow");
 
@@ -56,6 +80,7 @@ Deno.serve(async (req) => {
     const tier = FOUNDATION_TIERS[tierId as keyof typeof FOUNDATION_TIERS];
     logStep("Processing tier", { tierId, tier });
 
+<<<<<<< HEAD
     // Get the rank ID from the ranks table
     let rankId;
     if (tierId === 'f1') {
@@ -90,6 +115,8 @@ Deno.serve(async (req) => {
       rankId = f2RankId;
     }
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     // Authenticate user
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
@@ -111,7 +138,11 @@ Deno.serve(async (req) => {
       .from('foundation_purchases')
       .select('id, status')
       .eq('designer_id', user.id)
+<<<<<<< HEAD
       .eq('rank_id', rankId)
+=======
+      .eq('rank_id', tierId)
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       .eq('status', 'completed')
       .maybeSingle();
 
@@ -123,6 +154,7 @@ Deno.serve(async (req) => {
       throw new Error(`You already have the ${tier.name} rank`);
     }
 
+<<<<<<< HEAD
     // Additional security: Check if user already has a higher tier
     // F1 is higher than F2, so if they already have F1, they shouldn't buy F2
     if (tierId === 'f2') {
@@ -167,11 +199,17 @@ Deno.serve(async (req) => {
       throw new Error(`You already have the ${tier.name} rank`);
     }
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     // Check available slots
     const { count: soldCount, error: countError } = await supabaseClient
       .from('foundation_purchases')
       .select('*', { count: 'exact', head: true })
+<<<<<<< HEAD
       .eq('rank_id', rankId)
+=======
+      .eq('rank_id', tierId)
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       .eq('status', 'completed');
 
     if (countError) {
@@ -185,6 +223,7 @@ Deno.serve(async (req) => {
       throw new Error(`Sorry, all ${tier.name} slots have been sold out`);
     }
 
+<<<<<<< HEAD
     // Additional security: Check for suspicious activity
     // Limit to 1 pending purchase per user
     const { count: pendingCount } = await supabaseClient
@@ -202,6 +241,8 @@ Deno.serve(async (req) => {
       throw new Error('Invalid tier configuration');
     }
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     // Initialize Stripe
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
       apiVersion: "2025-08-27.basil",
@@ -224,7 +265,11 @@ Deno.serve(async (req) => {
       .from('foundation_purchases')
       .insert({
         designer_id: user.id,
+<<<<<<< HEAD
         rank_id: rankId,
+=======
+        rank_id: tierId,
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         amount_usd: Math.round(tier.priceInPKR * PKR_TO_USD_RATE),
         status: 'pending',
       })

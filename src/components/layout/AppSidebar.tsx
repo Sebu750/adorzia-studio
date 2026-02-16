@@ -50,6 +50,10 @@ const mainNavItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Walkthroughs", url: "/walkthroughs", icon: BookOpen },
   { title: "Stylebox Library", url: "/styleboxes", icon: Box },
+<<<<<<< HEAD
+=======
+  { title: "My Collections", url: "/collections", icon: Palette },
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   { title: "Portfolio", url: "/portfolio", icon: FolderOpen },
   { title: "Teams", url: "/teams", icon: Users },
   { title: "Job Portal", url: "/jobs", icon: Briefcase },
@@ -155,7 +159,11 @@ export function AppSidebar() {
           </div>
           {!isCollapsed && (
             <span className="font-display text-xl font-bold tracking-tight animate-fade-in">
+<<<<<<< HEAD
               The Studio
+=======
+              Adorzia
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             </span>
           )}
         </div>

@@ -41,12 +41,21 @@ const levels = [
 ];
 
 const sampleChallenges = [
+<<<<<<< HEAD
   { title: "Pattern Foundation", level: "Easy", skill: "Pattern Design", sc: 100 },
   { title: "Moodboard Mastery", level: "Easy", skill: "Creative Direction", sc: 100 },
   { title: "Capsule Collection", level: "Medium", skill: "Collection Development", sc: 250 },
   { title: "Trend Interpretation", level: "Medium", skill: "Market Analysis", sc: 250 },
   { title: "Tech Pack Pro", level: "Hard", skill: "Production Ready", sc: 500 },
   { title: "Construction Expert", level: "Hard", skill: "Garment Construction", sc: 500 },
+=======
+  { title: "Pattern Foundation", level: "Easy", skill: "Pattern Design", xp: 100 },
+  { title: "Moodboard Mastery", level: "Easy", skill: "Creative Direction", xp: 100 },
+  { title: "Capsule Collection", level: "Medium", skill: "Collection Development", xp: 250 },
+  { title: "Trend Interpretation", level: "Medium", skill: "Market Analysis", xp: 250 },
+  { title: "Tech Pack Pro", level: "Hard", skill: "Production Ready", xp: 500 },
+  { title: "Construction Expert", level: "Hard", skill: "Garment Construction", xp: 500 },
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 ];
 
 const skillMetrics = [
@@ -260,7 +269,11 @@ export default function StyleBoxesInfo() {
                         </Badge>
                         <div className="flex items-center gap-1 text-sm text-muted-foreground">
                           <Sparkles className="h-4 w-4" />
+<<<<<<< HEAD
                           {challenge.sc} SC
+=======
+                          {challenge.xp} XP
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                         </div>
                       </div>
                       <h3 className="font-display text-lg font-semibold mb-2">{challenge.title}</h3>

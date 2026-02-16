@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 
@@ -20,8 +24,13 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+<<<<<<< HEAD
     const resendApiKey = Deno.env.get("RESEND_API_KEY_TRANSACTIONAL");
     if (!resendApiKey) throw new Error("RESEND_API_KEY_TRANSACTIONAL not configured");
+=======
+    const resendApiKey = Deno.env.get("RESEND_API_KEY");
+    if (!resendApiKey) throw new Error("RESEND_API_KEY not configured");
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
     const resend = new Resend(resendApiKey);
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -43,7 +52,11 @@ const handler = async (req: Request): Promise<Response> => {
       });
     }
 
+<<<<<<< HEAD
     const fromAddress = "Adorzia <noreply@mail.adorzia.com>";
+=======
+    const fromAddress = "Adorzia <onboarding@resend.dev>";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     const subject = type === "welcome" ? "Welcome to Adorzia!" : `Adorzia - ${type}`;
 
     const emailResult = await resend.emails.send({
@@ -53,7 +66,11 @@ const handler = async (req: Request): Promise<Response> => {
       html: `<h2>${subject}</h2><p>This is a transactional email from Adorzia.</p>`,
     });
 
+<<<<<<< HEAD
     await supabase.from("email_logs").insert({ subdomain: "mail", email_type: type, from_address: "noreply@mail.adorzia.com", to_address: to, subject, status: "sent", resend_id: emailResult.data?.id, metadata: data });
+=======
+    await supabase.from("email_logs").insert({ subdomain: "mail", email_type: type, from_address: fromAddress, to_address: to, subject, status: "sent", resend_id: emailResult.data?.id, metadata: data });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
     return new Response(JSON.stringify({ success: true, message_id: emailResult.data?.id }), {
       status: 200, headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -66,4 +83,8 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
+<<<<<<< HEAD
 Deno.serve(handler);
+=======
+serve(handler);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241

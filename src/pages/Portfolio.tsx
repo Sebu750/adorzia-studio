@@ -2,7 +2,10 @@ import { useState } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { PublicationRequestForm } from "@/components/portfolio/PublicationRequestForm";
+<<<<<<< HEAD
 import { PortfolioUploadModal } from "@/components/portfolio/PortfolioUploadModal";
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { EmptyPortfolio } from "@/components/empty-states/EmptyPortfolio";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -25,6 +28,7 @@ import {
   List,
   Upload,
   Clock,
+<<<<<<< HEAD
   Send,
   GripVertical
 } from "lucide-react";
@@ -67,6 +71,16 @@ const Portfolio = () => {
     // Update featured status
     console.log(`Setting featured status for ${projectId} to ${featured}`);
   };
+=======
+  Send
+} from "lucide-react";
+import { usePortfolioData } from "@/hooks/usePortfolioData";
+import { format } from "date-fns";
+
+const Portfolio = () => {
+  const [publishFormOpen, setPublishFormOpen] = useState(false);
+  const { projects, stats, loading } = usePortfolioData();
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   // Transform portfolio projects to grid format
   const portfolioItems = projects.map(project => ({
@@ -95,7 +109,11 @@ const Portfolio = () => {
               My Portfolio
             </h1>
             <p className="text-muted-foreground mt-1">
+<<<<<<< HEAD
               Create, upload, edit, and manage your design work
+=======
+              Manage and showcase your design work
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             </p>
           </div>
           <div className="flex gap-3">
@@ -104,7 +122,11 @@ const Portfolio = () => {
               Export PDF
             </Button>
             <Button 
+<<<<<<< HEAD
               variant="outline" 
+=======
+              variant="accent" 
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               className="gap-2"
               onClick={() => setPublishFormOpen(true)}
               disabled={projects.length === 0}
@@ -112,11 +134,15 @@ const Portfolio = () => {
               <Send className="h-4 w-4" />
               Request Publish
             </Button>
+<<<<<<< HEAD
             <Button 
               variant="default" 
               className="gap-2"
               onClick={() => setUploadModalOpen(true)}
             >
+=======
+            <Button variant="default" className="gap-2">
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               <Plus className="h-4 w-4" />
               Upload Project
             </Button>
@@ -165,6 +191,7 @@ const Portfolio = () => {
             </div>
           </div>
         ) : projects.length === 0 ? (
+<<<<<<< HEAD
           <EmptyPortfolio onUpload={() => setUploadModalOpen(true)} />
         ) : (
           <>
@@ -179,6 +206,11 @@ const Portfolio = () => {
               currentView={currentView}
             />
 
+=======
+          <EmptyPortfolio />
+        ) : (
+          <>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             {/* Filters */}
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1 max-w-md">
@@ -212,6 +244,17 @@ const Portfolio = () => {
                     <SelectItem value="published">Published</SelectItem>
                   </SelectContent>
                 </Select>
+<<<<<<< HEAD
+=======
+                <div className="flex border border-border rounded-lg overflow-hidden">
+                  <Button variant="ghost" size="icon" className="rounded-none h-10">
+                    <Grid3X3 className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="rounded-none h-10">
+                    <List className="h-4 w-4" />
+                  </Button>
+                </div>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               </div>
             </div>
 
@@ -225,6 +268,7 @@ const Portfolio = () => {
               </TabsList>
 
               <TabsContent value="all">
+<<<<<<< HEAD
                 {isReordering ? (
                   <PortfolioGrid items={portfolioItems} isReordering={isReordering} />
                 ) : (
@@ -244,11 +288,18 @@ const Portfolio = () => {
                     onFeature={handleFeatureProject}
                   />
                 )}
+=======
+                <PortfolioGrid items={portfolioItems} />
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               </TabsContent>
 
               <TabsContent value="stylebox">
                 {styleboxItems.length > 0 ? (
+<<<<<<< HEAD
                   <PortfolioGrid items={styleboxItems} isReordering={isReordering} />
+=======
+                  <PortfolioGrid items={styleboxItems} />
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 ) : (
                   <EmptyPortfolio />
                 )}
@@ -256,7 +307,11 @@ const Portfolio = () => {
 
               <TabsContent value="uploaded">
                 {uploadedItems.length > 0 ? (
+<<<<<<< HEAD
                   <PortfolioGrid items={uploadedItems} isReordering={isReordering} />
+=======
+                  <PortfolioGrid items={uploadedItems} />
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 ) : (
                   <EmptyPortfolio />
                 )}
@@ -307,6 +362,7 @@ const Portfolio = () => {
         open={publishFormOpen}
         onOpenChange={setPublishFormOpen}
       />
+<<<<<<< HEAD
 
       {/* Upload Project Modal */}
       <PortfolioUploadModal
@@ -314,6 +370,8 @@ const Portfolio = () => {
         onOpenChange={setUploadModalOpen}
         onSuccess={refetch}
       />
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     </AppLayout>
   );
 };

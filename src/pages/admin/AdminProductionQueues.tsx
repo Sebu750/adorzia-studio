@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
+=======
+import { supabase } from "@/integrations/supabase/client";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { QueueStatsHeader } from "@/components/admin/QueueStatsHeader";
 import { ProductionQueueCard } from "@/components/admin/ProductionQueueCard";

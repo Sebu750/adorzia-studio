@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
@@ -11,7 +15,11 @@ const logStep = (step: string, details?: any) => {
   console.log(`[CUSTOMER-PORTAL] ${step}${detailsStr}`);
 };
 
+<<<<<<< HEAD
 Deno.serve(async (req) => {
+=======
+serve(async (req) => {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }

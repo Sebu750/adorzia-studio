@@ -32,7 +32,11 @@ const AdminAnalytics = () => {
   const { stats, activity } = useAdminRealtimeStats();
 
   const activityTypeConfig = {
+<<<<<<< HEAD
     signup: { icon: UserPlus, color: "text-success", bg: "bg-success/10" },
+=======
+    signup: { icon: UserPlus, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     submission: { icon: FileText, color: "text-blue-500", bg: "bg-blue-500/10" },
     publication: { icon: Package, color: "text-purple-500", bg: "bg-purple-500/10" },
     earning: { icon: DollarSign, color: "text-amber-500", bg: "bg-amber-500/10" },
@@ -60,8 +64,13 @@ const AdminAnalytics = () => {
             <h1 className="text-2xl font-display font-bold text-admin-foreground">Analytics</h1>
             <p className="text-admin-muted-foreground">Real-time platform insights and metrics</p>
           </div>
+<<<<<<< HEAD
           <Badge variant="outline" className="gap-2 bg-success/10 text-success border-success/20">
             <span className="h-2 w-2 rounded-full bg-success animate-pulse" />
+=======
+          <Badge variant="outline" className="gap-2 bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             Live
           </Badge>
         </div>
@@ -71,10 +80,17 @@ const AdminAnalytics = () => {
           <Card className="bg-admin-card border-admin-border">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
+<<<<<<< HEAD
                 <div className="h-12 w-12 rounded-xl bg-success/10 flex items-center justify-center">
                   <Users className="h-6 w-6 text-success" />
                 </div>
                 <div className="flex items-center text-success text-sm font-medium">
+=======
+                <div className="h-12 w-12 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                  <Users className="h-6 w-6 text-emerald-500" />
+                </div>
+                <div className="flex items-center text-emerald-500 text-sm font-medium">
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   <ArrowUpRight className="h-4 w-4" />
                   +{stats.newSignupsToday} today
                 </div>

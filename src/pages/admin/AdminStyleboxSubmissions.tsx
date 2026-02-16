@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
+=======
+import { supabase } from "@/integrations/supabase/client";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Separator } from "@/components/ui/separator";
+<<<<<<< HEAD
 import { Checkbox } from "@/components/ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
@@ -22,6 +27,14 @@ import {
   FileText,
   User,
   Calendar as CalendarIcon,
+=======
+import { toast } from "sonner";
+import { format } from "date-fns";
+import {
+  FileText,
+  User,
+  Calendar,
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   Award,
   CheckCircle,
   XCircle,
@@ -33,10 +46,14 @@ import {
   Loader2,
   Eye,
   RotateCcw,
+<<<<<<< HEAD
   Box,
   File,
   FileImage,
   Download
+=======
+  Box
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -54,7 +71,11 @@ interface SubmissionWithDetails extends Submission {
 
 const statusColors: Record<string, string> = {
   submitted: "bg-blue-500/20 text-blue-600 border-blue-500/30",
+<<<<<<< HEAD
   approved: "bg-success/20 text-success border-success/30",
+=======
+  approved: "bg-emerald-500/20 text-emerald-600 border-emerald-500/30",
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   rejected: "bg-red-500/20 text-red-600 border-red-500/30",
 };
 
@@ -62,6 +83,7 @@ export default function AdminStyleboxSubmissions() {
   const queryClient = useQueryClient();
   const [selectedSubmission, setSelectedSubmission] = useState<SubmissionWithDetails | null>(null);
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
+<<<<<<< HEAD
   const [selectedSubmissions, setSelectedSubmissions] = useState<string[]>([]);
   const [bulkAction, setBulkAction] = useState<"approve" | "reject" | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>("all");
@@ -69,16 +91,23 @@ export default function AdminStyleboxSubmissions() {
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [filterDifficulty, setFilterDifficulty] = useState<string>("all");
   const [dateRange, setDateRange] = useState<{ from: string | null; to: string | null }>({ from: null, to: null });
+=======
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [filterStylebox, setFilterStylebox] = useState<string>("all");
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const [searchQuery, setSearchQuery] = useState("");
   
   // Review form state
   const [reviewAction, setReviewAction] = useState<"approved" | "rejected">("approved");
   const [reviewScore, setReviewScore] = useState<number>(75);
   const [reviewFeedback, setReviewFeedback] = useState("");
+<<<<<<< HEAD
   
   // Bulk action state
   const [bulkScore, setBulkScore] = useState<number>(75);
   const [bulkFeedback, setBulkFeedback] = useState("");
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   // Fetch all submissions with related data
   const { data: submissions, isLoading } = useQuery({
@@ -111,6 +140,7 @@ export default function AdminStyleboxSubmissions() {
     },
   });
 
+<<<<<<< HEAD
   // Bulk action mutation
   const bulkActionMutation = useMutation({
     mutationFn: async ({ action, score, feedback }: { 
@@ -151,6 +181,8 @@ export default function AdminStyleboxSubmissions() {
     },
   });
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   // Review mutation
   const reviewMutation = useMutation({
     mutationFn: async ({ submissionId, status, score }: { submissionId: string; status: string; score: number | null }) => {
@@ -199,6 +231,7 @@ export default function AdminStyleboxSubmissions() {
     });
   };
 
+<<<<<<< HEAD
   // Filter submissions with advanced filtering
   const filteredSubmissions = submissions?.filter((sub) => {
     if (filterStatus !== "all" && sub.status !== filterStatus) return false;
@@ -214,6 +247,12 @@ export default function AdminStyleboxSubmissions() {
     if (dateRange.from && new Date(sub.submitted_at) < new Date(dateRange.from)) return false;
     if (dateRange.to && new Date(sub.submitted_at) > new Date(dateRange.to)) return false;
     
+=======
+  // Filter submissions
+  const filteredSubmissions = submissions?.filter((sub) => {
+    if (filterStatus !== "all" && sub.status !== filterStatus) return false;
+    if (filterStylebox !== "all" && sub.stylebox_id !== filterStylebox) return false;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       const designerName = sub.profile?.name?.toLowerCase() || "";
@@ -239,6 +278,7 @@ export default function AdminStyleboxSubmissions() {
               Review and score designer submissions
             </p>
           </div>
+<<<<<<< HEAD
           <div className="flex items-center gap-3">
             {pendingCount > 0 && (
               <Badge className="w-fit gap-1.5 bg-amber-500/20 text-amber-600 border-amber-500/30 py-1.5 px-3">
@@ -285,6 +325,14 @@ export default function AdminStyleboxSubmissions() {
               </div>
             )}
           </div>
+=======
+          {pendingCount > 0 && (
+            <Badge className="w-fit gap-1.5 bg-amber-500/20 text-amber-600 border-amber-500/30 py-1.5 px-3">
+              <Clock className="h-4 w-4" />
+              {pendingCount} Pending Review
+            </Badge>
+          )}
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         </div>
 
         {/* Filters */}
@@ -300,6 +348,7 @@ export default function AdminStyleboxSubmissions() {
                   className="pl-9"
                 />
               </div>
+<<<<<<< HEAD
               
               <div className="flex items-center gap-2">
                 <div className="relative flex flex-wrap items-center gap-2">
@@ -393,6 +442,20 @@ export default function AdminStyleboxSubmissions() {
                   </Popover>
                 </div>
               </div>
+=======
+              <Select value={filterStatus} onValueChange={setFilterStatus}>
+                <SelectTrigger className="w-[180px]">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Statuses</SelectItem>
+                  <SelectItem value="submitted">Pending</SelectItem>
+                  <SelectItem value="approved">Approved</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                </SelectContent>
+              </Select>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               <Select value={filterStylebox} onValueChange={setFilterStylebox}>
                 <SelectTrigger className="w-[220px]">
                   <Box className="h-4 w-4 mr-2" />
@@ -485,7 +548,11 @@ export default function AdminStyleboxSubmissions() {
                   {/* Submission Details */}
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <div className="flex items-center gap-1.5">
+<<<<<<< HEAD
                       <CalendarIcon className="h-3.5 w-3.5" />
+=======
+                      <Calendar className="h-3.5 w-3.5" />
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                       {format(new Date(submission.submitted_at), "MMM d, yyyy")}
                     </div>
                     {submission.score !== null && (
@@ -551,7 +618,11 @@ export default function AdminStyleboxSubmissions() {
                     </div>
                     <div className="flex items-center gap-4 mt-4 text-sm text-muted-foreground">
                       <div className="flex items-center gap-1.5">
+<<<<<<< HEAD
                         <CalendarIcon className="h-4 w-4" />
+=======
+                        <Calendar className="h-4 w-4" />
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                         Submitted {format(new Date(selectedSubmission.submitted_at), "PPP 'at' p")}
                       </div>
                     </div>
@@ -611,7 +682,11 @@ export default function AdminStyleboxSubmissions() {
                         <Button
                           type="button"
                           variant={reviewAction === "approved" ? "default" : "outline"}
+<<<<<<< HEAD
                           className={`flex-1 gap-2 ${reviewAction === "approved" ? "bg-success hover:bg-success/90" : ""}`}
+=======
+                          className={`flex-1 gap-2 ${reviewAction === "approved" ? "bg-emerald-600 hover:bg-emerald-700" : ""}`}
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                           onClick={() => setReviewAction("approved")}
                         >
                           <CheckCircle className="h-4 w-4" />
@@ -668,7 +743,11 @@ export default function AdminStyleboxSubmissions() {
 
                 {/* Already Reviewed */}
                 {selectedSubmission.status !== "submitted" && (
+<<<<<<< HEAD
                   <Card className={selectedSubmission.status === "approved" ? "border-success/30 bg-success/5" : "border-red-500/30 bg-red-500/5"}>
+=======
+                  <Card className={selectedSubmission.status === "approved" ? "border-emerald-500/30 bg-emerald-500/5" : "border-red-500/30 bg-red-500/5"}>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                     <CardContent className="p-4 flex items-center gap-3">
                       {selectedSubmission.status === "approved" ? (
                         <CheckCircle className="h-5 w-5 text-emerald-600" />
@@ -704,7 +783,11 @@ export default function AdminStyleboxSubmissions() {
                 <Button 
                   onClick={handleSubmitReview}
                   disabled={reviewMutation.isPending}
+<<<<<<< HEAD
                   className={reviewAction === "approved" ? "bg-success hover:bg-success/90" : ""}
+=======
+                  className={reviewAction === "approved" ? "bg-emerald-600 hover:bg-emerald-700" : ""}
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 >
                   {reviewMutation.isPending ? (
                     <>
@@ -726,6 +809,7 @@ export default function AdminStyleboxSubmissions() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+<<<<<<< HEAD
 
         {/* Bulk Action Dialog */}
         <Dialog open={!!bulkAction} onOpenChange={() => setBulkAction(null)}>
@@ -816,6 +900,8 @@ export default function AdminStyleboxSubmissions() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       </div>
     </AdminLayout>
   );

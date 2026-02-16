@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 project_id = "lnrhrevpouozugsarsmz"
+=======
+project_id = "lpmwqwpzdhtkrzoounec"
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 [functions.create-checkout]
 verify_jwt = false
@@ -51,9 +55,12 @@ verify_jwt = false
 [functions.marketplace-cart]
 verify_jwt = false
 
+<<<<<<< HEAD
 [functions.verify-authenticity]
 verify_jwt = false
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 [functions.marketplace-checkout]
 verify_jwt = false
 
@@ -62,6 +69,7 @@ verify_jwt = true
 
 [functions.generate-sitemap]
 verify_jwt = false
+<<<<<<< HEAD
 
 [functions.manage-founding]
 verify_jwt = true
@@ -71,3 +79,5 @@ verify_jwt = true
 
 [functions.manage-team]
 verify_jwt = true
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241

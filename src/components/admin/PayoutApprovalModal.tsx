@@ -9,7 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
+=======
+import { supabase } from "@/integrations/supabase/client";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useToast } from "@/hooks/use-toast";
 import { X, Loader2, AlertTriangle } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";

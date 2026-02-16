@@ -3,7 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface ProductFilters {
   category?: string;
+<<<<<<< HEAD
   collection?: string;
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   designer?: string;
   minPrice?: number;
   maxPrice?: number;
@@ -36,8 +39,12 @@ interface Product {
   care_instructions?: string;
   designer?: {
     id: string;
+<<<<<<< HEAD
     full_name: string;
     brand_name: string;
+=======
+    name: string;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     avatar_url: string;
   };
   category?: {
@@ -61,8 +68,12 @@ interface ProductDetailResponse {
   product: Product & {
     designer?: {
       id: string;
+<<<<<<< HEAD
       full_name: string;
       brand_name: string;
+=======
+      name: string;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       avatar_url: string;
       bio: string;
     };
@@ -83,12 +94,19 @@ interface ProductDetailResponse {
 export function useMarketplaceProducts(filters: ProductFilters = {}) {
   return useQuery<ProductsResponse>({
     queryKey: ['marketplace-products', filters],
+<<<<<<< HEAD
     queryFn: async ({ signal }) => {
+=======
+    queryFn: async () => {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       const params = new URLSearchParams();
       params.set('action', 'list');
       
       if (filters.category) params.set('category', filters.category);
+<<<<<<< HEAD
       if (filters.collection) params.set('collection', filters.collection);
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       if (filters.designer) params.set('designer', filters.designer);
       if (filters.minPrice) params.set('minPrice', filters.minPrice.toString());
       if (filters.maxPrice) params.set('maxPrice', filters.maxPrice.toString());
@@ -99,6 +117,7 @@ export function useMarketplaceProducts(filters: ProductFilters = {}) {
       if (filters.page) params.set('page', filters.page.toString());
       if (filters.limit) params.set('limit', filters.limit.toString());
 
+<<<<<<< HEAD
       // Create abort controller with timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
@@ -144,18 +163,48 @@ export function useMarketplaceProducts(filters: ProductFilters = {}) {
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
     staleTime: 5 * 60 * 1000, // 5 minutes
     cacheTime: 10 * 60 * 1000, // 10 minutes
+=======
+      const { data, error } = await supabase.functions.invoke('marketplace-products', {
+        body: null,
+        headers: {},
+      });
+
+      // Since we can't pass query params easily, we'll modify the call
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?${params.toString()}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
+      }
+
+      return response.json();
+    },
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   });
 }
 
 export function useMarketplaceProduct(idOrSlug: string) {
   return useQuery<ProductDetailResponse>({
     queryKey: ['marketplace-product', idOrSlug],
+<<<<<<< HEAD
     queryFn: async ({ signal }) => {
+=======
+    queryFn: async () => {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
       const params = new URLSearchParams();
       params.set('action', 'detail');
       params.set(isUUID ? 'id' : 'slug', idOrSlug);
 
+<<<<<<< HEAD
       // Create abort controller with timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
@@ -202,12 +251,33 @@ export function useMarketplaceProduct(idOrSlug: string) {
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     staleTime: 5 * 60 * 1000,
     cacheTime: 10 * 60 * 1000,
+=======
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?${params.toString()}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch product');
+      }
+
+      return response.json();
+    },
+    enabled: !!idOrSlug,
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   });
 }
 
 export function useMarketplaceCategories() {
   return useQuery({
     queryKey: ['marketplace-categories'],
+<<<<<<< HEAD
     queryFn: async ({ signal }) => {
       // Create abort controller with timeout
       const controller = new AbortController();
@@ -256,17 +326,42 @@ export function useMarketplaceCategories() {
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     staleTime: 10 * 60 * 1000, // 10 minutes
     cacheTime: 15 * 60 * 1000, // 15 minutes
+=======
+    queryFn: async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?action=categories`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch categories');
+      }
+
+      return response.json();
+    },
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   });
 }
 
 export function useMarketplaceCollections(featured = false) {
   return useQuery({
     queryKey: ['marketplace-collections', featured],
+<<<<<<< HEAD
     queryFn: async ({ signal }) => {
+=======
+    queryFn: async () => {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       const params = new URLSearchParams();
       params.set('action', 'collections');
       if (featured) params.set('featured', 'true');
 
+<<<<<<< HEAD
       // Create abort controller with timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
@@ -312,5 +407,24 @@ export function useMarketplaceCollections(featured = false) {
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     staleTime: 10 * 60 * 1000,
     cacheTime: 15 * 60 * 1000,
+=======
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?${params.toString()}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch collections');
+      }
+
+      return response.json();
+    },
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   });
 }

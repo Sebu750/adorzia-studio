@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+<<<<<<< HEAD
 import Stripe from "https://esm.sh/stripe@18.5.0";
 
 const corsHeaders = {
@@ -16,6 +17,13 @@ const createResponse = (body: string | Record<string, unknown>, status = 200, in
     ...(includeCors ? corsHeaders : {})
   };
   return new Response(JSON.stringify(body), { status, headers });
+=======
+import Stripe from "https://esm.sh/stripe@14.21.0";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 };
 
 const logStep = (step: string, details?: any) => {
@@ -25,9 +33,14 @@ const logStep = (step: string, details?: any) => {
 const MARKUP_MULTIPLIER = 2.3;
 
 serve(async (req) => {
+<<<<<<< HEAD
   // OPTIONS preflight always succeeds with proper CORS headers
   if (req.method === 'OPTIONS') {
     return createResponse(null, 204, true);
+=======
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   }
 
   try {
@@ -45,9 +58,15 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const body = await req.json();
+<<<<<<< HEAD
     const { action, cart_id, shipping_address, billing_address, shipping_method, success_url, cancel_url, currency = 'usd' } = body;
 
     logStep('Processing checkout request', { action, cart_id, currency });
+=======
+    const { action, cart_id, shipping_address, billing_address, shipping_method, success_url, cancel_url } = body;
+
+    logStep('Processing checkout request', { action, cart_id });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
     if (action === 'create_session') {
       // Fetch cart
@@ -58,11 +77,25 @@ serve(async (req) => {
         .single();
 
       if (cartError || !cart) {
+<<<<<<< HEAD
         return createResponse({ error: 'Cart not found' }, 404, true);
       }
 
       if (!cart.items || cart.items.length === 0) {
         return createResponse({ error: 'Cart is empty' }, 400, true);
+=======
+        return new Response(JSON.stringify({ error: 'Cart not found' }), {
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      if (!cart.items || cart.items.length === 0) {
+        return new Response(JSON.stringify({ error: 'Cart is empty' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       }
 
       // Validate products and calculate totals
@@ -73,6 +106,7 @@ serve(async (req) => {
         .in('id', productIds);
 
       if (!products || products.length !== productIds.length) {
+<<<<<<< HEAD
         return createResponse({ error: 'Some products are no longer available' }, 400, true);
       }
 
@@ -80,12 +114,24 @@ serve(async (req) => {
       const supportedCurrencies = ['usd', 'eur', 'gbp', 'cad', 'aud', 'pkr'];
       const checkoutCurrency = supportedCurrencies.includes(currency) ? currency : 'usd';
       
+=======
+        return new Response(JSON.stringify({ error: 'Some products are no longer available' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       // Create line items for Stripe
       const lineItems = cart.items.map((item: any) => {
         const product = products.find((p: any) => p.id === item.product_id);
         return {
           price_data: {
+<<<<<<< HEAD
             currency: checkoutCurrency,
+=======
+            currency: 'usd',
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             product_data: {
               name: product?.title || item.title,
               images: product?.images?.slice(0, 1) || [],
@@ -96,6 +142,7 @@ serve(async (req) => {
         };
       });
 
+<<<<<<< HEAD
       // FR 1.3: Global shipping calculations based on destination
       let shippingCost = 0;
       const shippingCountry = shipping_address?.country?.toUpperCase();
@@ -122,6 +169,16 @@ serve(async (req) => {
       }
       
       // Free shipping over $200 (or equivalent)
+=======
+      // Calculate shipping cost
+      let shippingCost = 0;
+      if (shipping_method === 'express') {
+        shippingCost = 25;
+      } else if (shipping_method === 'standard') {
+        shippingCost = 10;
+      }
+      // Free shipping over $200
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       if (cart.subtotal >= 200) {
         shippingCost = 0;
       }
@@ -130,9 +187,15 @@ serve(async (req) => {
       if (shippingCost > 0) {
         lineItems.push({
           price_data: {
+<<<<<<< HEAD
             currency: checkoutCurrency,
             product_data: {
               name: `Shipping (${shipping_method}) - ${shippingCountry || 'International'}`,
+=======
+            currency: 'usd',
+            product_data: {
+              name: `Shipping (${shipping_method})`,
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             },
             unit_amount: shippingCost * 100,
           },
@@ -166,10 +229,19 @@ serve(async (req) => {
 
       logStep('Checkout session created', { session_id: session.id, order_number: orderNumber });
 
+<<<<<<< HEAD
       return createResponse({ 
         session_id: session.id, 
         url: session.url,
         order_number: orderNumber,
+=======
+      return new Response(JSON.stringify({ 
+        session_id: session.id, 
+        url: session.url,
+        order_number: orderNumber,
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       });
     }
 
@@ -179,10 +251,19 @@ serve(async (req) => {
       const session = await stripe.checkout.sessions.retrieve(session_id);
 
       if (session.payment_status !== 'paid') {
+<<<<<<< HEAD
         return createResponse({ 
           success: false, 
           message: 'Payment not completed' 
         }, 200, true);
+=======
+        return new Response(JSON.stringify({ 
+          success: false, 
+          message: 'Payment not completed' 
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       }
 
       // Check if order already exists
@@ -193,9 +274,17 @@ serve(async (req) => {
         .single();
 
       if (existingOrder) {
+<<<<<<< HEAD
         return createResponse({ 
           success: true, 
           order: existingOrder 
+=======
+        return new Response(JSON.stringify({ 
+          success: true, 
+          order: existingOrder 
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         });
       }
 
@@ -210,7 +299,14 @@ serve(async (req) => {
         .single();
 
       if (!cart) {
+<<<<<<< HEAD
         return createResponse({ error: 'Cart not found' }, 404, true);
+=======
+        return new Response(JSON.stringify({ error: 'Cart not found' }), {
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       }
 
       // Get product details for order items
@@ -245,9 +341,13 @@ serve(async (req) => {
         .select()
         .single();
 
+<<<<<<< HEAD
       if (orderError) {
         return createResponse({ error: orderError.message }, 500, true);
       }
+=======
+      if (orderError) throw orderError;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
       // Create order items and calculate commissions
       const orderItems = cart.items.map((item: any) => {
@@ -301,6 +401,7 @@ serve(async (req) => {
 
       logStep('Order created', { order_id: order.id, order_number: order.order_number });
 
+<<<<<<< HEAD
       return createResponse({ 
         success: true, 
         order 
@@ -308,10 +409,31 @@ serve(async (req) => {
     }
 
     return createResponse({ error: 'Invalid action' }, 400, true);
+=======
+      return new Response(JSON.stringify({ 
+        success: true, 
+        order 
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    return new Response(JSON.stringify({ error: 'Invalid action' }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     logStep('Error', { message: errorMessage });
+<<<<<<< HEAD
     return createResponse({ error: errorMessage }, 500, true);
+=======
+    return new Response(JSON.stringify({ error: errorMessage }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   }
 });

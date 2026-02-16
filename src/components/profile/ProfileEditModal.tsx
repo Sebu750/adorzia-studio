@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useProfile } from "@/hooks/useProfile";
+<<<<<<< HEAD
 import { useFounderPurchase } from "@/hooks/useFounderPurchase";
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import {
   Dialog,
   DialogContent,
@@ -22,9 +25,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+<<<<<<< HEAD
 import { Camera, Loader2, Save, X, MapPin, GraduationCap, Award, Globe, Instagram, Twitter, Linkedin, Facebook, Youtube, ShoppingCart, Palette, Upload, Crown, Star } from "lucide-react";
 import FounderTierSelector from "@/components/founder/FounderTierSelector";
 import { sanitizeInput, sanitizeStringArray } from "@/lib/input-sanitizer";
+=======
+import { Camera, Loader2, Save, X } from "lucide-react";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 interface ProfileEditModalProps {
   open: boolean;
@@ -43,6 +50,7 @@ export function ProfileEditModal({ open, onOpenChange }: ProfileEditModalProps) 
   
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
+<<<<<<< HEAD
   const [brandName, setBrandName] = useState("");
   const [category, setCategory] = useState("");
   const [skills, setSkills] = useState("");
@@ -67,11 +75,18 @@ export function ProfileEditModal({ open, onOpenChange }: ProfileEditModalProps) 
   const [logoUploading, setLogoUploading] = useState(false);
   const [bannerUploading, setBannerUploading] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+=======
+  const [category, setCategory] = useState("");
+  const [skills, setSkills] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   useEffect(() => {
     if (profile) {
       setName(profile.name || "");
       setBio(profile.bio || "");
+<<<<<<< HEAD
       setBrandName(profile.brand_name || "");
       setCategory(profile.category || "fashion");
       setSkills(profile.skills?.join(", ") || "");
@@ -184,6 +199,28 @@ export function ProfileEditModal({ open, onOpenChange }: ProfileEditModalProps) 
       console.log("Profile updates being sent:", profileUpdates);
       
       const { error } = await updateProfile(profileUpdates);
+=======
+      setCategory(profile.category || "fashion");
+      setSkills(profile.skills?.join(", ") || "");
+      setAvatarUrl(profile.avatar_url || "");
+    }
+  }, [profile]);
+
+  const saveMutation = useMutation({
+    mutationFn: async () => {
+      const skillsArray = skills
+        .split(",")
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+
+      const { error } = await updateProfile({
+        name: name || null,
+        bio: bio || null,
+        category: category as any,
+        skills: skillsArray.length > 0 ? skillsArray : null,
+        avatar_url: avatarUrl || null,
+      });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
       if (error) throw error;
     },
@@ -192,11 +229,15 @@ export function ProfileEditModal({ open, onOpenChange }: ProfileEditModalProps) 
       onOpenChange(false);
     },
     onError: (error) => {
+<<<<<<< HEAD
       if (error.message === "Please fix validation errors") {
         toast.error("Please check the form for validation errors");
       } else {
         toast.error("Failed to update profile: " + error.message);
       }
+=======
+      toast.error("Failed to update profile: " + error.message);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     },
   });
 
@@ -219,16 +260,28 @@ export function ProfileEditModal({ open, onOpenChange }: ProfileEditModalProps) 
     setUploading(true);
     try {
       const fileExt = file.name.split(".").pop();
+<<<<<<< HEAD
       const filePath = `${profile?.user_id}/avatar-${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from("avatars")
+=======
+      const fileName = `${profile?.user_id}-${Date.now()}.${fileExt}`;
+      const filePath = `avatars/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("portfolio-assets")
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
+<<<<<<< HEAD
         .from("avatars")
+=======
+        .from("portfolio-assets")
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .getPublicUrl(filePath);
 
       setAvatarUrl(publicUrl);
@@ -240,6 +293,7 @@ export function ProfileEditModal({ open, onOpenChange }: ProfileEditModalProps) 
     }
   };
 
+<<<<<<< HEAD
   const handleBannerUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -280,6 +334,8 @@ export function ProfileEditModal({ open, onOpenChange }: ProfileEditModalProps) 
     }
   };
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const getInitials = (name?: string | null) => {
     if (!name) return "U";
     return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
@@ -292,6 +348,7 @@ export function ProfileEditModal({ open, onOpenChange }: ProfileEditModalProps) 
           <DialogTitle>Edit Profile</DialogTitle>
         </DialogHeader>
 
+<<<<<<< HEAD
         <div className="space-y-6 py-4 max-h-[70vh] overflow-y-auto pr-2">
           {/* Profile Section */}
           <div className="space-y-4">
@@ -754,6 +811,92 @@ export function ProfileEditModal({ open, onOpenChange }: ProfileEditModalProps) 
                 />
               </div>
             </div>
+=======
+        <div className="space-y-6 py-4">
+          {/* Avatar Upload */}
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative">
+              <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+                <AvatarImage src={avatarUrl || undefined} />
+                <AvatarFallback className="text-2xl bg-accent text-accent-foreground">
+                  {getInitials(name || profile?.name)}
+                </AvatarFallback>
+              </Avatar>
+              <label 
+                htmlFor="avatar-upload"
+                className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center cursor-pointer hover:bg-primary/90 transition-colors"
+              >
+                {uploading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Camera className="h-4 w-4" />
+                )}
+              </label>
+              <input
+                id="avatar-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarUpload}
+                disabled={uploading}
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">Click camera to upload avatar</p>
+          </div>
+
+          {/* Name */}
+          <div className="space-y-2">
+            <Label htmlFor="name">Display Name</Label>
+            <Input
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your display name"
+            />
+          </div>
+
+          {/* Bio */}
+          <div className="space-y-2">
+            <Label htmlFor="bio">Bio</Label>
+            <Textarea
+              id="bio"
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="Tell us about yourself..."
+              rows={3}
+            />
+          </div>
+
+          {/* Category */}
+          <div className="space-y-2">
+            <Label>Design Category</Label>
+            <Select value={category} onValueChange={setCategory}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                {DESIGNER_CATEGORIES.map((cat) => (
+                  <SelectItem key={cat.value} value={cat.value}>
+                    {cat.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Skills */}
+          <div className="space-y-2">
+            <Label htmlFor="skills">Skills (comma-separated)</Label>
+            <Input
+              id="skills"
+              value={skills}
+              onChange={(e) => setSkills(e.target.value)}
+              placeholder="e.g., Fashion Design, Textile Art, Pattern Making"
+            />
+            <p className="text-xs text-muted-foreground">
+              Separate skills with commas
+            </p>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           </div>
         </div>
 

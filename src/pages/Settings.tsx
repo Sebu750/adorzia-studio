@@ -29,6 +29,7 @@ import {
   Crown,
   Sparkles,
   MessageSquarePlus,
+<<<<<<< HEAD
   Send,
   MapPin,
   GraduationCap,
@@ -43,6 +44,9 @@ import {
   Palette,
   AlertTriangle,
   Trash2
+=======
+  Send
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -56,8 +60,13 @@ const profileSchema = z.object({
 });
 
 const passwordSchema = z.object({
+<<<<<<< HEAD
   currentPassword: z.string().min(8, "Password must be at least 8 characters"),
   newPassword: z.string().min(8, "Password must be at least 8 characters").regex(/[a-z]/, "Password must contain at least one lowercase letter").regex(/[A-Z]/, "Password must contain at least one uppercase letter").regex(/[0-9]/, "Password must contain at least one number").regex(/[^a-zA-Z0-9]/, "Password must contain at least one special character"),
+=======
+  currentPassword: z.string().min(6, "Password must be at least 6 characters"),
+  newPassword: z.string().min(6, "Password must be at least 6 characters"),
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   confirmPassword: z.string(),
 }).refine((data) => data.newPassword === data.confirmPassword, {
   message: "Passwords don't match",
@@ -73,6 +82,7 @@ const Settings = () => {
   const [profileData, setProfileData] = useState({
     name: "",
     email: "",
+<<<<<<< HEAD
     brand_name: "",
     category: "fashion" as "fashion" | "textile" | "jewelry",
     avatar_url: "",
@@ -92,6 +102,10 @@ const Settings = () => {
     behance_url: "",
     etsy_shop_url: "",
     shopify_store_url: "",
+=======
+    category: "fashion" as "fashion" | "textile" | "jewelry",
+    avatar_url: "",
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   });
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -111,10 +125,13 @@ const Settings = () => {
     message: "",
   });
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+<<<<<<< HEAD
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   useEffect(() => {
     if (user) {
@@ -135,6 +152,7 @@ const Settings = () => {
       setProfileData({
         name: data.name || "",
         email: data.email || user.email || "",
+<<<<<<< HEAD
         brand_name: data.brand_name || "",
         category: (data.category as "fashion" | "textile" | "jewelry") || "fashion",
         avatar_url: data.avatar_url || "",
@@ -154,12 +172,17 @@ const Settings = () => {
         behance_url: data.behance_url || "",
         etsy_shop_url: data.etsy_shop_url || "",
         shopify_store_url: data.shopify_store_url || "",
+=======
+        category: (data.category as "fashion" | "textile" | "jewelry") || "fashion",
+        avatar_url: data.avatar_url || "",
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       });
     } else if (!error) {
       // No profile exists, use auth user data
       setProfileData({
         name: user.user_metadata?.name || "",
         email: user.email || "",
+<<<<<<< HEAD
         brand_name: "",
         category: user.user_metadata?.category || "fashion",
         avatar_url: "",
@@ -179,10 +202,15 @@ const Settings = () => {
         behance_url: "",
         etsy_shop_url: "",
         shopify_store_url: "",
+=======
+        category: user.user_metadata?.category || "fashion",
+        avatar_url: "",
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       });
     }
   };
 
+<<<<<<< HEAD
   const validateProfileForm = () => {
     const errors: Record<string, string> = {};
     
@@ -210,11 +238,14 @@ const Settings = () => {
     return Object.keys(errors).length === 0;
   };
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const handleProfileUpdate = async () => {
     if (!user) return;
     setIsLoading(true);
 
     try {
+<<<<<<< HEAD
       if (!validateProfileForm()) {
         toast({
           title: "Validation Error",
@@ -284,6 +315,22 @@ const Settings = () => {
 
       console.log("Settings update result:", { error, data: profileUpdates });
       
+=======
+      const validated = profileSchema.parse(profileData);
+      
+      const { error } = await supabase
+        .from("profiles")
+        .upsert({
+          user_id: user.id,
+          name: validated.name,
+          email: validated.email,
+          category: validated.category,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: "user_id",
+        });
+
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       if (error) throw error;
 
       toast({
@@ -339,6 +386,7 @@ const Settings = () => {
           variant: "destructive",
         });
       } else {
+<<<<<<< HEAD
         const errorMessage = error?.message || error?.error_description || error?.error || "Failed to update password.";
         
         // Specific error handling for known Supabase auth errors
@@ -355,6 +403,13 @@ const Settings = () => {
             variant: "destructive",
           });
         }
+=======
+        toast({
+          title: "Error",
+          description: "Failed to update password.",
+          variant: "destructive",
+        });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       }
     } finally {
       setIsLoading(false);
@@ -366,6 +421,7 @@ const Settings = () => {
     navigate("/");
   };
 
+<<<<<<< HEAD
   const handleDeleteAccount = async () => {
     if (deleteConfirmation !== "DELETE") {
       toast({
@@ -406,6 +462,8 @@ const Settings = () => {
     }
   };
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const handleFeedbackSubmit = async () => {
     if (!user) return;
     
@@ -439,6 +497,7 @@ const Settings = () => {
         },
       });
 
+<<<<<<< HEAD
       if (error) {
         console.error("Edge function error:", error);
         throw error;
@@ -448,6 +507,9 @@ const Settings = () => {
         console.error("Function returned error:", data.error);
         throw new Error(data.error);
       }
+=======
+      if (error) throw error;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
       toast({
         title: "Thank you for your feedback!",
@@ -460,12 +522,20 @@ const Settings = () => {
         category: "",
         message: "",
       });
+<<<<<<< HEAD
     } catch (error: any) {
       console.error("Feedback submission error:", error);
       const errorMessage = error?.message || error?.error || "Something went wrong. Please try again.";
       toast({
         title: "Submission failed",
         description: errorMessage,
+=======
+    } catch (error) {
+      console.error("Feedback submission error:", error);
+      toast({
+        title: "Submission failed",
+        description: "Something went wrong. Please try again.",
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         variant: "destructive",
       });
     } finally {
@@ -484,6 +554,7 @@ const Settings = () => {
 
   return (
     <AppLayout>
+<<<<<<< HEAD
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/5">
         <div className="max-w-6xl mx-auto p-6 lg:p-8 space-y-8">
           {/* Header with Profile Preview */}
@@ -722,20 +793,95 @@ const Settings = () => {
                       }}
                     />
                   </label>
+=======
+      <div className="p-6 lg:p-8 space-y-8 max-w-4xl">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="font-display text-3xl font-bold tracking-tight">
+              Settings
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Manage your account preferences
+            </p>
+          </div>
+          <Button 
+            variant="outline" 
+            className="gap-2 text-destructive hover:text-destructive"
+            onClick={handleSignOut}
+          >
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </Button>
+        </div>
+
+        <Tabs defaultValue="profile" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+            <TabsTrigger value="profile" className="gap-2">
+              <User className="h-4 w-4" />
+              <span className="hidden sm:inline">Profile</span>
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="gap-2">
+              <Bell className="h-4 w-4" />
+              <span className="hidden sm:inline">Notifications</span>
+            </TabsTrigger>
+            <TabsTrigger value="security" className="gap-2">
+              <Lock className="h-4 w-4" />
+              <span className="hidden sm:inline">Security</span>
+            </TabsTrigger>
+            <TabsTrigger value="billing" className="gap-2">
+              <CreditCard className="h-4 w-4" />
+              <span className="hidden sm:inline">Billing</span>
+            </TabsTrigger>
+            <TabsTrigger value="feedback" className="gap-2">
+              <MessageSquarePlus className="h-4 w-4" />
+              <span className="hidden sm:inline">Feedback</span>
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="profile" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Profile Photo</CardTitle>
+                <CardDescription>Update your profile picture</CardDescription>
+              </CardHeader>
+              <CardContent className="flex items-center gap-6">
+                <Avatar className="h-20 w-20 border-2 border-border">
+                  <AvatarImage src={profileData.avatar_url} />
+                  <AvatarFallback className="text-xl bg-accent/10 text-accent">
+                    {getInitials(profileData.name || "U")}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="space-y-2">
+                  <Button variant="outline" className="gap-2">
+                    <Upload className="h-4 w-4" />
+                    Upload New Photo
+                  </Button>
+                  <p className="text-xs text-muted-foreground">
+                    JPG, PNG or GIF. Max size 2MB.
+                  </p>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 </div>
               </CardContent>
             </Card>
 
+<<<<<<< HEAD
             <Card className="border-accent/10 shadow-sm hover:shadow-md transition-shadow">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="h-5 w-5 text-accent" />
                   Personal Information
                 </CardTitle>
+=======
+            <Card>
+              <CardHeader>
+                <CardTitle>Personal Information</CardTitle>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 <CardDescription>Update your personal details</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
+<<<<<<< HEAD
                   <Label htmlFor="name">Full Name *</Label>
                   <Input 
                     id="name" 
@@ -752,6 +898,15 @@ const Settings = () => {
                   {validationErrors.name && (
                     <p className="text-sm text-red-500">{validationErrors.name}</p>
                   )}
+=======
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input 
+                    id="name" 
+                    value={profileData.name}
+                    onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="Your name"
+                  />
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
@@ -764,6 +919,7 @@ const Settings = () => {
                   />
                 </div>
                 <div className="space-y-2">
+<<<<<<< HEAD
                   <Label htmlFor="brand-name">Brand Name</Label>
                   <Input 
                     id="brand-name" 
@@ -773,6 +929,8 @@ const Settings = () => {
                   />
                 </div>
                 <div className="space-y-2">
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   <Label>Specialty Category</Label>
                   <Select 
                     value={profileData.category}
@@ -788,6 +946,7 @@ const Settings = () => {
                     </SelectContent>
                   </Select>
                 </div>
+<<<<<<< HEAD
                 <div className="space-y-2">
                   <Label htmlFor="location" className="flex items-center gap-2">
                     <MapPin className="h-4 w-4" />
@@ -802,6 +961,10 @@ const Settings = () => {
                 </div>
                 <Button 
                   className="gap-2 bg-gradient-accent hover:opacity-90 transition-opacity shadow-sm"
+=======
+                <Button 
+                  className="gap-2 bg-gradient-accent hover:opacity-90"
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   onClick={handleProfileUpdate}
                   disabled={isLoading}
                 >
@@ -814,6 +977,7 @@ const Settings = () => {
                 </Button>
               </CardContent>
             </Card>
+<<<<<<< HEAD
             
             <Card className="border-accent/10 shadow-sm hover:shadow-md transition-shadow">
               <CardHeader>
@@ -1067,6 +1231,12 @@ const Settings = () => {
 
             <TabsContent value="notifications" className="space-y-6 animate-in fade-in-50 duration-300">
               <Card className="border-accent/10 shadow-sm hover:shadow-md transition-shadow">
+=======
+          </TabsContent>
+
+          <TabsContent value="notifications" className="space-y-6">
+            <Card>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               <CardHeader>
                 <CardTitle>Notification Preferences</CardTitle>
                 <CardDescription>Choose what notifications you want to receive</CardDescription>
@@ -1095,10 +1265,17 @@ const Settings = () => {
                 ))}
               </CardContent>
             </Card>
+<<<<<<< HEAD
             </TabsContent>
 
             <TabsContent value="security" className="space-y-6 animate-in fade-in-50 duration-300">
               <Card className="border-accent/10 shadow-sm hover:shadow-md transition-shadow">
+=======
+          </TabsContent>
+
+          <TabsContent value="security" className="space-y-6">
+            <Card>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               <CardHeader>
                 <CardTitle>Change Password</CardTitle>
                 <CardDescription>Update your password to keep your account secure</CardDescription>
@@ -1141,8 +1318,13 @@ const Settings = () => {
                 </Button>
               </CardContent>
             </Card>
+<<<<<<< HEAD
             
             <Card className="border-accent/10 shadow-sm hover:shadow-md transition-shadow">
+=======
+
+            <Card>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               <CardHeader>
                 <CardTitle>Two-Factor Authentication</CardTitle>
                 <CardDescription>Add an extra layer of security to your account</CardDescription>
@@ -1159,6 +1341,7 @@ const Settings = () => {
                 </div>
               </CardContent>
             </Card>
+<<<<<<< HEAD
 
             <Card className="border-destructive/50">
               <CardHeader>
@@ -1195,6 +1378,12 @@ const Settings = () => {
 
             <TabsContent value="billing" className="space-y-6 animate-in fade-in-50 duration-300">
               <Card className="border-accent/10 shadow-sm hover:shadow-md transition-shadow">
+=======
+          </TabsContent>
+
+          <TabsContent value="billing" className="space-y-6">
+            <Card>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               <CardHeader>
                 <CardTitle>Subscription</CardTitle>
                 <CardDescription>Manage your subscription tier</CardDescription>
@@ -1256,10 +1445,17 @@ const Settings = () => {
                 <Button className="bg-gradient-accent hover:opacity-90">Save Payout Settings</Button>
               </CardContent>
             </Card>
+<<<<<<< HEAD
             </TabsContent>
 
             <TabsContent value="feedback" className="space-y-6 animate-in fade-in-50 duration-300">
               <Card className="border-accent/10 shadow-sm hover:shadow-md transition-shadow">
+=======
+          </TabsContent>
+
+          <TabsContent value="feedback" className="space-y-6">
+            <Card>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MessageSquarePlus className="h-5 w-5 text-accent" />
@@ -1369,6 +1565,7 @@ const Settings = () => {
             </Card>
           </TabsContent>
         </Tabs>
+<<<<<<< HEAD
 
         {/* Delete Account Confirmation Dialog */}
         {showDeleteDialog && (
@@ -1430,6 +1627,8 @@ const Settings = () => {
           </div>
         )}
         </div>
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       </div>
     </AppLayout>
   );

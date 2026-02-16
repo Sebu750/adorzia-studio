@@ -8,7 +8,10 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+<<<<<<< HEAD
     strictPort: true,  // Prevent auto port switching
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
@@ -16,6 +19,7 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+<<<<<<< HEAD
   build: {
     // NFR 1.1: Performance optimization for LCP < 1.2s
     rollupOptions: {
@@ -36,4 +40,6 @@ export default defineConfig(({ mode }) => ({
   },
   // NFR 1.4: Image optimization for high-res fashion imagery
   assetsInlineLimit: 4096, // Inline assets < 4KB
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 }));

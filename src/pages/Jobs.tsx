@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+=======
+import { useState, useMemo } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/AppLayout";
@@ -11,6 +16,7 @@ import { JobFilters } from "@/components/jobs/JobFilters";
 import { ApplicationCard } from "@/components/jobs/ApplicationCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
+<<<<<<< HEAD
 import { Briefcase, FileText, Bookmark, Wifi, WifiOff } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -24,6 +30,11 @@ import {
 } from "@/hooks/useJobs";
 
 const defaultFilters: JobFiltersType = {
+=======
+import { Briefcase, FileText, Bookmark } from "lucide-react";
+
+const defaultFilters = {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   search: '',
   category: 'all',
   jobType: 'all',
@@ -36,6 +47,7 @@ const defaultFilters: JobFiltersType = {
 export default function Jobs() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+<<<<<<< HEAD
   const [filters, setFilters] = useState<JobFiltersType>(defaultFilters);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -183,6 +195,94 @@ export default function Jobs() {
   }, [user, queryClient]);
 
   // Filter jobs (client-side filtering for additional criteria)
+=======
+  const [filters, setFilters] = useState(defaultFilters);
+  const [selectedJob, setSelectedJob] = useState<any>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [applyOpen, setApplyOpen] = useState(false);
+
+  // Fetch jobs
+  const { data: jobs = [], isLoading: jobsLoading } = useQuery({
+    queryKey: ['jobs', 'active'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('jobs')
+        .select('*')
+        .eq('status', 'active')
+        .order('is_featured', { ascending: false })
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Fetch user's applications
+  const { data: applications = [] } = useQuery({
+    queryKey: ['my-applications', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from('job_applications')
+        .select('*, jobs(title, company_name, company_logo, location, job_type)')
+        .eq('designer_id', user.id)
+        .order('applied_at', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  // Fetch saved jobs
+  const { data: savedJobs = [] } = useQuery({
+    queryKey: ['saved-jobs', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from('saved_jobs')
+        .select('job_id')
+        .eq('designer_id', user.id);
+      if (error) throw error;
+      return data.map(s => s.job_id);
+    },
+    enabled: !!user,
+  });
+
+  // Save/unsave job mutation
+  const saveMutation = useMutation({
+    mutationFn: async (jobId: string) => {
+      if (!user) throw new Error('Must be logged in');
+      const isSaved = savedJobs.includes(jobId);
+      if (isSaved) {
+        await supabase.from('saved_jobs').delete().eq('job_id', jobId).eq('designer_id', user.id);
+      } else {
+        await supabase.from('saved_jobs').insert({ job_id: jobId, designer_id: user.id });
+      }
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['saved-jobs'] }),
+  });
+
+  // Apply mutation
+  const applyMutation = useMutation({
+    mutationFn: async ({ jobId, coverLetter, portfolioUrl }: { jobId: string; coverLetter: string; portfolioUrl: string }) => {
+      if (!user) throw new Error('Must be logged in');
+      const { error } = await supabase.from('job_applications').insert({
+        job_id: jobId,
+        designer_id: user.id,
+        cover_letter: coverLetter,
+        portfolio_url: portfolioUrl,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['my-applications'] });
+      toast.success('Application submitted successfully!');
+      setApplyOpen(false);
+    },
+    onError: () => toast.error('Failed to submit application'),
+  });
+
+  // Filter jobs
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const filteredJobs = useMemo(() => {
     return jobs.filter(job => {
       if (filters.search && !job.title.toLowerCase().includes(filters.search.toLowerCase()) &&
@@ -195,6 +295,7 @@ export default function Jobs() {
     });
   }, [jobs, filters]);
 
+<<<<<<< HEAD
   const appliedJobIds = useMemo(() => 
     applications.map(a => a.job_id),
     [applications]
@@ -205,10 +306,15 @@ export default function Jobs() {
     setNewJobsCount(0);
     queryClient.invalidateQueries({ queryKey: ['jobs'] });
   }, [queryClient]);
+=======
+  const appliedJobIds = applications.map(a => a.job_id);
+  const savedJobsList = jobs.filter(j => savedJobs.includes(j.id));
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   return (
     <AppLayout>
       <div className="container max-w-7xl py-8">
+<<<<<<< HEAD
         <div className="mb-8 flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3">
@@ -235,13 +341,22 @@ export default function Jobs() {
               {newJobsCount} new job{newJobsCount > 1 ? 's' : ''} posted
             </Badge>
           )}
+=======
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">Job Portal</h1>
+          <p className="text-muted-foreground mt-1">Find your next design opportunity</p>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         </div>
 
         <Tabs defaultValue="browse" className="space-y-6">
           <TabsList>
             <TabsTrigger value="browse" className="gap-2"><Briefcase className="h-4 w-4" />Browse Jobs</TabsTrigger>
             <TabsTrigger value="applications" className="gap-2"><FileText className="h-4 w-4" />My Applications ({applications.length})</TabsTrigger>
+<<<<<<< HEAD
             <TabsTrigger value="saved" className="gap-2"><Bookmark className="h-4 w-4" />Saved ({savedJobsList.length})</TabsTrigger>
+=======
+            <TabsTrigger value="saved" className="gap-2"><Bookmark className="h-4 w-4" />Saved ({savedJobs.length})</TabsTrigger>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           </TabsList>
 
           <TabsContent value="browse">
@@ -253,6 +368,7 @@ export default function Jobs() {
                 {jobsLoading ? (
                   Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-40 w-full" />)
                 ) : filteredJobs.length === 0 ? (
+<<<<<<< HEAD
                   <div className="text-center py-12 text-muted-foreground">
                     <p>No jobs found matching your criteria</p>
                     {isRealtimeConnected && (
@@ -262,11 +378,15 @@ export default function Jobs() {
                       </p>
                     )}
                   </div>
+=======
+                  <div className="text-center py-12 text-muted-foreground">No jobs found matching your criteria</div>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 ) : (
                   filteredJobs.map(job => (
                     <JobCard
                       key={job.id}
                       job={job}
+<<<<<<< HEAD
                       isSaved={savedJobIds.includes(job.id)}
                       hasApplied={appliedJobIds.includes(job.id)}
                       onView={(j) => { setSelectedJob(j); setDetailOpen(true); }}
@@ -279,6 +399,12 @@ export default function Jobs() {
                           });
                         }
                       }}
+=======
+                      isSaved={savedJobs.includes(job.id)}
+                      hasApplied={appliedJobIds.includes(job.id)}
+                      onView={(j) => { setSelectedJob(j); setDetailOpen(true); }}
+                      onSave={(id) => saveMutation.mutate(id)}
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                       onApply={(j) => { setSelectedJob(j); setApplyOpen(true); }}
                     />
                   ))
@@ -300,10 +426,14 @@ export default function Jobs() {
           <TabsContent value="saved">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {savedJobsList.length === 0 ? (
+<<<<<<< HEAD
                 <div className="col-span-2 text-center py-12 text-muted-foreground">
                   <p>No saved jobs</p>
                   <p className="text-sm mt-1">Jobs you save will appear here</p>
                 </div>
+=======
+                <div className="col-span-2 text-center py-12 text-muted-foreground">No saved jobs</div>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               ) : (
                 savedJobsList.map(job => (
                   <JobCard
@@ -312,6 +442,7 @@ export default function Jobs() {
                     isSaved={true}
                     hasApplied={appliedJobIds.includes(job.id)}
                     onView={(j) => { setSelectedJob(j); setDetailOpen(true); }}
+<<<<<<< HEAD
                     onSave={(id) => {
                       if (user) {
                         saveMutation.mutate({ 
@@ -321,6 +452,9 @@ export default function Jobs() {
                         });
                       }
                     }}
+=======
+                    onSave={(id) => saveMutation.mutate(id)}
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                     onApply={(j) => { setSelectedJob(j); setApplyOpen(true); }}
                   />
                 ))
@@ -333,6 +467,7 @@ export default function Jobs() {
           job={selectedJob}
           open={detailOpen}
           onOpenChange={setDetailOpen}
+<<<<<<< HEAD
           isSaved={selectedJob ? savedJobIds.includes(selectedJob.id) : false}
           hasApplied={selectedJob ? appliedJobIds.includes(selectedJob.id) : false}
           onSave={(id) => {
@@ -344,6 +479,11 @@ export default function Jobs() {
               });
             }
           }}
+=======
+          isSaved={selectedJob ? savedJobs.includes(selectedJob.id) : false}
+          hasApplied={selectedJob ? appliedJobIds.includes(selectedJob.id) : false}
+          onSave={(id) => saveMutation.mutate(id)}
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           onApply={(j) => { setDetailOpen(false); setApplyOpen(true); }}
         />
 
@@ -353,6 +493,7 @@ export default function Jobs() {
           onOpenChange={setApplyOpen}
           isSubmitting={applyMutation.isPending}
           onSubmit={async (data) => {
+<<<<<<< HEAD
             if (selectedJob && user) {
               await applyMutation.mutateAsync({ 
                 jobId: selectedJob.id, 
@@ -360,6 +501,10 @@ export default function Jobs() {
                 coverLetter: data.cover_letter, 
                 portfolioUrl: data.portfolio_url 
               });
+=======
+            if (selectedJob) {
+              await applyMutation.mutateAsync({ jobId: selectedJob.id, coverLetter: data.cover_letter, portfolioUrl: data.portfolio_url });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             }
           }}
         />

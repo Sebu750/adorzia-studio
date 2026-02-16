@@ -351,7 +351,11 @@ export function TeamSubmissionReview({
           <Button 
             onClick={() => onApprove(buildFeedback())}
             disabled={isLoading}
+<<<<<<< HEAD
             className="bg-success hover:bg-success/90"
+=======
+            className="bg-emerald-600 hover:bg-emerald-700"
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           >
             <CheckCircle2 className="h-4 w-4 mr-2" />
             Approve & Award

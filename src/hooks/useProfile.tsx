@@ -17,16 +17,23 @@ export function useProfile() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+<<<<<<< HEAD
     // Prevent multiple fetches for the same user
     const userId = user?.id;
     if (!userId) {
+=======
+    if (!user) {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       setProfile(null);
       setLoading(false);
       return;
     }
 
+<<<<<<< HEAD
     let isCancelled = false;
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     const fetchProfile = async () => {
       try {
         setLoading(true);
@@ -35,6 +42,7 @@ export function useProfile() {
         const { data: profileData, error: profileError } = await supabase
           .from("profiles")
           .select("*")
+<<<<<<< HEAD
           .eq("user_id", userId)
           .maybeSingle();
         
@@ -42,6 +50,13 @@ export function useProfile() {
         
         if (profileError) throw profileError;
         
+=======
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (profileError) throw profileError;
+
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         if (profileData) {
           // Fetch rank if profile has rank_id
           let rankData = null;
@@ -53,6 +68,7 @@ export function useProfile() {
               .maybeSingle();
             rankData = rank;
           }
+<<<<<<< HEAD
         
           setProfile({ ...profileData, rank: rankData });
         } else {
@@ -88,20 +104,37 @@ export function useProfile() {
         if (!isCancelled) {
           setLoading(false);
         }
+=======
+
+          setProfile({ ...profileData, rank: rankData });
+        } else {
+          setProfile(null);
+        }
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+        setError(err instanceof Error ? err : new Error("Failed to fetch profile"));
+      } finally {
+        setLoading(false);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       }
     };
 
     fetchProfile();
+<<<<<<< HEAD
     
     return () => {
       isCancelled = true;
     };
   }, [user?.id]); // Only depend on user.id, not the entire user object
+=======
+  }, [user]);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!user) return { error: new Error("No user logged in") };
 
     try {
+<<<<<<< HEAD
       console.log("Updating profile for user:", user.id);
       console.log("Updates:", updates);
       
@@ -147,6 +180,18 @@ export function useProfile() {
       return { error: null };
     } catch (err) {
       console.error("Profile update error:", err);
+=======
+      const { error } = await supabase
+        .from("profiles")
+        .update(updates)
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+
+      setProfile((prev) => prev ? { ...prev, ...updates } : null);
+      return { error: null };
+    } catch (err) {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       return { error: err instanceof Error ? err : new Error("Failed to update profile") };
     }
   };

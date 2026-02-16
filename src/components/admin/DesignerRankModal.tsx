@@ -18,7 +18,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
+=======
+import { supabase } from "@/integrations/supabase/client";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useToast } from "@/hooks/use-toast";
 import { Save, X, Loader2, Crown, Sparkles } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
@@ -48,7 +52,11 @@ export function DesignerRankModal({
 
   const [formData, setFormData] = useState({
     rank_id: designer.rank_id || "",
+<<<<<<< HEAD
     style_credits: designer.style_credits || 0,
+=======
+    xp: designer.xp || 0,
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     status: designer.status || "active",
     notes: "",
   });
@@ -58,7 +66,11 @@ export function DesignerRankModal({
   useEffect(() => {
     setFormData({
       rank_id: designer.rank_id || "",
+<<<<<<< HEAD
       style_credits: designer.style_credits || 0,
+=======
+      xp: designer.xp || 0,
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       status: designer.status || "active",
       notes: "",
     });
@@ -70,7 +82,11 @@ export function DesignerRankModal({
         .from("profiles")
         .update({
           rank_id: formData.rank_id || null,
+<<<<<<< HEAD
           style_credits: formData.style_credits,
+=======
+          xp: formData.xp,
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           status: formData.status as "active" | "suspended" | "inactive",
         })
         .eq("id", designer.id);
@@ -143,6 +159,7 @@ export function DesignerRankModal({
             )}
           </div>
 
+<<<<<<< HEAD
           {/* SC */}
           <div className="space-y-2">
             <Label htmlFor="style_credits" className="flex items-center gap-2">
@@ -158,6 +175,23 @@ export function DesignerRankModal({
             />
             <p className="text-xs text-muted-foreground">
               Manually adjust SC for special circumstances
+=======
+          {/* XP Points */}
+          <div className="space-y-2">
+            <Label htmlFor="xp" className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-admin-camel" />
+              XP Points
+            </Label>
+            <Input
+              id="xp"
+              type="number"
+              min={0}
+              value={formData.xp}
+              onChange={(e) => setFormData(prev => ({ ...prev, xp: parseInt(e.target.value) || 0 }))}
+            />
+            <p className="text-xs text-muted-foreground">
+              Manually adjust XP for special circumstances
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             </p>
           </div>
 

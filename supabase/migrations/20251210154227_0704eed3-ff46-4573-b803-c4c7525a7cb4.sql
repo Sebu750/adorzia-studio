@@ -3,12 +3,16 @@
 -- Drop existing overly permissive policies
 DROP POLICY IF EXISTS "System can insert auth logs" ON public.auth_logs;
 DROP POLICY IF EXISTS "System can create notifications" ON public.notifications;
+<<<<<<< HEAD
 DO $$ 
 BEGIN
   IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'portfolio_analytics') THEN
     DROP POLICY IF EXISTS "Anyone can insert analytics" ON public.portfolio_analytics;
   END IF;
 END $$;
+=======
+DROP POLICY IF EXISTS "Anyone can insert analytics" ON public.portfolio_analytics;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- Create more restrictive auth_logs INSERT policy (only authenticated users for their own logs)
 CREATE POLICY "Users can insert own auth logs"
@@ -24,6 +28,7 @@ FOR INSERT
 WITH CHECK (has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'superadmin'::app_role));
 
 -- Create more restrictive portfolio_analytics INSERT policy (only for public portfolios or own portfolios)
+<<<<<<< HEAD
 DO $$ 
 BEGIN
   IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'portfolio_analytics') THEN
@@ -43,6 +48,22 @@ BEGIN
     )';
   END IF;
 END $$;
+=======
+CREATE POLICY "Authenticated users can insert analytics for accessible portfolios"
+ON public.portfolio_analytics
+FOR INSERT
+TO authenticated
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM portfolios p
+    WHERE p.id = portfolio_analytics.portfolio_id
+    AND (
+      p.designer_id = auth.uid()
+      OR (p.status = 'published' AND p.visibility IN ('public', 'marketplace_only'))
+    )
+  )
+);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- Fix 2: Fix team_members and teams self-referencing policy bugs
 

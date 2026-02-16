@@ -1,17 +1,27 @@
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
+<<<<<<< HEAD
 import { Bell, Search, Sun, Moon, Menu, Check, Trash2, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useStudioTheme } from "@/hooks/useStudioTheme";
+=======
+import { Bell, Search, Sun, Moon, Menu } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useTheme } from "next-themes";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,17 +29,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+<<<<<<< HEAD
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
+<<<<<<< HEAD
   const { theme, setTheme } = useStudioTheme();
   const { profile } = useProfile();
   const { user, signOut } = useAuth();
@@ -39,6 +53,13 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   // Get the 2 most recent notifications
   const recentNotifications = notifications.slice(0, 2);
+=======
+  const { theme, setTheme } = useTheme();
+  const { profile } = useProfile();
+  const { user, signOut } = useAuth();
+  const { unreadCount } = useNotifications();
+  const navigate = useNavigate();
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   const getInitials = (name?: string | null, email?: string | null) => {
     if (name) {
@@ -95,6 +116,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <span className="sr-only">Toggle theme</span>
               </Button>
 
+<<<<<<< HEAD
               {/* Notifications - Enhanced Dropdown */}
               <Popover open={notificationsOpen} onOpenChange={setNotificationsOpen}>
                 <PopoverTrigger asChild>
@@ -190,6 +212,23 @@ export function AppLayout({ children }: AppLayoutProps) {
                   </div>
                 </PopoverContent>
               </Popover>
+=======
+              {/* Notifications - Enhanced */}
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="relative h-9 w-9 hover:bg-secondary transition-all duration-200 rounded-lg"
+                onClick={() => navigate("/notifications")}
+              >
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <span className="notification-badge">
+                    {unreadCount > 9 ? "9+" : unreadCount}
+                  </span>
+                )}
+                <span className="sr-only">Notifications</span>
+              </Button>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
               {/* User Avatar Dropdown - Enhanced */}
               <DropdownMenu>

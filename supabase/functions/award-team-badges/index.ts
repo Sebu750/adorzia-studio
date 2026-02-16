@@ -4,7 +4,10 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+<<<<<<< HEAD
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 };
 
 interface BadgeAward {

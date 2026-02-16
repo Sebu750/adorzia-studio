@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
+=======
+import { supabase } from "@/integrations/supabase/client";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import {
   Dialog,
@@ -400,7 +404,11 @@ export function WalkthroughProgressModal({
                           </div>
                         ) : progress.completed_at ? (
                           <span className="text-sm text-muted-foreground">
+<<<<<<< HEAD
                             +{walkthrough.xp_reward || 0} SC
+=======
+                            +{walkthrough.xp_reward || 0}
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                           </span>
                         ) : (
                           <span className="text-sm text-muted-foreground">—</span>
@@ -479,9 +487,15 @@ export function WalkthroughProgressModal({
         <AlertDialog open={showOverrideDialog} onOpenChange={setShowOverrideDialog}>
           <AlertDialogContent>
             <AlertDialogHeader>
+<<<<<<< HEAD
               <AlertDialogTitle>Override SC Award</AlertDialogTitle>
               <AlertDialogDescription>
                 Set a custom SC amount for this user. This will override the default {walkthrough.xp_reward || 0} SC.
+=======
+              <AlertDialogTitle>Override XP Award</AlertDialogTitle>
+              <AlertDialogDescription>
+                Set a custom XP amount for this user. This will override the default {walkthrough.xp_reward || 0} XP.
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="space-y-4 py-4">

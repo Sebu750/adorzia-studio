@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { createClient } from "@supabase/supabase-js";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY_NEWSLETTER");
@@ -5,6 +6,12 @@ if (!RESEND_API_KEY) {
   console.error("RESEND_API_KEY_NEWSLETTER not configured");
   throw new Error("RESEND_API_KEY_NEWSLETTER not configured");
 }
+=======
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -104,7 +111,10 @@ const getWelcomeEmailHtml = () => `
               </p>
               <p style="margin: 8px 0 0; color: #adb5bd; font-size: 11px;">
                 You're receiving this because you subscribed to our newsletter.
+<<<<<<< HEAD
                 <a href="https://adorzia.com/unsubscribe?email=${normalizedEmail}" style="color: #6c757d; text-decoration: underline;">Unsubscribe</a>
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               </p>
             </td>
           </tr>
@@ -208,6 +218,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("New subscriber added:", normalizedEmail);
 
+<<<<<<< HEAD
     // Add subscriber to Resend contact list (General segment)
     let resendContactId: string | null = null;
     try {
@@ -242,12 +253,18 @@ const handler = async (req: Request): Promise<Response> => {
       // Don't fail subscription if Resend contact add fails
     }
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     // Send welcome email via Resend API
     let emailSent = false;
     let emailError: any = null;
     let emailResult: any = null;
     const emailSubject = "Welcome to Adorzia! 🎨";
+<<<<<<< HEAD
     const fromAddress = "hello@mail.adorzia.com";
+=======
+    const fromAddress = "hello@newsletter.adorzia.com";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     
     try {
       const emailResponse = await fetch("https://api.resend.com/emails", {
@@ -292,7 +309,11 @@ const handler = async (req: Request): Promise<Response> => {
       await supabase.from("email_logs").insert({
         subdomain: "newsletter",
         email_type: "welcome",
+<<<<<<< HEAD
         from_address: "hello@mail.adorzia.com",
+=======
+        from_address: fromAddress,
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         to_address: normalizedEmail,
         subject: emailSubject,
         status: emailSent ? "sent" : "failed",
@@ -323,4 +344,8 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
+<<<<<<< HEAD
 Deno.serve(handler);
+=======
+serve(handler);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241

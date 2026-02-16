@@ -1,12 +1,25 @@
 -- Create default superadmin account
 -- Run this migration to create an initial superadmin user for MVP access
+-- IMPORTANT: Set the SUPERADMIN_PASSWORD environment variable before running this migration
+-- Example: SET app.superadmin_password = 'your-secure-password';
 
 DO $$
 DECLARE
   new_user_id UUID := gen_random_uuid();
   admin_email TEXT := 'superadmin@adorzia.com';
-  admin_password TEXT := 'Adorzia2025!Secure';
+  admin_password TEXT;
 BEGIN
+  -- Get password from environment variable or raise error
+  BEGIN
+    admin_password := current_setting('app.superadmin_password', true);
+  EXCEPTION WHEN OTHERS THEN
+    admin_password := NULL;
+  END;
+  
+  -- Validate password is set
+  IF admin_password IS NULL OR length(admin_password) < 12 THEN
+    RAISE EXCEPTION 'SUPERADMIN_PASSWORD environment variable must be set with a password of at least 12 characters. Set it with: SET app.superadmin_password = ''your-secure-password'';';
+  END IF;
   -- Check if user already exists
   IF EXISTS (SELECT 1 FROM auth.users WHERE email = admin_email) THEN
     RAISE NOTICE 'Superadmin user already exists with email: %', admin_email;
@@ -80,8 +93,8 @@ BEGIN
 
     RAISE NOTICE 'Default superadmin created successfully!';
     RAISE NOTICE 'Email: %', admin_email;
-    RAISE NOTICE 'Password: %', admin_password;
     RAISE NOTICE 'User ID: %', new_user_id;
+    RAISE NOTICE 'IMPORTANT: Change the password immediately after first login!';
   END IF;
 END $$;
 

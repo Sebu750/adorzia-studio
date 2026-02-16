@@ -2,7 +2,10 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+<<<<<<< HEAD
 import { SafeHTMLRenderer } from "@/components/ui/SafeHTMLRenderer";
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import {
   ArrowRight,
   Target,
@@ -477,10 +480,16 @@ export default function About() {
                       {/* Article Content */}
                       <div className="md:col-span-2 p-8">
                         <p className="text-muted-foreground font-medium mb-4 text-lg">{article.excerpt}</p>
+<<<<<<< HEAD
                         <SafeHTMLRenderer 
                           html={article.content}
                           className="text-sm text-muted-foreground/80 leading-relaxed whitespace-pre-line line-clamp-6"
                         />
+=======
+                        <div className="text-sm text-muted-foreground/80 leading-relaxed whitespace-pre-line line-clamp-6">
+                          {article.content}
+                        </div>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                         <Button variant="link" className="mt-4 p-0 h-auto text-primary">
                           Read Full Article <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 
@@ -8,6 +9,13 @@ if (!resendApiKey) {
 }
 
 const resend = new Resend(resendApiKey);
+=======
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { Resend } from "https://esm.sh/resend@2.0.0";
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -29,7 +37,11 @@ const categoryLabels: Record<string, string> = {
   other: "📝 Other",
 };
 
+<<<<<<< HEAD
 Deno.serve(async (req: Request): Promise<Response> => {
+=======
+serve(async (req: Request): Promise<Response> => {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -143,7 +155,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
       });
 
       emailResponse = await resend.emails.send({
+<<<<<<< HEAD
         from: "Adorzia Feedback <feedback@mail.adorzia.com>",
+=======
+        from: "Adorzia Feedback <noreply@feedback.adorzia.com>",
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         to: [adminEmail],
         subject: emailSubject,
         html: `
@@ -219,7 +235,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
       await supabaseServiceRole.from("email_logs").insert({
         subdomain: "feedback",
         email_type: "feedback_notification",
+<<<<<<< HEAD
         from_address: "feedback@mail.adorzia.com",
+=======
+        from_address: "noreply@feedback.adorzia.com",
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         to_address: adminEmail,
         subject: emailSubject,
         status: emailSent ? "sent" : "failed",

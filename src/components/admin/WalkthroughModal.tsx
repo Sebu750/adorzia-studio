@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
+=======
+import { supabase } from "@/integrations/supabase/client";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import {
   Dialog,
@@ -293,7 +297,11 @@ export function WalkthroughModal({ open, onOpenChange, walkthrough }: Walkthroug
                 </div>
 
                 <div className="space-y-2">
+<<<<<<< HEAD
                   <Label htmlFor="xp">SC Reward</Label>
+=======
+                  <Label htmlFor="xp">XP Reward</Label>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   <Input
                     id="xp"
                     type="number"

@@ -105,7 +105,11 @@ const testimonials = [
 
 export default function Home() {
   return (
+<<<<<<< HEAD
     <PublicLayout showPreloader={false}>
+=======
+    <PublicLayout showPreloader={true}>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       <SEOHead 
         title="Adorzia Studio - Design, Create, Collaborate"
         description="The central platform for fashion, textile, and jewelry designers. Create with Styleboxes, build your portfolio, collaborate with teams, and publish to the marketplace."

@@ -22,7 +22,11 @@ const DELIVERABLE_CATEGORIES: { value: DetailedDeliverable['category']; label: s
   { value: 'illustration', label: 'Illustration', icon: <Image className="h-4 w-4" />, color: 'bg-purple-500/20 text-purple-600' },
   { value: 'technical', label: 'Technical', icon: <Code className="h-4 w-4" />, color: 'bg-blue-500/20 text-blue-600' },
   { value: 'documentation', label: 'Documentation', icon: <FileText className="h-4 w-4" />, color: 'bg-amber-500/20 text-amber-600' },
+<<<<<<< HEAD
   { value: 'digital', label: 'Digital', icon: <Package className="h-4 w-4" />, color: 'bg-success/20 text-success' },
+=======
+  { value: 'digital', label: 'Digital', icon: <Package className="h-4 w-4" />, color: 'bg-emerald-500/20 text-emerald-600' },
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   { value: 'sample', label: 'Sample', icon: <Package className="h-4 w-4" />, color: 'bg-pink-500/20 text-pink-600' },
 ];
 

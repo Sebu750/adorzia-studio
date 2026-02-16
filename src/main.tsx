@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+<<<<<<< HEAD
 
 // Production error handlers - minimal logging
 window.addEventListener("error", (event) => {
@@ -43,3 +44,21 @@ try {
     </div>
   `;
 }
+=======
+import { ErrorBoundary } from "./components/ErrorBoundary";
+
+// Global error handlers for debugging
+window.addEventListener("error", (event) => {
+  console.error("[Global Error]", event.error);
+});
+
+window.addEventListener("unhandledrejection", (event) => {
+  console.error("[Unhandled Promise Rejection]", event.reason);
+});
+
+createRoot(document.getElementById("root")!).render(
+  <ErrorBoundary>
+    <App />
+  </ErrorBoundary>
+);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241

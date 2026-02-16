@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
@@ -38,7 +42,11 @@ const logStep = (step: string, details?: any) => {
   console.log(`[CALC-COMMISSION] ${step}${detailsStr}`);
 };
 
+<<<<<<< HEAD
 Deno.serve(async (req) => {
+=======
+serve(async (req) => {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -89,6 +97,7 @@ Deno.serve(async (req) => {
     // Check for founder bonus
     let founderBonus = 0;
     
+<<<<<<< HEAD
     // First check the profile's founder_tier (this takes precedence after purchase completion)
     if (profile.founder_tier) {
       if (profile.founder_tier === 'f1') {
@@ -120,6 +129,28 @@ Deno.serve(async (req) => {
         founderBonus = FOUNDER_BONUSES[rankName] || 0;
         logStep("Founder bonus applied from foundation purchase", { rankName, founderBonus });
       }
+=======
+    // Check if user has a foundation rank purchase
+    const { data: foundationPurchase } = await supabaseClient
+      .from('foundation_purchases')
+      .select(`
+        rank_id,
+        ranks (
+          name,
+          bonus_percentage
+        )
+      `)
+      .eq('designer_id', designer_id)
+      .eq('status', 'completed')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (foundationPurchase?.ranks) {
+      const rankName = (foundationPurchase.ranks as any).name;
+      founderBonus = FOUNDER_BONUSES[rankName] || 0;
+      logStep("Founder bonus applied", { rankName, founderBonus });
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     }
 
     // Calculate total commission (capped at 50%)

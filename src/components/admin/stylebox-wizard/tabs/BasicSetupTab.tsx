@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+<<<<<<< HEAD
 import { Badge } from "@/components/ui/badge";
 import { useWizardContext } from "../WizardContext";
 import { 
@@ -19,6 +20,11 @@ import {
 } from "@/lib/stylebox-template";
 import type { Database } from "@/integrations/supabase/types";
 import { Sparkles } from "lucide-react";
+=======
+import { useWizardContext } from "../WizardContext";
+import { SEASON_OPTIONS } from "@/lib/stylebox-template";
+import type { Database } from "@/integrations/supabase/types";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 type StyleboxDifficulty = Database["public"]["Enums"]["stylebox_difficulty"];
 type DesignerCategory = Database["public"]["Enums"]["designer_category"];
@@ -37,6 +43,7 @@ export function BasicSetupTab() {
       </div>
 
       {/* Title */}
+<<<<<<< HEAD
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="md:col-span-2 space-y-2">
           <Label htmlFor="title">Title *</Label>
@@ -101,6 +108,17 @@ export function BasicSetupTab() {
             </SelectContent>
           </Select>
         </div>
+=======
+      <div className="space-y-2">
+        <Label htmlFor="title">Title *</Label>
+        <Input
+          id="title"
+          value={formData.title}
+          onChange={(e) => updateFormData("title", e.target.value)}
+          placeholder="e.g., Urban Minimalist Capsule Collection"
+          className="max-w-xl"
+        />
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       </div>
 
       {/* Season & Collection Size */}
@@ -176,9 +194,15 @@ export function BasicSetupTab() {
       </div>
 
       {/* XP & Status */}
+<<<<<<< HEAD
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label htmlFor="xp_reward">SC Reward</Label>
+=======
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="xp_reward">XP Reward</Label>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           <Input
             id="xp_reward"
             type="number"
@@ -204,6 +228,7 @@ export function BasicSetupTab() {
             </SelectContent>
           </Select>
         </div>
+<<<<<<< HEAD
         <div className="space-y-2">
           <Label>Visibility Tags</Label>
           <Select
@@ -222,6 +247,8 @@ export function BasicSetupTab() {
             </SelectContent>
           </Select>
         </div>
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       </div>
 
       {/* Short Description */}

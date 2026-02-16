@@ -19,6 +19,7 @@ import {
   FileCheck,
   Clock,
   Sparkles,
+<<<<<<< HEAD
   Zap,
   BarChart3,
   Bell,
@@ -28,11 +29,20 @@ import {
 import { motion } from "framer-motion";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { supabaseAdmin } from "@/integrations/supabase/admin-client";
+=======
+  Zap
+} from "lucide-react";
+import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useToast } from "@/hooks/use-toast";
 
 const AdminDashboard = () => {
   const { toast } = useToast();
+<<<<<<< HEAD
   const { user, isSuperadmin } = useAdminAuth();
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     totalDesigners: 0,
@@ -43,10 +53,13 @@ const AdminDashboard = () => {
     liveProducts: 0,
     styleboxCompletions: 0,
     approvalRate: 0,
+<<<<<<< HEAD
     pendingSubmissions: 0,
     avgCompletionTime: 0,
     topPerformingStylebox: "",
     submissionTrend: [] as { date: string; count: number }[],
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   });
   const [pendingPublications, setPendingPublications] = useState<any[]>([]);
   const [topDesigners, setTopDesigners] = useState<any[]>([]);
@@ -55,23 +68,36 @@ const AdminDashboard = () => {
   const fetchData = useCallback(async () => {
     try {
       // Fetch designer count
+<<<<<<< HEAD
       const { count: designerCount } = await supabaseAdmin
+=======
+      const { count: designerCount } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("profiles")
         .select("*", { count: "exact", head: true });
 
       // Fetch active styleboxes
+<<<<<<< HEAD
       const { count: styleboxCount } = await supabaseAdmin
+=======
+      const { count: styleboxCount } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("styleboxes")
         .select("*", { count: "exact", head: true })
         .eq("status", "active");
 
       // Fetch pending publications
+<<<<<<< HEAD
       const { count: pendingCount, data: pendingData } = await supabaseAdmin
+=======
+      const { count: pendingCount, data: pendingData } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("portfolio_publications")
         .select("*, portfolios(designer_id, title, category)")
         .eq("status", "pending")
         .limit(5);
 
+<<<<<<< HEAD
       // Fetch pending Stylebox submissions
       const { count: pendingSubmissions } = await supabaseAdmin
         .from("stylebox_submissions")
@@ -88,12 +114,18 @@ const AdminDashboard = () => {
         .gte("submitted_at", thirtyDaysAgo.toISOString())
         .order("submitted_at");
 
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       // Fetch monthly revenue
       const startOfMonth = new Date();
       startOfMonth.setDate(1);
       startOfMonth.setHours(0, 0, 0, 0);
       
+<<<<<<< HEAD
       const { data: earningsData } = await supabaseAdmin
+=======
+      const { data: earningsData } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("earnings")
         .select("amount")
         .gte("created_at", startOfMonth.toISOString());
@@ -101,24 +133,40 @@ const AdminDashboard = () => {
       const monthlyRevenue = earningsData?.reduce((sum, e) => sum + Number(e.amount), 0) || 0;
 
       // Fetch live products
+<<<<<<< HEAD
       const { count: productsCount } = await supabaseAdmin
+=======
+      const { count: productsCount } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("marketplace_products")
         .select("*", { count: "exact", head: true })
         .eq("status", "live");
 
       // Fetch founder count from foundation_purchases
+<<<<<<< HEAD
       const { count: founderCount } = await supabaseAdmin
+=======
+      const { count: founderCount } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("foundation_purchases")
         .select("*", { count: "exact", head: true })
         .eq("status", "completed");
 
       // Fetch approved and total submissions for approval rate
+<<<<<<< HEAD
       const { count: approvedCount } = await supabaseAdmin
+=======
+      const { count: approvedCount } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("stylebox_submissions")
         .select("*", { count: "exact", head: true })
         .eq("status", "approved");
 
+<<<<<<< HEAD
       const { count: totalSubmissions } = await supabaseAdmin
+=======
+      const { count: totalSubmissions } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("stylebox_submissions")
         .select("*", { count: "exact", head: true });
 
@@ -126,6 +174,7 @@ const AdminDashboard = () => {
         ? Math.round(((approvedCount || 0) / totalSubmissions) * 100) 
         : 0;
 
+<<<<<<< HEAD
       // Calculate average completion time
       const { data: completedSubmissions } = await supabaseAdmin
         .from("stylebox_submissions")
@@ -163,12 +212,23 @@ const AdminDashboard = () => {
         .from("profiles")
         .select("id, name, avatar_url, style_credits, rank_id")
         .order("style_credits", { ascending: false })
+=======
+      // Fetch top designers with real earnings data
+      const { data: designers } = await supabase
+        .from("profiles")
+        .select("id, name, avatar_url, xp, rank_id")
+        .order("xp", { ascending: false })
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .limit(5);
 
       // Fetch earnings for each designer
       const designersWithEarnings = await Promise.all(
         (designers || []).map(async (d) => {
+<<<<<<< HEAD
           const { data: earnings } = await supabaseAdmin
+=======
+          const { data: earnings } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             .from("earnings")
             .select("amount")
             .eq("designer_id", d.id)
@@ -176,13 +236,21 @@ const AdminDashboard = () => {
           
           const revenue = earnings?.reduce((sum, e) => sum + Number(e.amount), 0) || 0;
 
+<<<<<<< HEAD
           const { count: completedCount } = await supabaseAdmin
+=======
+          const { count: completedCount } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             .from("stylebox_submissions")
             .select("*", { count: "exact", head: true })
             .eq("designer_id", d.id)
             .eq("status", "approved");
 
+<<<<<<< HEAD
           const { count: publishedCount } = await supabaseAdmin
+=======
+          const { count: publishedCount } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             .from("marketplace_products")
             .select("*", { count: "exact", head: true })
             .eq("designer_id", d.id)
@@ -209,10 +277,13 @@ const AdminDashboard = () => {
         liveProducts: productsCount || 0,
         styleboxCompletions: approvedCount || 0,
         approvalRate,
+<<<<<<< HEAD
         pendingSubmissions: pendingSubmissions || 0,
         avgCompletionTime,
         topPerformingStylebox: "The Modular Kantha", // Placeholder - would fetch from DB
         submissionTrend: submissionTrend || [],
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       });
 
       // Format pending publications
@@ -234,7 +305,11 @@ const AdminDashboard = () => {
       await fetchRecentActivities();
 
     } catch (err) {
+<<<<<<< HEAD
       // Error handling without logging in production
+=======
+      console.error("Error fetching admin data:", err);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     } finally {
       setLoading(false);
     }
@@ -244,7 +319,11 @@ const AdminDashboard = () => {
     const activities: any[] = [];
 
     // Fetch new designers (recent signups)
+<<<<<<< HEAD
     const { data: newDesigners } = await supabaseAdmin
+=======
+    const { data: newDesigners } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       .from("profiles")
       .select("id, name, created_at")
       .order("created_at", { ascending: false })
@@ -261,7 +340,11 @@ const AdminDashboard = () => {
     });
 
     // Fetch recent stylebox completions
+<<<<<<< HEAD
     const { data: completions } = await supabaseAdmin
+=======
+    const { data: completions } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       .from("stylebox_submissions")
       .select("id, submitted_at, stylebox_id, styleboxes(title)")
       .eq("status", "approved")
@@ -279,7 +362,11 @@ const AdminDashboard = () => {
     });
 
     // Fetch recent publication requests
+<<<<<<< HEAD
     const { data: publications } = await supabaseAdmin
+=======
+    const { data: publications } = await supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       .from("portfolio_publications")
       .select("id, submitted_at, portfolios(title)")
       .eq("status", "pending")
@@ -305,7 +392,11 @@ const AdminDashboard = () => {
     fetchData();
 
     // Set up realtime subscription for new designers
+<<<<<<< HEAD
     const channel = supabaseAdmin
+=======
+    const channel = supabase
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       .channel('admin-dashboard-realtime')
       .on(
         'postgres_changes',
@@ -324,6 +415,7 @@ const AdminDashboard = () => {
           fetchData();
         }
       )
+<<<<<<< HEAD
       .on(
         'postgres_changes',
         {
@@ -349,6 +441,12 @@ const AdminDashboard = () => {
 
     return () => {
       supabaseAdmin.removeChannel(channel);
+=======
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     };
   }, [fetchData, toast]);
 
@@ -398,6 +496,7 @@ const AdminDashboard = () => {
         animate="visible"
       >
         {/* Header */}
+<<<<<<< HEAD
         <motion.header variants={itemVariants} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-admin-muted/60 to-admin-muted/30 p-6 sm:p-8 border-4 border-red-500" role="banner">
           <div className="absolute inset-0 bg-dot-pattern opacity-20" />
           <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -423,6 +522,25 @@ const AdminDashboard = () => {
                 {stats.pendingPublications > 0 && (
                   <Badge className="ml-1 bg-admin-background/20 text-admin-background h-5 px-1.5 text-xs rounded-full">{stats.pendingPublications}</Badge>
                 )}
+=======
+        <motion.header variants={itemVariants} className="relative overflow-hidden rounded-2xl bg-admin-muted/50 p-6 sm:p-8" role="banner">
+          <div className="absolute inset-0 bg-dot-pattern opacity-30" />
+          <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <h1 className="text-display-xl text-admin-foreground">Dashboard</h1>
+                <Badge variant="outline" className="h-6 px-2.5 text-xs font-medium bg-success/10 text-success border-success/20">Live</Badge>
+              </div>
+              <p className="text-caption text-base text-admin-muted-foreground">Overview of Adorzia Studio operations</p>
+            </div>
+            <div className="flex gap-3">
+              <Button variant="outline" className="gap-2 h-10 px-4 btn-press border-admin-border text-admin-foreground hover:bg-admin-muted">
+                <Clock className="h-4 w-4" />Last 7 Days
+              </Button>
+              <Button className="gap-2 h-10 px-4 bg-admin-foreground text-admin-background hover:bg-admin-foreground/90 btn-press shadow-md">
+                <FileCheck className="h-4 w-4" />Review Queue
+                <Badge className="ml-1 bg-admin-background/20 text-admin-background h-5 px-1.5">{stats.pendingPublications}</Badge>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               </Button>
             </div>
           </div>
@@ -431,12 +549,19 @@ const AdminDashboard = () => {
         {/* Primary Stats */}
         <motion.section variants={itemVariants} className="space-y-4">
           <div className="flex items-center gap-2">
+<<<<<<< HEAD
             <div className="h-8 w-8 rounded-lg bg-admin-muted/60 flex items-center justify-center">
               <Sparkles className="h-4 w-4 text-admin-muted-foreground" />
             </div>
             <h2 className="text-[11px] font-bold uppercase tracking-wider text-admin-muted-foreground">Key Metrics</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+=======
+            <Sparkles className="h-4 w-4 text-admin-muted-foreground" />
+            <h2 className="text-label text-admin-muted-foreground">Key Metrics</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             <AdminStatCard title="Total Designers" value={stats.totalDesigners.toLocaleString()} subtitle="Active accounts" icon={Users} trend={{ value: 12, isPositive: true }} variant="wine" />
             <AdminStatCard title="Active StyleBoxes" value={stats.activeStyleboxes.toLocaleString()} subtitle="In progress" icon={Box} trend={{ value: 8, isPositive: true }} variant="camel" />
             <AdminStatCard title="Pending Publications" value={stats.pendingPublications.toString()} subtitle="Awaiting review" icon={FolderOpen} variant="warning" />
@@ -445,6 +570,7 @@ const AdminDashboard = () => {
         </motion.section>
 
         {/* Secondary Stats */}
+<<<<<<< HEAD
         <motion.section variants={itemVariants} className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
           {secondaryStats.map((stat) => (
             <Card key={stat.label} className="group bg-admin-card border-admin-border/60 rounded-xl shadow-sm hover:shadow-md hover:border-admin-border transition-all duration-300 hover:-translate-y-0.5">
@@ -455,12 +581,25 @@ const AdminDashboard = () => {
                 <div className="min-w-0">
                   <p className="text-xl sm:text-2xl font-bold text-admin-foreground truncate">{stat.value}</p>
                   <p className="text-[10px] sm:text-xs font-semibold text-admin-muted-foreground uppercase tracking-wider truncate">{stat.label}</p>
+=======
+        <motion.section variants={itemVariants} className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+          {secondaryStats.map((stat) => (
+            <Card key={stat.label} hover className="group card-interactive bg-admin-card border-admin-border">
+              <CardContent className="p-4 sm:p-5 flex items-center gap-4">
+                <div className={`h-11 w-11 sm:h-12 sm:w-12 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105 ${stat.color}`}>
+                  <stat.icon className="h-5 w-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="stat-value text-2xl truncate text-admin-foreground">{stat.value}</p>
+                  <p className="text-caption text-xs truncate text-admin-muted-foreground">{stat.label}</p>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 </div>
               </CardContent>
             </Card>
           ))}
         </motion.section>
 
+<<<<<<< HEAD
         {/* Stylebox Analytics Section */}
         <motion.section variants={itemVariants} className="space-y-4">
           <div className="flex items-center gap-2">
@@ -559,6 +698,15 @@ const AdminDashboard = () => {
             <h2 className="text-[11px] font-bold uppercase tracking-wider text-admin-muted-foreground">Action Center</h2>
           </div>
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-5">
+=======
+        {/* Action Center */}
+        <motion.section variants={itemVariants} className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Zap className="h-4 w-4 text-admin-muted-foreground" />
+            <h2 className="text-label text-admin-muted-foreground">Action Center</h2>
+          </div>
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 sm:gap-6">
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             <div className="xl:col-span-2">
               <PendingQueueCard items={pendingPublications} title="Pending Publications" viewAllLink="/admin/publications" />
             </div>
@@ -567,6 +715,7 @@ const AdminDashboard = () => {
         </motion.section>
 
         {/* Bottom Section */}
+<<<<<<< HEAD
         <motion.section variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
           <RecentActivityCard activities={recentActivities} />
           <Card className="overflow-hidden bg-admin-card border-admin-border/60 rounded-xl shadow-sm">
@@ -580,6 +729,21 @@ const AdminDashboard = () => {
                   <Button key={action.label} variant="ghost" className={`h-auto py-5 flex-col gap-2.5 rounded-xl border border-admin-border/60 bg-admin-muted/30 text-admin-foreground transition-all duration-200 hover:bg-admin-muted hover:border-admin-border active:scale-[0.98] ${action.color}`}>
                     <action.icon className="h-5 w-5" />
                     <span className="text-[10px] font-bold uppercase tracking-wider">{action.label}</span>
+=======
+        <motion.section variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+          <RecentActivityCard activities={recentActivities} />
+          <Card className="overflow-hidden bg-admin-card border-admin-border">
+            <CardHeader className="pb-4 border-b border-admin-border">
+              <CardTitle className="text-lg font-semibold text-admin-foreground">Quick Actions</CardTitle>
+              <p className="text-caption text-admin-muted-foreground">Common administrative tasks</p>
+            </CardHeader>
+            <CardContent className="p-4 sm:p-5">
+              <div className="grid grid-cols-2 gap-3">
+                {quickActions.map((action) => (
+                  <Button key={action.label} variant="ghost" className={`h-auto py-5 flex-col gap-3 rounded-xl border border-admin-border bg-admin-muted/30 text-admin-foreground transition-all btn-press ${action.color}`}>
+                    <action.icon className="h-6 w-6" />
+                    <span className="text-sm font-medium">{action.label}</span>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   </Button>
                 ))}
               </div>

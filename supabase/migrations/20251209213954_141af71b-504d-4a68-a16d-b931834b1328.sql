@@ -275,16 +275,25 @@ ALTER TABLE public.notifications ENABLE ROW LEVEL SECURITY;
 -- User Roles: Only admins can manage
 CREATE POLICY "Admins can manage user_roles" ON public.user_roles
   FOR ALL TO authenticated
+<<<<<<< HEAD
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
 
 CREATE POLICY "Users can view own roles" ON public.user_roles
   FOR SELECT TO authenticated
   USING (user_id = (select auth.uid()));
+=======
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+
+CREATE POLICY "Users can view own roles" ON public.user_roles
+  FOR SELECT TO authenticated
+  USING (user_id = auth.uid());
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- Ranks: Public read, admin write
 CREATE POLICY "Anyone can view ranks" ON public.ranks FOR SELECT USING (true);
 CREATE POLICY "Admins can manage ranks" ON public.ranks
   FOR ALL TO authenticated
+<<<<<<< HEAD
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
 
 -- Profiles: Users can manage own, admins can view all
@@ -304,12 +313,34 @@ CREATE POLICY "Users can view own badges" ON public.user_badges
 CREATE POLICY "Admins can manage badges" ON public.user_badges
   FOR ALL TO authenticated
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
+=======
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+
+-- Profiles: Users can manage own, admins can view all
+CREATE POLICY "Users can view own profile" ON public.profiles
+  FOR SELECT TO authenticated USING (user_id = auth.uid());
+CREATE POLICY "Admins can view all profiles" ON public.profiles
+  FOR SELECT TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+CREATE POLICY "Users can update own profile" ON public.profiles
+  FOR UPDATE TO authenticated USING (user_id = auth.uid());
+CREATE POLICY "Users can insert own profile" ON public.profiles
+  FOR INSERT TO authenticated WITH CHECK (user_id = auth.uid());
+
+-- User Badges
+CREATE POLICY "Users can view own badges" ON public.user_badges
+  FOR SELECT TO authenticated USING (user_id = auth.uid());
+CREATE POLICY "Admins can manage badges" ON public.user_badges
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- StyleBoxes: Active ones public, admins manage all
 CREATE POLICY "Anyone can view active styleboxes" ON public.styleboxes
   FOR SELECT USING (status = 'active');
 CREATE POLICY "Admins can manage styleboxes" ON public.styleboxes
   FOR ALL TO authenticated
+<<<<<<< HEAD
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
 
 -- StyleBox Submissions
@@ -327,10 +358,30 @@ CREATE POLICY "Designers can manage own portfolios" ON public.portfolios
 CREATE POLICY "Admins can view all portfolios" ON public.portfolios
   FOR SELECT TO authenticated
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
+=======
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+
+-- StyleBox Submissions
+CREATE POLICY "Designers can view own submissions" ON public.stylebox_submissions
+  FOR SELECT TO authenticated USING (designer_id = auth.uid());
+CREATE POLICY "Designers can create submissions" ON public.stylebox_submissions
+  FOR INSERT TO authenticated WITH CHECK (designer_id = auth.uid());
+CREATE POLICY "Admins can manage submissions" ON public.stylebox_submissions
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+
+-- Portfolios
+CREATE POLICY "Designers can manage own portfolios" ON public.portfolios
+  FOR ALL TO authenticated USING (designer_id = auth.uid());
+CREATE POLICY "Admins can view all portfolios" ON public.portfolios
+  FOR SELECT TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- Portfolio Publications
 CREATE POLICY "Designers can view own publications" ON public.portfolio_publications
   FOR SELECT TO authenticated
+<<<<<<< HEAD
   USING (EXISTS (SELECT 1 FROM public.portfolios WHERE id = portfolio_id AND designer_id = (select auth.uid())));
 CREATE POLICY "Designers can create publications" ON public.portfolio_publications
   FOR INSERT TO authenticated
@@ -338,36 +389,68 @@ CREATE POLICY "Designers can create publications" ON public.portfolio_publicatio
 CREATE POLICY "Admins can manage publications" ON public.portfolio_publications
   FOR ALL TO authenticated
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
+=======
+  USING (EXISTS (SELECT 1 FROM public.portfolios WHERE id = portfolio_id AND designer_id = auth.uid()));
+CREATE POLICY "Designers can create publications" ON public.portfolio_publications
+  FOR INSERT TO authenticated
+  WITH CHECK (EXISTS (SELECT 1 FROM public.portfolios WHERE id = portfolio_id AND designer_id = auth.uid()));
+CREATE POLICY "Admins can manage publications" ON public.portfolio_publications
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- Marketplace Products: Published ones public
 CREATE POLICY "Anyone can view live products" ON public.marketplace_products
   FOR SELECT USING (status = 'live');
 CREATE POLICY "Designers can manage own products" ON public.marketplace_products
+<<<<<<< HEAD
   FOR ALL TO authenticated USING (designer_id = (select auth.uid()));
 CREATE POLICY "Admins can manage all products" ON public.marketplace_products
   FOR ALL TO authenticated
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
+=======
+  FOR ALL TO authenticated USING (designer_id = auth.uid());
+CREATE POLICY "Admins can manage all products" ON public.marketplace_products
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- Product Sales: Designers see own, admins see all
 CREATE POLICY "Designers can view own sales" ON public.product_sales
   FOR SELECT TO authenticated
+<<<<<<< HEAD
   USING (EXISTS (SELECT 1 FROM public.marketplace_products WHERE id = product_id AND designer_id = (select auth.uid())));
 CREATE POLICY "Admins can manage sales" ON public.product_sales
   FOR ALL TO authenticated
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
+=======
+  USING (EXISTS (SELECT 1 FROM public.marketplace_products WHERE id = product_id AND designer_id = auth.uid()));
+CREATE POLICY "Admins can manage sales" ON public.product_sales
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- Teams
 CREATE POLICY "Team members can view their teams" ON public.teams
   FOR SELECT TO authenticated
+<<<<<<< HEAD
   USING (EXISTS (SELECT 1 FROM public.team_members WHERE team_id = id AND user_id = (select auth.uid())) OR created_by = (select auth.uid()));
 CREATE POLICY "Users can create teams" ON public.teams
   FOR INSERT TO authenticated WITH CHECK (created_by = (select auth.uid()));
 CREATE POLICY "Team creators can update" ON public.teams
   FOR UPDATE TO authenticated USING (created_by = (select auth.uid()));
+=======
+  USING (EXISTS (SELECT 1 FROM public.team_members WHERE team_id = id AND user_id = auth.uid()) OR created_by = auth.uid());
+CREATE POLICY "Users can create teams" ON public.teams
+  FOR INSERT TO authenticated WITH CHECK (created_by = auth.uid());
+CREATE POLICY "Team creators can update" ON public.teams
+  FOR UPDATE TO authenticated USING (created_by = auth.uid());
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- Team Members
 CREATE POLICY "Members can view team members" ON public.team_members
   FOR SELECT TO authenticated
+<<<<<<< HEAD
   USING (EXISTS (SELECT 1 FROM public.team_members tm WHERE tm.team_id = team_id AND tm.user_id = (select auth.uid())));
 CREATE POLICY "Team leads can manage members" ON public.team_members
   FOR ALL TO authenticated
@@ -386,23 +469,52 @@ CREATE POLICY "Designers can view own payouts" ON public.payouts
 CREATE POLICY "Admins can manage payouts" ON public.payouts
   FOR ALL TO authenticated
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
+=======
+  USING (EXISTS (SELECT 1 FROM public.team_members tm WHERE tm.team_id = team_id AND tm.user_id = auth.uid()));
+CREATE POLICY "Team leads can manage members" ON public.team_members
+  FOR ALL TO authenticated
+  USING (EXISTS (SELECT 1 FROM public.team_members tm WHERE tm.team_id = team_id AND tm.user_id = auth.uid() AND tm.role = 'lead'));
+
+-- Earnings
+CREATE POLICY "Designers can view own earnings" ON public.earnings
+  FOR SELECT TO authenticated USING (designer_id = auth.uid());
+CREATE POLICY "Admins can manage earnings" ON public.earnings
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+
+-- Payouts
+CREATE POLICY "Designers can view own payouts" ON public.payouts
+  FOR SELECT TO authenticated USING (designer_id = auth.uid());
+CREATE POLICY "Admins can manage payouts" ON public.payouts
+  FOR ALL TO authenticated
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- Jobs: Public read
 CREATE POLICY "Anyone can view jobs" ON public.jobs FOR SELECT USING (true);
 CREATE POLICY "Admins can manage jobs" ON public.jobs
   FOR ALL TO authenticated
+<<<<<<< HEAD
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
+=======
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- Job Applications
 CREATE POLICY "Designers can manage own applications" ON public.job_applications
   FOR ALL TO authenticated USING (designer_id = auth.uid());
 CREATE POLICY "Admins can view all applications" ON public.job_applications
   FOR SELECT TO authenticated
+<<<<<<< HEAD
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
+=======
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 -- Admin Logs: Only admins
 CREATE POLICY "Admins can view logs" ON public.admin_logs
   FOR SELECT TO authenticated
+<<<<<<< HEAD
   USING (public.has_role((select auth.uid()), 'admin') OR public.has_role((select auth.uid()), 'superadmin'));
 CREATE POLICY "Admins can create logs" ON public.admin_logs
   FOR INSERT TO authenticated
@@ -413,6 +525,18 @@ CREATE POLICY "Users can view own notifications" ON public.notifications
   FOR SELECT TO authenticated USING (user_id = (select auth.uid()));
 CREATE POLICY "Users can update own notifications" ON public.notifications
   FOR UPDATE TO authenticated USING (user_id = (select auth.uid()));
+=======
+  USING (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+CREATE POLICY "Admins can create logs" ON public.admin_logs
+  FOR INSERT TO authenticated
+  WITH CHECK (public.has_role(auth.uid(), 'admin') OR public.has_role(auth.uid(), 'superadmin'));
+
+-- Notifications
+CREATE POLICY "Users can view own notifications" ON public.notifications
+  FOR SELECT TO authenticated USING (user_id = auth.uid());
+CREATE POLICY "Users can update own notifications" ON public.notifications
+  FOR UPDATE TO authenticated USING (user_id = auth.uid());
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 CREATE POLICY "System can create notifications" ON public.notifications
   FOR INSERT TO authenticated WITH CHECK (true);
 

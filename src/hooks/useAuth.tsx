@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,6 +14,13 @@ export interface CustomerProfile {
   created_at: string;
   updated_at?: string;
 }
+=======
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
+
+type AppRole = 'designer' | 'admin' | 'superadmin' | null;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 interface AuthContextType {
   user: User | null;
@@ -20,9 +28,13 @@ interface AuthContextType {
   loading: boolean;
   isAdmin: boolean;
   isDesigner: boolean;
+<<<<<<< HEAD
   isCustomer: boolean;
   userRole: AppRole;
   customerProfile: CustomerProfile | null;
+=======
+  userRole: AppRole;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   isSigningOut: boolean;
   signUp: (email: string, password: string, name: string, category: string, bio?: string, skills?: string[]) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -36,6 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<AppRole>(null);
+<<<<<<< HEAD
   const [customerProfile, setCustomerProfile] = useState<CustomerProfile | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
   
@@ -87,12 +100,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
   }, []);
+=======
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const isAdmin = userRole === 'admin' || userRole === 'superadmin';
+  const isDesigner = userRole === 'designer' || isAdmin;
+
+  // Stable ref to prevent stale closures
+  const userRef = React.useRef<User | null>(null);
+  userRef.current = user;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   // Multi-tab sync for auth state - only handle explicit sign-outs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
+<<<<<<< HEAD
       if (!isMountedRef.current) return;
       
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       // Only sync if token was explicitly removed (sign-out)
       if (e.key?.includes('supabase.auth.token') && e.newValue === null && userRef.current) {
         setUser(null);
@@ -105,19 +131,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+<<<<<<< HEAD
   // Main auth state listener
   useEffect(() => {
     isMountedRef.current = true;
     
     let authCheckTimeout: NodeJS.Timeout;
+=======
+  useEffect(() => {
+    let isMounted = true;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, currentSession) => {
+<<<<<<< HEAD
         if (!isMountedRef.current) return;
         
         // Ignore TOKEN_REFRESHED events that might cause flickering
         if (event === 'TOKEN_REFRESHED') {
+=======
+        if (!isMounted) return;
+        
+        // Ignore TOKEN_REFRESHED events that might cause flickering
+        if (event === 'TOKEN_REFRESHED' && session) {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           setSession(currentSession);
           return;
         }
@@ -129,6 +167,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUserRole(null);
           setLoading(false);
         } else {
+<<<<<<< HEAD
           // Debounce role checking to prevent rapid calls
           clearTimeout(authCheckTimeout);
           authCheckTimeout = setTimeout(() => {
@@ -136,13 +175,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               checkUserRole(currentSession.user.id);
             }
           }, 100);
+=======
+          // Check role with setTimeout to prevent deadlock
+          setTimeout(() => {
+            if (isMounted) {
+              checkUserRole(currentSession.user.id);
+            }
+          }, 0);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         }
       }
     );
 
+<<<<<<< HEAD
     // THEN check for existing session (only on mount)
     supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
       if (!isMountedRef.current) return;
+=======
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+      if (!isMounted) return;
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       
       setSession(existingSession);
       setUser(existingSession?.user ?? null);
@@ -152,6 +205,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setLoading(false);
       }
+<<<<<<< HEAD
     }).catch((error) => {
       if (isMountedRef.current) {
         setLoading(false);
@@ -167,6 +221,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []); // Empty dependency array - only run on mount
 
   const signUp = useCallback(async (email: string, password: string, name: string, category: string, bio?: string, skills?: string[]) => {
+=======
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const checkUserRole = async (userId: string) => {
+    try {
+      // Get the highest privilege role for the user
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId);
+      
+      if (error) {
+        console.error('Error checking user role:', error);
+        setUserRole(null);
+      } else if (data && data.length > 0) {
+        // Priority: superadmin > admin > designer
+        const roles = data.map(r => r.role);
+        if (roles.includes('superadmin')) {
+          setUserRole('superadmin');
+        } else if (roles.includes('admin')) {
+          setUserRole('admin');
+        } else if (roles.includes('designer')) {
+          setUserRole('designer');
+        } else {
+          setUserRole(null);
+        }
+      } else {
+        setUserRole(null);
+      }
+    } catch {
+      setUserRole(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signUp = async (email: string, password: string, name: string, category: string, bio?: string, skills?: string[]) => {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     try {
       const redirectUrl = `${window.location.origin}/`;
       
@@ -178,7 +276,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           data: {
             name,
             category,
+<<<<<<< HEAD
             signup_type: 'designer', // Used by trigger to assign correct role
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           },
         },
       });
@@ -207,9 +308,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       return { error: error as Error };
     }
+<<<<<<< HEAD
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
+=======
+  };
+
+  const signIn = async (email: string, password: string) => {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -239,11 +346,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       return { error: error as Error };
     }
+<<<<<<< HEAD
   }, []);
 
   const signOut = useCallback(async () => {
     if (isSigningOut) return;
     
+=======
+  };
+
+  const signOut = async () => {
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     setIsSigningOut(true);
     try {
       if (user) {
@@ -256,6 +369,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Use local scope to only sign out from studio session, not admin
       await supabase.auth.signOut({ scope: 'local' });
       setUserRole(null);
+<<<<<<< HEAD
     } catch (error) {
       // Silently handle signout errors
     } finally {
@@ -293,6 +407,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const isAdmin = userRole === 'admin' || userRole === 'superadmin';
   const isDesigner = userRole === 'designer' || isAdmin;
   const isCustomer = userRole === 'customer';
+=======
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   return (
     <AuthContext.Provider value={{ 
@@ -301,9 +421,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading, 
       isAdmin, 
       isDesigner, 
+<<<<<<< HEAD
       isCustomer,
       userRole,
       customerProfile,
+=======
+      userRole,
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       isSigningOut,
       signUp, 
       signIn, 

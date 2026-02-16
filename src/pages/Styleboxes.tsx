@@ -4,7 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+<<<<<<< HEAD
 import { SafeHTMLRenderer } from "@/components/ui/SafeHTMLRenderer";
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import {
   Select,
   SelectContent,
@@ -337,11 +340,19 @@ function StyleboxLibraryCard({ stylebox }: { stylebox: any }) {
         {/* Bottom content */}
         <div className="absolute bottom-0 left-0 right-0 p-4">
           <div className="flex items-center gap-2 mb-2">
+<<<<<<< HEAD
             <Badge variant={stylebox.difficulty as SCDifficulty || "easy"} className="text-xs shadow-sm">
               {(stylebox.difficulty?.charAt(0).toUpperCase() + stylebox.difficulty?.slice(1)) || "Easy"}
             </Badge>
             <Badge variant="secondary" className="text-xs bg-background/90 backdrop-blur-sm border-0">
               {(stylebox.category?.charAt(0).toUpperCase() + stylebox.category?.slice(1)) || "Fashion"}
+=======
+            <Badge variant={stylebox.difficulty as SCDifficulty} className="text-xs shadow-sm">
+              {stylebox.difficulty.charAt(0).toUpperCase() + stylebox.difficulty.slice(1)}
+            </Badge>
+            <Badge variant="secondary" className="text-xs bg-background/90 backdrop-blur-sm border-0">
+              {stylebox.category.charAt(0).toUpperCase() + stylebox.category.slice(1)}
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             </Badge>
           </div>
           <h3 className="font-display text-lg font-semibold text-primary-foreground leading-tight line-clamp-2">
@@ -358,11 +369,17 @@ function StyleboxLibraryCard({ stylebox }: { stylebox: any }) {
       <CardContent className="p-4 space-y-3">
         {/* Description */}
         {stylebox.description && (
+<<<<<<< HEAD
           <SafeHTMLRenderer 
             html={stylebox.description}
             className="text-sm text-muted-foreground line-clamp-2"
             tagName="p"
           />
+=======
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {stylebox.description}
+          </p>
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         )}
         
         {/* SC and Deadline */}

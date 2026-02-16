@@ -9,11 +9,15 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
+<<<<<<< HEAD
     // Set up the primary timeout
+=======
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     const timer = setTimeout(() => {
       setIsVisible(false);
       onComplete?.();
     }, 2000);
+<<<<<<< HEAD
     
     // Also complete if component unmounts early
     return () => {
@@ -24,6 +28,10 @@ const Preloader = ({ onComplete }: PreloaderProps) => {
         onComplete?.();
       }
     };
+=======
+
+    return () => clearTimeout(timer);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

@@ -62,7 +62,11 @@ DROP POLICY IF EXISTS "Admins can manage publication reviews" ON public.publicat
 CREATE POLICY "Admins can manage publication reviews"
 ON public.publication_reviews
 FOR ALL
+<<<<<<< HEAD
 USING (has_role((select auth.uid()), 'admin'::app_role) OR has_role((select auth.uid()), 'superadmin'::app_role));
+=======
+USING (has_role(auth.uid(), 'admin'::app_role) OR has_role(auth.uid(), 'superadmin'::app_role));
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 DROP POLICY IF EXISTS "Designers can view reviews of their publications" ON public.publication_reviews;
 CREATE POLICY "Designers can view reviews of their publications"
@@ -72,7 +76,11 @@ USING (EXISTS (
   SELECT 1 FROM portfolio_publications pp
   JOIN portfolios p ON p.id = pp.portfolio_id
   WHERE pp.id = publication_reviews.publication_id
+<<<<<<< HEAD
   AND p.designer_id = (select auth.uid())
+=======
+  AND p.designer_id = auth.uid()
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 ));
 
 -- Create indexes for faster publication queries

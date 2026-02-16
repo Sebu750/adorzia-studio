@@ -40,7 +40,11 @@ export function ArticlesTable({ articles, onEdit }: ArticlesTableProps) {
 
   const getStatusColor = (status: string) => {
     switch (status) {
+<<<<<<< HEAD
       case "published": return "bg-success/10 text-success border-success/20";
+=======
+      case "published": return "bg-emerald-500/10 text-emerald-600 border-emerald-500/20";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       case "draft": return "bg-amber-500/10 text-amber-600 border-amber-500/20";
       case "archived": return "bg-slate-500/10 text-slate-600 border-slate-500/20";
       default: return "bg-slate-500/10 text-slate-600 border-slate-500/20";

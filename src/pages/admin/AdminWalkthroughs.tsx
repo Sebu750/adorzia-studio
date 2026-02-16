@@ -58,7 +58,11 @@ import {
   Star
 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
+=======
+import { supabase } from "@/integrations/supabase/client";
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useToast } from "@/hooks/use-toast";
 import { WalkthroughModal } from "@/components/admin/WalkthroughModal";
 import { WalkthroughProgressModal } from "@/components/admin/WalkthroughProgressModal";
@@ -69,7 +73,11 @@ type Stylebox = Database["public"]["Tables"]["styleboxes"]["Row"];
 type WalkthroughProgress = Database["public"]["Tables"]["walkthrough_progress"]["Row"];
 
 const difficultyColors: Record<string, string> = {
+<<<<<<< HEAD
   free: "bg-success/20 text-success border-success/30",
+=======
+  free: "bg-emerald-500/20 text-emerald-600 border-emerald-500/30",
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   easy: "bg-blue-500/20 text-blue-600 border-blue-500/30",
   medium: "bg-amber-500/20 text-amber-600 border-amber-500/30",
   hard: "bg-orange-500/20 text-orange-600 border-orange-500/30",
@@ -176,6 +184,10 @@ export default function AdminWalkthroughs() {
         description: "Failed to archive walkthrough.",
         variant: "destructive",
       });
+<<<<<<< HEAD
+=======
+      console.error(error);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     },
   });
 
@@ -201,6 +213,10 @@ export default function AdminWalkthroughs() {
         description: "Failed to restore walkthrough.",
         variant: "destructive",
       });
+<<<<<<< HEAD
+=======
+      console.error(error);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     },
   });
 
@@ -228,6 +244,10 @@ export default function AdminWalkthroughs() {
         description: "Failed to update featured status.",
         variant: "destructive",
       });
+<<<<<<< HEAD
+=======
+      console.error(error);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     },
   });
 
@@ -257,6 +277,10 @@ export default function AdminWalkthroughs() {
         description: "Failed to duplicate walkthrough.",
         variant: "destructive",
       });
+<<<<<<< HEAD
+=======
+      console.error(error);
+>>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     },
   });
 

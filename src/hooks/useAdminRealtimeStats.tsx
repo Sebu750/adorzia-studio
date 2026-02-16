@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
-<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
-=======
-import { supabase } from "@/integrations/supabase/client";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useQuery } from "@tanstack/react-query";
 
 interface RealtimeStats {
@@ -32,7 +28,6 @@ export function useAdminRealtimeStats() {
   const { data: stats, refetch: refetchStats } = useQuery({
     queryKey: ["admin-realtime-stats"],
     queryFn: async (): Promise<RealtimeStats> => {
-<<<<<<< HEAD
       const { data, error } = await supabase.rpc('get_admin_dashboard_stats');
       
       if (error) throw error;
@@ -48,70 +43,6 @@ export function useAdminRealtimeStats() {
         pendingPublications: stats.pending_publications || 0,
         totalRevenue: stats.total_revenue || 0,
         revenueThisMonth: stats.revenue_this_month || 0,
-=======
-      const now = new Date();
-      const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-      const startOfWeek = new Date(now.setDate(now.getDate() - 7)).toISOString();
-      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-
-      // Total designers
-      const { count: totalDesigners } = await supabase
-        .from("profiles")
-        .select("*", { count: "exact", head: true });
-
-      // New signups today
-      const { count: newSignupsToday } = await supabase
-        .from("profiles")
-        .select("*", { count: "exact", head: true })
-        .gte("created_at", startOfDay);
-
-      // New signups this week
-      const { count: newSignupsWeek } = await supabase
-        .from("profiles")
-        .select("*", { count: "exact", head: true })
-        .gte("created_at", startOfWeek);
-
-      // New signups this month
-      const { count: newSignupsMonth } = await supabase
-        .from("profiles")
-        .select("*", { count: "exact", head: true })
-        .gte("created_at", startOfMonth);
-
-      // Pending submissions
-      const { count: pendingSubmissions } = await supabase
-        .from("stylebox_submissions")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "submitted");
-
-      // Pending publications
-      const { count: pendingPublications } = await supabase
-        .from("portfolio_publications")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "pending");
-
-      // Total revenue
-      const { data: allEarnings } = await supabase
-        .from("earnings")
-        .select("amount");
-      const totalRevenue = allEarnings?.reduce((sum, e) => sum + Number(e.amount), 0) || 0;
-
-      // Revenue this month
-      const { data: monthEarnings } = await supabase
-        .from("earnings")
-        .select("amount")
-        .gte("created_at", startOfMonth);
-      const revenueThisMonth = monthEarnings?.reduce((sum, e) => sum + Number(e.amount), 0) || 0;
-
-      return {
-        totalDesigners: totalDesigners || 0,
-        newSignupsToday: newSignupsToday || 0,
-        newSignupsWeek: newSignupsWeek || 0,
-        newSignupsMonth: newSignupsMonth || 0,
-        pendingSubmissions: pendingSubmissions || 0,
-        pendingPublications: pendingPublications || 0,
-        totalRevenue,
-        revenueThisMonth,
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       };
     },
     refetchInterval: 30000, // Refetch every 30 seconds

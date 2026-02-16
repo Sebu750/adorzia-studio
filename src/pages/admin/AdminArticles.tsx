@@ -77,13 +77,8 @@ export default function AdminArticles() {
           </Card>
           <Card>
             <CardContent className="flex items-center gap-3 p-4">
-<<<<<<< HEAD
               <div className="p-2 rounded-lg bg-success/10">
                 <Eye className="h-5 w-5 text-success" />
-=======
-              <div className="p-2 rounded-lg bg-emerald-500/10">
-                <Eye className="h-5 w-5 text-emerald-500" />
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.published}</p>

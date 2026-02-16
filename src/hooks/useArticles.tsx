@@ -1,9 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-<<<<<<< HEAD
 import { supabaseAdmin } from "@/integrations/supabase/admin-client";
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useToast } from "@/hooks/use-toast";
 
 export interface Article {
@@ -37,11 +34,7 @@ export function useArticles(filters: ArticleFilters = {}) {
   return useQuery({
     queryKey: ["articles", filters],
     queryFn: async () => {
-<<<<<<< HEAD
       let query = supabaseAdmin
-=======
-      let query = supabase
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("articles")
         .select("*")
         .order("created_at", { ascending: false });
@@ -109,11 +102,7 @@ export function useCreateArticle() {
 
   return useMutation({
     mutationFn: async (article: Partial<Article>) => {
-<<<<<<< HEAD
       const { data, error } = await supabaseAdmin
-=======
-      const { data, error } = await supabase
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("articles")
         .insert(article as any)
         .select()
@@ -137,11 +126,7 @@ export function useUpdateArticle() {
 
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<Article> }) => {
-<<<<<<< HEAD
       const { error } = await supabaseAdmin
-=======
-      const { error } = await supabase
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("articles")
         .update(data)
         .eq("id", id);
@@ -163,11 +148,7 @@ export function useDeleteArticle() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-<<<<<<< HEAD
       const { error } = await supabaseAdmin
-=======
-      const { error } = await supabase
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         .from("articles")
         .delete()
         .eq("id", id);

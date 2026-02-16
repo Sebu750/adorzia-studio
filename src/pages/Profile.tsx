@@ -7,10 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-<<<<<<< HEAD
 import { SafeHTMLRenderer } from "@/components/ui/SafeHTMLRenderer";
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { 
   Crown, 
   Edit, 
@@ -35,26 +32,17 @@ import { RANKS, RankTier } from "@/lib/ranks";
 import { RankOverview } from "@/components/rank/RankOverview";
 import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
-<<<<<<< HEAD
 import { useDesignerProducts } from "@/hooks/useDesignerProducts";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 import { useNavigate, Link } from "react-router-dom";
-=======
-import { supabase } from "@/integrations/supabase/client";
-import { formatDistanceToNow } from "date-fns";
-import { useNavigate } from "react-router-dom";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { ProfileEditModal } from "@/components/profile/ProfileEditModal";
 
 const Profile = () => {
   const { user } = useAuth();
   const { profile, loading } = useProfile();
   const navigate = useNavigate();
-<<<<<<< HEAD
   const { data: marketplaceProducts = [], isLoading: productsLoading } = useDesignerProducts(user?.id);
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const [achievements, setAchievements] = useState<any[]>([]);
   const [portfolioProjects, setPortfolioProjects] = useState<any[]>([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -134,11 +122,7 @@ const Profile = () => {
 
       setStats({
         styleboxes: styleboxCount || 0,
-<<<<<<< HEAD
         xpPoints: profile?.style_credits || 0,
-=======
-        xpPoints: profile?.xp || 0,
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         dayStreak: 0, // Would need separate tracking
         achievementsCount: `${unlockedCount}/${totalCount}`,
         productsSold,
@@ -171,11 +155,7 @@ const Profile = () => {
       <AppLayout>
         <div className="p-6 lg:p-8 space-y-8">
           <Card>
-<<<<<<< HEAD
             <Skeleton className="h-32 w-full" />
-=======
-            <div className="h-32 bg-gradient-accent" />
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             <CardContent className="relative px-6 pb-6">
               <div className="flex flex-col md:flex-row md:items-end gap-4 -mt-12">
                 <Skeleton className="h-24 w-24 rounded-full" />
@@ -186,13 +166,8 @@ const Profile = () => {
               </div>
             </CardContent>
           </Card>
-<<<<<<< HEAD
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-=======
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            {[1, 2, 3, 4, 5].map((i) => (
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               <Skeleton key={i} className="h-24 rounded-xl" />
             ))}
           </div>
@@ -206,7 +181,6 @@ const Profile = () => {
       <div className="p-6 lg:p-8 space-y-8">
         {/* Profile Header */}
         <Card className="overflow-hidden">
-<<<<<<< HEAD
           {profile?.banner_image ? (
             <div className="h-32 relative overflow-hidden">
               <img 
@@ -218,9 +192,6 @@ const Profile = () => {
           ) : (
             <div className="h-32 bg-gradient-accent" />
           )}
-=======
-          <div className="h-32 bg-gradient-accent" />
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           <CardContent className="relative px-6 pb-6">
             <div className="flex flex-col md:flex-row md:items-end gap-4 -mt-12">
               <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
@@ -246,7 +217,6 @@ const Profile = () => {
                     {RANKS[currentRank]?.revenueShare || 10}% Share
                   </Badge>
                 </div>
-<<<<<<< HEAD
                 {profile?.bio ? (
                   <SafeHTMLRenderer 
                     html={profile.bio}
@@ -258,11 +228,6 @@ const Profile = () => {
                     {`${profile?.category || "Fashion"} Designer`}
                   </p>
                 )}
-=======
-                <p className="text-muted-foreground mt-1">
-                  {profile?.bio || `${profile?.category || "Fashion"} Designer`}
-                </p>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               </div>
               <Button 
                 variant="outline" 
@@ -294,22 +259,14 @@ const Profile = () => {
         </Card>
 
         {/* Stats Row */}
-<<<<<<< HEAD
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-=======
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           {[
             { label: "Styleboxes", value: stats.styleboxes.toString(), icon: Box },
             { label: "XP Points", value: stats.xpPoints.toLocaleString(), icon: Star },
             { label: "Day Streak", value: stats.dayStreak.toString(), icon: Flame },
             { label: "Achievements", value: stats.achievementsCount, icon: Trophy },
-<<<<<<< HEAD
             { label: "Published", value: marketplaceProducts.length.toString(), icon: Target },
             { label: "Products Sold", value: stats.productsSold.toString(), icon: Award },
-=======
-            { label: "Products Sold", value: stats.productsSold.toString(), icon: Target },
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           ].map((stat, index) => (
             <Card key={index}>
               <CardContent className="p-4 text-center">
@@ -411,17 +368,10 @@ const Profile = () => {
 
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-<<<<<<< HEAD
                       <span>SC Progress</span>
                       <span className="text-muted-foreground">{profile?.style_credits || 0} SC</span>
                     </div>
                     <Progress value={Math.min((profile?.style_credits || 0) / 100, 100)} className="h-2" />
-=======
-                      <span>XP Progress</span>
-                      <span className="text-muted-foreground">{profile?.xp || 0} XP</span>
-                    </div>
-                    <Progress value={Math.min((profile?.xp || 0) / 100, 100)} className="h-2" />
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   </div>
                 </CardContent>
               </Card>
@@ -500,7 +450,6 @@ const Profile = () => {
                 <CardTitle>Published Products</CardTitle>
               </CardHeader>
               <CardContent>
-<<<<<<< HEAD
                 {productsLoading ? (
                   <div className="flex items-center justify-center py-8">
                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
@@ -593,15 +542,6 @@ const Profile = () => {
                     })}
                   </div>
                 )}
-=======
-                <div className="text-center py-8 text-muted-foreground">
-                  <Target className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                  <p>No published products yet</p>
-                  <p className="text-sm mt-1">
-                    Complete styleboxes and submit your work to get featured!
-                  </p>
-                </div>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               </CardContent>
             </Card>
           </TabsContent>

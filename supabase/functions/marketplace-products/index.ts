@@ -3,7 +3,6 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-<<<<<<< HEAD
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-forwarded-proto, x-real-ip',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
   'Access-Control-Max-Age': '86400', // 24 hours
@@ -19,17 +18,10 @@ const createResponse = (body: unknown, status = 200) => {
 };
 
 const logStep = (step: string, details?: unknown) => {
-=======
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
-const logStep = (step: string, details?: any) => {
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   console.log(`[MARKETPLACE-PRODUCTS] ${step}`, details ? JSON.stringify(details) : '');
 };
 
 serve(async (req) => {
-<<<<<<< HEAD
   // OPTIONS preflight always succeeds with proper CORS headers
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: corsHeaders });
@@ -44,15 +36,6 @@ serve(async (req) => {
       return createResponse({ error: 'Server configuration error' }, 500);
     }
     
-=======
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
-
-  try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const url = new URL(req.url);
@@ -77,16 +60,9 @@ serve(async (req) => {
         .from('marketplace_products')
         .select(`
           *,
-<<<<<<< HEAD
           category:marketplace_categories(id, name, slug)
         `, { count: 'exact' })
         .eq('status', 'live');
-=======
-          designer:profiles!marketplace_products_designer_id_fkey(id, name, avatar_url),
-          category:marketplace_categories(id, name, slug)
-        `, { count: 'exact' })
-        .eq('status', 'active');
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
       if (category) {
         query = query.eq('category_id', category);
@@ -137,20 +113,12 @@ serve(async (req) => {
 
       if (error) {
         logStep('Error fetching products', error);
-<<<<<<< HEAD
         return createResponse({ error: error.message }, 500);
-=======
-        throw error;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       }
 
       logStep('Products fetched', { count, page, limit });
 
-<<<<<<< HEAD
       return createResponse({
-=======
-      return new Response(JSON.stringify({
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         products,
         pagination: {
           page,
@@ -158,11 +126,6 @@ serve(async (req) => {
           total: count,
           totalPages: Math.ceil((count || 0) / limit),
         },
-<<<<<<< HEAD
-=======
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       });
     }
 
@@ -171,30 +134,16 @@ serve(async (req) => {
       const slug = url.searchParams.get('slug');
 
       if (!productId && !slug) {
-<<<<<<< HEAD
         return createResponse({ error: 'Product ID or slug required' }, 400);
-=======
-        return new Response(JSON.stringify({ error: 'Product ID or slug required' }), {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       }
 
       let query = supabase
         .from('marketplace_products')
         .select(`
           *,
-<<<<<<< HEAD
           category:marketplace_categories(id, name, slug)
         `)
         .eq('status', 'live');
-=======
-          designer:profiles!marketplace_products_designer_id_fkey(id, name, avatar_url, bio),
-          category:marketplace_categories(id, name, slug)
-        `)
-        .eq('status', 'active');
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
       if (productId) {
         query = query.eq('id', productId);
@@ -206,14 +155,7 @@ serve(async (req) => {
 
       if (error) {
         logStep('Error fetching product', error);
-<<<<<<< HEAD
         return createResponse({ error: 'Product not found' }, 404);
-=======
-        return new Response(JSON.stringify({ error: 'Product not found' }), {
-          status: 404,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       }
 
       // Increment view count
@@ -222,7 +164,6 @@ serve(async (req) => {
         .update({ view_count: (product.view_count || 0) + 1 })
         .eq('id', product.id);
 
-<<<<<<< HEAD
       // Fetch related products - NJAL Logic: Prioritize same designer
       const { data: sameDesignerProducts } = await supabase
         .from('marketplace_products')
@@ -247,17 +188,6 @@ serve(async (req) => {
         relatedProducts = [...relatedProducts, ...(categoryProducts || [])];
       }
 
-=======
-      // Fetch related products
-      const { data: relatedProducts } = await supabase
-        .from('marketplace_products')
-        .select('id, title, price, images, designer_id, average_rating')
-        .eq('status', 'active')
-        .eq('category_id', product.category_id)
-        .neq('id', product.id)
-        .limit(4);
-
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       // Fetch reviews
       const { data: reviews } = await supabase
         .from('marketplace_reviews')
@@ -272,19 +202,10 @@ serve(async (req) => {
 
       logStep('Product fetched', { id: product.id });
 
-<<<<<<< HEAD
       return createResponse({
         product,
         relatedProducts: relatedProducts || [],
         reviews: reviews || [],
-=======
-      return new Response(JSON.stringify({
-        product,
-        relatedProducts: relatedProducts || [],
-        reviews: reviews || [],
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       });
     }
 
@@ -295,19 +216,11 @@ serve(async (req) => {
         .eq('is_active', true)
         .order('display_order');
 
-<<<<<<< HEAD
       if (error) {
         return createResponse({ error: error.message }, 500);
       }
 
       return createResponse({ categories });
-=======
-      if (error) throw error;
-
-      return new Response(JSON.stringify({ categories }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     }
 
     if (action === 'collections') {
@@ -325,7 +238,6 @@ serve(async (req) => {
 
       const { data: collections, error } = await query;
 
-<<<<<<< HEAD
       if (error) {
         return createResponse({ error: error.message }, 500);
       }
@@ -334,30 +246,10 @@ serve(async (req) => {
     }
 
     return createResponse({ error: 'Invalid action' }, 400);
-=======
-      if (error) throw error;
-
-      return new Response(JSON.stringify({ collections }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-
-    return new Response(JSON.stringify({ error: 'Invalid action' }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     logStep('Error', { message: errorMessage });
-<<<<<<< HEAD
     return createResponse({ error: errorMessage }, 500);
-=======
-    return new Response(JSON.stringify({ error: errorMessage }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   }
 });

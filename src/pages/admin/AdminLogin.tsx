@@ -11,11 +11,7 @@ import { z } from "zod";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
-<<<<<<< HEAD
   password: z.string().min(8, "Password must be at least 8 characters"),
-=======
-  password: z.string().min(6, "Password must be at least 6 characters"),
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 });
 
 export default function AdminLogin() {
@@ -26,7 +22,6 @@ export default function AdminLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
 
-<<<<<<< HEAD
   // Handle redirect after login - check admin access
   useEffect(() => {
     if (!loading && user) {
@@ -42,14 +37,6 @@ export default function AdminLogin() {
       }
     }
   }, [loading, user, isAdmin, navigate, toast]);
-=======
-  // Redirect if already logged in as admin
-  useEffect(() => {
-    if (!loading && user && isAdmin) {
-      navigate("/admin");
-    }
-  }, [loading, user, isAdmin, navigate]);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,19 +55,9 @@ export default function AdminLogin() {
           variant: "destructive",
         });
       } else {
-<<<<<<< HEAD
         // Success - auth context will check role and redirect via useEffect
         toast({ title: "Login successful", description: "Checking admin access..." });
         // Don't navigate here - let useEffect handle it after role check
-=======
-        // Check if user has admin role - this will be verified by the auth context
-        toast({ title: "Checking admin access..." });
-        
-        // Give time for role check
-        setTimeout(() => {
-          navigate("/admin");
-        }, 500);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       }
     } catch (error) {
       if (error instanceof z.ZodError) {

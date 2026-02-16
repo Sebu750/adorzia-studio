@@ -18,19 +18,12 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
-=======
-import { supabase } from "@/integrations/supabase/client";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useToast } from "@/hooks/use-toast";
 import { Save, Send, X, Loader2 } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 import type { Json } from "@/integrations/supabase/types";
-<<<<<<< HEAD
 import { sanitizeTitle, sanitizeInput } from "@/lib/input-sanitizer";
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 type Stylebox = Database["public"]["Tables"]["styleboxes"]["Row"];
 type StyleboxInsert = Database["public"]["Tables"]["styleboxes"]["Insert"];
@@ -156,15 +149,11 @@ export function StyleboxModal({ open, onOpenChange, stylebox }: StyleboxModalPro
   });
 
   const handleSubmit = (publishNow: boolean) => {
-<<<<<<< HEAD
     const sanitizedTitle = sanitizeTitle(formData.title);
     const sanitizedDescription = sanitizeInput(formData.description);
     const sanitizedBrief = sanitizeInput(formData.brief);
     
     if (!sanitizedTitle.trim()) {
-=======
-    if (!formData.title.trim()) {
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       toast({
         title: "Validation error",
         description: "Title is required.",
@@ -174,30 +163,17 @@ export function StyleboxModal({ open, onOpenChange, stylebox }: StyleboxModalPro
     }
 
     let briefJson: Json = null;
-<<<<<<< HEAD
     if (sanitizedBrief.trim()) {
       try {
         briefJson = JSON.parse(sanitizedBrief);
       } catch {
         briefJson = { content: sanitizedBrief };
-=======
-    if (formData.brief.trim()) {
-      try {
-        briefJson = JSON.parse(formData.brief);
-      } catch {
-        briefJson = { content: formData.brief };
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       }
     }
 
     const data = {
-<<<<<<< HEAD
       title: sanitizedTitle.trim(),
       description: sanitizedDescription.trim() || null,
-=======
-      title: formData.title.trim(),
-      description: formData.description.trim() || null,
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       category: formData.category,
       difficulty: formData.difficulty,
       xp_reward: formData.xp_reward,
@@ -286,11 +262,7 @@ export function StyleboxModal({ open, onOpenChange, stylebox }: StyleboxModalPro
           {/* XP & Status Row */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-<<<<<<< HEAD
               <Label htmlFor="xp">SC Reward</Label>
-=======
-              <Label htmlFor="xp">XP Reward</Label>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               <Input
                 id="xp"
                 type="number"

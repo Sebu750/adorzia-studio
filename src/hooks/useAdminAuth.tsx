@@ -1,17 +1,9 @@
-<<<<<<< HEAD
 import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback, useRef } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabaseAdmin } from '@/integrations/supabase/admin-client';
 
 // MVP: Single role - superadmin only
 type AdminRole = 'superadmin' | null;
-=======
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabaseAdmin } from '@/integrations/supabase/admin-client';
-
-type AdminRole = 'admin' | 'superadmin' | null;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 interface AdminAuthContextType {
   user: User | null;
@@ -33,7 +25,6 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [adminRole, setAdminRole] = useState<AdminRole>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
-<<<<<<< HEAD
   
   // Refs to prevent stale closures
   const userRef = useRef<User | null>(null);
@@ -93,24 +84,12 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     // Force sign out from THIS isolated storage to prevent Designer session hijacking the Admin portal
     await supabaseAdmin.auth.signOut({ scope: 'local' });
   }, []);
-=======
-
-  const isAdmin = adminRole === 'admin' || adminRole === 'superadmin';
-  const isSuperadmin = adminRole === 'superadmin';
-
-  // Stable ref to prevent stale closures
-  const userRef = React.useRef<User | null>(null);
-  userRef.current = user;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   // Multi-tab sync for admin auth state - only handle explicit sign-outs
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
-<<<<<<< HEAD
       if (!isMountedRef.current) return;
       
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       // Only sync if admin token was explicitly removed (sign-out)
       if (e.key?.includes('admin:') && e.key?.includes('auth-token') && e.newValue === null && userRef.current) {
         setUser(null);
@@ -123,32 +102,20 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-<<<<<<< HEAD
   // Main admin auth state listener - only run once on mount
   useEffect(() => {
     isMountedRef.current = true;
     
     let authCheckTimeout: NodeJS.Timeout;
     let isInitialized = false;
-=======
-  useEffect(() => {
-    let isMounted = true;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabaseAdmin.auth.onAuthStateChange(
       (event, currentSession) => {
-<<<<<<< HEAD
         if (!isMountedRef.current) return;
         
         // Ignore TOKEN_REFRESHED events that might cause flickering
         if (event === 'TOKEN_REFRESHED') {
-=======
-        if (!isMounted) return;
-        
-        // Ignore TOKEN_REFRESHED events that might cause flickering
-        if (event === 'TOKEN_REFRESHED' && session) {
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           setSession(currentSession);
           return;
         }
@@ -159,7 +126,6 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
         if (!currentSession?.user) {
           setAdminRole(null);
           setLoading(false);
-<<<<<<< HEAD
         } else if (!isInitialized || event === 'SIGNED_IN') {
           // Only check role on initial load or explicit sign-in
           clearTimeout(authCheckTimeout);
@@ -168,31 +134,15 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
               checkAdminRole(currentSession.user.id);
             }
           }, 100);
-=======
-        } else {
-          // Check role with setTimeout to prevent deadlock
-          setTimeout(() => {
-            if (isMounted) {
-              checkAdminRole(currentSession.user.id);
-            }
-          }, 0);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         }
       }
     );
 
-<<<<<<< HEAD
     // THEN check for existing session (only on mount)
     supabaseAdmin.auth.getSession().then(({ data: { session: existingSession } }) => {
       if (!isMountedRef.current) return;
       
       isInitialized = true;
-=======
-    // THEN check for existing session
-    supabaseAdmin.auth.getSession().then(({ data: { session: existingSession } }) => {
-      if (!isMounted) return;
-      
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       setSession(existingSession);
       setUser(existingSession?.user ?? null);
       
@@ -201,7 +151,6 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
       } else {
         setLoading(false);
       }
-<<<<<<< HEAD
     }).catch((error) => {
       if (isMountedRef.current) {
         setLoading(false);
@@ -217,49 +166,6 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
   }, []); // Empty deps - only run on mount, auth state listener handles updates
 
   const signIn = useCallback(async (email: string, password: string) => {
-=======
-    });
-
-    return () => {
-      isMounted = false;
-      subscription.unsubscribe();
-    };
-  }, []);
-
-  const checkAdminRole = async (userId: string) => {
-    try {
-      // Get admin/superadmin roles only for the user
-      const { data, error } = await supabaseAdmin
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId);
-      
-      if (error) {
-        console.error('Error checking admin role:', error);
-        setAdminRole(null);
-      } else if (data && data.length > 0) {
-        // Priority: superadmin > admin
-        const roles = data.map(r => r.role);
-        if (roles.includes('superadmin')) {
-          setAdminRole('superadmin');
-        } else if (roles.includes('admin')) {
-          setAdminRole('admin');
-        } else {
-          // User is authenticated but not an admin
-          setAdminRole(null);
-        }
-      } else {
-        setAdminRole(null);
-      }
-    } catch {
-      setAdminRole(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const signIn = async (email: string, password: string) => {
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     try {
       const { data, error } = await supabaseAdmin.auth.signInWithPassword({
         email,
@@ -289,17 +195,11 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       return { error: error as Error };
     }
-<<<<<<< HEAD
   }, []);
 
   const signOut = useCallback(async () => {
     if (isSigningOut) return;
     
-=======
-  };
-
-  const signOut = async () => {
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     setIsSigningOut(true);
     try {
       if (user) {
@@ -312,7 +212,6 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
       // Use local scope to only sign out from admin session, not studio
       await supabaseAdmin.auth.signOut({ scope: 'local' });
       setAdminRole(null);
-<<<<<<< HEAD
     } catch (error) {
       // Silently handle signout errors
     } finally {
@@ -321,12 +220,6 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [user, isSigningOut]);
-=======
-    } finally {
-      setIsSigningOut(false);
-    }
-  };
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   return (
     <AdminAuthContext.Provider value={{ 

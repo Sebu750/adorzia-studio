@@ -262,7 +262,7 @@ export function StyleboxModal({ open, onOpenChange, stylebox }: StyleboxModalPro
           {/* XP & Status Row */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="xp">XP Reward</Label>
+              <Label htmlFor="xp">SC Reward</Label>
               <Input
                 id="xp"
                 type="number"

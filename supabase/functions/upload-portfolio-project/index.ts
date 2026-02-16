@@ -26,44 +26,53 @@ serve(async (req) => {
   try {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
+      console.error("[upload-portfolio-project] Missing authorization header");
       return new Response(
         JSON.stringify({ error: "Missing authorization header" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-      { global: { headers: { Authorization: authHeader } } }
-    );
-
-    // Create service role client for storage operations (bypasses RLS)
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    if (!serviceRoleKey) {
-      console.error("CRITICAL: SUPABASE_SERVICE_ROLE_KEY is not set");
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+    
+    if (!supabaseUrl || !supabaseAnonKey || !serviceRoleKey) {
+      console.error("[upload-portfolio-project] Missing environment variables");
       return new Response(
         JSON.stringify({ error: "Server configuration error" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      serviceRoleKey
+    // Create anon client to validate the user's JWT
+    const supabase = createClient(
+      supabaseUrl,
+      supabaseAnonKey,
+      { auth: { persistSession: false, autoRefreshToken: false } }
     );
 
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    // Validate JWT and get user
+    const { data: { user }, error: authError } = await supabase.auth.getUser(
+      authHeader.replace("Bearer ", "")
+    );
 
     if (authError || !user) {
+      console.error("[upload-portfolio-project] Auth error:", authError?.message || "No user");
       return new Response(
         JSON.stringify({ error: "Unauthorized" }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    console.log("[upload-portfolio-project] Authenticated user:", user.id);
+
+    // Create service role client for storage operations
+    const supabaseAdmin = createClient(
+      supabaseUrl,
+      serviceRoleKey,
+      { auth: { persistSession: false, autoRefreshToken: false } }
+    );
 
     const requestData: UploadRequest = await req.json();
     const { title, description, category, tags, images } = requestData;

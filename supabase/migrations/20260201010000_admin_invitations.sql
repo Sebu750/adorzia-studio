@@ -18,30 +18,39 @@ CREATE TABLE IF NOT EXISTS public.admin_invitations (
 -- Enable RLS
 ALTER TABLE public.admin_invitations ENABLE ROW LEVEL SECURITY;
 
+-- Create security definer functions to avoid recursion in RLS policies
+CREATE OR REPLACE FUNCTION public.is_superadmin(user_uuid UUID)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.user_roles 
+    WHERE user_id = user_uuid AND role = 'superadmin'
+  );
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
+CREATE OR REPLACE FUNCTION public.is_admin_or_superadmin(user_uuid UUID)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.user_roles 
+    WHERE user_id = user_uuid AND role IN ('admin', 'superadmin')
+  );
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
 -- RLS Policies
 -- Superadmins can manage all invitations
 CREATE POLICY "Superadmins can manage admin invitations" 
 ON public.admin_invitations 
 FOR ALL TO authenticated
-USING (
-    EXISTS (
-        SELECT 1 FROM public.user_roles 
-        WHERE user_id = auth.uid() 
-        AND role = 'superadmin'
-    )
-);
+USING (public.is_superadmin(auth.uid()));
 
 -- Admins can view invitations (for transparency)
 CREATE POLICY "Admins can view admin invitations" 
 ON public.admin_invitations 
 FOR SELECT TO authenticated
-USING (
-    EXISTS (
-        SELECT 1 FROM public.user_roles 
-        WHERE user_id = auth.uid() 
-        AND role IN ('admin', 'superadmin')
-    )
-);
+USING (public.is_admin_or_superadmin(auth.uid()));
 
 -- Create index for performance
 CREATE INDEX idx_admin_invitations_email ON public.admin_invitations(email);

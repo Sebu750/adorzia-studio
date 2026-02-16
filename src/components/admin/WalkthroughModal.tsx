@@ -293,7 +293,7 @@ export function WalkthroughModal({ open, onOpenChange, walkthrough }: Walkthroug
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="xp">XP Reward</Label>
+                  <Label htmlFor="xp">SC Reward</Label>
                   <Input
                     id="xp"
                     type="number"

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,10 +11,10 @@ import { SubscriptionProvider } from "@/hooks/useSubscription";
 import { StudioThemeProvider } from "@/hooks/useStudioTheme";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AdminProtectedRoute } from "@/components/auth/AdminProtectedRoute";
+import { CustomerProtectedRoute } from "@/components/auth/CustomerProtectedRoute";
 import ScrollToTop from "@/components/public/ScrollToTop";
-
-// Diagnostic import
-import { useDiagnostics } from "@/components/DiagnosticOverlay";
+import { startRequestMonitoring } from "@/lib/api-deduplication";
+import { useEffect } from "react";
 
 // Dual Layer Operating Model
 import { DualLayerProvider } from "@/contexts/DualLayerContext";
@@ -40,11 +39,20 @@ import ShopHome from "./pages/shop/ShopHome";
 import ShopProducts from "./pages/shop/ShopProducts";
 import ShopProductDetail from "./pages/shop/ShopProductDetail";
 import ShopCart from "./pages/shop/ShopCart";
+import ShopCheckout from "./pages/shop/ShopCheckout";
+import ShopOrderConfirmation from "./pages/shop/ShopOrderConfirmation";
 import ShopDesigners from "./pages/shop/ShopDesigners";
 import ShopDesignerProfile from "./pages/shop/ShopDesignerProfile";
 import ShopCollections from "./pages/shop/ShopCollections";
+import ShopCollectionDetail from "./pages/shop/ShopCollectionDetail";
 import ShopOrderTracking from "./pages/shop/ShopOrderTracking";
+import ShopAccount from "./pages/shop/ShopAccount";
+import ShopWishlist from "./pages/shop/ShopWishlist";
+import ShopFAQ from "./pages/shop/ShopFAQ";
+import ShopPolicies from "./pages/shop/ShopPolicies";
+import ShopAuth from "./pages/shop/ShopAuth";
 import { CartProvider } from "@/hooks/useCart";
+import { WishlistProvider } from "@/hooks/useWishlist";
 
 // Auth Pages
 import Auth from "./pages/Auth";
@@ -128,33 +136,37 @@ function AdminProviders({ children }: { children: React.ReactNode }) {
 // Wrapper for public website routes
 function WebsiteWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" storageKey="website-theme" disableTransitionOnChange>
-      {children}
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider attribute="class" defaultTheme="light" storageKey="website-theme" disableTransitionOnChange>
+        {children}
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
 // Wrapper for auth routes
 function AuthWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      {children}
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        {children}
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
-// App component with diagnostics
+// App component
 const App = () => {
-  // Simple test to see if the app renders at all
-  console.log("App component rendering");
-  
-  // Initialize diagnostics hook (must be called at top level)
-  const { addDiagnostic } = useDiagnostics();
-  
+  // Start API request monitoring to detect infinite loops
   useEffect(() => {
-    addDiagnostic('App', 'loading', 'Application initializing');
-  }, [addDiagnostic]);
-  
+    startRequestMonitoring();
+    console.log('[App] API request monitoring started');
+    
+    return () => {
+      // Cleanup handled by the monitoring module
+    };
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -183,16 +195,32 @@ const App = () => {
               <Route path="articles/:slug" element={<ArticleDetail />} />
               
               {/* Marketplace Routes - Public Shopping */}
-              <Route path="shop" element={<CartProvider><ShopHome /></CartProvider>} />
-              <Route path="shop/products" element={<CartProvider><ShopProducts /></CartProvider>} />
-              <Route path="shop/designers" element={<CartProvider><ShopDesigners /></CartProvider>} />
-              <Route path="shop/designer/:id" element={<CartProvider><ShopDesignerProfile /></CartProvider>} />
-              <Route path="shop/collections" element={<CartProvider><ShopCollections /></CartProvider>} />
-              <Route path="shop/product/:id" element={<CartProvider><ShopProductDetail /></CartProvider>} />
-              <Route path="shop/category/:slug" element={<CartProvider><ShopCategory /></CartProvider>} />
-              <Route path="shop/cart" element={<CartProvider><ShopCart /></CartProvider>} />
-              <Route path="shop/order/:orderNumber" element={<CartProvider><ShopOrderTracking /></CartProvider>} />
-              <Route path="shop/new-arrivals" element={<CartProvider><ShopProducts /></CartProvider>} />
+              <Route path="shop" element={<CartProvider><WishlistProvider><ShopHome /></WishlistProvider></CartProvider>} />
+              <Route path="shop/products" element={<CartProvider><WishlistProvider><ShopProducts /></WishlistProvider></CartProvider>} />
+              <Route path="shop/designers" element={<CartProvider><WishlistProvider><ShopDesigners /></WishlistProvider></CartProvider>} />
+              <Route path="shop/designer/:id" element={<CartProvider><WishlistProvider><ShopDesignerProfile /></WishlistProvider></CartProvider>} />
+              <Route path="shop/collections" element={<CartProvider><WishlistProvider><ShopCollections /></WishlistProvider></CartProvider>} />
+              <Route path="shop/collection/:slug" element={<CartProvider><WishlistProvider><ShopCollectionDetail /></WishlistProvider></CartProvider>} />
+              <Route path="shop/product/:id" element={<CartProvider><WishlistProvider><ShopProductDetail /></WishlistProvider></CartProvider>} />
+              <Route path="shop/category/:slug" element={<CartProvider><WishlistProvider><ShopCategory /></WishlistProvider></CartProvider>} />
+              <Route path="shop/cart" element={<CartProvider><WishlistProvider><ShopCart /></WishlistProvider></CartProvider>} />
+              <Route path="shop/checkout" element={<CartProvider><WishlistProvider><ShopCheckout /></WishlistProvider></CartProvider>} />
+              <Route path="shop/order-confirmation/:orderId" element={<WishlistProvider><ShopOrderConfirmation /></WishlistProvider>} />
+              <Route path="shop/order/:orderNumber" element={<WishlistProvider><ShopOrderTracking /></WishlistProvider>} />
+              <Route path="shop/account" element={
+                <CustomerProtectedRoute>
+                  <WishlistProvider><ShopAccount /></WishlistProvider>
+                </CustomerProtectedRoute>
+              } />
+              <Route path="shop/wishlist" element={
+                <CustomerProtectedRoute>
+                  <CartProvider><WishlistProvider><ShopWishlist /></WishlistProvider></CartProvider>
+                </CustomerProtectedRoute>
+              } />
+              <Route path="shop/faq" element={<WishlistProvider><ShopFAQ /></WishlistProvider>} />
+              <Route path="shop/policies" element={<WishlistProvider><ShopPolicies /></WishlistProvider>} />
+              <Route path="shop/new-arrivals" element={<CartProvider><WishlistProvider><ShopProducts /></WishlistProvider></CartProvider>} />
+              <Route path="shop/auth" element={<ShopAuth />} />
             </Route>
             
             {/* Auth and Studio Routes */}

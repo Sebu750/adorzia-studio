@@ -8,32 +8,42 @@
 -- 1. ENUMS
 -- =====================================================
 
--- Submission status enum
-CREATE TYPE IF NOT EXISTS submission_status AS ENUM (
-  'draft',
-  'submitted',
-  'under_review',
-  'approved',
-  'rejected',
-  'revision_requested'
-);
+-- Create all enum types in a single DO block to avoid multiple transactions
+DO $$
+BEGIN
+  -- Submission status enum
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'submission_status') THEN
+    CREATE TYPE submission_status AS ENUM (
+      'draft',
+      'submitted',
+      'under_review',
+      'approved',
+      'rejected',
+      'revision_requested'
+    );
+  END IF;
 
--- Deliverable status enum
-CREATE TYPE IF NOT EXISTS deliverable_status AS ENUM (
-  'pending',
-  'uploaded',
-  'approved',
-  'rejected'
-);
+  -- Deliverable status enum
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'deliverable_status') THEN
+    CREATE TYPE deliverable_status AS ENUM (
+      'pending',
+      'uploaded',
+      'approved',
+      'rejected'
+    );
+  END IF;
 
--- File type enum for designer uploads
-CREATE TYPE IF NOT EXISTS designer_file_type AS ENUM (
-  'image_2d',
-  'technical_pack',
-  'model_3d',
-  'video',
-  'document'
-);
+  -- File type enum for designer uploads
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'designer_file_type') THEN
+    CREATE TYPE designer_file_type AS ENUM (
+      'image_2d',
+      'technical_pack',
+      'model_3d',
+      'video',
+      'document'
+    );
+  END IF;
+END$$;
 
 -- =====================================================
 -- 2. CORE TABLES

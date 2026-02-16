@@ -66,10 +66,12 @@ export default function Subscription() {
   // Get founder tier from profile if available
   const [founderTier, setFounderTier] = useState<string | null>(null);
   useEffect(() => {
-    // This would typically come from useProfile hook
+    // TODO: This would typically come from useProfile hook
     // For now we'll just mock it or get it from somewhere
     // In a real implementation, you'd use the useProfile hook
-  }, []);
+    setFounderTier(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Placeholder effect - implement when founder tier data is available
 
   return (
     <div className="min-h-screen bg-background py-12 px-4">

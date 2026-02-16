@@ -3,7 +3,18 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-forwarded-proto, x-real-ip',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
+  'Access-Control-Max-Age': '86400', // 24 hours
+};
+
+// Enhanced response helper to ensure CORS headers are always included
+const createResponse = (body: string | Record<string, unknown> | null, status = 200, includeCors = true) => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(includeCors ? corsHeaders : {})
+  };
+  return new Response(body ? JSON.stringify(body) : null, { status, headers });
 };
 
 const logStep = (step: string, details?: any) => {
@@ -11,13 +22,20 @@ const logStep = (step: string, details?: any) => {
 };
 
 serve(async (req) => {
+  // OPTIONS preflight always succeeds with proper CORS headers
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return createResponse(null, 204, true);
   }
 
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('Missing environment variables: SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY');
+      return createResponse({ error: 'Server configuration error' }, 500, true);
+    }
+    
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     const authHeader = req.headers.get('Authorization');

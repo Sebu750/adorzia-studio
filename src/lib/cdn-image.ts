@@ -192,3 +192,113 @@ async function checkImageSupport(dataUrl: string): Promise<boolean> {
     img.src = dataUrl;
   });
 }
+
+// Add Unsplash fallback strategy
+const UNSPLASH_FALLBACK_URL = 'https://placehold.co/600x800?text=Product+Image';
+
+/**
+ * Enhanced image handling with fallback support
+ * Handles Unsplash images and provides fallbacks
+ */
+export function getCdnImage(
+  image: string | null, 
+  options?: ImageTransformOptions,
+  fallbackUrl?: string
+): string {
+  // Use provided fallback or Unsplash placeholder
+  if (!image || image === 'null') {
+    return fallbackUrl || UNSPLASH_FALLBACK_URL;
+  }
+
+  // Check if Unsplash is the source
+  if (image.startsWith('https://images.unsplash.com/')) {
+    try {
+      // Try with Unsplash params first
+      const url = new URL(image);
+      // Add basic Unsplash optimization
+      url.searchParams.set('w', options?.width?.toString() || '800');
+      url.searchParams.set('q', '80');
+      url.searchParams.set('auto', 'format');
+      url.searchParams.set('fit', 'crop');
+      
+      return url.toString();
+    } catch (error) {
+      // If Unsplash fails, return fallback
+      return fallbackUrl || UNSPLASH_FALLBACK_URL;
+    }
+  }
+  
+  // Existing Cloudflare logic for Supabase storage
+  if (image.startsWith('http')) {
+    return image;
+  }
+  
+  // Handle Supabase storage URLs
+  return getOptimizedImageUrl(image, options);
+}
+
+/**
+ * Add timeout handling for images
+ * Returns a promise that resolves with either the original src or fallback
+ */
+export function createImageWithFallback(src: string, fallback: string): Promise<string> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const timeout = setTimeout(() => {
+      resolve(fallback);
+    }, 3000); // 3 second timeout
+    
+    img.onload = () => {
+      clearTimeout(timeout);
+      resolve(src);
+    };
+    
+    img.onerror = () => {
+      clearTimeout(timeout);
+      resolve(fallback);
+    };
+    
+    img.src = src;
+  });
+}
+
+/**
+ * Cache mechanism for fallback images
+ * Avoids repeated requests for failed images
+ */
+const IMAGE_CACHE_KEY = 'fallback-images';
+const cacheTimeout = 24 * 60 * 60 * 1000; // 24 hours
+
+function getImageCache() {
+  const cached = localStorage.getItem(IMAGE_CACHE_KEY);
+  return cached ? JSON.parse(cached) : {};
+}
+
+function setToCache(src: string) {
+  const cache = getImageCache();
+  cache[src] = {
+    status: 'fallback',
+    timestamp: Date.now()
+  };
+  localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
+}
+
+/**
+ * Check if image should use fallback from cache
+ */
+export function shouldUseFallback(src: string): boolean {
+  const cache = getImageCache();
+  const cached = cache[src];
+  
+  if (!cached) return false;
+  
+  // Check if cache is still valid (24 hours)
+  if (Date.now() - cached.timestamp > cacheTimeout) {
+    // Remove expired cache entry
+    delete cache[src];
+    localStorage.setItem(IMAGE_CACHE_KEY, JSON.stringify(cache));
+    return false;
+  }
+  
+  return cached.status === 'fallback';
+}

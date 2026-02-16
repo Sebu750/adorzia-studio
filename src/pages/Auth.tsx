@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Badge } from "@/components/ui/badge";
@@ -77,11 +77,12 @@ export default function Auth() {
     }
   };
 
-  // Redirect if already logged in
-  if (user) {
-    navigate("/dashboard");
-    return null;
-  }
+  // Redirect if already logged in - use useEffect to avoid setState during render
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,7 +114,7 @@ export default function Auth() {
       } else {
         toast({ 
           title: "Welcome back!",
-          description: "You've successfully signed in to The Studio."
+          description: "You've successfully signed in to Adorzia."
         });
         navigate("/dashboard");
       }
@@ -163,7 +164,7 @@ export default function Auth() {
         });
       } else {
         toast({
-          title: "Welcome to The Studio!",
+          title: "Welcome to Adorzia!",
           description: "Your account has been created successfully.",
         });
         navigate("/dashboard");

@@ -148,7 +148,7 @@ export function WalkthroughCard({
           </div>
           <div className="flex items-center gap-1.5">
             <Sparkles className="h-3.5 w-3.5" />
-            <span>+{walkthrough.xp_reward || 100} XP</span>
+            <span>+{walkthrough.xp_reward || 100} SC</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Clock className="h-3.5 w-3.5" />

@@ -2,10 +2,17 @@ import React, { createContext, useContext, useEffect, useState, ReactNode, useCa
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
-// Add diagnostic import
-import { useDiagnostics } from '@/components/DiagnosticOverlay';
+export type AppRole = 'customer' | 'designer' | 'admin' | 'superadmin' | null;
 
-type AppRole = 'designer' | 'admin' | 'superadmin' | null;
+export interface CustomerProfile {
+  id: string;
+  user_id: string;
+  email: string;
+  name: string;
+  phone?: string;
+  created_at: string;
+  updated_at?: string;
+}
 
 interface AuthContextType {
   user: User | null;
@@ -13,7 +20,9 @@ interface AuthContextType {
   loading: boolean;
   isAdmin: boolean;
   isDesigner: boolean;
+  isCustomer: boolean;
   userRole: AppRole;
+  customerProfile: CustomerProfile | null;
   isSigningOut: boolean;
   signUp: (email: string, password: string, name: string, category: string, bio?: string, skills?: string[]) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -27,10 +36,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<AppRole>(null);
+  const [customerProfile, setCustomerProfile] = useState<CustomerProfile | null>(null);
   const [isSigningOut, setIsSigningOut] = useState(false);
-  
-  // Diagnostic hook
-  const { addDiagnostic } = useDiagnostics();
   
   // Refs to prevent stale closures
   const userRef = useRef<User | null>(null);
@@ -43,8 +50,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!isMountedRef.current) return;
     
     try {
-      addDiagnostic('useAuth', 'loading', `Checking role for user: ${userId}`);
-      
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
@@ -53,31 +58,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!isMountedRef.current) return;
       
       if (error) {
-        console.error('Error checking user role:', error);
-        addDiagnostic('useAuth', 'error', 'Failed to check user role', error);
         setUserRole(null);
       } else if (data && data.length > 0) {
         const roles = data.map(r => r.role);
-        addDiagnostic('useAuth', 'success', `User roles found: ${roles.join(', ')}`);
         
-        // Priority: superadmin > admin > designer
+        // Priority: superadmin > admin > designer > customer
         if (roles.includes('superadmin')) {
           setUserRole('superadmin');
         } else if (roles.includes('admin')) {
           setUserRole('admin');
         } else if (roles.includes('designer')) {
           setUserRole('designer');
+        } else if (roles.includes('customer')) {
+          setUserRole('customer');
         } else {
           setUserRole(null);
         }
       } else {
-        addDiagnostic('useAuth', 'success', 'No roles found for user');
         setUserRole(null);
       }
     } catch (error) {
       if (isMountedRef.current) {
-        console.error('Exception in checkUserRole:', error);
-        addDiagnostic('useAuth', 'error', 'Exception checking user role', error);
         setUserRole(null);
       }
     } finally {
@@ -85,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false);
       }
     }
-  }, [addDiagnostic]);
+  }, []);
 
   // Multi-tab sync for auth state - only handle explicit sign-outs
   useEffect(() => {
@@ -94,7 +95,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       
       // Only sync if token was explicitly removed (sign-out)
       if (e.key?.includes('supabase.auth.token') && e.newValue === null && userRef.current) {
-        addDiagnostic('useAuth', 'success', 'Session cleared due to storage change');
         setUser(null);
         setSession(null);
         setUserRole(null);
@@ -103,13 +103,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, [addDiagnostic]);
+  }, []);
 
   // Main auth state listener
   useEffect(() => {
     isMountedRef.current = true;
-    
-    addDiagnostic('useAuth', 'loading', 'Initializing auth listener');
     
     let authCheckTimeout: NodeJS.Timeout;
     
@@ -118,10 +116,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       (event, currentSession) => {
         if (!isMountedRef.current) return;
         
-        addDiagnostic('useAuth', 'success', `Auth state changed: ${event}`);
-        
         // Ignore TOKEN_REFRESHED events that might cause flickering
-        if (event === 'TOKEN_REFRESHED' && session) {
+        if (event === 'TOKEN_REFRESHED') {
           setSession(currentSession);
           return;
         }
@@ -132,7 +128,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!currentSession?.user) {
           setUserRole(null);
           setLoading(false);
-          addDiagnostic('useAuth', 'success', 'User logged out');
         } else {
           // Debounce role checking to prevent rapid calls
           clearTimeout(authCheckTimeout);
@@ -145,11 +140,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     );
 
-    // THEN check for existing session
+    // THEN check for existing session (only on mount)
     supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
       if (!isMountedRef.current) return;
-      
-      addDiagnostic('useAuth', 'success', existingSession ? 'Existing session found' : 'No existing session');
       
       setSession(existingSession);
       setUser(existingSession?.user ?? null);
@@ -161,8 +154,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }).catch((error) => {
       if (isMountedRef.current) {
-        console.error('Error getting session:', error);
-        addDiagnostic('useAuth', 'error', 'Failed to get session', error);
         setLoading(false);
       }
     });
@@ -172,12 +163,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       clearTimeout(authCheckTimeout);
       subscription.unsubscribe();
     };
-  }, [checkUserRole, session, addDiagnostic]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array - only run on mount
 
   const signUp = useCallback(async (email: string, password: string, name: string, category: string, bio?: string, skills?: string[]) => {
     try {
-      addDiagnostic('useAuth', 'loading', `Signing up user: ${email}`);
-      
       const redirectUrl = `${window.location.origin}/`;
       
       const { data, error } = await supabase.auth.signUp({
@@ -188,6 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           data: {
             name,
             category,
+            signup_type: 'designer', // Used by trigger to assign correct role
           },
         },
       });
@@ -212,18 +203,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user_agent: navigator.userAgent,
       });
 
-      addDiagnostic('useAuth', 'success', 'User signed up successfully');
       return { error: null };
     } catch (error) {
-      addDiagnostic('useAuth', 'error', 'Signup failed', error);
       return { error: error as Error };
     }
-  }, [addDiagnostic]);
+  }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
     try {
-      addDiagnostic('useAuth', 'loading', `Signing in user: ${email}`);
-      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -248,21 +235,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
       }
 
-      addDiagnostic('useAuth', 'success', 'User signed in successfully');
       return { error: null };
     } catch (error) {
-      addDiagnostic('useAuth', 'error', 'Signin failed', error);
       return { error: error as Error };
     }
-  }, [addDiagnostic]);
+  }, []);
 
   const signOut = useCallback(async () => {
     if (isSigningOut) return;
     
     setIsSigningOut(true);
     try {
-      addDiagnostic('useAuth', 'loading', 'Signing out user');
-      
       if (user) {
         await supabase.from('auth_logs').insert({
           user_id: user.id,
@@ -273,19 +256,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Use local scope to only sign out from studio session, not admin
       await supabase.auth.signOut({ scope: 'local' });
       setUserRole(null);
-      
-      addDiagnostic('useAuth', 'success', 'User signed out successfully');
     } catch (error) {
-      addDiagnostic('useAuth', 'error', 'Signout failed', error);
+      // Silently handle signout errors
     } finally {
       if (isMountedRef.current) {
         setIsSigningOut(false);
       }
     }
-  }, [user, isSigningOut, addDiagnostic]);
+  }, [user, isSigningOut]);
+
+  // Fetch customer profile when user is a customer
+  useEffect(() => {
+    if (user && userRole === 'customer') {
+      fetchCustomerProfile(user.id);
+    } else {
+      setCustomerProfile(null);
+    }
+  }, [user, userRole]);
+
+  const fetchCustomerProfile = useCallback(async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('marketplace_customers')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+      
+      if (!error && data) {
+        setCustomerProfile(data as CustomerProfile);
+      }
+    } catch (error) {
+      console.error('Error fetching customer profile:', error);
+    }
+  }, []);
 
   const isAdmin = userRole === 'admin' || userRole === 'superadmin';
   const isDesigner = userRole === 'designer' || isAdmin;
+  const isCustomer = userRole === 'customer';
 
   return (
     <AuthContext.Provider value={{ 
@@ -294,7 +301,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading, 
       isAdmin, 
       isDesigner, 
+      isCustomer,
       userRole,
+      customerProfile,
       isSigningOut,
       signUp, 
       signIn, 

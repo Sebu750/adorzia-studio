@@ -107,7 +107,7 @@ const Dashboard = () => {
   const rankData = {
     currentRank: getCurrentRank(),
     foundationRank: null as 'f1' | 'f2' | null,
-    styleCredits: profile?.xp || 0,
+    styleCredits: profile?.style_credits || 0,
     badges: [],
   };
 

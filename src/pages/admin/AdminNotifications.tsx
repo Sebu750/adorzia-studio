@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
 import { useToast } from "@/hooks/use-toast";
 import { AdminLayout } from "@/components/admin/AdminLayout";
@@ -28,8 +28,6 @@ import {
 import { 
   Bell, 
   Mail, 
-  MessageSquare, 
-  Settings, 
   Send, 
   History, 
   AlertCircle,
@@ -37,9 +35,297 @@ import {
   RefreshCw,
   Users,
   User,
-  Megaphone
+  Megaphone,
+  Eye,
+  BarChart3
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+// Broadcast Analytics Component
+const BroadcastAnalytics = ({ message, createdAt }: { message: string; createdAt: string }) => {
+  const { data: analytics } = useQuery({
+    queryKey: ['broadcast-analytics', message, createdAt],
+    queryFn: async () => {
+      // Find all notifications with same message sent within 1 minute of createdAt
+      const oneMinuteBefore = new Date(new Date(createdAt).getTime() - 60000).toISOString();
+      const oneMinuteAfter = new Date(new Date(createdAt).getTime() + 60000).toISOString();
+      
+      const { data, error } = await supabase
+        .from('notifications')
+        .select('status')
+        .eq('message', message)
+        .gte('created_at', oneMinuteBefore)
+        .lte('created_at', oneMinuteAfter);
+      
+      if (error) return { total: 0, read: 0 };
+      
+      const total = data?.length || 0;
+      const read = data?.filter(n => n.status === 'read').length || 0;
+      return { total, read };
+    },
+    enabled: !!message && !!createdAt,
+  });
+
+  const total = analytics?.total || 0;
+  const read = analytics?.read || 0;
+  const percentage = total > 0 ? Math.round((read / total) * 100) : 0;
+
+  return (
+    <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5 text-sm">
+        <Eye className="h-4 w-4 text-muted-foreground" />
+        <span className="font-medium">{read}</span>
+        <span className="text-muted-foreground">/</span>
+        <span>{total}</span>
+      </div>
+      <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
+        <div 
+          className="h-full bg-green-500 rounded-full transition-all"
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+      <span className="text-xs text-muted-foreground">{percentage}%</span>
+    </div>
+  );
+};
+
+// Email Templates Tab Component
+const EmailTemplatesTab = () => {
+  const { toast } = useToast();
+  const [emailTemplate, setEmailTemplate] = useState<'welcome' | 'announcement' | 'alert' | 'custom'>('announcement');
+  const [emailTarget, setEmailTarget] = useState<'individual' | 'all'>('all');
+  const [emailRecipient, setEmailRecipient] = useState('');
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailContent, setEmailContent] = useState('');
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+
+  const templatePresets = {
+    welcome: { subject: 'Welcome to Adorzia!', content: 'We\'re thrilled to have you join our community of creative professionals. Get started by exploring your dashboard and setting up your profile.' },
+    announcement: { subject: 'Platform Announcement', content: 'We have exciting news to share with you! Check out the latest updates and improvements we\'ve made to the platform.' },
+    alert: { subject: 'Important Alert', content: 'Please be aware of an important update that may affect your account. Review the details below.' },
+    custom: { subject: '', content: '' },
+  };
+
+  const handleTemplateChange = (template: typeof emailTemplate) => {
+    setEmailTemplate(template);
+    const preset = templatePresets[template];
+    setEmailSubject(preset.subject);
+    setEmailContent(preset.content);
+  };
+
+  const sendEmail = async () => {
+    if (!emailSubject.trim() || !emailContent.trim()) {
+      toast({ title: "Subject and content required", variant: "destructive" });
+      return;
+    }
+
+    if (emailTarget === 'individual' && !emailRecipient) {
+      toast({ title: "Recipient email required", variant: "destructive" });
+      return;
+    }
+
+    setIsSendingEmail(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('send-admin-email', {
+        body: {
+          template: emailTemplate,
+          to: emailTarget === 'individual' ? emailRecipient : [],
+          subject: emailSubject,
+          content: emailContent,
+          targetType: emailTarget,
+        }
+      });
+
+      if (error) throw error;
+
+      toast({ 
+        title: "Email sent successfully", 
+        description: `Sent to ${data.sent} recipients (${data.failed} failed)` 
+      });
+      
+      setEmailRecipient('');
+      if (emailTemplate === 'custom') {
+        setEmailSubject('');
+        setEmailContent('');
+      }
+    } catch (error: any) {
+      console.error('[EmailTemplates] Send error:', error);
+      toast({ title: "Failed to send email", description: error.message, variant: "destructive" });
+    } finally {
+      setIsSendingEmail(false);
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Mail className="h-5 w-5" />
+          Send Email
+        </CardTitle>
+        <CardDescription>Send branded emails to users using templates</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Template</Label>
+              <Select value={emailTemplate} onValueChange={(v) => handleTemplateChange(v as typeof emailTemplate)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="welcome">Welcome Email</SelectItem>
+                  <SelectItem value="announcement">Announcement</SelectItem>
+                  <SelectItem value="alert">Important Alert</SelectItem>
+                  <SelectItem value="custom">Custom Message</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Target Audience</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <Button 
+                  variant={emailTarget === "all" ? "default" : "outline"} 
+                  className="gap-2"
+                  onClick={() => setEmailTarget("all")}
+                >
+                  <Users className="h-4 w-4" />
+                  All Users
+                </Button>
+                <Button 
+                  variant={emailTarget === "individual" ? "default" : "outline"} 
+                  className="gap-2"
+                  onClick={() => setEmailTarget("individual")}
+                >
+                  <User className="h-4 w-4" />
+                  Individual
+                </Button>
+              </div>
+            </div>
+
+            {emailTarget === 'individual' && (
+              <div className="space-y-2">
+                <Label>Recipient Email</Label>
+                <Input 
+                  placeholder="user@example.com" 
+                  value={emailRecipient}
+                  onChange={(e) => setEmailRecipient(e.target.value)}
+                  type="email"
+                />
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label>Subject</Label>
+              <Input 
+                placeholder="Email subject..." 
+                value={emailSubject}
+                onChange={(e) => setEmailSubject(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Content</Label>
+              <Textarea 
+                placeholder="Email content..." 
+                className="min-h-[200px]"
+                value={emailContent}
+                onChange={(e) => setEmailContent(e.target.value)}
+              />
+            </div>
+
+            <Button 
+              className="w-full gap-2" 
+              onClick={sendEmail}
+              disabled={isSendingEmail}
+            >
+              {isSendingEmail ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
+              {emailTarget === 'all' ? 'Send to All Users' : 'Send Email'}
+            </Button>
+          </div>
+        </div>
+
+        <div className="border-t pt-6">
+          <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
+            <BarChart3 className="h-4 w-4" />
+            Recent Email Activity
+          </h4>
+          <EmailLogsTable />
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+// Email Logs Table Component
+const EmailLogsTable = () => {
+  const { data: logs = [], isLoading } = useQuery({
+    queryKey: ['admin-email-logs'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('email_logs')
+        .select('*')
+        .eq('subdomain', 'admin')
+        .order('created_at', { ascending: false })
+        .limit(20);
+      
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  if (isLoading) {
+    return <Loader2 className="h-6 w-6 animate-spin mx-auto" />;
+  }
+
+  if (logs.length === 0) {
+    return <p className="text-sm text-muted-foreground text-center py-4">No emails sent yet.</p>;
+  }
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>To</TableHead>
+          <TableHead>Subject</TableHead>
+          <TableHead>Type</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Date</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {logs.map((log: any) => (
+          <TableRow key={log.id}>
+            <TableCell className="text-sm">{log.to_address}</TableCell>
+            <TableCell className="text-sm max-w-[200px] truncate">{log.subject}</TableCell>
+            <TableCell>
+              <Badge variant="outline" className="capitalize">{log.email_type}</Badge>
+            </TableCell>
+            <TableCell>
+              <Badge 
+                variant={log.status === 'sent' ? 'success' : 'destructive'} 
+                className="capitalize"
+              >
+                {log.status}
+              </Badge>
+            </TableCell>
+            <TableCell className="text-sm">
+              {new Date(log.created_at).toLocaleDateString()}
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
 
 const AdminNotifications = () => {
   const { toast } = useToast();
@@ -49,27 +335,89 @@ const AdminNotifications = () => {
   // Form states
   const [targetType, setTargetType] = useState<"all" | "individual">("all");
   const [targetUserId, setTargetUserId] = useState("");
-  const [notificationType, setNotificationType] = useState("announcement");
+  const [notificationType, setNotificationType] = useState("submission");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch notification history
+  // Fetch notification history - include broadcast notifications (metadata->broadcast = true)
   const { data: history = [], isLoading: historyLoading, refetch: refetchHistory } = useQuery({
     queryKey: ['admin-notifications-history'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('notifications')
-        .select(`
-          *,
-          profiles(name, email)
-        `)
-        .order('created_at', { ascending: false })
-        .limit(50);
+      console.log('[AdminNotifications] Fetching history...');
       
-      if (error) throw error;
-      return data;
+      // First try without the join to see if that's the issue
+      const { data: notifs, error: notifError } = await supabase
+        .from('notifications')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(200);
+      
+      if (notifError) {
+        console.error('[AdminNotifications] Query error:', notifError);
+        throw notifError;
+      }
+      
+      console.log('[AdminNotifications] Raw notifications:', notifs?.length || 0);
+      
+      // Fetch profiles separately for the notifications we have
+      const userIds = [...new Set((notifs || []).map((n: any) => n.user_id).filter(Boolean))];
+      let profilesMap: Record<string, any> = {};
+      
+      if (userIds.length > 0) {
+        const { data: profiles, error: profileError } = await supabase
+          .from('profiles')
+          .select('user_id, name, email')
+          .in('user_id', userIds.slice(0, 100));
+        
+        if (!profileError && profiles) {
+          profilesMap = profiles.reduce((acc: any, p: any) => {
+            acc[p.user_id] = p;
+            return acc;
+          }, {});
+        }
+      }
+      
+      // Merge data
+      const merged = (notifs || []).map((notif: any) => ({
+        ...notif,
+        profiles: profilesMap[notif.user_id] || null
+      }));
+      
+      // Deduplicate broadcast notifications - show only one entry per broadcast
+      const seenBroadcasts = new Set();
+      const deduplicated = merged.filter((notif: any) => {
+        if (notif.metadata?.broadcast) {
+          const key = `${notif.message}-${notif.created_at}`;
+          if (seenBroadcasts.has(key)) return false;
+          seenBroadcasts.add(key);
+          return true;
+        }
+        return true;
+      });
+      
+      return deduplicated.slice(0, 50);
     }
   });
+
+  const resolveUserId = async (input: string): Promise<string | null> => {
+    // If input looks like a UUID, return it directly
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (uuidRegex.test(input)) {
+      return input;
+    }
+    
+    // Otherwise, treat as email and look up user
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('user_id')
+      .eq('email', input)
+      .maybeSingle();
+    
+    if (error || !data) {
+      return null;
+    }
+    return data.user_id;
+  };
 
   const sendNotification = async () => {
     if (!message.trim()) {
@@ -86,36 +434,88 @@ const AdminNotifications = () => {
     try {
       console.log('[AdminNotifications] Sending notification', { targetType, notificationType, recipientCount: targetType === 'all' ? 'broadcast' : 1 });
       
+      // Resolve user ID if email was provided
+      let resolvedUserId = targetUserId;
+      if (targetType === "individual") {
+        resolvedUserId = await resolveUserId(targetUserId);
+        if (!resolvedUserId) {
+          throw new Error('User not found. Please check the email or UUID.');
+        }
+      }
+      
       if (targetType === "all") {
-        // Use edge function for broadcast notifications (better performance)
-        const { data, error } = await supabase.functions.invoke('broadcast-notification', {
-          body: {
-            type: notificationType,
-            message,
-            title: notificationType === 'announcement' ? 'Platform Announcement' : 'System Update'
-          }
-        });
-
-        if (error) {
-          console.error('[AdminNotifications] Broadcast failed:', error);
-          throw error;
+        // Fallback: Use direct database insert for broadcast (edge function may not be deployed)
+        const title = notificationType === 'submission' ? 'Platform Announcement' : 
+                      notificationType === 'earnings' ? 'Important Alert' :
+                      notificationType === 'portfolio' ? 'Achievement Unlocked' :
+                      'System Update';
+        
+        // Fetch all active users
+        const { data: users, error: usersError } = await supabase
+          .from('profiles')
+          .select('user_id')
+          .limit(1000);
+        
+        if (usersError) {
+          console.error('[AdminNotifications] Error fetching users:', usersError);
+          throw new Error('Failed to fetch users for broadcast');
         }
         
-        console.log('[AdminNotifications] Broadcast notification sent:', data);
+        if (!users || users.length === 0) {
+          throw new Error('No users found to notify');
+        }
+        
+        // Create notification records for all users
+        const notifications = users.map(u => ({
+          user_id: u.user_id,
+          type: notificationType,
+          message,
+          status: 'unread' as const,
+          metadata: {
+            sent_by: 'admin',
+            sent_at: new Date().toISOString(),
+            broadcast: true,
+            title: title
+          }
+        }));
+        
+        // Insert in batches of 100
+        const batchSize = 100;
+        let totalInserted = 0;
+        for (let i = 0; i < notifications.length; i += batchSize) {
+          const batch = notifications.slice(i, i + batchSize);
+          const { error: insertError } = await supabase
+            .from('notifications')
+            .insert(batch);
+          
+          if (insertError) {
+            console.error('[AdminNotifications] Batch insert error:', insertError);
+            throw new Error(`Failed to send notifications: ${insertError.message}`);
+          }
+          totalInserted += batch.length;
+        }
+        
+        console.log('[AdminNotifications] Broadcast notification sent:', totalInserted, 'users');
       } else {
         // Targeted notification - direct insert
+        // Note: notifications table doesn't have a title column, so we include it in metadata
+        const title = notificationType === 'submission' ? 'Platform Announcement' : 
+                      notificationType === 'earnings' ? 'Important Alert' :
+                      notificationType === 'portfolio' ? 'Achievement Unlocked' :
+                      'System Update';
+        
         const { error } = await supabase.from('notifications').insert({
-          user_id: targetUserId,
+          user_id: resolvedUserId,
           type: notificationType,
           message,
           status: 'unread',
-          metadata: { sent_by: 'admin', sent_at: new Date().toISOString() }
+          metadata: { sent_by: 'admin', sent_at: new Date().toISOString(), title: title }
         });
         if (error) {
           console.error('[AdminNotifications] Individual notification failed:', error);
           throw error;
         }
-        console.log('[AdminNotifications] Individual notification sent to:', targetUserId);
+        console.log('[AdminNotifications] Individual notification sent to:', resolvedUserId);
       }
 
       toast({ title: "Notification sent successfully", description: targetType === 'all' ? 'Broadcast to all users' : 'Sent to selected user' });
@@ -173,12 +573,15 @@ const AdminNotifications = () => {
 
               {targetType === "individual" && (
                 <div className="space-y-2">
-                  <Label>User ID</Label>
+                  <Label>User Email or UUID</Label>
                   <Input 
-                    placeholder="Enter user UUID..." 
+                    placeholder="Enter user email or UUID..." 
                     value={targetUserId}
                     onChange={(e) => setTargetUserId(e.target.value)}
                   />
+                  <p className="text-xs text-muted-foreground">
+                    You can enter either an email address or a user UUID
+                  </p>
                 </div>
               )}
 
@@ -189,10 +592,10 @@ const AdminNotifications = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="announcement">Announcement</SelectItem>
-                    <SelectItem value="alert">Alert</SelectItem>
-                    <SelectItem value="achievement">Achievement</SelectItem>
-                    <SelectItem value="system">System Update</SelectItem>
+                    <SelectItem value="submission">Announcement</SelectItem>
+                    <SelectItem value="earnings">Alert</SelectItem>
+                    <SelectItem value="portfolio">Achievement</SelectItem>
+                    <SelectItem value="marketplace">System Update</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -275,11 +678,25 @@ const AdminNotifications = () => {
                           history.map((notif: any) => (
                             <TableRow key={notif.id}>
                               <TableCell>
-                                <p className="text-sm font-medium">{notif.profiles?.name || 'Unknown'}</p>
-                                <p className="text-xs text-muted-foreground">{notif.profiles?.email || 'N/A'}</p>
+                                {notif.metadata?.broadcast ? (
+                                  <div className="flex items-center gap-2">
+                                    <Users className="h-4 w-4 text-muted-foreground" />
+                                    <span className="text-sm font-medium">All Users (Broadcast)</span>
+                                  </div>
+                                ) : (
+                                  <>
+                                    <p className="text-sm font-medium">{notif.profiles?.name || 'Unknown'}</p>
+                                    <p className="text-xs text-muted-foreground">{notif.profiles?.email || 'N/A'}</p>
+                                  </>
+                                )}
                               </TableCell>
                               <TableCell>
-                                <Badge variant="outline" className="capitalize">{notif.type}</Badge>
+                                <Badge variant="outline" className="capitalize">
+                                  {notif.type === 'submission' ? 'Announcement' :
+                                   notif.type === 'earnings' ? 'Alert' :
+                                   notif.type === 'portfolio' ? 'Achievement' :
+                                   notif.type === 'marketplace' ? 'System' : notif.type}
+                                </Badge>
                               </TableCell>
                               <TableCell className="max-w-[200px] truncate">
                                 {notif.message}
@@ -288,9 +705,13 @@ const AdminNotifications = () => {
                                 {new Date(notif.created_at).toLocaleDateString()}
                               </TableCell>
                               <TableCell>
-                                <Badge variant={notif.status === 'read' ? 'success' : 'outline'} className="capitalize">
-                                  {notif.status}
-                                </Badge>
+                                {notif.metadata?.broadcast ? (
+                                  <BroadcastAnalytics message={notif.message} createdAt={notif.created_at} />
+                                ) : (
+                                  <Badge variant={notif.status === 'read' ? 'success' : 'outline'} className="capitalize">
+                                    {notif.status}
+                                  </Badge>
+                                )}
                               </TableCell>
                             </TableRow>
                           ))
@@ -302,19 +723,7 @@ const AdminNotifications = () => {
               </TabsContent>
 
               <TabsContent value="templates" className="mt-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Email Templates</CardTitle>
-                    <CardDescription>Configure system-generated emails</CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-12 text-center">
-                    <AlertCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold">Templates Module Coming Soon</h3>
-                    <p className="text-muted-foreground max-w-sm mx-auto">
-                      We are currently integrating with the transactional email provider to allow direct template editing.
-                    </p>
-                  </CardContent>
-                </Card>
+                <EmailTemplatesTab />
               </TabsContent>
             </Tabs>
           </div>

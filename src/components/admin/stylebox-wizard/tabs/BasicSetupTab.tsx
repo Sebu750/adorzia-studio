@@ -178,7 +178,7 @@ export function BasicSetupTab() {
       {/* XP & Status */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="xp_reward">XP Reward</Label>
+          <Label htmlFor="xp_reward">SC Reward</Label>
           <Input
             id="xp_reward"
             type="number"

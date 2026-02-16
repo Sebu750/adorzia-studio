@@ -715,6 +715,7 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          designer_id: string | null
           id: string
           image_url: string | null
           is_active: boolean | null
@@ -726,6 +727,7 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string | null
+          designer_id?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean | null
@@ -737,6 +739,7 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string | null
+          designer_id?: string | null
           id?: string
           image_url?: string | null
           is_active?: boolean | null
@@ -745,7 +748,15 @@ export type Database = {
           slug?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_collections_designer_id_fkey"
+            columns: ["designer_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       marketplace_customers: {
         Row: {
@@ -1037,11 +1048,14 @@ export type Database = {
           description: string | null
           designer_id: string | null
           dimensions: Json | null
+          edition_size: number | null
           id: string
           images: Json | null
           inventory_count: number | null
           is_adorzia_product: boolean | null
           is_bestseller: boolean | null
+          is_limited_edition: boolean | null
+          is_made_to_order: boolean | null
           materials: string[] | null
           meta_description: string | null
           meta_title: string | null
@@ -1073,11 +1087,14 @@ export type Database = {
           description?: string | null
           designer_id?: string | null
           dimensions?: Json | null
+          edition_size?: number | null
           id?: string
           images?: Json | null
           inventory_count?: number | null
           is_adorzia_product?: boolean | null
           is_bestseller?: boolean | null
+          is_limited_edition?: boolean | null
+          is_made_to_order?: boolean | null
           materials?: string[] | null
           meta_description?: string | null
           meta_title?: string | null
@@ -1109,11 +1126,14 @@ export type Database = {
           description?: string | null
           designer_id?: string | null
           dimensions?: Json | null
+          edition_size?: number | null
           id?: string
           images?: Json | null
           inventory_count?: number | null
           is_adorzia_product?: boolean | null
           is_bestseller?: boolean | null
+          is_limited_edition?: boolean | null
+          is_made_to_order?: boolean | null
           materials?: string[] | null
           meta_description?: string | null
           meta_title?: string | null
@@ -2030,7 +2050,7 @@ export type Database = {
           updated_at: string
           user_id: string
           website_url: string | null
-          xp: number | null
+          style_credits: number | null
           youtube_channel: string | null
           dribbble_url: string | null
           behance_url: string | null

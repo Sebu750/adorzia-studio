@@ -306,11 +306,7 @@ USING (
   bucket_id = 'stylebox-submissions'
   AND (
     (storage.foldername(name))[1] = auth.uid()::text
-    OR EXISTS (
-      SELECT 1 FROM public.user_roles
-      WHERE user_id = auth.uid()
-      AND role IN ('admin', 'superadmin')
-    )
+    OR public.is_admin_or_superadmin(auth.uid())
   )
 );
 
@@ -338,11 +334,7 @@ USING (
   bucket_id = 'collection-files'
   AND (
     (storage.foldername(name))[1] = auth.uid()::text
-    OR EXISTS (
-      SELECT 1 FROM public.user_roles
-      WHERE user_id = auth.uid()
-      AND role IN ('admin', 'superadmin')
-    )
+    OR public.is_admin_or_superadmin(auth.uid())
   )
 );
 
@@ -389,11 +381,7 @@ CREATE POLICY "Admins can view all founding files"
 ON storage.objects FOR SELECT
 USING (
   bucket_id = 'founding-submissions'
-  AND EXISTS (
-    SELECT 1 FROM public.user_roles
-    WHERE user_id = auth.uid()
-    AND role IN ('admin', 'superadmin')
-  )
+  AND public.is_admin_or_superadmin(auth.uid())
 );
 
 CREATE POLICY "Users can delete own founding files"
@@ -415,11 +403,7 @@ CREATE POLICY "Admins can upload walkthrough files"
 ON storage.objects FOR INSERT
 WITH CHECK (
   bucket_id = 'walkthrough-files'
-  AND EXISTS (
-    SELECT 1 FROM public.user_roles
-    WHERE user_id = auth.uid()
-    AND role IN ('admin', 'superadmin')
-  )
+  AND public.is_admin_or_superadmin(auth.uid())
 );
 
 -- =====================================================

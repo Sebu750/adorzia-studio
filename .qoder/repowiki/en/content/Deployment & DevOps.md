@@ -2,21 +2,20 @@
 
 <cite>
 **Referenced Files in This Document**
-- [vercel.json](file://vercel.json)
-- [package.json](file://package.json)
-- [DEPLOYMENT_COMMANDS.sh](file://DEPLOYMENT_COMMANDS.sh)
-- [supabase/config.toml](file://supabase/config.toml)
-- [.env](file://.env)
 - [vite.config.ts](file://vite.config.ts)
+- [package.json](file://package.json)
+- [vercel.json](file://vercel.json)
+- [eslint.config.js](file://eslint.config.js)
+- [tailwind.config.ts](file://tailwind.config.ts)
+- [postcss.config.js](file://postcss.config.js)
+- [components.json](file://components.json)
 - [index.html](file://index.html)
-- [src/main.tsx](file://src/main.tsx)
 - [src/App.tsx](file://src/App.tsx)
-- [supabase/functions/deno.json](file://supabase/functions/deno.json)
-- [supabase/functions/import_map.json](file://supabase/functions/import_map.json)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts)
-- [supabase/functions/calculate-designer-score/index.ts](file://supabase/functions/calculate-designer-score/index.ts)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts)
+- [src/main.tsx](file://src/main.tsx)
+- [src/integrations/supabase/client.ts](file://src/integrations/supabase/client.ts)
+- [src/integrations/supabase/admin-client.ts](file://src/integrations/supabase/admin-client.ts)
+- [tsconfig.json](file://tsconfig.json)
+- [tsconfig.app.json](file://tsconfig.app.json)
 </cite>
 
 ## Table of Contents
@@ -32,436 +31,310 @@
 10. [Appendices](#appendices)
 
 ## Introduction
-This document provides comprehensive deployment and DevOps guidance for the Adorzia platform. It covers the frontend build process, environment configuration, CI/CD pipeline setup, and deployment strategies. It also documents Vercel deployment configuration, Supabase deployment requirements, environment variable management, monitoring and maintenance procedures, rollback strategies, performance optimization, security considerations, backup procedures, and disaster recovery planning.
+This document provides comprehensive deployment and DevOps guidance for the project. It covers build configuration with Vite, asset optimization, bundling strategies, deployment via Vercel, environment variable management, CI/CD considerations, development workflow best practices, code quality standards with ESLint, project maintenance, troubleshooting, performance optimization, monitoring strategies, environment setup, testing procedures, and release management.
 
 ## Project Structure
-The Adorzia platform consists of:
-- A React + TypeScript frontend built with Vite and deployed via Vercel.
-- A Supabase backend with Edge Functions (Deno runtime) and database migrations.
-- Environment configuration managed via .env and Supabase secrets.
-- A dedicated deployment script for Supabase functions and migrations.
+The project is a Vite-powered React application with TypeScript, Tailwind CSS, and shadcn/ui components. Build-time configuration is centralized in Vite, while runtime configuration relies on environment variables accessed via Vite’s import.meta.env. The application is deployed to Vercel with security headers and caching policies applied.
 
 ```mermaid
 graph TB
-subgraph "Frontend"
-ViteCfg["vite.config.ts"]
-EnvFile[".env"]
-HTML["index.html"]
-MainTS["src/main.tsx"]
-AppTS["src/App.tsx"]
-end
-subgraph "Edge Functions"
-DenoJson["supabase/functions/deno.json"]
-ImportMap["supabase/functions/import_map.json"]
-ManageFounding["supabase/functions/manage-founding/index.ts"]
-CalcScore["supabase/functions/calculate-designer-score/index.ts"]
-CreateCheckout["supabase/functions/create-checkout/index.ts"]
-CustomerPortal["supabase/functions/customer-portal/index.ts"]
-end
-subgraph "Platform"
-VercelCfg["vercel.json"]
-SupabaseCfg["supabase/config.toml"]
-Migrations["supabase/migrations/*"]
-end
-ViteCfg --> HTML
-MainTS --> AppTS
-EnvFile --> ViteCfg
-VercelCfg --> HTML
-DenoJson --> ImportMap
-ManageFounding --> SupabaseCfg
-CalcScore --> SupabaseCfg
-CreateCheckout --> SupabaseCfg
-CustomerPortal --> SupabaseCfg
-SupabaseCfg --> Migrations
+A["index.html<br/>HTML entrypoint"] --> B["src/main.tsx<br/>Runtime bootstrap"]
+B --> C["src/App.tsx<br/>Routing and providers"]
+C --> D["vite.config.ts<br/>Build and dev server config"]
+D --> E["Rollup bundling<br/>manualChunks, minify, targets"]
+D --> F["Assets optimization<br/>inline limit, code-splitting"]
+G["vercel.json<br/>Rewrites, headers, cache"] --> H["Vercel deployment"]
+I["eslint.config.js<br/>Lint rules"] --> J["Developer workflow"]
+K["tailwind.config.ts<br/>UI tokens and animations"] --> L["PostCSS pipeline"]
+L --> M["postcss.config.js"]
+N["components.json<br/>shadcn/ui aliases"] --> O["TypeScript path mapping"]
+P["tsconfig*.json<br/>Compiler options"] --> Q["TypeScript resolution"]
 ```
 
 **Diagram sources**
-- [vite.config.ts](file://vite.config.ts#L1-L39)
-- [.env](file://.env#L1-L4)
 - [index.html](file://index.html#L1-L127)
-- [src/main.tsx](file://src/main.tsx#L1-L20)
-- [src/App.tsx](file://src/App.tsx#L1-L350)
-- [supabase/functions/deno.json](file://supabase/functions/deno.json#L1-L4)
-- [supabase/functions/import_map.json](file://supabase/functions/import_map.json#L1-L7)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L1-L191)
-- [supabase/functions/calculate-designer-score/index.ts](file://supabase/functions/calculate-designer-score/index.ts#L1-L223)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L1-L85)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L1-L74)
-- [vercel.json](file://vercel.json#L1-L16)
-- [supabase/config.toml](file://supabase/config.toml#L1-L71)
+- [src/main.tsx](file://src/main.tsx#L1-L46)
+- [src/App.tsx](file://src/App.tsx#L1-L422)
+- [vite.config.ts](file://vite.config.ts#L1-L40)
+- [vercel.json](file://vercel.json#L1-L24)
+- [eslint.config.js](file://eslint.config.js#L1-L27)
+- [tailwind.config.ts](file://tailwind.config.ts#L1-L476)
+- [postcss.config.js](file://postcss.config.js#L1-L7)
+- [components.json](file://components.json#L1-L21)
+- [tsconfig.json](file://tsconfig.json#L1-L17)
+- [tsconfig.app.json](file://tsconfig.app.json#L1-L31)
 
 **Section sources**
-- [package.json](file://package.json#L1-L88)
-- [vite.config.ts](file://vite.config.ts#L1-L39)
-- [vercel.json](file://vercel.json#L1-L16)
-- [supabase/config.toml](file://supabase/config.toml#L1-L71)
+- [index.html](file://index.html#L1-L127)
+- [src/main.tsx](file://src/main.tsx#L1-L46)
+- [src/App.tsx](file://src/App.tsx#L1-L422)
+- [vite.config.ts](file://vite.config.ts#L1-L40)
+- [vercel.json](file://vercel.json#L1-L24)
+- [eslint.config.js](file://eslint.config.js#L1-L27)
+- [tailwind.config.ts](file://tailwind.config.ts#L1-L476)
+- [postcss.config.js](file://postcss.config.js#L1-L7)
+- [components.json](file://components.json#L1-L21)
+- [tsconfig.json](file://tsconfig.json#L1-L17)
+- [tsconfig.app.json](file://tsconfig.app.json#L1-L31)
 
 ## Core Components
-- Frontend build and deployment:
-  - Build scripts and dependencies are defined in package.json.
-  - Vite configuration enables code-splitting, vendor chunking, and asset optimization.
-  - Vercel configuration enforces rewrites and security headers.
-- Supabase Edge Functions:
-  - Deno runtime with import map for third-party libraries.
-  - Functions for founding approvals, scoring, checkout, and customer portal.
-- Environment configuration:
-  - Frontend environment variables (.env) for Supabase project identifiers and keys.
-  - Supabase config.toml defines JWT verification policies per function.
+- Build system: Vite with esbuild minification, ES2020 target, CSS code splitting, and manual chunking for vendor bundles.
+- Asset optimization: Inline assets under a threshold and long-term caching for immutable assets.
+- Routing and providers: Centralized routing with protected routes and provider wrappers for Studio and Admin contexts.
+- Environment variables: Supabase client initialization using Vite env variables.
+- Code quality: ESLint with TypeScript and React Hooks recommended rules.
+- Styling pipeline: Tailwind CSS with PostCSS autoprefixing and animation utilities.
 
 **Section sources**
-- [package.json](file://package.json#L1-L88)
-- [vite.config.ts](file://vite.config.ts#L18-L38)
-- [vercel.json](file://vercel.json#L1-L16)
-- [supabase/functions/deno.json](file://supabase/functions/deno.json#L1-L4)
-- [supabase/functions/import_map.json](file://supabase/functions/import_map.json#L1-L7)
-- [supabase/config.toml](file://supabase/config.toml#L1-L71)
-- [.env](file://.env#L1-L4)
+- [vite.config.ts](file://vite.config.ts#L1-L40)
+- [vercel.json](file://vercel.json#L1-L24)
+- [src/App.tsx](file://src/App.tsx#L1-L422)
+- [src/integrations/supabase/client.ts](file://src/integrations/supabase/client.ts#L1-L17)
+- [src/integrations/supabase/admin-client.ts](file://src/integrations/supabase/admin-client.ts#L1-L28)
+- [eslint.config.js](file://eslint.config.js#L1-L27)
+- [tailwind.config.ts](file://tailwind.config.ts#L1-L476)
+- [postcss.config.js](file://postcss.config.js#L1-L7)
 
 ## Architecture Overview
-The deployment architecture integrates the frontend and backend as follows:
-- Frontend (React SPA) hosted on Vercel with static rewrites and security headers.
-- Supabase Edge Functions (Deno) handling business logic and integrations with Stripe and Supabase Auth/DB.
-- Supabase database migrations applied via CLI to maintain schema consistency.
+The deployment architecture integrates Vite build outputs with Vercel. Vercel applies rewrites to serve the SPA, sets security headers, and caches static assets for optimal performance.
 
 ```mermaid
 graph TB
-Client["Browser"]
-Vercel["Vercel CDN<br/>Rewrites + Security Headers"]
-SupabaseEdge["Supabase Edge Functions (Deno)"]
-SupabaseDB["Supabase Postgres + Storage"]
-Client --> Vercel
-Vercel --> SupabaseEdge
-SupabaseEdge --> SupabaseDB
+subgraph "Local Build"
+VC["vite.config.ts"] --> OUT["Dist artifacts"]
+end
+subgraph "Vercel"
+VERCEL["vercel.json"] --> REWRITE["Rewrite all routes to /"]
+VERCEL --> HEADERS["Security headers"]
+VERCEL --> CACHE["Immutable asset caching"]
+end
+OUT --> DEPLOY["Deploy to Vercel"]
+DEPLOY --> VERCEL
 ```
 
 **Diagram sources**
-- [vercel.json](file://vercel.json#L1-L16)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L1-L191)
-- [supabase/functions/calculate-designer-score/index.ts](file://supabase/functions/calculate-designer-score/index.ts#L1-L223)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L1-L85)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L1-L74)
+- [vite.config.ts](file://vite.config.ts#L1-L40)
+- [vercel.json](file://vercel.json#L1-L24)
+
+**Section sources**
+- [vite.config.ts](file://vite.config.ts#L1-L40)
+- [vercel.json](file://vercel.json#L1-L24)
 
 ## Detailed Component Analysis
 
-### Frontend Build and Deployment
-- Build process:
-  - Scripts for dev, build, dev build, lint, and preview are defined in package.json.
-  - Vite configuration optimizes bundle size with manualChunks for vendor libraries and sets esbuild minification.
-- Static hosting:
-  - Vercel rewrites all routes to the SPA entry, enabling client-side routing.
-  - Security headers enforce content-type options, frame options, and XSS protection.
-- Environment variables:
-  - Frontend reads Supabase project ID, publishable key, and URL from .env.
+### Vite Build Configuration
+- Dev server: Host binding to all interfaces, fixed port, and optional component tagger plugin in development.
+- Aliasing: Path alias @ resolves to src for concise imports.
+- Rollup options: Manual chunking separates React core, UI motion libraries, and data fetching/storage libraries.
+- Minification and targets: esbuild minification, ES2020 target, CSS code splitting, and chunk size warning threshold.
+- Assets: Inline assets smaller than a configured limit; larger assets emitted as separate chunks.
 
 ```mermaid
 flowchart TD
-Start(["Developer runs build"]) --> Scripts["Run npm/yarn scripts"]
-Scripts --> ViteBuild["Vite build with code-splitting"]
-ViteBuild --> Output["Static assets"]
-Output --> VercelDeploy["Deploy to Vercel"]
-VercelDeploy --> Rewrites["Apply rewrites to '/'"]
-Rewrites --> Security["Apply security headers"]
-Security --> Serve["Serve SPA"]
+Start(["Vite build"]) --> Resolve["Resolve aliases (@ -> src)"]
+Resolve --> Plugins["Load plugins (React, componentTagger in dev)"]
+Plugins --> Rollup["Configure Rollup output"]
+Rollup --> ManualChunks["Manual chunks:<br/>react-vendor, ui-vendor, data-vendor"]
+ManualChunks --> Minify["Minify with esbuild"]
+Minify --> Target["Target ES2020"]
+Target --> CSSplit["CSS code split"]
+CSSplit --> Warn["Chunk size warning limit"]
+Warn --> Assets["Inline small assets, emit others"]
+Assets --> Dist(["Emit dist artifacts"])
 ```
 
 **Diagram sources**
-- [package.json](file://package.json#L6-L11)
-- [vite.config.ts](file://vite.config.ts#L18-L38)
-- [vercel.json](file://vercel.json#L1-L16)
+- [vite.config.ts](file://vite.config.ts#L1-L40)
 
 **Section sources**
-- [package.json](file://package.json#L6-L11)
-- [vite.config.ts](file://vite.config.ts#L18-L38)
-- [vercel.json](file://vercel.json#L1-L16)
-- [.env](file://.env#L1-L4)
-
-### Supabase Edge Functions Deployment
-- Function deployment flow:
-  - A shell script deploys specific functions and pushes database migrations.
-  - Post-deployment, the script tests a function endpoint and instructs next steps for verification.
-- Function configuration:
-  - deno.json defines the import map used by all functions.
-  - import_map.json resolves @supabase/supabase-js and Stripe SDK.
-- Function-specific behavior:
-  - manage-founding validates admin roles and updates submission statuses.
-  - calculate-designer-score computes weighted scores and persists results.
-  - create-checkout creates Stripe checkout sessions using Supabase Auth.
-  - customer-portal generates Stripe Billing Portal sessions for authenticated users.
-
-```mermaid
-sequenceDiagram
-participant Dev as "Developer"
-participant Script as "DEPLOYMENT_COMMANDS.sh"
-participant SupabaseCLI as "Supabase CLI"
-participant Func as "Supabase Edge Function"
-participant Stripe as "Stripe API"
-Dev->>Script : Run deployment script
-Script->>SupabaseCLI : Deploy functions
-Script->>SupabaseCLI : Push database migrations
-Script->>Func : Send test request
-Func-->>Script : Function response
-Script-->>Dev : Verification instructions
-Dev->>Func : Invoke create-checkout
-Func->>Stripe : Create checkout session
-Stripe-->>Func : Session URL
-Func-->>Dev : Return session URL
-```
-
-**Diagram sources**
-- [DEPLOYMENT_COMMANDS.sh](file://DEPLOYMENT_COMMANDS.sh#L1-L37)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L1-L191)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L1-L85)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L1-L74)
-
-**Section sources**
-- [DEPLOYMENT_COMMANDS.sh](file://DEPLOYMENT_COMMANDS.sh#L1-L37)
-- [supabase/functions/deno.json](file://supabase/functions/deno.json#L1-L4)
-- [supabase/functions/import_map.json](file://supabase/functions/import_map.json#L1-L7)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L1-L191)
-- [supabase/functions/calculate-designer-score/index.ts](file://supabase/functions/calculate-designer-score/index.ts#L1-L223)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L1-L85)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L1-L74)
+- [vite.config.ts](file://vite.config.ts#L1-L40)
 
 ### Environment Variable Management
-- Frontend variables:
-  - Supabase project ID, publishable key, and URL are loaded from .env.
-- Supabase function variables:
-  - Functions rely on Supabase service role key, Stripe secret key, and Supabase URLs.
-  - These are configured in Supabase project settings/secrets and injected at runtime.
-
-```mermaid
-flowchart TD
-EnvFile[".env (frontend)"] --> ViteBuild["Vite build"]
-ViteBuild --> Bundle["Built app"]
-Bundle --> VercelDeploy["Vercel deployment"]
-SupabaseSecrets["Supabase Secrets"] --> FunctionsRuntime["Functions runtime"]
-FunctionsRuntime --> EdgeFunctions["Edge Functions"]
-```
-
-**Diagram sources**
-- [.env](file://.env#L1-L4)
-- [vite.config.ts](file://vite.config.ts#L1-L39)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L22-L37)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L38-L40)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L22-L24)
-
-**Section sources**
-- [.env](file://.env#L1-L4)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L22-L37)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L38-L40)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L22-L24)
-
-### CI/CD Pipeline Setup
-Recommended CI/CD pipeline stages:
-- Build:
-  - Install dependencies and run the build script defined in package.json.
-- Test:
-  - Run lint checks and unit/integration tests (as applicable).
-- Deploy:
-  - Deploy frontend to Vercel using Vercel CLI or provider-native deployment.
-  - Deploy Supabase functions and migrations using the deployment script and Supabase CLI.
-- Post-deploy verification:
-  - Validate function health and critical flows (e.g., checkout, scoring).
-  - Monitor Vercel and Supabase dashboards for errors.
-
-```mermaid
-flowchart TD
-CI["CI Runner"] --> Build["Install deps + build"]
-Build --> Test["Lint + tests"]
-Test --> DeployFE["Deploy to Vercel"]
-Test --> DeployBE["Deploy Supabase functions + migrations"]
-DeployFE --> VerifyFE["Verify SPA routes + headers"]
-DeployBE --> VerifyBE["Test critical functions"]
-VerifyFE --> Done["Release complete"]
-VerifyBE --> Done
-```
-
-**Diagram sources**
-- [package.json](file://package.json#L6-L11)
-- [DEPLOYMENT_COMMANDS.sh](file://DEPLOYMENT_COMMANDS.sh#L1-L37)
-- [vercel.json](file://vercel.json#L1-L16)
-
-**Section sources**
-- [package.json](file://package.json#L6-L11)
-- [DEPLOYMENT_COMMANDS.sh](file://DEPLOYMENT_COMMANDS.sh#L1-L37)
-- [vercel.json](file://vercel.json#L1-L16)
-
-### Monitoring and Maintenance
-- Frontend monitoring:
-  - Track Vercel deployment logs and performance metrics.
-  - Use browser-level error boundaries and global error handlers for runtime diagnostics.
-- Backend monitoring:
-  - Review Supabase Edge Functions logs for function invocations and errors.
-  - Monitor Stripe webhooks and billing portal sessions.
-- Maintenance tasks:
-  - Regularly apply database migrations via the deployment script.
-  - Rotate secrets and keys in Supabase project settings.
-  - Audit JWT verification settings in config.toml.
+- Supabase clients read Vite environment variables prefixed with VITE_. The Studio and Admin clients use the same base keys but isolate session storage for Admin.
+- Ensure environment variables are present in Vercel project settings for production builds.
 
 ```mermaid
 sequenceDiagram
-participant Ops as "Operator"
-participant VercelLogs as "Vercel Logs"
-participant SupaLogs as "Supabase Functions Logs"
-participant StripeWebhooks as "Stripe Webhooks"
-Ops->>VercelLogs : Review SPA deployment logs
-Ops->>SupaLogs : Inspect function errors
-Ops->>StripeWebhooks : Validate webhook delivery
-Ops-->>Ops : Schedule maintenance tasks
+participant App as "App Runtime"
+participant Client as "Supabase Client"
+participant Env as "Vite env (import.meta.env)"
+App->>Client : Initialize with URL and Publishable Key
+Client->>Env : Read VITE_SUPABASE_URL
+Client->>Env : Read VITE_SUPABASE_PUBLISHABLE_KEY
+Env-->>Client : Values
+Client-->>App : Ready to use
 ```
 
 **Diagram sources**
-- [src/main.tsx](file://src/main.tsx#L6-L13)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L183-L189)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L76-L83)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L65-L72)
+- [src/integrations/supabase/client.ts](file://src/integrations/supabase/client.ts#L1-L17)
+- [src/integrations/supabase/admin-client.ts](file://src/integrations/supabase/admin-client.ts#L1-L28)
 
 **Section sources**
-- [src/main.tsx](file://src/main.tsx#L6-L13)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L183-L189)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L76-L83)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L65-L72)
+- [src/integrations/supabase/client.ts](file://src/integrations/supabase/client.ts#L1-L17)
+- [src/integrations/supabase/admin-client.ts](file://src/integrations/supabase/admin-client.ts#L1-L28)
 
-### Rollback Strategies
-- Frontend rollback:
-  - Revert to the previous Vercel deployment using the provider’s rollback mechanism.
-- Backend rollback:
-  - Re-run the deployment script to redeploy previously known-good functions.
-  - Revert database schema by re-applying prior migrations or using Supabase’s migration history.
-- Communication:
-  - Notify stakeholders and monitor systems after rollback.
-
-```mermaid
-flowchart TD
-Issue["Issue detected"] --> FECheck["Check Vercel logs"]
-Issue --> BECheck["Check Supabase logs + migrations"]
-FECheck --> RollbackFE["Rollback SPA to previous version"]
-BECheck --> RollbackBE["Redeploy functions + revert migrations"]
-RollbackFE --> Verify["Verify service health"]
-RollbackBE --> Verify
-Verify --> Communicate["Notify stakeholders"]
-```
-
-**Diagram sources**
-- [DEPLOYMENT_COMMANDS.sh](file://DEPLOYMENT_COMMANDS.sh#L1-L37)
-- [vercel.json](file://vercel.json#L1-L16)
-
-**Section sources**
-- [DEPLOYMENT_COMMANDS.sh](file://DEPLOYMENT_COMMANDS.sh#L1-L37)
-- [vercel.json](file://vercel.json#L1-L16)
-
-### Security Considerations
-- Frontend:
-  - Security headers enforced by Vercel configuration.
-  - Environment variables must remain private; avoid committing secrets to the repository.
-- Backend:
-  - JWT verification toggled per function in config.toml.
-  - Functions authenticate requests using Supabase Auth and enforce role-based access.
-  - Secrets for Stripe and Supabase are stored securely in Supabase project settings.
-
-```mermaid
-graph TB
-SecHeaders["Security Headers (Vercel)"]
-JWT["JWT Verification (config.toml)"]
-Auth["Supabase Auth (Functions)"]
-Secrets["Supabase Secrets (Stripe/SUPABASE)"]
-SecHeaders --> SPA["SPA Security"]
-JWT --> Functions["Function Security"]
-Auth --> Functions
-Secrets --> Functions
-```
-
-**Diagram sources**
-- [vercel.json](file://vercel.json#L5-L14)
-- [supabase/config.toml](file://supabase/config.toml#L1-L71)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L39-L62)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L31-L36)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L32-L41)
-
-**Section sources**
-- [vercel.json](file://vercel.json#L5-L14)
-- [supabase/config.toml](file://supabase/config.toml#L1-L71)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L39-L62)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L31-L36)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L32-L41)
-
-### Backup Procedures and Disaster Recovery
-- Database backups:
-  - Use Supabase’s automated backup and point-in-time recovery features.
-- Function artifacts:
-  - Maintain a copy of function source code and deno.json/import_map.json in version control.
-- Environment drift prevention:
-  - Store all secrets in Supabase project settings and track changes via configuration management.
-- DR testing:
-  - Periodically restore backups in a staging environment and validate critical flows.
-
-[No sources needed since this section provides general guidance]
-
-## Dependency Analysis
-- Frontend dependencies:
-  - React ecosystem, TanStack Query, Radix UI, Tailwind-based UI library, and Vite toolchain.
-- Supabase dependencies:
-  - @supabase/supabase-js and Stripe SDK resolved via import_map.json.
-- Internal coupling:
-  - Functions depend on Supabase Auth/DB and Stripe APIs; frontend depends on Supabase JS client.
+### Routing and Providers
+- Centralized routing with nested providers for Studio and Admin contexts, protected routes, and theme providers.
+- Public website routes are wrapped with a theme provider suitable for the marketing site.
+- Auth and Studio routes are wrapped with appropriate providers and protected route guards.
 
 ```mermaid
 graph LR
-React["@supabase/supabase-js"] --> Functions["Edge Functions"]
-StripeSDK["Stripe SDK"] --> Functions
-React --> Frontend["Frontend App"]
-StripeSDK --> Frontend
+R["BrowserRouter"] --> WS["WebsiteWrapper"]
+R --> AW["AuthWrapper"]
+R --> SP["StudioProviders"]
+R --> AP["AdminProviders"]
+WS --> RoutesWS["Public routes"]
+AW --> RoutesAuth["Auth routes"]
+SP --> RoutesStudio["Studio routes"]
+AP --> RoutesAdmin["Admin routes"]
 ```
 
 **Diagram sources**
-- [supabase/functions/import_map.json](file://supabase/functions/import_map.json#L1-L7)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L1-L2)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L1-L2)
+- [src/App.tsx](file://src/App.tsx#L1-L422)
 
 **Section sources**
-- [supabase/functions/import_map.json](file://supabase/functions/import_map.json#L1-L7)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L1-L2)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L1-L2)
+- [src/App.tsx](file://src/App.tsx#L1-L422)
+
+### Code Quality and Linting
+- ESLint configuration extends recommended rules for JavaScript and TypeScript, enables React Hooks rules, and includes a refresh plugin.
+- Unused variable rule is disabled to reduce noise in a large codebase.
+
+```mermaid
+flowchart TD
+Init["ESLint init"] --> ExtJS["Extend JS recommended"]
+Init --> ExtTS["Extend TS recommended"]
+ExtJS --> Plugins["Plugins: react-hooks, react-refresh"]
+ExtTS --> Plugins
+Plugins --> Rules["Configure rules:<br/>react-hooks recommended,<br/>react-refresh allowConstantExport,<br/>no-unused-vars off"]
+Rules --> Run["Run lint script"]
+```
+
+**Diagram sources**
+- [eslint.config.js](file://eslint.config.js#L1-L27)
+
+**Section sources**
+- [eslint.config.js](file://eslint.config.js#L1-L27)
+
+### Styling Pipeline and Tailwind
+- Tailwind scans components and app directories, supports CSS variables for themes, and defines extensive color palettes and animations.
+- PostCSS pipeline applies Tailwind and autoprefixer.
+
+```mermaid
+flowchart TD
+TW["Tailwind config"] --> Scan["Scan content dirs"]
+TW --> Tokens["Define colors, shadows, radii"]
+TW --> Anim["Define keyframes and animations"]
+PC["PostCSS config"] --> Tailwind["Tailwind CSS"]
+PC --> Autoprefixer["Autoprefixer"]
+Tailwind --> CSSOut["Generated CSS"]
+Autoprefixer --> CSSOut
+```
+
+**Diagram sources**
+- [tailwind.config.ts](file://tailwind.config.ts#L1-L476)
+- [postcss.config.js](file://postcss.config.js#L1-L7)
+
+**Section sources**
+- [tailwind.config.ts](file://tailwind.config.ts#L1-L476)
+- [postcss.config.js](file://postcss.config.js#L1-L7)
+
+### TypeScript Configuration
+- Root tsconfig aggregates app and node configs and sets baseUrl and path mapping for @.
+- App tsconfig targets ES2020, uses bundler module resolution, JSX transform, and path mapping aligned with Vite.
+
+**Section sources**
+- [tsconfig.json](file://tsconfig.json#L1-L17)
+- [tsconfig.app.json](file://tsconfig.app.json#L1-L31)
+
+### shadcn/ui Setup
+- components.json defines style, TSX usage, Tailwind config path, CSS file, base color, and aliases for components, utils, ui, lib, and hooks.
+
+**Section sources**
+- [components.json](file://components.json#L1-L21)
+
+## Dependency Analysis
+The build pipeline depends on Vite, React plugin, and Rollup for bundling. Runtime dependencies include React, React Router, TanStack Query, and Supabase. Dev dependencies include ESLint, TypeScript, Tailwind, and PostCSS.
+
+```mermaid
+graph TB
+Vite["vite.config.ts"] --> ReactPlugin["@vitejs/plugin-react-swc"]
+Vite --> Rollup["Rollup bundling"]
+Rollup --> Vendor["manualChunks"]
+AppDeps["Runtime deps"] --> React["react, react-dom"]
+AppDeps --> Router["react-router-dom"]
+AppDeps --> Query["@tanstack/react-query"]
+AppDeps --> Supabase["@supabase/supabase-js"]
+DevDeps["Dev deps"] --> ESLint["eslint, typescript-eslint"]
+DevDeps --> Tailwind["tailwindcss"]
+DevDeps --> PostCSS["autoprefixer"]
+```
+
+**Diagram sources**
+- [vite.config.ts](file://vite.config.ts#L1-L40)
+- [package.json](file://package.json#L1-L92)
+
+**Section sources**
+- [package.json](file://package.json#L1-L92)
+- [vite.config.ts](file://vite.config.ts#L1-L40)
 
 ## Performance Considerations
-- Frontend:
-  - Manual chunks for React, UI, and data libraries reduce initial payload.
-  - esbuild minification and CSS code splitting improve load performance.
-  - Asset inline threshold optimized for high-resolution imagery.
-- Backend:
-  - Functions should minimize cold starts by keeping dependencies lean.
-  - Use Supabase RLS and efficient queries to reduce function latency.
+- Bundle size and loading: Manual chunking reduces initial payload; ensure chunk size warnings are monitored during development.
+- Asset optimization: Inline small assets to reduce requests; rely on Vercel caching for immutable assets.
+- CSS delivery: Enable CSS code splitting to avoid large single CSS bundles.
+- Target compatibility: ES2020 target balances modern features with broad browser support.
+- Monitoring: Global error listeners in main entry can be extended to integrate with error tracking services.
 
 **Section sources**
-- [vite.config.ts](file://vite.config.ts#L18-L38)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L1-L191)
+- [vite.config.ts](file://vite.config.ts#L1-L40)
+- [vercel.json](file://vercel.json#L1-L24)
+- [src/main.tsx](file://src/main.tsx#L1-L46)
 
 ## Troubleshooting Guide
-- Frontend:
-  - Use global error handlers and browser developer tools to diagnose runtime issues.
-  - Verify Vercel rewrites and security headers are applied.
-- Backend:
-  - Inspect Supabase Edge Functions logs for authentication failures, missing headers, or invalid actions.
-  - Validate Stripe secret key presence and checkout session creation.
-- Environment:
-  - Confirm Supabase service role key and Stripe secret key are present in Supabase project settings.
+- Build fails due to missing environment variables:
+  - Ensure VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY are set in Vercel project settings.
+  - Verify environment variable names match those used by the Supabase clients.
+- SPA routing issues after deploy:
+  - Confirm Vercel rewrite rule serves index.html for all routes.
+- Security headers not applied:
+  - Validate header entries in vercel.json are correctly formatted.
+- Asset caching problems:
+  - Check Cache-Control headers for /assets/* paths.
+- Lint errors blocking commits:
+  - Run the lint script and address rule violations; unused vars are intentionally disabled.
 
 **Section sources**
-- [src/main.tsx](file://src/main.tsx#L6-L13)
-- [vercel.json](file://vercel.json#L1-L16)
-- [supabase/functions/manage-founding/index.ts](file://supabase/functions/manage-founding/index.ts#L17-L32)
-- [supabase/functions/create-checkout/index.ts](file://supabase/functions/create-checkout/index.ts#L22-L28)
-- [supabase/functions/customer-portal/index.ts](file://supabase/functions/customer-portal/index.ts#L22-L24)
+- [src/integrations/supabase/client.ts](file://src/integrations/supabase/client.ts#L1-L17)
+- [src/integrations/supabase/admin-client.ts](file://src/integrations/supabase/admin-client.ts#L1-L28)
+- [vercel.json](file://vercel.json#L1-L24)
+- [eslint.config.js](file://eslint.config.js#L1-L27)
 
 ## Conclusion
-The Adorzia platform combines a modern React SPA with Supabase Edge Functions and a robust deployment workflow. By following the outlined build, environment, CI/CD, monitoring, rollback, security, backup, and performance practices, teams can reliably operate and evolve the platform.
+The project employs a modern Vite build pipeline with strategic bundling and asset optimization, served securely via Vercel with robust headers and caching. Environment variables are cleanly abstracted for Supabase integration, while ESLint and Tailwind streamline development and styling. Following the outlined DevOps practices ensures reliable deployments, maintainable code, and strong performance.
 
 ## Appendices
-- Recommended CI/CD checklist:
-  - Build and lint passes.
-  - Supabase migrations applied.
-  - Critical function tests executed.
-  - Vercel deployment verified.
-  - Monitoring alerts reviewed.
 
-[No sources needed since this section provides general guidance]
+### Environment Setup
+- Install dependencies: Use the package manager commands defined in scripts.
+- Local development: Start the Vite dev server on the configured ports.
+- Build for production: Emit optimized artifacts for deployment.
+
+**Section sources**
+- [package.json](file://package.json#L1-L92)
+
+### Testing Procedures
+- Linting: Run the lint script to validate code quality against ESLint rules.
+- Preview: Use the preview script to test built artifacts locally before deploying.
+
+**Section sources**
+- [package.json](file://package.json#L1-L92)
+- [eslint.config.js](file://eslint.config.js#L1-L27)
+
+### Release Management
+- Versioning: Maintain semantic versioning in package.json.
+- Build artifacts: Tag releases with immutable asset caching via Vercel.
+- Rollback: Leverage Vercel’s deployment history to roll back to previous versions if needed.
+
+**Section sources**
+- [package.json](file://package.json#L1-L92)
+- [vercel.json](file://vercel.json#L1-L24)

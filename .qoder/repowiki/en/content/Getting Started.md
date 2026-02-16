@@ -2,22 +2,20 @@
 
 <cite>
 **Referenced Files in This Document**
-- [package.json](file://package.json)
 - [README.md](file://README.md)
-- [.env](file://.env)
+- [package.json](file://package.json)
 - [vite.config.ts](file://vite.config.ts)
+- [tsconfig.json](file://tsconfig.json)
+- [tsconfig.app.json](file://tsconfig.app.json)
+- [tsconfig.node.json](file://tsconfig.node.json)
+- [tailwind.config.ts](file://tailwind.config.ts)
+- [postcss.config.js](file://postcss.config.js)
+- [eslint.config.js](file://eslint.config.js)
+- [components.json](file://components.json)
+- [vercel.json](file://vercel.json)
+- [index.html](file://index.html)
 - [src/main.tsx](file://src/main.tsx)
 - [src/App.tsx](file://src/App.tsx)
-- [src/hooks/useAuth.tsx](file://src/hooks/useAuth.tsx)
-- [src/hooks/useAdminAuth.tsx](file://src/hooks/useAdminAuth.tsx)
-- [src/integrations/supabase/client.ts](file://src/integrations/supabase/client.ts)
-- [src/pages/Auth.tsx](file://src/pages/Auth.tsx)
-- [src/pages/admin/AdminLogin.tsx](file://src/pages/admin/AdminLogin.tsx)
-- [src/components/auth/AdminProtectedRoute.tsx](file://src/components/auth/AdminProtectedRoute.tsx)
-- [supabase/config.toml](file://supabase/config.toml)
-- [vercel.json](file://vercel.json)
-- [PLAN_ADORZIA_CORE_OPERATING_MODEL.md](file://PLAN_ADORZIA_CORE_OPERATING_MODEL.md)
-- [DEPLOYMENT_COMMANDS.sh](file://DEPLOYMENT_COMMANDS.sh)
 </cite>
 
 ## Table of Contents
@@ -33,348 +31,320 @@
 10. [Appendices](#appendices)
 
 ## Introduction
-This guide helps you install, configure, and run the Adorzia platform locally. It covers prerequisites, environment setup, local development server startup, project structure overview, key configuration files, initial verification steps, and how to access different user roles (designer, admin, public). It also explains the authentication flow and highlights environment-specific considerations.
+Welcome to the Adorzia development environment. This guide helps new developers set up the project locally, understand the development workflow, and contribute effectively using Lovable, a preferred IDE, GitHub, or GitHub Codespaces. You will learn how to install prerequisites, clone and bootstrap the project, run the local development server with hot reloading and live preview, and troubleshoot common setup issues.
 
 ## Project Structure
-The Adorzia platform is a Vite + React + TypeScript application with Supabase for authentication and backend logic. The frontend is organized by feature areas under src/, with pages, components, hooks, integrations, and libraries. Supabase-related backend logic lives under supabase/.
+Adorzia is a Vite-powered React application with TypeScript, styled using Tailwind CSS and shadcn/ui components. The repository includes:
+- Frontend application under src/
+- Build and tooling configurations for Vite, TypeScript, ESLint, PostCSS, and Tailwind
+- Supabase-related backend functions and database migrations under supabase/
+- Static HTML shell and SEO metadata in index.html
+- Deployment and security headers configuration for Vercel-like environments
 
 ```mermaid
 graph TB
-subgraph "Frontend (Vite + React)"
-A["src/main.tsx"]
-B["src/App.tsx"]
-C["src/hooks/useAuth.tsx"]
-D["src/hooks/useAdminAuth.tsx"]
-E["src/integrations/supabase/client.ts"]
-F["src/pages/Auth.tsx"]
-G["src/pages/admin/AdminLogin.tsx"]
-H["src/components/auth/AdminProtectedRoute.tsx"]
-end
-subgraph "Backend (Supabase)"
-S1["supabase/config.toml"]
-S2["supabase/functions/*"]
-S3["supabase/migrations/*"]
-end
-subgraph "Build & Dev"
-V["vite.config.ts"]
-P["package.json"]
-ENV[".env"]
-VERCEL["vercel.json"]
-end
-A --> B
-B --> C
-B --> D
-C --> E
-D --> E
-F --> E
-G --> E
-H --> D
-E --> S1
-S1 --> S2
-S1 --> S3
-V --> P
-ENV --> E
-VERCEL --> B
+Dev["Developer Machine"] --> Node["Node.js + npm"]
+Node --> Repo["Repository Clone"]
+Repo --> Scripts["npm scripts"]
+Scripts --> Vite["Vite Dev Server"]
+Vite --> Browser["Browser Runtime"]
+Browser --> App["React App (src/App.tsx)"]
+App --> UI["shadcn/ui + Tailwind"]
+App --> Routing["React Router"]
+App --> State["React Query"]
 ```
 
 **Diagram sources**
-- [src/main.tsx](file://src/main.tsx#L1-L20)
-- [src/App.tsx](file://src/App.tsx#L1-L350)
-- [src/hooks/useAuth.tsx](file://src/hooks/useAuth.tsx#L1-L252)
-- [src/hooks/useAdminAuth.tsx](file://src/hooks/useAdminAuth.tsx#L1-L216)
-- [src/integrations/supabase/client.ts](file://src/integrations/supabase/client.ts#L1-L17)
-- [src/pages/Auth.tsx](file://src/pages/Auth.tsx#L1-L451)
-- [src/pages/admin/AdminLogin.tsx](file://src/pages/admin/AdminLogin.tsx#L1-L158)
-- [src/components/auth/AdminProtectedRoute.tsx](file://src/components/auth/AdminProtectedRoute.tsx#L1-L46)
-- [vite.config.ts](file://vite.config.ts#L1-L39)
-- [package.json](file://package.json#L1-L88)
-- [.env](file://.env#L1-L4)
-- [supabase/config.toml](file://supabase/config.toml#L1-L71)
-- [vercel.json](file://vercel.json#L1-L16)
+- [package.json](file://package.json#L6-L13)
+- [vite.config.ts](file://vite.config.ts#L7-L18)
+- [src/App.tsx](file://src/App.tsx#L155-L420)
+- [tailwind.config.ts](file://tailwind.config.ts#L3-L5)
 
 **Section sources**
-- [package.json](file://package.json#L1-L88)
+- [README.md](file://README.md#L23-L37)
+- [package.json](file://package.json#L6-L13)
 - [vite.config.ts](file://vite.config.ts#L1-L39)
-- [src/App.tsx](file://src/App.tsx#L1-L350)
-- [supabase/config.toml](file://supabase/config.toml#L1-L71)
+- [tsconfig.json](file://tsconfig.json#L1-L17)
+- [tailwind.config.ts](file://tailwind.config.ts#L1-L476)
+- [postcss.config.js](file://postcss.config.js#L1-L7)
+- [index.html](file://index.html#L1-L127)
 
 ## Core Components
-- Build and dev server: Vite configuration defines the dev server host/port, aliases, and build optimizations.
-- Routing and providers: App sets up routing, theme, React Query, and provider wrappers for studio and admin contexts.
-- Authentication: useAuth manages designer/studio sessions and roles; useAdminAuth manages admin sessions and roles.
-- Supabase client: Typed client initialized with Vite environment variables.
-- Pages: Public, marketplace, studio (protected), and admin routes are declared in App.
-- Admin protection: AdminProtectedRoute enforces admin access and optional superadmin gating.
+- Package manager and scripts: npm scripts define development, building, linting, and preview commands.
+- Vite configuration: development server, plugin chain, path aliases, and build optimizations.
+- TypeScript configuration: app and node configs with bundler resolution and path aliases.
+- Styling pipeline: Tailwind CSS with shadcn/ui, PostCSS, and CSS variables.
+- Application entry and routing: React root, providers, router, and route groups.
 
 **Section sources**
-- [vite.config.ts](file://vite.config.ts#L1-L39)
-- [src/App.tsx](file://src/App.tsx#L1-L350)
-- [src/hooks/useAuth.tsx](file://src/hooks/useAuth.tsx#L1-L252)
-- [src/hooks/useAdminAuth.tsx](file://src/hooks/useAdminAuth.tsx#L1-L216)
-- [src/integrations/supabase/client.ts](file://src/integrations/supabase/client.ts#L1-L17)
-- [src/components/auth/AdminProtectedRoute.tsx](file://src/components/auth/AdminProtectedRoute.tsx#L1-L46)
+- [package.json](file://package.json#L6-L13)
+- [vite.config.ts](file://vite.config.ts#L7-L39)
+- [tsconfig.app.json](file://tsconfig.app.json#L1-L31)
+- [tsconfig.node.json](file://tsconfig.node.json#L1-L23)
+- [tailwind.config.ts](file://tailwind.config.ts#L3-L5)
+- [postcss.config.js](file://postcss.config.js#L1-L7)
+- [src/main.tsx](file://src/main.tsx#L1-L46)
+- [src/App.tsx](file://src/App.tsx#L155-L420)
 
 ## Architecture Overview
-The app initializes providers and routes, then delegates authentication to Supabase. Designer and admin flows are isolated via separate auth contexts and protected routes.
+The development stack centers on Vite’s fast dev server with React Fast Refresh, TypeScript compilation, and Tailwind CSS processing. The app initializes in index.html and renders the React root in src/main.tsx, which mounts src/App.tsx. Providers wrap routes for authentication, subscriptions, themes, and dual-layer contexts. Routing organizes public, auth/studio, and admin sections.
 
 ```mermaid
-sequenceDiagram
-participant Browser as "Browser"
-participant Main as "src/main.tsx"
-participant App as "src/App.tsx"
-participant StudioProv as "Studio Providers"
-participant AdminProv as "Admin Providers"
-participant AuthHook as "useAuth.tsx"
-participant AdminHook as "useAdminAuth.tsx"
-participant Supabase as "Supabase Client"
-Browser->>Main : Load app
-Main->>App : Render App
-App->>StudioProv : Wrap studio routes
-App->>AdminProv : Wrap admin routes
-StudioProv->>AuthHook : Initialize auth state
-AdminProv->>AdminHook : Initialize admin auth state
-AuthHook->>Supabase : onAuthStateChange + getSession
-AdminHook->>Supabase : onAuthStateChange + getSession
-App-->>Browser : Render routes with protected access
+graph TB
+HTML["index.html"] --> Main["src/main.tsx"]
+Main --> App["src/App.tsx"]
+App --> Providers["Providers<br/>Auth, Subscription, Themes, QueryClient"]
+App --> Routes["React Router Routes"]
+Routes --> Public["Public Website"]
+Routes --> Studio["Auth + Studio Routes"]
+Routes --> Admin["Admin Routes"]
+App --> UI["shadcn/ui + Tailwind"]
+App --> State["React Query"]
+ViteCfg["vite.config.ts"] --> Plugins["Plugins<br/>React + Lovable Tagging"]
+ViteCfg --> Aliases["@ alias to src"]
+ViteCfg --> Server["Dev Server<br/>host, port, strictPort"]
 ```
 
 **Diagram sources**
-- [src/main.tsx](file://src/main.tsx#L1-L20)
-- [src/App.tsx](file://src/App.tsx#L1-L350)
-- [src/hooks/useAuth.tsx](file://src/hooks/useAuth.tsx#L1-L252)
-- [src/hooks/useAdminAuth.tsx](file://src/hooks/useAdminAuth.tsx#L1-L216)
-- [src/integrations/supabase/client.ts](file://src/integrations/supabase/client.ts#L1-L17)
+- [index.html](file://index.html#L123-L126)
+- [src/main.tsx](file://src/main.tsx#L1-L46)
+- [src/App.tsx](file://src/App.tsx#L155-L420)
+- [vite.config.ts](file://vite.config.ts#L7-L18)
 
 ## Detailed Component Analysis
 
-### Prerequisites and Installation
-- Node.js and npm are required. The project README provides installation guidance and a step-by-step process.
-- Install dependencies and start the dev server using the scripts defined in package.json.
+### Local Development Setup
+Follow these steps to set up the project locally:
+- Install prerequisites: Node.js and npm. The project requires Node.js and npm; using nvm is recommended.
+- Clone the repository using the project’s Git URL.
+- Navigate into the project directory.
+- Install dependencies with npm.
+- Start the development server with hot reloading and live preview.
 
-Step-by-step:
-1. Install dependencies: npm install
-2. Start the development server: npm run dev
-3. Open http://localhost:8080 in your browser.
-
-Notes:
-- The dev server binds to :: (all interfaces) and runs on port 8080 as configured in vite.config.ts.
-- The project README includes a concise setup flow and technology stack overview.
+```mermaid
+flowchart TD
+Start(["Start"]) --> Prereq["Install Node.js + npm"]
+Prereq --> Clone["Clone repository"]
+Clone --> Enter["Enter project directory"]
+Enter --> InstallDeps["Install dependencies (npm i)"]
+InstallDeps --> RunDev["Run development server (npm run dev)"]
+RunDev --> Preview["Open browser to http://localhost:8080"]
+Preview --> Iterate["Iterate with hot reload"]
+```
 
 **Section sources**
 - [README.md](file://README.md#L21-L37)
-- [package.json](file://package.json#L6-L12)
-- [vite.config.ts](file://vite.config.ts#L8-L11)
+- [package.json](file://package.json#L6-L13)
+- [vite.config.ts](file://vite.config.ts#L8-L12)
 
-### Environment Setup (.env)
-- The project reads Supabase configuration from Vite environment variables prefixed with VITE_.
-- Ensure the following variables are present in your .env file:
-  - VITE_SUPABASE_URL
-  - VITE_SUPABASE_PUBLISHABLE_KEY
-  - VITE_SUPABASE_PROJECT_ID
+### Development Workflow and Hot Reloading
+- The dev script launches Vite on port 8080 with strict port enforcement to prevent auto-port switching.
+- React Fast Refresh enables hot reloading of components during development.
+- The Lovable tagger plugin is conditionally enabled in development to support component tagging.
 
-These are consumed by the Supabase client initialization.
+```mermaid
+sequenceDiagram
+participant Dev as "Developer"
+participant NPM as "npm run dev"
+participant Vite as "Vite Dev Server"
+participant Browser as "Browser"
+Dev->>NPM : Execute dev script
+NPM->>Vite : Start dev server (port 8080)
+Vite-->>Browser : Serve app bundle
+Browser-->>Dev : Render React app
+Dev->>Vite : Modify TS/TSX/CSS
+Vite-->>Browser : Hot module replacement
+Browser-->>Dev : Updated UI without refresh
+```
 
-Verification tip:
-- Confirm the Supabase client resolves these variables at runtime.
-
-**Section sources**
-- [.env](file://.env#L1-L4)
-- [src/integrations/supabase/client.ts](file://src/integrations/supabase/client.ts#L5-L6)
-
-### Local Development Server Startup
-- Use the dev script to start Vite’s development server.
-- The server listens on port 8080 and hosts on all interfaces per vite.config.ts.
-- The main entry point renders the App inside an ErrorBoundary and global error handlers.
+**Diagram sources**
+- [package.json](file://package.json#L7-L7)
+- [vite.config.ts](file://vite.config.ts#L7-L13)
 
 **Section sources**
 - [package.json](file://package.json#L7-L7)
-- [vite.config.ts](file://vite.config.ts#L8-L11)
-- [src/main.tsx](file://src/main.tsx#L1-L20)
+- [vite.config.ts](file://vite.config.ts#L7-L13)
 
-### Project Structure Overview
-Key directories and files:
-- src/pages: Public, marketplace, studio (protected), and admin pages.
-- src/components: Shared UI and feature components.
-- src/hooks: Custom hooks for auth, subscriptions, cart, analytics, etc.
-- src/integrations/supabase: Supabase client and types.
-- supabase/: Edge functions and database migrations.
-- vite.config.ts, package.json, .env, vercel.json: Build, runtime, and deployment configuration.
+### Auto-Preview and Live Updates
+- The dev server serves the app at http://localhost:8080.
+- Changes to source files trigger Fast Refresh, updating the UI instantly.
+- The preview script can be used to test the production build locally.
 
-**Section sources**
-- [src/App.tsx](file://src/App.tsx#L1-L350)
-- [supabase/config.toml](file://supabase/config.toml#L1-L71)
-- [package.json](file://package.json#L1-L88)
-- [vite.config.ts](file://vite.config.ts#L1-L39)
-- [vercel.json](file://vercel.json#L1-L16)
-
-### Initial Setup Verification
-After starting the dev server:
-- Visit the homepage to confirm the public site loads.
-- Navigate to /auth to verify the designer login/signup page.
-- Navigate to /admin/login to verify the admin login page.
-- Check that protected routes redirect unauthenticated users appropriately.
-
-**Section sources**
-- [src/App.tsx](file://src/App.tsx#L124-L342)
-- [src/pages/Auth.tsx](file://src/pages/Auth.tsx#L1-L451)
-- [src/pages/admin/AdminLogin.tsx](file://src/pages/admin/AdminLogin.tsx#L1-L158)
-
-### Accessing Different User Roles
-- Public: Access public pages without authentication.
-- Designer: Use the login/signup form at /auth. After successful login, you gain access to studio routes.
-- Admin: Use the admin login at /admin/login. AdminProtectedRoute enforces admin access and optionally superadmin-only access for certain routes.
-
-Authentication flow highlights:
-- Designer auth uses Supabase auth with role checks against user_roles.
-- Admin auth uses a separate admin client and role checks.
-- AdminProtectedRoute handles redirects and superadmin gating.
-
-**Section sources**
-- [src/App.tsx](file://src/App.tsx#L157-L338)
-- [src/pages/Auth.tsx](file://src/pages/Auth.tsx#L35-L163)
-- [src/pages/admin/AdminLogin.tsx](file://src/pages/admin/AdminLogin.tsx#L17-L68)
-- [src/hooks/useAuth.tsx](file://src/hooks/useAuth.tsx#L102-L133)
-- [src/hooks/useAdminAuth.tsx](file://src/hooks/useAdminAuth.tsx#L101-L140)
-- [src/components/auth/AdminProtectedRoute.tsx](file://src/components/auth/AdminProtectedRoute.tsx#L11-L45)
-
-### Understanding the Authentication Flow
 ```mermaid
-sequenceDiagram
-participant U as "User"
-participant A as "src/pages/Auth.tsx"
-participant H as "useAuth.tsx"
-participant S as "Supabase Client"
-participant R as "App Routes"
-U->>A : Submit login/signup
-A->>H : signIn/signUp
-H->>S : Auth API call
-S-->>H : Session + User
-H->>S : Check user roles (user_roles)
-S-->>H : Roles
-H-->>A : Auth state updated
-A-->>R : Redirect to dashboard or keep on page
-R-->>U : Render protected/studio/admin routes
+flowchart TD
+Dev["Developer edits code"] --> Change{"File changed?"}
+Change --> |Yes| HMR["Vite Fast Refresh"]
+HMR --> Update["Update browser view"]
+Change --> |No| Wait["Idle"]
+Update --> Wait
 ```
 
-**Diagram sources**
-- [src/pages/Auth.tsx](file://src/pages/Auth.tsx#L84-L163)
-- [src/hooks/useAuth.tsx](file://src/hooks/useAuth.tsx#L51-L133)
-- [src/App.tsx](file://src/App.tsx#L157-L236)
-
-### Admin Authentication and Protection
-```mermaid
-sequenceDiagram
-participant U as "Admin User"
-participant AL as "src/pages/admin/AdminLogin.tsx"
-participant AH as "useAdminAuth.tsx"
-participant S as "Supabase Admin Client"
-participant APR as "AdminProtectedRoute.tsx"
-participant AR as "Admin Routes"
-U->>AL : Enter credentials
-AL->>AH : signIn
-AH->>S : Admin auth API call
-S-->>AH : Session + User
-AH->>S : Check admin roles (user_roles)
-S-->>AH : Roles
-AH-->>AL : Auth state updated
-AL-->>AR : Redirect to /admin
-APR->>AH : Enforce admin access
-AH-->>APR : Roles + session
-APR-->>U : Render admin routes or redirect
-```
-
-**Diagram sources**
-- [src/pages/admin/AdminLogin.tsx](file://src/pages/admin/AdminLogin.tsx#L32-L68)
-- [src/hooks/useAdminAuth.tsx](file://src/hooks/useAdminAuth.tsx#L50-L140)
-- [src/components/auth/AdminProtectedRoute.tsx](file://src/components/auth/AdminProtectedRoute.tsx#L11-L45)
-- [src/App.tsx](file://src/App.tsx#L241-L338)
-
-### Supabase Edge Functions and JWT Verification
-- supabase/config.toml controls whether specific edge functions verify JWTs. Some functions require authenticated admin calls, while others are open.
-- These settings influence how admin and studio features interact with backend logic.
-
 **Section sources**
-- [supabase/config.toml](file://supabase/config.toml#L1-L71)
+- [package.json](file://package.json#L13-L13)
+- [vite.config.ts](file://vite.config.ts#L8-L12)
 
-### Environment-Specific Considerations
-- Vite environment variables: Ensure VITE_SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY, and VITE_SUPABASE_PROJECT_ID are set in .env.
-- Build and hosting: vercel.json defines rewrites and security headers for deployments.
-- Development server: vite.config.ts sets host, port, aliases, and build optimizations.
-
-**Section sources**
-- [.env](file://.env#L1-L4)
-- [vercel.json](file://vercel.json#L1-L16)
-- [vite.config.ts](file://vite.config.ts#L7-L38)
-
-## Dependency Analysis
-The project uses Vite for bundling, React for UI, Radix UI + shadcn for components, Tailwind CSS for styling, and Supabase for auth and backend functions. Routing is handled by react-router-dom, and state/cache by @tanstack/react-query.
+### Contribution Methods
+- Lovable: Visit the Lovable project page and start prompting; changes are committed automatically.
+- Preferred IDE: Clone the repo locally, develop with your IDE, and push changes; synced to Lovable.
+- GitHub: Edit files directly on GitHub and commit changes.
+- GitHub Codespaces: Launch a Codespace from the repository and edit directly; commit and push changes.
 
 ```mermaid
 graph LR
-P["package.json"]
-V["vite.config.ts"]
-A["src/App.tsx"]
-SA["@supabase/supabase-js"]
-RRD["react-router-dom"]
-RQ["@tanstack/react-query"]
-P --> V
-P --> SA
-P --> RRD
-P --> RQ
-V --> A
-A --> RRD
-A --> RQ
-A --> SA
+Lovable["Lovable Platform"] --> Repo["Repository"]
+IDE["Preferred IDE"] --> Repo
+GH["GitHub"] --> Repo
+Codespaces["GitHub Codespaces"] --> Repo
+Repo --> Sync["Synced across platforms"]
+```
+
+**Section sources**
+- [README.md](file://README.md#L11-L21)
+- [README.md](file://README.md#L39-L51)
+
+### Environment Configuration
+- Path aliases: @ resolves to src via tsconfig and Vite resolve.alias.
+- TypeScript: App and node configurations with bundler module resolution.
+- Styling: Tailwind scans components/pages/app/src; PostCSS applies Tailwind and Autoprefixer.
+- ESLint: TypeScript + React Hooks + React Refresh rules configured.
+
+```mermaid
+graph TB
+Alias["Path Alias @ -> src"] --> TS["tsconfig.json"]
+Alias --> Vite["vite.config.ts resolve.alias"]
+TS --> AppTS["tsconfig.app.json"]
+TS --> NodeTS["tsconfig.node.json"]
+Tailwind["Tailwind config"] --> Scan["Scans pages/components/app/src"]
+PostCSS["PostCSS"] --> Tailwind
+ESLint["ESLint config"] --> Rules["TypeScript + React Hooks + Refresh"]
 ```
 
 **Diagram sources**
-- [package.json](file://package.json#L13-L85)
-- [vite.config.ts](file://vite.config.ts#L1-L39)
-- [src/App.tsx](file://src/App.tsx#L1-L14)
+- [tsconfig.json](file://tsconfig.json#L4-L8)
+- [vite.config.ts](file://vite.config.ts#L14-L17)
+- [tailwind.config.ts](file://tailwind.config.ts#L3-L5)
+- [postcss.config.js](file://postcss.config.js#L1-L7)
+- [eslint.config.js](file://eslint.config.js#L1-L27)
 
 **Section sources**
-- [package.json](file://package.json#L13-L85)
-- [vite.config.ts](file://vite.config.ts#L1-L39)
-- [src/App.tsx](file://src/App.tsx#L1-L14)
+- [tsconfig.json](file://tsconfig.json#L4-L8)
+- [tsconfig.app.json](file://tsconfig.app.json#L24-L27)
+- [vite.config.ts](file://vite.config.ts#L14-L17)
+- [tailwind.config.ts](file://tailwind.config.ts#L3-L5)
+- [postcss.config.js](file://postcss.config.js#L1-L7)
+- [eslint.config.js](file://eslint.config.js#L1-L27)
+
+### Build and Preview
+- Build: Generates optimized bundles with code splitting and vendor chunking.
+- Preview: Serves the production build locally for testing.
+
+```mermaid
+flowchart TD
+Build["npm run build"] --> Rollup["Rollup Options<br/>manualChunks"]
+Rollup --> Split["Code Splitting + Tree Shaking"]
+Split --> Output["Optimized Assets"]
+Preview["npm run preview"] --> Serve["Serve Production Build"]
+```
+
+**Section sources**
+- [package.json](file://package.json#L10-L12)
+- [vite.config.ts](file://vite.config.ts#L19-L36)
+
+### Deployment and Security Headers
+- Deployment: Publish via Lovable’s Share -> Publish.
+- Custom domains: Configure under Project > Settings > Domains.
+- Security headers: Vercel-compatible headers for content-type options, frame options, XSS protection, referrer policy, permissions policy, and asset caching.
+
+```mermaid
+graph LR
+Lovable["Lovable Publish"] --> Deploy["Deployed Site"]
+Custom["Custom Domain"] --> Deploy
+Headers["Security Headers"] --> Deploy
+```
+
+**Section sources**
+- [README.md](file://README.md#L63-L74)
+- [vercel.json](file://vercel.json#L1-L24)
+
+## Dependency Analysis
+- Runtime dependencies include React, React Router, TanStack React Query, Supabase JS, Framer Motion, shadcn/ui primitives, Tailwind variants, and others.
+- Dev dependencies include Vite, TypeScript, ESLint, Tailwind, PostCSS, and the Lovable tagger plugin.
+
+```mermaid
+graph TB
+App["Application"] --> React["react + react-dom"]
+App --> Router["react-router-dom"]
+App --> Query["@tanstack/react-query"]
+App --> Supabase["@supabase/supabase-js"]
+App --> UI["@radix-ui/* + lucide-react + framer-motion"]
+Dev["Dev Dependencies"] --> Vite["vite + @vitejs/plugin-react-swc"]
+Dev --> TS["typescript + types/*"]
+Dev --> Lint["eslint + typescript-eslint"]
+Dev --> TailwindDev["tailwindcss + autoprefixer"]
+Dev --> Lovable["lovable-tagger"]
+```
+
+**Diagram sources**
+- [package.json](file://package.json#L15-L69)
+- [package.json](file://package.json#L71-L89)
+
+**Section sources**
+- [package.json](file://package.json#L15-L69)
+- [package.json](file://package.json#L71-L89)
 
 ## Performance Considerations
-- Vite build settings optimize for fast load times, including manual chunks for vendor libraries, esbuild minification, and CSS code splitting.
-- Assets inline limit is configured for efficient handling of small assets.
-- These settings help maintain a responsive UI during development and in production builds.
+- Vendor chunking separates React, UI, and data libraries to improve caching and load performance.
+- Code splitting and tree shaking reduce bundle sizes.
+- Strict port enforcement prevents accidental port conflicts.
+- Asset inlining threshold tuned for high-resolution imagery.
 
 **Section sources**
-- [vite.config.ts](file://vite.config.ts#L18-L38)
+- [vite.config.ts](file://vite.config.ts#L21-L36)
+- [vite.config.ts](file://vite.config.ts#L38-L38)
 
 ## Troubleshooting Guide
 Common setup issues and resolutions:
-- Missing environment variables:
-  - Ensure VITE_SUPABASE_URL, VITE_SUPABASE_PUBLISHABLE_KEY, and VITE_SUPABASE_PROJECT_ID are defined in .env.
-- Dev server does not start:
-  - Verify Node.js and npm versions meet project requirements.
-  - Clear node_modules and reinstall dependencies if needed.
-- Supabase client errors:
-  - Confirm the Supabase URL and key match your project settings.
-  - Check that the client is initialized with the correct environment variables.
-- Admin access denied:
-  - Ensure your user has an appropriate role in the user_roles table.
-  - AdminProtectedRoute will redirect to unauthorized if insufficient privileges.
-- CORS or auth state issues:
-  - Check browser storage for auth tokens and ensure they are persisted as configured.
-  - Review global error handlers in main.tsx for unhandled exceptions.
+- Node.js/npm not installed or outdated
+  - Ensure Node.js and npm are installed. Using nvm is recommended.
+  - Verify installation by checking node -v and npm -v.
+- Port conflicts on 8080
+  - The dev server enforces strict port usage. Close other services using port 8080 or change the port in Vite configuration.
+- Missing dependencies after clone
+  - Run npm i to install all dependencies defined in package.json.
+- TypeScript path alias not resolving
+  - Confirm @ alias is defined in both tsconfig.json and vite.config.ts resolve.alias.
+- Tailwind styles not applied
+  - Ensure Tailwind scans the correct paths and PostCSS is configured. Check content globs and PostCSS plugins.
+- ESLint errors
+  - Fix lint violations or adjust rules in eslint.config.js if needed.
+- Production preview differs locally
+  - Use npm run preview to emulate production builds and confirm behavior.
 
 **Section sources**
-- [.env](file://.env#L1-L4)
-- [src/integrations/supabase/client.ts](file://src/integrations/supabase/client.ts#L5-L17)
-- [src/hooks/useAdminAuth.tsx](file://src/hooks/useAdminAuth.tsx#L101-L140)
-- [src/components/auth/AdminProtectedRoute.tsx](file://src/components/auth/AdminProtectedRoute.tsx#L18-L45)
-- [src/main.tsx](file://src/main.tsx#L6-L13)
+- [README.md](file://README.md#L21-L21)
+- [vite.config.ts](file://vite.config.ts#L8-L12)
+- [vite.config.ts](file://vite.config.ts#L14-L17)
+- [tsconfig.json](file://tsconfig.json#L4-L8)
+- [tailwind.config.ts](file://tailwind.config.ts#L3-L5)
+- [postcss.config.js](file://postcss.config.js#L1-L7)
+- [eslint.config.js](file://eslint.config.js#L1-L27)
+- [package.json](file://package.json#L13-L13)
 
 ## Conclusion
-You now have the essentials to install, configure, and run the Adorzia platform locally. Use the .env file to configure Supabase, start the dev server with npm run dev, and explore public, studio, and admin experiences. For deeper operational model guidance, refer to the core operating model plan.
+You now have the essentials to set up the Adorzia development environment, run the local server with hot reloading, and contribute via Lovable, IDE, GitHub, or Codespaces. Use the troubleshooting section to resolve common issues and refer to the architecture overview to understand how the pieces fit together.
 
 ## Appendices
-- Additional deployment and edge function guidance is available in the deployment script and operating model plan.
+
+### Quick Reference
+- Install prerequisites: Node.js and npm (recommended: nvm)
+- Clone repository and enter directory
+- Install dependencies: npm i
+- Start dev server: npm run dev
+- View site: http://localhost:8080
+- Build for production: npm run build
+- Preview production build: npm run preview
 
 **Section sources**
-- [DEPLOYMENT_COMMANDS.sh](file://DEPLOYMENT_COMMANDS.sh#L1-L37)
-- [PLAN_ADORZIA_CORE_OPERATING_MODEL.md](file://PLAN_ADORZIA_CORE_OPERATING_MODEL.md#L1-L356)
+- [README.md](file://README.md#L23-L37)
+- [package.json](file://package.json#L6-L13)
+- [vite.config.ts](file://vite.config.ts#L8-L12)

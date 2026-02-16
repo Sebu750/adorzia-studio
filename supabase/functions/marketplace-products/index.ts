@@ -3,21 +3,39 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-forwarded-proto, x-real-ip',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
+  'Access-Control-Max-Age': '86400', // 24 hours
 };
 
-const logStep = (step: string, details?: any) => {
+// Enhanced response helper to ensure CORS headers are always included
+const createResponse = (body: unknown, status = 200) => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...corsHeaders
+  };
+  return new Response(body ? JSON.stringify(body) : null, { status, headers });
+};
+
+const logStep = (step: string, details?: unknown) => {
   console.log(`[MARKETPLACE-PRODUCTS] ${step}`, details ? JSON.stringify(details) : '');
 };
 
 serve(async (req) => {
+  // OPTIONS preflight always succeeds with proper CORS headers
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { status: 204, headers: corsHeaders });
   }
 
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY');
+    
+    if (!supabaseUrl || !supabaseAnonKey) {
+      console.error('Missing environment variables: SUPABASE_URL or SUPABASE_ANON_KEY');
+      return createResponse({ error: 'Server configuration error' }, 500);
+    }
+    
     const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const url = new URL(req.url);
@@ -42,10 +60,9 @@ serve(async (req) => {
         .from('marketplace_products')
         .select(`
           *,
-          designer:designer_profiles!marketplace_products_designer_id_fkey(id, full_name, brand_name, avatar_url),
           category:marketplace_categories(id, name, slug)
         `, { count: 'exact' })
-        .eq('status', 'active');
+        .eq('status', 'live');
 
       if (category) {
         query = query.eq('category_id', category);
@@ -96,12 +113,12 @@ serve(async (req) => {
 
       if (error) {
         logStep('Error fetching products', error);
-        throw error;
+        return createResponse({ error: error.message }, 500);
       }
 
       logStep('Products fetched', { count, page, limit });
 
-      return new Response(JSON.stringify({
+      return createResponse({
         products,
         pagination: {
           page,
@@ -109,8 +126,6 @@ serve(async (req) => {
           total: count,
           totalPages: Math.ceil((count || 0) / limit),
         },
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -119,20 +134,16 @@ serve(async (req) => {
       const slug = url.searchParams.get('slug');
 
       if (!productId && !slug) {
-        return new Response(JSON.stringify({ error: 'Product ID or slug required' }), {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        return createResponse({ error: 'Product ID or slug required' }, 400);
       }
 
       let query = supabase
         .from('marketplace_products')
         .select(`
           *,
-          designer:designer_profiles!marketplace_products_designer_id_fkey(id, full_name, brand_name, avatar_url, bio),
           category:marketplace_categories(id, name, slug)
         `)
-        .eq('status', 'active');
+        .eq('status', 'live');
 
       if (productId) {
         query = query.eq('id', productId);
@@ -144,10 +155,7 @@ serve(async (req) => {
 
       if (error) {
         logStep('Error fetching product', error);
-        return new Response(JSON.stringify({ error: 'Product not found' }), {
-          status: 404,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
+        return createResponse({ error: 'Product not found' }, 404);
       }
 
       // Increment view count
@@ -160,7 +168,7 @@ serve(async (req) => {
       const { data: sameDesignerProducts } = await supabase
         .from('marketplace_products')
         .select('id, title, price, images, designer_id, average_rating')
-        .eq('status', 'active')
+        .eq('status', 'live')
         .eq('designer_id', product.designer_id)
         .neq('id', product.id)
         .limit(4);
@@ -172,7 +180,7 @@ serve(async (req) => {
         const { data: categoryProducts } = await supabase
           .from('marketplace_products')
           .select('id, title, price, images, designer_id, average_rating')
-          .eq('status', 'active')
+          .eq('status', 'live')
           .eq('category_id', product.category_id)
           .not('id', 'in', `(${excludeIds.join(',')})`)
           .limit(4 - relatedProducts.length);
@@ -194,12 +202,10 @@ serve(async (req) => {
 
       logStep('Product fetched', { id: product.id });
 
-      return new Response(JSON.stringify({
+      return createResponse({
         product,
         relatedProducts: relatedProducts || [],
         reviews: reviews || [],
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -210,11 +216,11 @@ serve(async (req) => {
         .eq('is_active', true)
         .order('display_order');
 
-      if (error) throw error;
+      if (error) {
+        return createResponse({ error: error.message }, 500);
+      }
 
-      return new Response(JSON.stringify({ categories }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return createResponse({ categories });
     }
 
     if (action === 'collections') {
@@ -232,24 +238,18 @@ serve(async (req) => {
 
       const { data: collections, error } = await query;
 
-      if (error) throw error;
+      if (error) {
+        return createResponse({ error: error.message }, 500);
+      }
 
-      return new Response(JSON.stringify({ collections }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return createResponse({ collections });
     }
 
-    return new Response(JSON.stringify({ error: 'Invalid action' }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return createResponse({ error: 'Invalid action' }, 400);
 
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     logStep('Error', { message: errorMessage });
-    return new Response(JSON.stringify({ error: errorMessage }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return createResponse({ error: errorMessage }, 500);
   }
 });

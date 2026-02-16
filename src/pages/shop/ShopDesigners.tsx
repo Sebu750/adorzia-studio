@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Star, Package } from "lucide-react";
+import { Search, ArrowUpRight, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { MarketplaceLayout } from "@/components/marketplace/MarketplaceLayout";
-import AnimatedHeading from "@/components/public/AnimatedHeading";
-import TiltCard from "@/components/public/TiltCard";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -19,14 +17,9 @@ interface Designer {
   brand_name?: string | null;
   category: string | null;
   location?: string | null;
-  website_url?: string | null;
-  instagram_handle?: string | null;
-  xp: number;
+  style_credits: number;
   product_count?: number;
   product_images?: string[];
-  rating?: number;
-  signature_style?: string;
-  awards?: string[];
 }
 
 export default function ShopDesigners() {
@@ -38,7 +31,7 @@ export default function ShopDesigners() {
     queryFn: async () => {
       let query = supabase
         .from('profiles')
-        .select('id, name, avatar_url, bio, brand_name, category, location, website_url, instagram_handle, xp, awards')
+        .select('user_id, name, avatar_url, bio, brand_name, category, location, style_credits')
         .not('name', 'is', null);
 
       const { data: profileData, error } = await query;
@@ -50,13 +43,13 @@ export default function ShopDesigners() {
           const { count } = await supabase
             .from('marketplace_products')
             .select('*', { count: 'exact', head: true })
-            .eq('designer_id', profile.id)
+            .eq('designer_id', profile.user_id)
             .eq('status', 'live');
 
           const { data: products } = await supabase
             .from('marketplace_products')
             .select('images')
-            .eq('designer_id', profile.id)
+            .eq('designer_id', profile.user_id)
             .eq('status', 'live')
             .limit(4);
 
@@ -66,136 +59,171 @@ export default function ShopDesigners() {
             .slice(0, 4) || [];
 
           return {
-            ...profile,
+            id: profile.user_id,
+            name: profile.name,
+            avatar_url: profile.avatar_url,
+            bio: profile.bio,
+            brand_name: profile.brand_name,
+            category: profile.category,
+            location: profile.location,
+            style_credits: profile.style_credits || 0,
             product_count: count || 0,
             product_images: productImages,
-            rating: 4.5 + Math.random() * 0.4, // Mock rating for now
           };
         })
       );
 
-      return designersWithProducts.filter(d => d.product_count > 0);
+      return designersWithProducts;
     },
   });
 
   const filteredDesigners = designers?.filter(d =>
     d.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    d.bio?.toLowerCase().includes(searchQuery.toLowerCase())
+    d.bio?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    d.brand_name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <MarketplaceLayout>
       {/* Hero Section */}
-      <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden bg-secondary/50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center max-w-2xl mx-auto">
-            <motion.div
+      <section className="pt-32 pb-20 md:pt-40 md:pb-28">
+        <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
+          <div className="max-w-3xl">
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
+              className="text-editorial-caption text-muted-foreground mb-4"
             >
-              <Badge variant="outline" className="mb-4">
-                Rising Stars
-              </Badge>
-              <AnimatedHeading className="font-display text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-                Our Designers
-              </AnimatedHeading>
-              <p className="text-lg text-muted-foreground mb-8">
-                Discover emerging talent from across Pakistan. Each designer brings unique perspectives and exceptional craftsmanship.
-              </p>
-              <div className="max-w-md mx-auto">
-                <Input
-                  type="text"
-                  placeholder="Search designers..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-12"
-                />
-              </div>
+              Rising Stars
+            </motion.p>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="text-editorial-display mb-6"
+            >
+              Our Designers
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-editorial-body text-muted-foreground mb-10 max-w-xl"
+            >
+              Discover emerging talent from across Pakistan. Each designer brings 
+              unique perspectives, exceptional craftsmanship, and a distinct creative vision.
+            </motion.p>
+            
+            {/* Search */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="relative max-w-md"
+            >
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Search designers..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="h-12 pl-11 pr-4 bg-muted/50 border-0 focus-visible:ring-1"
+              />
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* Designers Grid */}
-      <section className="py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="pb-24 md:pb-32">
+        <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
           {isLoading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className="space-y-3">
-                  <div className="aspect-[16/9] bg-muted rounded-2xl animate-pulse" />
-                  <div className="h-6 bg-muted rounded animate-pulse w-1/2" />
-                  <div className="h-4 bg-muted rounded animate-pulse w-3/4" />
+                <div key={i} className="space-y-4">
+                  <div className="aspect-[4/3] bg-muted rounded-lg animate-pulse" />
+                  <div className="h-6 bg-muted rounded animate-pulse w-2/3" />
+                  <div className="h-4 bg-muted rounded animate-pulse w-1/2" />
                 </div>
               ))}
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredDesigners?.map((designer, i) => {
-                const profileLink = `/shop/designer/${designer.id}`;
-
-                return (
-                  <motion.div
-                    key={designer.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.05 }}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredDesigners?.map((designer, i) => (
+                <motion.div
+                  key={designer.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.08 }}
+                >
+                  <Link 
+                    to={`/shop/designer/${designer.id}`}
+                    className="group block"
                   >
-                    <Link to={profileLink}>
-                      <TiltCard tiltAmount={8}>
-                        <Card className="h-full hover:shadow-lg transition-shadow overflow-hidden">
-                          <div className="aspect-[16/9] relative overflow-hidden">
-                            {designer.product_images && designer.product_images.length > 0 ? (
-                              <>
-                                <img
-                                  src={designer.product_images[0]}
-                                  alt={designer.name || 'Designer'}
-                                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-                                <div className="absolute bottom-4 left-4 right-4">
-                                  <h3 className="font-display font-semibold text-lg">{designer.name}</h3>
-                                  <p className="text-sm text-muted-foreground line-clamp-1">{designer.category}</p>
-                                </div>
-                              </>
-                            ) : (
-                              <div className="w-full h-full bg-muted flex items-center justify-center">
-                                <Package className="h-12 w-12 text-muted-foreground" />
-                              </div>
-                            )}
-                          </div>
-                          <CardContent className="p-4">
-                            <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                              {designer.bio || 'Designer specializing in unique handcrafted pieces.'}
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-muted mb-4">
+                      {designer.product_images && designer.product_images.length > 0 ? (
+                        <img
+                          src={designer.product_images[0]}
+                          alt={designer.brand_name || designer.name}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
+                          <span className="font-display text-6xl text-muted-foreground/30">
+                            {(designer.brand_name || designer.name)?.charAt(0)}
+                          </span>
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <span className="text-sm font-medium text-background">
+                          View Profile
+                        </span>
+                        <ArrowUpRight className="h-4 w-4 text-background" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h3 className="font-display text-xl font-medium group-hover:text-foreground/80 transition-colors">
+                            {designer.brand_name || designer.name}
+                          </h3>
+                          {designer.category && (
+                            <p className="text-sm text-muted-foreground">
+                              {designer.category}
                             </p>
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-muted-foreground">{designer.product_count || 0} products</span>
-                              {designer.rating && (
-                                <div className="flex items-center gap-1">
-                                  <Star className="h-4 w-4 fill-primary text-primary" />
-                                  <span className="font-medium">{designer.rating.toFixed(1)}</span>
-                                </div>
-                              )}
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </TiltCard>
-                    </Link>
-                  </motion.div>
-                );
-              })}
+                          )}
+                        </div>
+                        {designer.product_count !== undefined && designer.product_count > 0 && (
+                          <Badge variant="secondary" className="text-xs">
+                            {designer.product_count} pieces
+                          </Badge>
+                        )}
+                      </div>
+                      {designer.location && (
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <MapPin className="h-3 w-3" />
+                          {designer.location}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
             </div>
           )}
 
           {!isLoading && filteredDesigners?.length === 0 && (
-            <div className="text-center py-12">
-              <Package className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="font-display text-2xl font-bold mb-2">No designers found</h3>
-              <p className="text-muted-foreground">
+            <div className="text-center py-20">
+              <p className="font-display text-2xl text-muted-foreground mb-4">No designers found</p>
+              <p className="text-muted-foreground mb-6">
                 Try adjusting your search terms or check back later for new designers.
               </p>
+              <Button variant="outline" onClick={() => setSearchQuery('')}>
+                Clear Search
+              </Button>
             </div>
           )}
         </div>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Designer Debug</title>
+</head>
+<body>
+    <h1>Designer Data Debug</h1>
+    <div id="results"></div>
+    
+    <script type="module">
+        import { createClient } from 'https://cdn.skypack.dev/@supabase/supabase-js';
+        
+        const supabaseUrl = 'YOUR_SUPABASE_URL';
+        const supabaseKey = 'YOUR_SUPABASE_KEY';
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        
+        const designerIds = [
+            'c22f79a6-0fa2-4f3e-ad3c-a647e7eab39d',
+            'b2c92b0f-cc1e-423c-ba2f-ce22a70b7099'
+        ];
+        
+        const results = document.getElementById('results');
+        
+        async function checkDesigner(id) {
+            try {
+                // Check profiles table
+                const { data: profile, error: profileError } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('user_id', id)
+                    .single();
+                
+                const profileResult = profileError ? 
+                    `Profile Error: ${profileError.message}` : 
+                    `Profile Found: ${profile?.name || 'No name'} - ${profile?.email || 'No email'}`;
+                
+                // Check marketplace products
+                const { count: productCount, error: productError } = await supabase
+                    .from('marketplace_products')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('designer_id', id);
+                
+                const productResult = productError ? 
+                    `Products Error: ${productError.message}` : 
+                    `Products Count: ${productCount || 0}`;
+                
+                return {
+                    id,
+                    profile: profileResult,
+                    products: productResult,
+                    hasData: !profileError && (profile || productCount > 0)
+                };
+            } catch (error) {
+                return {
+                    id,
+                    error: error.message
+                };
+            }
+        }
+        
+        async function runDebug() {
+            results.innerHTML = '<p>Checking designer data...</p>';
+            
+            for (const id of designerIds) {
+                const result = await checkDesigner(id);
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <h3>Designer ID: ${id}</h3>
+                    <p><strong>Profile:</strong> ${result.profile || result.error}</p>
+                    <p><strong>Products:</strong> ${result.products}</p>
+                    <p><strong>Status:</strong> ${result.hasData ? 'HAS DATA' : 'NO DATA'}</p>
+                    <hr>
+                `;
+                results.appendChild(div);
+            }
+        }
+        
+        // Run the debug when page loads
+        runDebug();
+    </script>
+</body>
+</html>

@@ -55,10 +55,13 @@ Deno.serve(async (req) => {
     }
 
     console.log('[manage-founding] User role:', roleData?.role)
-    const isAdmin = roleData?.role === 'admin' || roleData?.role === 'superadmin'
-    if (!isAdmin) {
-      console.error('[manage-founding] Forbidden: user does not have admin role')
-      throw new Error('Forbidden: Admin access required')
+    
+    // MVP: Single role - superadmin only
+    const isSuperadmin = roleData?.role === 'superadmin'
+    
+    if (!isSuperadmin) {
+      console.error('[manage-founding] Forbidden: user is not superadmin')
+      throw new Error('Forbidden: Superadmin access required')
     }
 
     const body = await req.json()
@@ -182,9 +185,15 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     console.error('[manage-founding] Request failed with error:', error.message, error)
+    // Return appropriate HTTP status codes
+    let status = 500
+    if (error.message?.includes('Forbidden')) status = 403
+    else if (error.message?.includes('Unauthorized')) status = 401
+    else if (error.message?.includes('required')) status = 400
+    
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 400,
+      status: status,
     })
   }
 })

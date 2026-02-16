@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface TablePaginationProps {
   currentPage: number;
@@ -46,32 +47,46 @@ export function TablePagination({
   };
 
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-t border-admin-border bg-admin-muted/20">
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-4 border-t border-admin-border/60 bg-admin-muted/20">
       <p className="text-sm text-admin-muted-foreground">
-        Showing <span className="font-medium text-admin-foreground">{start}-{end}</span> of{" "}
-        <span className="font-medium text-admin-foreground">{totalItems}</span> results
+        Showing <span className="font-semibold text-admin-foreground">{start}-{end}</span> of{" "}
+        <span className="font-semibold text-admin-foreground">{totalItems}</span> results
       </p>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => onPageChange(1)}
+          disabled={currentPage === 1}
+          className="h-9 w-9 rounded-lg border-admin-border/60 hover:bg-admin-muted hover:border-admin-border disabled:opacity-40"
+        >
+          <ChevronsLeft className="h-4 w-4" />
+        </Button>
         <Button
           variant="outline"
           size="sm"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="gap-1"
+          className="h-9 px-3 rounded-lg border-admin-border/60 hover:bg-admin-muted hover:border-admin-border gap-1.5 disabled:opacity-40"
         >
           <ChevronLeft className="h-4 w-4" />
-          Previous
+          <span className="hidden sm:inline">Prev</span>
         </Button>
         <div className="flex items-center gap-1">
           {getPageNumbers().map((page, index) => (
             page === '...' ? (
-              <span key={`ellipsis-${index}`} className="px-2 text-admin-muted-foreground">...</span>
+              <span key={`ellipsis-${index}`} className="px-2 text-admin-muted-foreground/60 text-sm">...</span>
             ) : (
               <Button
                 key={page}
                 variant={page === currentPage ? "default" : "ghost"}
                 size="sm"
-                className="w-9 h-9"
+                className={cn(
+                  "w-9 h-9 rounded-lg text-sm font-medium transition-all",
+                  page === currentPage 
+                    ? "bg-admin-foreground text-admin-background hover:bg-admin-foreground/90" 
+                    : "hover:bg-admin-muted text-admin-foreground"
+                )}
                 onClick={() => typeof page === 'number' && onPageChange(page)}
               >
                 {page}
@@ -84,10 +99,19 @@ export function TablePagination({
           size="sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="gap-1"
+          className="h-9 px-3 rounded-lg border-admin-border/60 hover:bg-admin-muted hover:border-admin-border gap-1.5 disabled:opacity-40"
         >
-          Next
+          <span className="hidden sm:inline">Next</span>
           <ChevronRight className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => onPageChange(totalPages)}
+          disabled={currentPage === totalPages}
+          className="h-9 w-9 rounded-lg border-admin-border/60 hover:bg-admin-muted hover:border-admin-border disabled:opacity-40"
+        >
+          <ChevronsRight className="h-4 w-4" />
         </Button>
       </div>
     </div>

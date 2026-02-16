@@ -224,7 +224,7 @@ export function QueueItemDetailModal({
                       <div className="flex items-center gap-4 mt-2 text-xs text-admin-apricot/50">
                         <span className="flex items-center gap-1">
                           <Star className="w-3 h-3" />
-                          {designer?.xp || 0} XP
+                          {designer?.style_credits || 0} SC
                         </span>
                         <span className="capitalize">{designer?.subscription_tier || 'basic'} Plan</span>
                         {designer?.rank && (

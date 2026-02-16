@@ -2,20 +2,16 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
-  MapPin, ExternalLink, Share2, Heart, ChevronLeft, 
-  Instagram, Twitter, Globe, Mail, Package, Award
+  MapPin, Share2, Heart, ArrowLeft, ArrowUpRight,
+  Instagram, Globe, Mail, Package
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MarketplaceLayout } from "@/components/marketplace/MarketplaceLayout";
 import { MarketplaceProductCard } from "@/components/marketplace/MarketplaceProductCard";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-
-// END MOCK DATA
 
 export default function ShopDesignerProfile() {
   const { id } = useParams<{ id: string }>();
@@ -30,12 +26,12 @@ export default function ShopDesignerProfile() {
       const { data, error } = await supabase
         .from('profiles')
         .select(`
-          id, 
+          user_id,
           name, 
           avatar_url, 
           bio, 
           category, 
-          xp,
+          style_credits,
           brand_name,
           banner_image,
           location,
@@ -48,14 +44,24 @@ export default function ShopDesignerProfile() {
           linkedin_url,
           sustainability_practices
         `)
-        .eq('id', id)
+        .eq('user_id', id)
         .single();
 
-      if (error) throw error;
+      // Handle case where designer doesn't exist
+      if (error && error.code === 'PGRST116') {
+        // No rows returned - designer not found
+        return null;
+      }
+      
+      if (error) {
+        console.error('Error fetching designer profile:', error);
+        throw error;
+      }
       
       // Map to UI format
       return {
         ...data,
+        id: data.user_id, // Map user_id to id for compatibility
         brand_name: data.brand_name || data.name?.toUpperCase(),
         social_links: {
           website: data.website_url,
@@ -81,7 +87,12 @@ export default function ShopDesignerProfile() {
         .order('created_at', { ascending: false })
         .limit(12);
 
-      if (error) throw error;
+      // Handle case where no products exist
+      if (error) {
+        console.error('Error fetching designer products:', error);
+        return [];
+      }
+      
       return data || [];
     },
   });
@@ -98,18 +109,67 @@ export default function ShopDesignerProfile() {
         .eq('status', 'published')
         .limit(4);
 
-      if (error) throw error;
+      // Handle case where no articles exist
+      if (error) {
+        console.error('Error fetching designer articles:', error);
+        return [];
+      }
+      
       return data || [];
+    },
+  });
+
+  // Fetch designer collections
+  const { data: collections } = useQuery({
+    queryKey: ['designer-collections', id],
+    enabled: !!id,
+    queryFn: async () => {
+      if (!id) return [];
+
+      const { data, error } = await supabase
+        .from('marketplace_collections')
+        .select(`
+          id,
+          name,
+          slug,
+          description,
+          image_url,
+          is_featured,
+          collection_products:marketplace_collection_products(count)
+        `)
+        .eq('designer_id', id)
+        .eq('is_active', true)
+        .order('is_featured', { ascending: false })
+        .order('created_at', { ascending: false })
+        .limit(6);
+
+      // Handle case where no collections exist
+      if (error) {
+        console.error('Error fetching designer collections:', error);
+        return [];
+      }
+      
+      return data?.map(collection => ({
+        id: collection.id,
+        name: collection.name,
+        slug: collection.slug,
+        description: collection.description || '',
+        image_url: collection.image_url || 'https://images.unsplash.com/photo-1558769132-cb1aea1c8e86?w=1200',
+        is_featured: collection.is_featured,
+        items: collection.collection_products?.[0]?.count || 0,
+      })) || [];
     },
   });
 
   if (isLoading) {
     return (
       <MarketplaceLayout>
-        <div className="container py-12">
-          <div className="animate-pulse space-y-8">
-            <div className="h-80 bg-slate-100" />
-            <div className="h-32 bg-slate-100" />
+        <div className="pt-32 pb-20">
+          <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
+            <div className="animate-pulse space-y-8">
+              <div className="h-[50vh] bg-gray-200 rounded-lg" />
+              <div className="h-32 bg-gray-200 rounded-lg max-w-2xl" />
+            </div>
           </div>
         </div>
       </MarketplaceLayout>
@@ -119,11 +179,15 @@ export default function ShopDesignerProfile() {
   if (!designer) {
     return (
       <MarketplaceLayout>
-        <div className="container py-20 text-center">
-          <h1 className="text-2xl font-light mb-4">Designer Not Found</h1>
-          <Button asChild>
-            <Link to="/shop/designers">Back to Designers</Link>
-          </Button>
+        <div className="pt-32 pb-20 text-center">
+          <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
+            <Package className="h-16 w-16 text-gray-400 mx-auto mb-6" />
+            <h1 className="font-display text-3xl text-gray-900 mb-4">Designer Not Found</h1>
+            <p className="text-gray-600 mb-8">The designer you're looking for doesn't exist.</p>
+            <Button asChild className="bg-gray-900 text-white hover:bg-gray-800">
+              <Link to="/shop/designers">Explore Designers</Link>
+            </Button>
+          </div>
         </div>
       </MarketplaceLayout>
     );
@@ -132,67 +196,96 @@ export default function ShopDesignerProfile() {
   return (
     <MarketplaceLayout>
       {/* Hero Section */}
-      <div className="relative h-[60vh] min-h-[500px] bg-slate-100">
+      <div className="relative min-h-[70vh] flex items-end">
         {designer.banner_image ? (
           <img
             src={designer.banner_image}
             alt={designer.name}
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-slate-100 to-slate-200" />
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200" />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent" />
         
         {/* Back Button */}
-        <div className="absolute top-8 left-0 right-0 container">
-          <Button
-            variant="ghost"
-            size="sm"
-            asChild
-            className="text-white hover:bg-white/20"
-          >
-            <Link to="/shop/designers">
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Explore Designers
-            </Link>
-          </Button>
+        <div className="absolute top-24 left-0 right-0 z-10">
+          <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="text-gray-900 hover:text-gray-600 bg-white/80 hover:bg-white/90 backdrop-blur-sm"
+            >
+              <Link to="/shop/designers">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                All Designers
+              </Link>
+            </Button>
+          </div>
         </div>
 
-        {/* Designer Info Overlay */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <div className="container pb-12">
+        {/* Designer Info */}
+        <div className="relative w-full pb-16 md:pb-24">
+          <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-end gap-6"
+              transition={{ duration: 0.6 }}
+              className="flex flex-col md:flex-row md:items-end gap-6 md:gap-10"
             >
-              <Avatar className="h-24 w-24 border-4 border-white">
-                <AvatarImage src={designer.avatar_url || undefined} />
-                <AvatarFallback className="text-2xl">{designer.name?.[0]}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <h1 className="text-[48px] font-light tracking-tight text-white mb-2">
-                  {designer.brand_name || designer.name}
-                </h1>
-                {designer.location && (
-                  <div className="flex items-center gap-2 text-white/90">
-                    <MapPin className="h-4 w-4" />
-                    <span className="text-[14px]">{designer.location}</span>
+              {/* Avatar */}
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white bg-gray-100 flex-shrink-0">
+                {designer.avatar_url ? (
+                  <img
+                    src={designer.avatar_url}
+                    alt={designer.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                    <span className="font-display text-4xl text-gray-500">
+                      {designer.name?.charAt(0)}
+                    </span>
                   </div>
                 )}
               </div>
+
+              {/* Info */}
+              <div className="flex-1">
+                <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-light text-gray-900 mb-3">
+                  {designer.brand_name || designer.name}
+                </h1>
+                <div className="flex flex-wrap items-center gap-4 text-gray-600">
+                  {designer.category && (
+                    <span className="text-sm">{designer.category}</span>
+                  )}
+                  {designer.location && (
+                    <>
+                      <span className="hidden md:inline text-gray-400">·</span>
+                      <div className="flex items-center gap-1 text-sm">
+                        <MapPin className="h-3.5 w-3.5 text-gray-500" />
+                        {designer.location}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Actions */}
               <div className="flex items-center gap-3">
                 <Button
-                  variant={isFollowing ? "secondary" : "default"}
+                  variant={isFollowing ? "default" : "outline"}
                   size="lg"
                   onClick={() => setIsFollowing(!isFollowing)}
-                  className="gap-2"
+                  className={`gap-2 ${isFollowing 
+                    ? 'bg-gray-900 text-white hover:bg-gray-800' 
+                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
                 >
                   <Heart className={`h-4 w-4 ${isFollowing ? 'fill-current' : ''}`} />
-                  {isFollowing ? 'Loved' : 'Love'}
+                  {isFollowing ? 'Following' : 'Follow'}
                 </Button>
-                <Button variant="secondary" size="lg">
+                <Button variant="outline" size="icon" className="h-11 w-11 border-gray-300 text-gray-700 hover:bg-gray-50">
                   <Share2 className="h-4 w-4" />
                 </Button>
               </div>
@@ -201,217 +294,194 @@ export default function ShopDesignerProfile() {
         </div>
       </div>
 
-      <div className="container py-12">
-        <div className="grid lg:grid-cols-[1fr_320px] gap-12">
-          {/* Main Content */}
-          <div className="space-y-16">
-            {/* About Designer */}
-            <section>
-              <h2 className="text-[12px] uppercase tracking-widest text-black mb-6 font-bold">
-                About the Designer
-              </h2>
-              <div className="space-y-6">
-                <p className="text-[15px] text-slate-700 leading-relaxed">
-                  {designer.bio || designer.artist_statement}
-                </p>
-                
-                {designer.education && designer.education.length > 0 && (
-                  <div className="flex items-start gap-3">
-                    <Award className="h-5 w-5 text-slate-400 mt-0.5" />
-                    <div>
-                      <p className="text-[13px] font-medium text-black">Education</p>
-                      <p className="text-[13px] text-slate-600">
-                        {Array.isArray(designer.education) ? designer.education.join(', ') : designer.education}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
-                {designer.manufacturing_countries && designer.manufacturing_countries.length > 0 && (
-                  <div className="flex items-start gap-3">
-                    <MapPin className="h-5 w-5 text-slate-400 mt-0.5" />
-                    <div>
-                      <p className="text-[13px] font-medium text-black">Manufacturing</p>
-                      <p className="text-[13px] text-slate-600">
-                        {designer.manufacturing_countries.join(', ')}
-                      </p>
-                    </div>
-                  </div>
-                )}
-
+      {/* Content */}
+      <div className="pb-24 md:pb-32">
+        <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
+          <div className="grid lg:grid-cols-[1fr_380px] gap-16">
+            {/* Main Content */}
+            <div className="space-y-16">
+              {/* About */}
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <p className="text-editorial-caption text-gray-500 mb-4">About</p>
+                <div className="prose prose-lg max-w-none">
+                  <p className="text-editorial-body text-gray-800 leading-relaxed">
+                    {designer.bio || designer.artist_statement || `${designer.brand_name || designer.name} is a talented designer creating exceptional pieces that blend traditional craftsmanship with contemporary aesthetics.`}
+                  </p>
+                </div>
                 {designer.artist_statement && designer.artist_statement !== designer.bio && (
-                  <div className="p-6 bg-slate-50 border border-slate-100 italic">
-                    <p className="text-[14px] text-slate-700 leading-relaxed">
-                      "{designer.artist_statement}"
+                  <blockquote className="mt-8 pl-6 border-l-2 border-gray-200 italic text-lg text-gray-600">
+                    "{designer.artist_statement}"
+                  </blockquote>
+                )}
+              </motion.section>
+
+              <Separator className="bg-gray-200" />
+
+              {/* Collections */}
+              {collections && collections.length > 0 && (
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="flex items-center justify-between mb-8">
+                    <p className="text-editorial-caption text-gray-500">Collections</p>
+                    <span className="text-sm text-gray-500">{collections.length} collections</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {collections.map((collection) => (
+                      <Link 
+                        key={collection.id} 
+                        to={`/shop/products?collection=${collection.id}`}
+                        className="group relative aspect-[4/3] overflow-hidden rounded-lg"
+                      >
+                        <img
+                          src={collection.image_url}
+                          alt={collection.name}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-5">
+                          <h3 className="font-display text-xl font-medium text-white mb-1">
+                            {collection.name}
+                          </h3>
+                          <p className="text-sm text-white/70">{collection.items} pieces</p>
+                        </div>
+                        {collection.is_featured && (
+                          <Badge className="absolute top-4 right-4 bg-white/90 text-gray-900 border-0">
+                            Featured
+                          </Badge>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+                </motion.section>
+              )}
+
+              <Separator className="bg-gray-200" />
+
+              {/* Products */}
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+              >
+                <div className="flex items-center justify-between mb-8">
+                  <p className="text-editorial-caption text-gray-500">Products</p>
+                  <span className="text-sm text-gray-500">{products?.length || 0} pieces</span>
+                </div>
+
+                {products && products.length > 0 ? (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+                    {products.map((product: any) => (
+                      <MarketplaceProductCard
+                        key={product.id}
+                        id={product.id}
+                        title={product.title}
+                        price={product.price}
+                        images={product.images || []}
+                        brandName={designer.brand_name}
+                        designerName={designer.name}
+                        designerId={designer.id}
+                        slug={product.slug}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-16 bg-gray-50 rounded-lg">
+                    <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-600">
+                      No products available yet. Check back soon.
                     </p>
                   </div>
                 )}
-              </div>
-            </section>
+              </motion.section>
+            </div>
 
-            <Separator className="bg-slate-100" />
-
-            {/* Products Section */}
-            <section>
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-[12px] uppercase tracking-widest text-black font-bold">
-                  Collection ({products?.length || 0})
-                </h2>
-              </div>
-
-              {products && products.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {products.map((product: any) => (
-                    <MarketplaceProductCard
-                      key={product.id}
-                      id={product.id}
-                      title={product.title}
-                      price={product.price}
-                      images={product.images || []}
-                      brandName={designer.brand_name}
-                      designerName={designer.name}
-                      designerId={designer.id}
-                      slug={product.slug}
-                    />
-                  ))}
+            {/* Sidebar */}
+            <aside className="space-y-8 lg:sticky lg:top-24 lg:self-start">
+              {/* Connect */}
+              <div className="p-6 bg-gray-50 rounded-lg">
+                <p className="text-editorial-caption text-gray-500 mb-4">Connect</p>
+                <div className="space-y-3">
+                  {designer.instagram_handle && (
+                    <a
+                      href={`https://instagram.com/${designer.instagram_handle}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors group border border-gray-200"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Instagram className="h-4 w-4 text-gray-500" />
+                        <span className="text-sm text-gray-700">Instagram</span>
+                      </div>
+                      <ArrowUpRight className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                    </a>
+                  )}
+                  {designer.website_url && (
+                    <a
+                      href={designer.website_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors group border border-gray-200"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Globe className="h-4 w-4 text-gray-500" />
+                        <span className="text-sm text-gray-700">Website</span>
+                      </div>
+                      <ArrowUpRight className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                    </a>
+                  )}
+                  <a
+                    href={`mailto:hello@adorzia.com`}
+                    className="flex items-center justify-between p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors group border border-gray-200"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-4 w-4 text-gray-500" />
+                      <span className="text-sm text-gray-700">Contact</span>
+                    </div>
+                    <ArrowUpRight className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors" />
+                  </a>
                 </div>
-              ) : (
-                <div className="text-center py-12 bg-slate-50 border border-slate-100">
-                  <Package className="h-12 w-12 text-slate-300 mx-auto mb-4" />
-                  <p className="text-slate-600 text-[14px]">
-                    No products available yet. Check back soon.
-                  </p>
+              </div>
+
+              {/* Custom Inquiries */}
+              <div className="p-6 bg-gray-900 text-white rounded-lg">
+                <h3 className="font-display text-xl font-medium mb-2">Custom Inquiries</h3>
+                <p className="text-sm text-gray-300 mb-4">
+                  Interested in bespoke pieces or collaboration opportunities?
+                </p>
+                <Button
+                  variant="secondary"
+                  className="w-full bg-white text-gray-900 hover:bg-gray-100"
+                  asChild
+                >
+                  <a href="mailto:hello@adorzia.com">
+                    Get in Touch
+                  </a>
+                </Button>
+              </div>
+
+              {/* Sustainability */}
+              {designer.sustainability_practices && designer.sustainability_practices.length > 0 && (
+                <div className="p-6 bg-gray-50 rounded-lg">
+                  <p className="text-editorial-caption text-gray-500 mb-4">Sustainability</p>
+                  <ul className="space-y-2">
+                    {designer.sustainability_practices.map((practice: string, idx: number) => (
+                      <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
+                        <span className="text-amber-600 mt-1">•</span>
+                        <span>{practice}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
-            </section>
-
-            {/* Editorial Section */}
-            {editorials && editorials.length > 0 && (
-              <>
-                <Separator className="bg-slate-100" />
-                <section>
-                  <h2 className="text-[12px] uppercase tracking-widest text-black mb-6 font-bold">
-                    Editorial & Features
-                  </h2>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {editorials.map((editorial) => (
-                      <div key={editorial.id} className="group cursor-pointer">
-                        <div className="aspect-[4/3] bg-slate-100 overflow-hidden mb-3">
-                          {editorial.featured_image && (
-                            <img
-                              src={editorial.featured_image}
-                              alt={editorial.title}
-                              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                            />
-                          )}
-                        </div>
-                        <Badge variant="outline" className="mb-2 text-[10px]">
-                          {editorial.category}
-                        </Badge>
-                        <h3 className="text-[14px] font-medium text-black mb-1 group-hover:text-slate-600 transition-colors">
-                          {editorial.title}
-                        </h3>
-                        <p className="text-[12px] text-slate-500 line-clamp-2">{editorial.excerpt}</p>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              </>
-            )}
+            </aside>
           </div>
-
-          {/* Sidebar */}
-          <aside className="space-y-8">
-            {/* Social Links */}
-            {/* @ts-ignore - Social links type guard */}
-            {designer.social_links && Object.keys(designer.social_links).length > 0 && (
-              <div>
-                <h3 className="text-[12px] uppercase tracking-widest text-black mb-4 font-bold">
-                  Connect
-                </h3>
-                <div className="space-y-2">
-                  {/* @ts-ignore - Social links type guard */}
-                  {'instagram' in designer.social_links && designer.social_links.instagram && (
-                    <a
-                      href={(designer.social_links as any).instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 border border-slate-200 hover:border-black transition-colors group"
-                    >
-                      <Instagram className="h-4 w-4 text-slate-600 group-hover:text-black" />
-                      <span className="text-[13px] text-slate-700 group-hover:text-black">
-                        Instagram
-                      </span>
-                      <ExternalLink className="h-3 w-3 ml-auto text-slate-400" />
-                    </a>
-                  )}
-                  {/* @ts-ignore - Social links type guard */}
-                  {'website' in designer.social_links && designer.social_links.website && (
-                    <a
-                      href={(designer.social_links as any).website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 border border-slate-200 hover:border-black transition-colors group"
-                    >
-                      <Globe className="h-4 w-4 text-slate-600 group-hover:text-black" />
-                      <span className="text-[13px] text-slate-700 group-hover:text-black">
-                        Website
-                      </span>
-                      <ExternalLink className="h-3 w-3 ml-auto text-slate-400" />
-                    </a>
-                  )}
-                  {/* @ts-ignore - Social links type guard */}
-                  {'email' in designer.social_links && designer.social_links.email && (
-                    <a
-                      href={`mailto:${(designer.social_links as any).email}`}
-                      className="flex items-center gap-3 p-3 border border-slate-200 hover:border-black transition-colors group"
-                    >
-                      <Mail className="h-4 w-4 text-slate-600 group-hover:text-black" />
-                      <span className="text-[13px] text-slate-700 group-hover:text-black">
-                        Contact
-                      </span>
-                    </a>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Sustainability */}
-            {designer.sustainability_practices && designer.sustainability_practices.length > 0 && (
-              <div>
-                <h3 className="text-[12px] uppercase tracking-widest text-black mb-4 font-bold">
-                  Sustainability
-                </h3>
-                <ul className="space-y-2">
-                  {designer.sustainability_practices.map((practice, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-[13px] text-slate-700">
-                      <span className="text-slate-400 mt-1">•</span>
-                      <span>{practice}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Contact CTA */}
-            <div className="p-6 bg-black text-white space-y-4">
-              <h3 className="text-[14px] font-medium">Custom Inquiries</h3>
-              <p className="text-[12px] text-white/70">
-                Interested in custom pieces or collaborations?
-              </p>
-              <Button
-                variant="secondary"
-                size="sm"
-                className="w-full"
-                asChild
-              >
-                {/* @ts-ignore - Social links type guard */}
-                <a href={`mailto:${'email' in designer.social_links && (designer.social_links as any).email ? (designer.social_links as any).email : 'hello@adorzia.com'}`}>
-                  Get in Touch
-                </a>
-              </Button>
-            </div>
-          </aside>
         </div>
       </div>
     </MarketplaceLayout>

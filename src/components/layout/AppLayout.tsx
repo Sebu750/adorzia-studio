@@ -1,6 +1,6 @@
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
-import { Bell, Search, Sun, Moon, Menu } from "lucide-react";
+import { Bell, Search, Sun, Moon, Menu, Check, Trash2, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useStudioTheme } from "@/hooks/useStudioTheme";
@@ -9,6 +9,9 @@ import { useProfile } from "@/hooks/useProfile";
 import { useAuth } from "@/hooks/useAuth";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { formatDistanceToNow } from "date-fns";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,6 +19,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -25,8 +33,12 @@ export function AppLayout({ children }: AppLayoutProps) {
   const { theme, setTheme } = useStudioTheme();
   const { profile } = useProfile();
   const { user, signOut } = useAuth();
-  const { unreadCount } = useNotifications();
+  const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
   const navigate = useNavigate();
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+
+  // Get the 2 most recent notifications
+  const recentNotifications = notifications.slice(0, 2);
 
   const getInitials = (name?: string | null, email?: string | null) => {
     if (name) {
@@ -83,21 +95,101 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <span className="sr-only">Toggle theme</span>
               </Button>
 
-              {/* Notifications - Enhanced */}
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="relative h-9 w-9 hover:bg-secondary transition-all duration-200 rounded-lg"
-                onClick={() => navigate("/notifications")}
-              >
-                <Bell className="h-5 w-5" />
-                {unreadCount > 0 && (
-                  <span className="notification-badge">
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
-                <span className="sr-only">Notifications</span>
-              </Button>
+              {/* Notifications - Enhanced Dropdown */}
+              <Popover open={notificationsOpen} onOpenChange={setNotificationsOpen}>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="relative h-9 w-9 hover:bg-secondary transition-all duration-200 rounded-lg"
+                  >
+                    <Bell className="h-5 w-5" />
+                    {unreadCount > 0 && (
+                      <span className="notification-badge">
+                        {unreadCount > 9 ? "9+" : unreadCount}
+                      </span>
+                    )}
+                    <span className="sr-only">Notifications</span>
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent align="end" className="w-80 p-0 bg-popover border-border shadow-lg z-50">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+                    <h3 className="font-semibold text-sm">Notifications</h3>
+                    {unreadCount > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 text-xs text-muted-foreground hover:text-foreground"
+                        onClick={() => markAllAsRead()}
+                      >
+                        <Check className="h-3 w-3 mr-1" />
+                        Mark all read
+                      </Button>
+                    )}
+                  </div>
+                  
+                  <div className="max-h-64 overflow-y-auto">
+                    {recentNotifications.length === 0 ? (
+                      <div className="px-4 py-6 text-center text-muted-foreground text-sm">
+                        <Bell className="h-8 w-8 mx-auto mb-2 opacity-40" />
+                        <p>No notifications yet</p>
+                      </div>
+                    ) : (
+                      recentNotifications.map((notification) => (
+                        <div
+                          key={notification.id}
+                          className={cn(
+                            "px-4 py-3 border-b border-border/50 last:border-b-0 cursor-pointer hover:bg-secondary/50 transition-colors",
+                            notification.status === "unread" && "bg-secondary/20"
+                          )}
+                          onClick={() => {
+                            if (notification.status === "unread") {
+                              markAsRead(notification.id);
+                            }
+                            if (notification.action_url) {
+                              navigate(notification.action_url);
+                              setNotificationsOpen(false);
+                            }
+                          }}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={cn(
+                              "w-2 h-2 rounded-full mt-1.5 shrink-0",
+                              notification.status === "unread" ? "bg-accent" : "bg-transparent"
+                            )} />
+                            <div className="flex-1 min-w-0">
+                              <p className={cn(
+                                "text-sm line-clamp-2",
+                                notification.status === "unread" ? "font-medium" : "text-muted-foreground"
+                              )}>
+                                {notification.message}
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                  
+                  <div className="border-t border-border p-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="w-full justify-between text-sm text-muted-foreground hover:text-foreground"
+                      onClick={() => {
+                        setNotificationsOpen(false);
+                        navigate("/notifications");
+                      }}
+                    >
+                      View More
+                      <ChevronRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </PopoverContent>
+              </Popover>
 
               {/* User Avatar Dropdown - Enhanced */}
               <DropdownMenu>

@@ -1,0 +1,26 @@
+-- Update RLS policies for styleboxes to include lead_curator (Part 2)
+-- This migration runs after the enum value has been added to avoid PostgreSQL transaction issues
+
+-- Update RLS policies for styleboxes to include lead_curator
+DROP POLICY IF EXISTS "Admins can manage styleboxes" ON public.styleboxes;
+CREATE POLICY "Admins and Lead Curators can manage styleboxes" ON public.styleboxes
+  FOR ALL TO authenticated
+  USING (
+    public.has_role(auth.uid(), 'admin') OR 
+    public.has_role(auth.uid(), 'superadmin') OR 
+    public.has_role(auth.uid(), 'lead_curator')
+  );
+
+-- Update storage policies for stylebox-curation-assets
+DROP POLICY IF EXISTS "Curators can manage curation assets" ON storage.objects;
+CREATE POLICY "Admins and Lead Curators can manage curation assets"
+ON storage.objects
+FOR ALL
+TO authenticated
+USING (
+  bucket_id = 'stylebox-curation-assets' AND (
+    public.has_role(auth.uid(), 'admin') OR 
+    public.has_role(auth.uid(), 'superadmin') OR 
+    public.has_role(auth.uid(), 'lead_curator')
+  )
+);

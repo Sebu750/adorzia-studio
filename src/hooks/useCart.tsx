@@ -68,20 +68,34 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const authHeader = await getAuthHeader();
     const sessionId = getSessionId();
 
-    const response = await supabase.functions.invoke('marketplace-cart', {
-      headers: authHeader,
-      body: {
-        action,
-        session_id: sessionId,
-        ...body,
-      },
-    });
+    // Add timeout to the function call
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    try {
+      const response = await supabase.functions.invoke('marketplace-cart', {
+        headers: authHeader,
+        body: {
+          action,
+          session_id: sessionId,
+          ...body,
+        },
+      });
 
-    if (response.error) {
-      throw new Error(response.error.message);
+      clearTimeout(timeoutId);
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      return response.data;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new Error('Request timeout - please try again');
+      }
+      throw error;
     }
-
-    return response.data;
   }, []);
 
   const refreshCart = useCallback(async () => {

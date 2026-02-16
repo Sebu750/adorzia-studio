@@ -134,13 +134,13 @@ function WizardContent({
       resetForm();
       onOpenChange(false);
     },
-    onError: (error) => {
+    onError: (error: any) => {
+      console.error("StyleBox creation error:", error);
       toast({
-        title: "Error",
-        description: "Failed to create StyleBox. Please try again.",
+        title: "Error creating StyleBox",
+        description: error?.message || error?.error?.message || "Failed to create StyleBox. Please check all required fields and try again.",
         variant: "destructive",
       });
-      console.error(error);
     },
   });
 

@@ -81,7 +81,6 @@ const AdminDesigners = () => {
           .select('*');
 
         if (profilesError) {
-          console.error('Profiles fetch error:', profilesError);
           throw profilesError;
         }
 
@@ -105,8 +104,7 @@ const AdminDesigners = () => {
             supabase.from('earnings').select('designer_id, amount').in('designer_id', designerIds)
           ]);
           
-          if (submissionsError) console.error('Submissions fetch error:', submissionsError);
-          if (earningsError) console.error('Earnings fetch error:', earningsError);
+          // Silently handle query errors
           
           submissions = submissionsData || [];
           earnings = earningsData || [];
@@ -133,7 +131,6 @@ const AdminDesigners = () => {
           };
         });
       } catch (error) {
-        console.error('Error in admin designers query:', error);
         throw error;
       }
     },

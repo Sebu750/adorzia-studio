@@ -86,7 +86,8 @@ export default function PublicNav() {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Event listener setup - only on mount
 
   const isActive = (href: string) => {
     if (href === "/") return location.pathname === "/";

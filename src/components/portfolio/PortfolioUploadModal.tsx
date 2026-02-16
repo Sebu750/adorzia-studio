@@ -20,11 +20,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Loader2, Upload, X, Plus, Zap } from "lucide-react";
+import { Loader2, Upload, X, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { compressImages, formatBytes, getTotalSavings, type CompressionResult } from "@/lib/image-compression";
 
 interface PortfolioUploadModalProps {
   open: boolean;
@@ -50,7 +48,6 @@ interface ImageFile {
   preview: string;
   fileName: string;
   fileType: string;
-  compressionResult?: CompressionResult;
 }
 
 export function PortfolioUploadModal({
@@ -67,9 +64,6 @@ export function PortfolioUploadModal({
   const [newTag, setNewTag] = useState("");
   const [images, setImages] = useState<ImageFile[]>([]);
   const [dragActive, setDragActive] = useState(false);
-  const [compressing, setCompressing] = useState(false);
-  const [compressionProgress, setCompressionProgress] = useState(0);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [currentFile, setCurrentFile] = useState("");
 
   const uploadMutation = useMutation({
@@ -79,31 +73,27 @@ export function PortfolioUploadModal({
 
       setCurrentFile("Preparing upload...");
 
-      // Convert images to base64 with progress tracking
+      // Convert images to base64
       const imageData = await Promise.all(
-        images.map(async (img, index) => {
-          setCurrentFile(`Processing image ${index + 1} of ${images.length}`);
-          setUploadProgress(Math.round(((index + 1) / images.length) * 50));
-          
+        images.map(async (img) => {
           return new Promise<{ fileName: string; fileType: string; fileData: string }>(
             (resolve, reject) => {
               const reader = new FileReader();
               reader.onload = () => {
                 resolve({
                   fileName: img.fileName,
-                  fileType: img.compressionResult?.file.type || img.fileType,
+                  fileType: img.fileType,
                   fileData: reader.result as string,
                 });
               };
               reader.onerror = reject;
-              reader.readAsDataURL(img.compressionResult?.file || img.file);
+              reader.readAsDataURL(img.file);
             }
           );
         })
       );
 
       setCurrentFile("Uploading to server...");
-      setUploadProgress(60);
 
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error("Not authenticated");
@@ -126,14 +116,11 @@ export function PortfolioUploadModal({
         }
       );
 
-      setUploadProgress(90);
-
       if (!response.ok) {
         const error = await response.json();
         throw new Error(error.error || "Upload failed");
       }
 
-      setUploadProgress(100);
       return response.json();
     },
     onSuccess: () => {
@@ -145,7 +132,6 @@ export function PortfolioUploadModal({
     },
     onError: (error: Error) => {
       toast.error("Upload failed: " + error.message);
-      setUploadProgress(0);
       setCurrentFile("");
     },
   });
@@ -157,9 +143,6 @@ export function PortfolioUploadModal({
     setTags([]);
     setNewTag("");
     setImages([]);
-    setCompressing(false);
-    setCompressionProgress(0);
-    setUploadProgress(0);
     setCurrentFile("");
     onOpenChange(false);
   };
@@ -213,46 +196,16 @@ export function PortfolioUploadModal({
 
     if (validFiles.length === 0) return;
 
-    // Compress images
-    setCompressing(true);
-    setCompressionProgress(0);
+    // Create image previews from original files (no compression)
+    const newImages: ImageFile[] = validFiles.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+      fileName: file.name,
+      fileType: file.type,
+    }));
 
-    try {
-      const compressionResults = await compressImages(
-        validFiles,
-        {},
-        (current, total) => {
-          setCompressionProgress(Math.round((current / total) * 100));
-        }
-      );
-
-      const newImages: ImageFile[] = compressionResults.map((result, index) => {
-        const preview = URL.createObjectURL(result.file);
-        return {
-          file: validFiles[index],
-          preview,
-          fileName: validFiles[index].name,
-          fileType: validFiles[index].type,
-          compressionResult: result,
-        };
-      });
-
-      setImages((prev) => [...prev, ...newImages]);
-
-      // Show compression savings
-      const savings = getTotalSavings(compressionResults);
-      if (savings.savingsPercent > 10) {
-        toast.success(
-          `Images compressed! Saved ${formatBytes(savings.savings)} (${savings.savingsPercent.toFixed(0)}%)`
-        );
-      }
-    } catch (error) {
-      console.error("Compression error:", error);
-      toast.error("Failed to compress images");
-    } finally {
-      setCompressing(false);
-      setCompressionProgress(0);
-    }
+    setImages((prev) => [...prev, ...newImages]);
+    toast.success(`${validFiles.length} image${validFiles.length > 1 ? 's' : ''} ready for upload`);
   }, []);
 
   const handleDrag = (e: React.DragEvent) => {
@@ -296,26 +249,13 @@ export function PortfolioUploadModal({
         </DialogHeader>
 
         <div className="space-y-6 py-4">
-          {/* Compression Progress */}
-          {compressing && (
-            <div className="space-y-2 p-4 bg-primary/5 rounded-lg border border-primary/20">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Zap className="h-4 w-4 text-primary animate-pulse" />
-                <span>Compressing images... {compressionProgress}%</span>
-              </div>
-              <Progress value={compressionProgress} className="h-2" />
-            </div>
-          )}
-
-          {/* Upload Progress */}
+          {/* Upload Status */}
           {uploadMutation.isPending && (
             <div className="space-y-2 p-4 bg-primary/5 rounded-lg border border-primary/20">
               <div className="flex items-center gap-2 text-sm font-medium">
                 <Upload className="h-4 w-4 text-primary animate-pulse" />
                 <span>{currentFile}</span>
               </div>
-              <Progress value={uploadProgress} className="h-2" />
-              <p className="text-xs text-muted-foreground">{uploadProgress}% complete</p>
             </div>
           )}
 
@@ -357,14 +297,9 @@ export function PortfolioUploadModal({
             {/* Image Preview Grid */}
             {images.length > 0 && (
               <div className="space-y-2">
-                {images.some(img => img.compressionResult && img.compressionResult.savingsPercent > 5) && (
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Zap className="h-3 w-3 text-green-500" />
-                    <span>
-                      Total savings: {formatBytes(getTotalSavings(images.map(img => img.compressionResult!).filter(Boolean)).savings)}
-                    </span>
-                  </div>
-                )}
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <span>{images.length} image{images.length > 1 ? 's' : ''} selected</span>
+                </div>
                 <div className="grid grid-cols-3 gap-3">
                   {images.map((img, index) => (
                     <div
@@ -389,17 +324,7 @@ export function PortfolioUploadModal({
                           <X className="h-4 w-4" />
                         </Button>
                       </div>
-                      {index === 0 && (
-                        <Badge className="absolute top-2 left-2 text-xs">
-                          Thumbnail
-                        </Badge>
-                      )}
-                      {img.compressionResult && img.compressionResult.savingsPercent > 5 && (
-                        <Badge variant="secondary" className="absolute bottom-2 right-2 text-xs gap-1">
-                          <Zap className="h-3 w-3" />
-                          -{img.compressionResult.savingsPercent.toFixed(0)}%
-                        </Badge>
-                      )}
+
                     </div>
                   ))}
                 </div>
@@ -494,17 +419,12 @@ export function PortfolioUploadModal({
           </Button>
           <Button
             onClick={() => uploadMutation.mutate()}
-            disabled={uploadMutation.isPending || compressing || images.length === 0 || !title.trim()}
+            disabled={uploadMutation.isPending || images.length === 0 || !title.trim()}
           >
             {uploadMutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Uploading... {uploadProgress}%
-              </>
-            ) : compressing ? (
-              <>
-                <Zap className="mr-2 h-4 w-4 animate-pulse" />
-                Compressing...
+                Uploading...
               </>
             ) : (
               <>

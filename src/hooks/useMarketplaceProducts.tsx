@@ -83,7 +83,7 @@ interface ProductDetailResponse {
 export function useMarketplaceProducts(filters: ProductFilters = {}) {
   return useQuery<ProductsResponse>({
     queryKey: ['marketplace-products', filters],
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       const params = new URLSearchParams();
       params.set('action', 'list');
       
@@ -99,110 +99,218 @@ export function useMarketplaceProducts(filters: ProductFilters = {}) {
       if (filters.page) params.set('page', filters.page.toString());
       if (filters.limit) params.set('limit', filters.limit.toString());
 
-      const { data, error } = await supabase.functions.invoke('marketplace-products', {
-        body: null,
-        headers: {},
-      });
-
-      // Since we can't pass query params easily, we'll modify the call
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?${params.toString()}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch products');
+      // Create abort controller with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
+      // Link to React Query's signal
+      if (signal) {
+        signal.addEventListener('abort', () => {
+          controller.abort();
+          clearTimeout(timeoutId);
+        });
       }
 
-      return response.json();
+      try {
+        // Direct fetch call to handle query parameters properly
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?${params.toString()}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            },
+            signal: controller.signal,
+          }
+        );
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch products: ${response.status} ${response.statusText}`);
+        }
+
+        return response.json();
+      } catch (error) {
+        clearTimeout(timeoutId);
+        if (error instanceof Error && error.name === 'AbortError') {
+          throw new Error('Request timeout - please try again');
+        }
+        throw error;
+      }
     },
+    retry: 2, // Retry failed requests twice
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000), // Exponential backoff
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
   });
 }
 
 export function useMarketplaceProduct(idOrSlug: string) {
   return useQuery<ProductDetailResponse>({
     queryKey: ['marketplace-product', idOrSlug],
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
       const params = new URLSearchParams();
       params.set('action', 'detail');
       params.set(isUUID ? 'id' : 'slug', idOrSlug);
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?${params.toString()}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch product');
+      // Create abort controller with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
+      // Link to React Query's signal
+      if (signal) {
+        signal.addEventListener('abort', () => {
+          controller.abort();
+          clearTimeout(timeoutId);
+        });
       }
 
-      return response.json();
+      try {
+        // Direct fetch call to handle query parameters properly
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?${params.toString()}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            },
+            signal: controller.signal,
+          }
+        );
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch product: ${response.status} ${response.statusText}`);
+        }
+
+        return response.json();
+      } catch (error) {
+        clearTimeout(timeoutId);
+        if (error instanceof Error && error.name === 'AbortError') {
+          throw new Error('Request timeout - please try again');
+        }
+        throw error;
+      }
     },
     enabled: !!idOrSlug,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 5 * 60 * 1000,
+    cacheTime: 10 * 60 * 1000,
   });
 }
 
 export function useMarketplaceCategories() {
   return useQuery({
     queryKey: ['marketplace-categories'],
-    queryFn: async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?action=categories`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch categories');
+    queryFn: async ({ signal }) => {
+      // Create abort controller with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      
+      // Link to React Query's signal
+      if (signal) {
+        signal.addEventListener('abort', () => {
+          controller.abort();
+          clearTimeout(timeoutId);
+        });
       }
 
-      return response.json();
+      try {
+        // Direct fetch call to handle query parameters properly
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?action=categories`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            },
+            signal: controller.signal,
+          }
+        );
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch categories: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        // Return the categories array directly for consistent usage
+        return data.categories || [];
+      } catch (error) {
+        clearTimeout(timeoutId);
+        if (error instanceof Error && error.name === 'AbortError') {
+          throw new Error('Request timeout - please try again');
+        }
+        throw error;
+      }
     },
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    cacheTime: 15 * 60 * 1000, // 15 minutes
   });
 }
 
 export function useMarketplaceCollections(featured = false) {
   return useQuery({
     queryKey: ['marketplace-collections', featured],
-    queryFn: async () => {
+    queryFn: async ({ signal }) => {
       const params = new URLSearchParams();
       params.set('action', 'collections');
       if (featured) params.set('featured', 'true');
 
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?${params.toString()}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch collections');
+      // Create abort controller with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      
+      // Link to React Query's signal
+      if (signal) {
+        signal.addEventListener('abort', () => {
+          controller.abort();
+          clearTimeout(timeoutId);
+        });
       }
 
-      return response.json();
+      try {
+        // Direct fetch call to handle query parameters properly
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/marketplace-products?${params.toString()}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            },
+            signal: controller.signal,
+          }
+        );
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch collections: ${response.status} ${response.statusText}`);
+        }
+
+        return response.json();
+      } catch (error) {
+        clearTimeout(timeoutId);
+        if (error instanceof Error && error.name === 'AbortError') {
+          throw new Error('Request timeout - please try again');
+        }
+        throw error;
+      }
     },
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 10 * 60 * 1000,
+    cacheTime: 15 * 60 * 1000,
   });
 }

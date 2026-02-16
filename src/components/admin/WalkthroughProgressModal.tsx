@@ -400,7 +400,7 @@ export function WalkthroughProgressModal({
                           </div>
                         ) : progress.completed_at ? (
                           <span className="text-sm text-muted-foreground">
-                            +{walkthrough.xp_reward || 0}
+                            +{walkthrough.xp_reward || 0} SC
                           </span>
                         ) : (
                           <span className="text-sm text-muted-foreground">—</span>
@@ -479,9 +479,9 @@ export function WalkthroughProgressModal({
         <AlertDialog open={showOverrideDialog} onOpenChange={setShowOverrideDialog}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Override XP Award</AlertDialogTitle>
+              <AlertDialogTitle>Override SC Award</AlertDialogTitle>
               <AlertDialogDescription>
-                Set a custom XP amount for this user. This will override the default {walkthrough.xp_reward || 0} XP.
+                Set a custom SC amount for this user. This will override the default {walkthrough.xp_reward || 0} SC.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <div className="space-y-4 py-4">

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;450;500;550;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -82,13 +82,14 @@
     --admin-accent: 210 14% 93%;
     --admin-accent-foreground: 210 11% 15%;
     
-    /* Admin Sidebar - Carbon Black (Dark Sidebar) */
-    --admin-sidebar: 210 11% 15%;
-    --admin-sidebar-foreground: 210 17% 98%;
-    --admin-sidebar-muted: 210 10% 23%;
-    --admin-sidebar-accent: 210 10% 28%;
-    --admin-sidebar-accent-foreground: 210 17% 98%;
-    --admin-sidebar-border: 210 10% 23%;
+    /* Admin Sidebar - Professional Slate (Unified for both themes) */
+    --admin-sidebar: 220 15% 18%; /* Deep slate blue-gray */
+    --admin-sidebar-foreground: 0 0% 100%; /* Pure white */
+    --admin-sidebar-muted: 220 12% 25%;
+    --admin-sidebar-accent: 220 13% 32%;
+    --admin-sidebar-accent-foreground: 0 0% 100%;
+    --admin-sidebar-border: 220 12% 28%;
+    --admin-sidebar-hover: 220 13% 28%;
     
     /* Admin Login Page Colors - Light Mode */
     --admin-login-background: 210 17% 98%;
@@ -127,9 +128,27 @@
     --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* Typography */
-    --font-display: 'Playfair Display', serif;
+    /* Typography - Luxury Editorial */
+    --font-display: 'Cormorant Garamond', serif;
     --font-body: 'Inter', sans-serif;
+    
+    /* Luxury Accent Colors */
+    --luxury-gold: 38 50% 52%;
+    --luxury-gold-light: 38 40% 75%;
+    --luxury-cream: 40 25% 97%;
+    --luxury-charcoal: 220 15% 12%;
+    --luxury-pearl: 40 15% 95%;
+    --luxury-rose: 350 20% 94%;
+    --luxury-warm: 30 20% 92%;
+    
+    /* Premium Shadows */
+    --shadow-luxury: 0 25px 50px -12px hsl(220 15% 15% / 0.12);
+    --shadow-luxury-hover: 0 35px 60px -15px hsl(220 15% 15% / 0.18);
+    --shadow-soft: 0 4px 20px -2px hsl(220 15% 15% / 0.08);
+    
+    /* Transitions */
+    --transition-luxury: 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-swift: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Rank Colors - Grayscale System */
     --rank-f1: 210 11% 10%;
@@ -230,13 +249,14 @@
     --admin-accent: 210 10% 23%;
     --admin-accent-foreground: 210 17% 98%;
     
-    /* Admin Sidebar - Darker Carbon (unified dark tone) */
-    --admin-sidebar: 210 11% 8%;
-    --admin-sidebar-foreground: 210 17% 98%;
-    --admin-sidebar-muted: 210 10% 18%;
-    --admin-sidebar-accent: 210 10% 22%;
-    --admin-sidebar-accent-foreground: 210 17% 98%;
-    --admin-sidebar-border: 210 10% 18%;
+    /* Admin Sidebar - Professional Slate (Unified for both themes) */
+    --admin-sidebar: 220 15% 14%; /* Darker slate for dark mode */
+    --admin-sidebar-foreground: 0 0% 100%; /* Pure white */
+    --admin-sidebar-muted: 220 12% 22%;
+    --admin-sidebar-accent: 220 13% 30%;
+    --admin-sidebar-accent-foreground: 0 0% 100%;
+    --admin-sidebar-border: 220 12% 25%;
+    --admin-sidebar-hover: 220 13% 26%;
     
     /* Admin Login Page Colors - Dark Mode */
     --admin-login-background: 210 11% 10%;
@@ -273,12 +293,13 @@
     --admin-border: 210 14% 89%;
     --admin-accent: 210 14% 93%;
     --admin-accent-foreground: 210 11% 15%;
-    --admin-sidebar: 210 11% 15%;
-    --admin-sidebar-foreground: 210 17% 98%;
-    --admin-sidebar-muted: 210 10% 23%;
-    --admin-sidebar-accent: 210 10% 28%;
-    --admin-sidebar-accent-foreground: 210 17% 98%;
-    --admin-sidebar-border: 210 10% 23%;
+    --admin-sidebar: 220 15% 18%;
+    --admin-sidebar-foreground: 0 0% 100%;
+    --admin-sidebar-muted: 220 12% 25%;
+    --admin-sidebar-accent: 220 13% 32%;
+    --admin-sidebar-accent-foreground: 0 0% 100%;
+    --admin-sidebar-border: 220 12% 28%;
+    --admin-sidebar-hover: 220 13% 28%;
     --admin-login-background: 210 17% 98%;
     --admin-login-card: 0 0% 100%;
     --admin-login-card-border: 210 14% 89%;
@@ -381,12 +402,13 @@
     --admin-border: 210 10% 23%;
     --admin-accent: 210 10% 23%;
     --admin-accent-foreground: 210 17% 98%;
-    --admin-sidebar: 210 11% 8%;
-    --admin-sidebar-foreground: 210 17% 98%;
-    --admin-sidebar-muted: 210 10% 18%;
-    --admin-sidebar-accent: 210 10% 22%;
-    --admin-sidebar-accent-foreground: 210 17% 98%;
-    --admin-sidebar-border: 210 10% 18%;
+    --admin-sidebar: 220 15% 14%;
+    --admin-sidebar-foreground: 0 0% 100%;
+    --admin-sidebar-muted: 220 12% 22%;
+    --admin-sidebar-accent: 220 13% 30%;
+    --admin-sidebar-accent-foreground: 0 0% 100%;
+    --admin-sidebar-border: 220 12% 25%;
+    --admin-sidebar-hover: 220 13% 26%;
     --admin-login-background: 210 11% 10%;
     --admin-login-card: 210 11% 15%;
     --admin-login-card-border: 210 10% 23%;
@@ -425,8 +447,104 @@
   }
 }
 
+/* Mobile-specific enhancements */
+@media (max-width: 640px) {
+  /* Adjust typography for better readability on small screens */
+  .text-editorial-hero {
+    @apply text-4xl md:text-5xl lg:text-7xl;
+  }
+  
+  .text-editorial-display {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
+  
+  .text-editorial-title {
+    @apply text-xl md:text-2xl lg:text-3xl;
+  }
+  
+  .text-editorial-subtitle {
+    @apply text-lg md:text-xl;
+  }
+  
+  /* Optimize grid layouts for mobile */
+  .card-grid {
+    @apply grid-cols-1 sm:grid-cols-2 lg:grid-cols-3;
+  }
+  
+  /* Adjust spacing for mobile */
+  .page-container {
+    @apply p-2 sm:p-4 lg:p-6 space-y-3 sm:space-y-4;
+  }
+  
+  /* Mobile-friendly navigation */
+  .sidebar-active-indicator::before {
+    @apply w-1;
+  }
+  
+  /* Touch-friendly elements */
+  .touch-target {
+    @apply min-h-12 min-w-12 flex items-center justify-center;
+  }
+  
+  /* Adjust button sizes for mobile */
+  .btn-mobile-large {
+    @apply h-14 text-base;
+  }
+  
+  /* Mobile modal adjustments */
+  .modal-mobile-fullscreen {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    height: 100% !important;
+  }
+}
+
 @layer components {
-  /* Typography Scale */
+  /* Editorial Typography Scale - Luxury */
+  .text-editorial-hero {
+    @apply text-5xl md:text-7xl lg:text-8xl font-display font-light tracking-tight;
+    letter-spacing: -0.03em;
+    line-height: 0.95;
+  }
+
+  .text-editorial-display {
+    @apply text-4xl md:text-5xl lg:text-6xl font-display font-light;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  .text-editorial-title {
+    @apply text-2xl md:text-3xl lg:text-4xl font-display font-medium;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  .text-editorial-subtitle {
+    @apply text-xl md:text-2xl font-display font-normal;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  .text-editorial-body {
+    @apply text-base md:text-lg leading-relaxed;
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.7;
+  }
+
+  .text-editorial-caption {
+    @apply text-[10px] md:text-xs uppercase font-medium;
+    letter-spacing: 0.25em;
+    font-family: var(--font-body);
+  }
+
+  .text-editorial-label {
+    @apply text-xs uppercase font-medium;
+    letter-spacing: 0.15em;
+    font-family: var(--font-body);
+  }
+
+  /* Legacy Typography Scale */
   .text-display-2xl {
     @apply text-4xl sm:text-5xl font-display font-bold tracking-tight;
     letter-spacing: -0.03em;
@@ -678,6 +796,131 @@
 @layer utilities {
   .font-display {
     font-family: var(--font-display);
+  }
+
+  /* Luxury Color Utilities */
+  .text-luxury-gold {
+    color: hsl(var(--luxury-gold));
+  }
+  .bg-luxury-gold {
+    background-color: hsl(var(--luxury-gold));
+  }
+  .text-luxury-charcoal {
+    color: hsl(var(--luxury-charcoal));
+  }
+  .bg-luxury-cream {
+    background-color: hsl(var(--luxury-cream));
+  }
+  .bg-luxury-pearl {
+    background-color: hsl(var(--luxury-pearl));
+  }
+
+  /* Luxury Shadow Utilities */
+  .shadow-luxury {
+    box-shadow: var(--shadow-luxury);
+  }
+  .shadow-luxury-hover {
+    box-shadow: var(--shadow-luxury-hover);
+  }
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  /* Luxury Hover Effects */
+  .hover-lift-luxury {
+    transition: transform var(--transition-swift), box-shadow var(--transition-swift);
+  }
+  .hover-lift-luxury:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-luxury-hover);
+  }
+
+  /* Image Zoom Effect */
+  .hover-zoom {
+    overflow: hidden;
+  }
+  .hover-zoom img {
+    transition: transform 700ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .hover-zoom:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Reveal Animations */
+  @keyframes reveal-up {
+    from { 
+      opacity: 0; 
+      transform: translateY(40px); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+  }
+
+  @keyframes reveal-scale {
+    from { 
+      opacity: 0; 
+      transform: scale(0.95); 
+    }
+    to { 
+      opacity: 1; 
+      transform: scale(1); 
+    }
+  }
+
+  @keyframes fade-in-luxury {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .animate-reveal-up {
+    animation: reveal-up 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .animate-reveal-scale {
+    animation: reveal-scale 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .animate-fade-in-luxury {
+    animation: fade-in-luxury 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  /* Stagger delays for reveal animations */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+  .stagger-6 { animation-delay: 0.6s; }
+
+  /* Link Underline Animation */
+  .link-underline-luxury {
+    position: relative;
+  }
+  .link-underline-luxury::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: -2px;
+    left: 0;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .link-underline-luxury:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Glass morphism luxury */
+  .glass-luxury {
+    background: hsl(var(--background) / 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid hsl(var(--border) / 0.3);
   }
 
   .font-body {
@@ -1056,6 +1299,170 @@
     pointer-events: none;
   }
 
+  /* Admin Dashboard Specific Utilities */
+  .admin-card {
+    @apply bg-admin-card border border-admin-border rounded-xl shadow-sm transition-all duration-300;
+  }
+
+  .admin-card:hover {
+    @apply shadow-md border-admin-border/80;
+  }
+
+  .admin-card-elevated {
+    @apply bg-admin-card border border-admin-border rounded-xl shadow-md;
+  }
+
+  .admin-section-header {
+    @apply flex items-center gap-2 mb-4;
+  }
+
+  .admin-section-title {
+    @apply text-xs font-bold uppercase tracking-wider text-admin-muted-foreground;
+  }
+
+  .admin-page-header {
+    @apply flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8;
+  }
+
+  .admin-page-title {
+    @apply text-2xl font-bold tracking-tight text-admin-foreground;
+  }
+
+  .admin-page-subtitle {
+    @apply text-sm text-admin-muted-foreground mt-1;
+  }
+
+  .admin-input {
+    @apply h-11 bg-admin-muted/60 border-admin-border rounded-xl 
+           focus:bg-admin-card focus:ring-2 focus:ring-admin-foreground/10 
+           focus:border-admin-foreground/20 transition-all text-admin-foreground 
+           placeholder:text-admin-muted-foreground;
+  }
+
+  .admin-button-primary {
+    @apply bg-admin-foreground text-admin-background hover:bg-admin-foreground/90 
+           transition-all active:scale-[0.98] shadow-md rounded-xl h-11 px-6;
+  }
+
+  .admin-button-secondary {
+    @apply bg-admin-muted text-admin-foreground hover:bg-admin-muted/80 
+           transition-all active:scale-[0.98] border border-admin-border rounded-xl h-11 px-6;
+  }
+
+  .admin-button-ghost {
+    @apply hover:bg-admin-muted text-admin-foreground transition-all 
+           active:scale-[0.98] rounded-xl;
+  }
+
+  .admin-icon-button {
+    @apply h-10 w-10 rounded-xl hover:bg-admin-muted text-admin-foreground 
+           transition-all active:scale-[0.95] flex items-center justify-center;
+  }
+
+  .admin-badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .admin-badge-default {
+    @apply admin-badge bg-admin-foreground text-admin-background;
+  }
+
+  .admin-badge-secondary {
+    @apply admin-badge bg-admin-muted text-admin-foreground;
+  }
+
+  .admin-badge-success {
+    @apply admin-badge bg-success/10 text-success;
+  }
+
+  .admin-badge-warning {
+    @apply admin-badge bg-warning/10 text-warning;
+  }
+
+  .admin-badge-destructive {
+    @apply admin-badge bg-destructive/10 text-destructive;
+  }
+
+  .admin-table-header {
+    @apply bg-admin-muted/50 text-admin-muted-foreground text-xs uppercase tracking-wider font-semibold;
+  }
+
+  .admin-table-row {
+    @apply transition-colors hover:bg-admin-muted/30 border-b border-admin-border last:border-b-0;
+  }
+
+  .admin-table-cell {
+    @apply py-4 px-4 text-sm;
+  }
+
+  .admin-stat-icon {
+    @apply h-12 w-12 rounded-xl flex items-center justify-center transition-transform duration-300;
+  }
+
+  .admin-nav-item {
+    @apply flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200
+           text-admin-sidebar-foreground hover:bg-admin-sidebar-muted;
+  }
+
+  .admin-nav-item-active {
+    @apply admin-nav-item bg-admin-sidebar-accent text-admin-sidebar-accent-foreground font-semibold
+           relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 
+           before:h-6 before:w-1 before:rounded-r-full before:bg-admin-sidebar-accent-foreground;
+  }
+
+  /* Enhanced hover effects */
+  .hover-lift-sm {
+    @apply transition-all duration-300;
+  }
+
+  .hover-lift-sm:hover {
+    @apply -translate-y-0.5 shadow-md;
+  }
+
+  /* Focus states for admin */
+  .admin-focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-admin-foreground/20 focus:ring-offset-2 
+           focus:ring-offset-admin-background;
+  }
+
+  /* Smooth scrollbar for admin */
+  .admin-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .admin-scrollbar::-webkit-scrollbar-track {
+    @apply bg-admin-muted/50 rounded-full;
+  }
+
+  .admin-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-admin-muted-foreground/30 rounded-full;
+  }
+
+  .admin-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-admin-muted-foreground/50;
+  }
+
+  /* Stats card animations */
+  @keyframes stat-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+  }
+
+  .animate-stat-pulse {
+    animation: stat-pulse 2s ease-in-out infinite;
+  }
+
+  /* Tab indicator animation */
+  @keyframes tab-slide {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  .tab-indicator {
+    animation: tab-slide 0.3s ease-out;
+  }
+
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     .animate-float,
@@ -1065,11 +1472,13 @@
     .animate-shimmer,
     .animate-blur-reveal,
     .animate-scale-fade,
-    .text-shine {
+    .text-shine,
+    .animate-stat-pulse {
       animation: none;
     }
     
-    .hover-lift:hover {
+    .hover-lift:hover,
+    .hover-lift-sm:hover {
       transform: none;
     }
 
@@ -1082,6 +1491,11 @@
     }
 
     .shadow-premium-hover:hover {
+      transform: none;
+    }
+
+    .admin-card:hover,
+    .admin-card-elevated:hover {
       transform: none;
     }
   }

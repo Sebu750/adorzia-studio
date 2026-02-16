@@ -17,13 +17,15 @@ export function useProfile() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    console.log("useProfile useEffect triggered, user:", user);
-    if (!user) {
-      console.log("No user, setting profile to null");
+    // Prevent multiple fetches for the same user
+    const userId = user?.id;
+    if (!userId) {
       setProfile(null);
       setLoading(false);
       return;
     }
+
+    let isCancelled = false;
 
     const fetchProfile = async () => {
       try {
@@ -33,8 +35,10 @@ export function useProfile() {
         const { data: profileData, error: profileError } = await supabase
           .from("profiles")
           .select("*")
-          .eq("user_id", user.id)
+          .eq("user_id", userId)
           .maybeSingle();
+        
+        if (isCancelled) return;
         
         if (profileError) throw profileError;
         
@@ -53,26 +57,20 @@ export function useProfile() {
           setProfile({ ...profileData, rank: rankData });
         } else {
           // Create profile if it doesn't exist
-          console.log("Creating new profile for user:", user.id);
-          console.log("User metadata:", user.user_metadata);
-          console.log("User email:", user.email);
-                
-          const profileData = {
-            user_id: user.id,
-            name: user.user_metadata?.name || '',
-            email: user.email || '',
-            category: user.user_metadata?.category || 'fashion',
+          const newProfileData = {
+            user_id: userId,
+            name: user?.user_metadata?.name || '',
+            email: user?.email || '',
+            category: user?.user_metadata?.category || 'fashion',
           };
-                
-          console.log("Profile data to insert:", profileData);
                 
           const { data: newProfile, error: createError } = await supabase
             .from("profiles")
-            .insert(profileData)
+            .insert(newProfileData)
             .select()
             .single();
         
-          console.log("Create profile result:", { newProfile, createError });
+          if (isCancelled) return;
         
           if (createError) {
             console.error("Failed to create profile:", createError);
@@ -82,15 +80,23 @@ export function useProfile() {
           }
         }
       } catch (err) {
-        console.error("Error fetching profile:", err);
-        setError(err instanceof Error ? err : new Error("Failed to fetch profile"));
+        if (!isCancelled) {
+          console.error("Error fetching profile:", err);
+          setError(err instanceof Error ? err : new Error("Failed to fetch profile"));
+        }
       } finally {
-        setLoading(false);
+        if (!isCancelled) {
+          setLoading(false);
+        }
       }
     };
 
     fetchProfile();
-  }, [user]);
+    
+    return () => {
+      isCancelled = true;
+    };
+  }, [user?.id]); // Only depend on user.id, not the entire user object
 
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!user) return { error: new Error("No user logged in") };
@@ -104,7 +110,13 @@ export function useProfile() {
       const knownFields = [
         'name', 'bio', 'email', 'category', 'avatar_url', 
         'skills', 'first_login', 'notification_preferences',
-        'rank_id', 'subscription_tier', 'status', 'xp'
+        'rank_id', 'subscription_tier', 'status', 'style_credits',
+        // Enhanced profile fields
+        'brand_name', 'logo_url', 'banner_image', 'location',
+        'education', 'awards', 'website_url', 'instagram_handle',
+        'twitter_handle', 'linkedin_url', 'facebook_url',
+        'tiktok_handle', 'youtube_channel', 'dribbble_url',
+        'behance_url', 'etsy_shop_url', 'shopify_store_url'
       ];
       
       // Only include fields that we know exist or are likely to exist

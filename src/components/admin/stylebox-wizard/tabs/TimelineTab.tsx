@@ -181,8 +181,8 @@ export function TimelineTab({ onSave, isLoading }: TimelineTabProps) {
             <Badge variant="secondary" className="capitalize">{formData.difficulty}</Badge>
           </div>
           <div>
-            <p className="text-muted-foreground">XP Reward</p>
-            <p className="font-medium">{formData.xp_reward || 100} XP</p>
+            <p className="text-muted-foreground">SC Reward</p>
+            <p className="font-medium">{formData.xp_reward || 100} SC</p>
           </div>
           <div>
             <p className="text-muted-foreground">Deliverables</p>

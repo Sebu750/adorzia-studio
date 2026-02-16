@@ -23,7 +23,6 @@ import {
   History,
   Search,
   RefreshCw,
-  MoreVertical,
   Ban,
   Mail,
   Loader2,
@@ -34,18 +33,11 @@ import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client"
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useToast } from "@/hooks/use-toast";
 import { formatDistanceToNow } from "date-fns";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
@@ -58,12 +50,11 @@ const AdminSecurity = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Invite functionality
+  // Invite functionality - MVP: Only superadmin role
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
   const [inviteData, setInviteData] = useState({
     email: "",
     name: "",
-    role: "admin" as "admin" | "superadmin",
     message: ""
   });
   const [isSendingInvite, setIsSendingInvite] = useState(false);
@@ -85,6 +76,7 @@ const AdminSecurity = () => {
 
   const fetchAdmins = async () => {
     // Fetch from the isolated admin_profiles table
+    // MVP: Only superadmin role
     const { data, error } = await supabase
       .from('admin_profiles')
       .select(`
@@ -95,10 +87,12 @@ const AdminSecurity = () => {
         user_roles!inner (
           role
         )
-      `);
+      `)
+      .eq('user_roles.role', 'superadmin');
 
     if (error) {
       // Fallback: If admin_profiles hasn't been fully populated yet, check user_roles
+      // MVP: Only superadmin role
       const { data: roleData, error: roleError } = await supabase
         .from('user_roles')
         .select(`
@@ -110,7 +104,7 @@ const AdminSecurity = () => {
             email
           )
         `)
-        .in('role', ['admin', 'superadmin']);
+        .eq('role', 'superadmin');
       
       if (!roleError) {
         setAdmins(roleData.map(r => ({
@@ -146,34 +140,6 @@ const AdminSecurity = () => {
     }
   };
 
-  const handleUpdateRole = async (userId: string, newRole: 'admin' | 'superadmin') => {
-    if (!isSuperadmin) return;
-
-    try {
-      // 1. Update the role in user_roles
-      const { error: roleError } = await supabase
-        .from('user_roles')
-        .update({ role: newRole })
-        .eq('user_id', userId);
-
-      if (roleError) throw roleError;
-
-      // 2. Log the administrative change
-      await supabase.from('admin_logs').insert({
-        admin_id: currentUser?.id,
-        action: 'update_role',
-        target_type: 'user_role',
-        target_id: userId,
-        details: { new_role: newRole }
-      });
-
-      toast({ title: "Role updated", description: `User is now a ${newRole}.` });
-      fetchAdmins();
-    } catch (error: any) {
-      toast({ title: "Update failed", description: error.message, variant: "destructive" });
-    }
-  };
-
   const handleInviteAdmin = async () => {
     if (!isSuperadmin) return;
     
@@ -186,13 +152,13 @@ const AdminSecurity = () => {
     setInviteStatus("sending");
 
     try {
-      // 1. Create invitation record
+      // 1. Create invitation record - MVP: Always superadmin role
       const { data: invitation, error: inviteError } = await supabase
         .from('admin_invitations')
         .insert({
           email: inviteData.email,
           name: inviteData.name,
-          role: inviteData.role,
+          role: 'superadmin',
           invited_by: currentUser?.id,
           message: inviteData.message || null,
           expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 days
@@ -202,13 +168,13 @@ const AdminSecurity = () => {
 
       if (inviteError) throw inviteError;
 
-      // 2. Send invitation via edge function
+      // 2. Send invitation via edge function - MVP: Always superadmin
       const { error: sendError } = await supabase.functions.invoke('send-admin-invitation', {
         body: {
           invitationId: invitation.id,
           email: inviteData.email,
           name: inviteData.name,
-          role: inviteData.role,
+          role: 'superadmin',
           message: inviteData.message,
           invitedByName: currentUser?.user_metadata?.name || 'System Administrator'
         }
@@ -225,18 +191,18 @@ const AdminSecurity = () => {
         details: { 
           email: inviteData.email, 
           name: inviteData.name, 
-          role: inviteData.role 
+          role: 'superadmin'
         }
       });
 
       setInviteStatus("sent");
       toast({ 
         title: "Invitation Sent", 
-        description: `Invitation sent to ${inviteData.email} for ${inviteData.role} role.` 
+        description: `Invitation sent to ${inviteData.email} for superadmin role.` 
       });
       
       // Reset form
-      setInviteData({ email: "", name: "", role: "admin", message: "" });
+      setInviteData({ email: "", name: "", message: "" });
       setTimeout(() => {
         setIsInviteDialogOpen(false);
         setInviteStatus("idle");
@@ -244,7 +210,17 @@ const AdminSecurity = () => {
 
     } catch (error: any) {
       setInviteStatus("error");
-      toast({ title: "Invitation Failed", description: error.message, variant: "destructive" });
+      console.error("Invitation error:", error);
+      
+      // Provide helpful error message for common issues
+      let errorMessage = error.message;
+      if (error.message?.includes("admin_invitations") || error.message?.includes("invitation table")) {
+        errorMessage = "The admin invitations table is not set up in the database. Please run the migration '20260201010000_admin_invitations.sql' in your Supabase project.";
+      } else if (error.code === "42P01" || error.message?.includes("relation") || error.message?.includes("does not exist")) {
+        errorMessage = "Database table missing. Please ensure all migrations have been applied to your Supabase project.";
+      }
+      
+      toast({ title: "Invitation Failed", description: errorMessage, variant: "destructive" });
     } finally {
       setIsSendingInvite(false);
     }
@@ -299,7 +275,7 @@ const AdminSecurity = () => {
           </div>
           <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 gap-2 py-1 px-3">
             <ShieldAlert className="h-4 w-4" />
-            Superadmin Access Only
+            Super Admin Only
           </Badge>
         </div>
 
@@ -352,7 +328,6 @@ const AdminSecurity = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>User</TableHead>
-                    <TableHead>Role</TableHead>
                     <TableHead>Added</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
@@ -374,60 +349,32 @@ const AdminSecurity = () => {
                     filteredAdmins.map((admin) => (
                       <TableRow key={admin.user_id}>
                         <TableCell>
-                          <div>
-                            <p className="font-medium">{admin.name}</p>
-                            <p className="text-xs text-muted-foreground">{admin.email}</p>
+                          <div className="flex items-center gap-3">
+                            <div>
+                              <p className="font-medium">{admin.name}</p>
+                              <p className="text-xs text-muted-foreground">{admin.email}</p>
+                            </div>
+                            <Badge 
+                              variant="wine"
+                              className="bg-admin-wine text-admin-wine-foreground border-transparent"
+                            >
+                              Super Admin
+                            </Badge>
                           </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge 
-                            variant={admin.role === 'superadmin' ? "wine" : "outline"}
-                            className={cn(
-                              admin.role === 'superadmin' 
-                                ? "bg-admin-wine text-admin-wine-foreground border-transparent" 
-                                : "bg-blue-500/10 text-blue-500 border-blue-500/20"
-                            )}
-                          >
-                            {admin.role}
-                          </Badge>
                         </TableCell>
                         <TableCell className="text-sm text-muted-foreground">
                           {formatDistanceToNow(new Date(admin.created_at), { addSuffix: true })}
                         </TableCell>
                         <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                              <DropdownMenuLabel>Manage Role</DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem 
-                                disabled={admin.role === 'superadmin'}
-                                onClick={() => handleUpdateRole(admin.user_id, 'superadmin')}
-                              >
-                                <ShieldAlert className="h-4 w-4 mr-2 text-wine" />
-                                Promote to Superadmin
-                              </DropdownMenuItem>
-                              <DropdownMenuItem 
-                                disabled={admin.role === 'admin'}
-                                onClick={() => handleUpdateRole(admin.user_id, 'admin')}
-                              >
-                                <ShieldCheck className="h-4 w-4 mr-2" />
-                                Demote to Admin
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem 
-                                className="text-destructive"
-                                onClick={() => handleRevokeAccess(admin.user_id, admin.email)}
-                              >
-                                <Ban className="h-4 w-4 mr-2" />
-                                Revoke Access
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="text-destructive hover:text-destructive"
+                            onClick={() => handleRevokeAccess(admin.user_id, admin.email)}
+                          >
+                            <Ban className="h-4 w-4 mr-2" />
+                            Revoke
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))
@@ -532,25 +479,11 @@ const AdminSecurity = () => {
               />
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="invite-role">Admin Role *</Label>
-              <Select 
-                value={inviteData.role} 
-                onValueChange={(value) => setInviteData(prev => ({ ...prev, role: value as "admin" | "superadmin" }))}
-                disabled={isSendingInvite}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="admin">Admin</SelectItem>
-                  <SelectItem value="superadmin">Superadmin</SelectItem>
-                </SelectContent>
-              </Select>
+            {/* MVP: All invitations are for superadmin role */}
+            <div className="p-3 bg-muted/50 rounded-lg">
+              <p className="text-sm font-medium">Role: Superadmin</p>
               <p className="text-xs text-muted-foreground">
-                {inviteData.role === "superadmin" 
-                  ? "Full system access and role management capabilities" 
-                  : "Standard administrative access with limited role management"}
+                Full system access and management capabilities
               </p>
             </div>
             

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { ShoppingBag, Minus, Plus, X, Trash2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ShoppingBag, Minus, Plus, X, Trash2, Sparkles, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -16,7 +17,7 @@ export function CartDrawer({ onClose }: CartDrawerProps) {
   if (isLoading) {
     return (
       <div className="h-full flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-2 border-foreground border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -24,16 +25,23 @@ export function CartDrawer({ onClose }: CartDrawerProps) {
   if (!cart || !cart.items || cart.items.length === 0) {
     return (
       <div className="h-full flex flex-col">
-        <div className="flex items-center justify-between pb-4 border-b">
-          <h2 className="text-lg font-semibold">Shopping Bag</h2>
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b">
+          <h2 className="text-editorial-title text-xl">Your Bag</h2>
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <X className="h-5 w-5" />
+          </Button>
         </div>
+        
         <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
-          <ShoppingBag className="h-16 w-16 text-muted-foreground/30 mb-4" />
-          <h3 className="text-lg font-medium mb-2">Your bag is empty</h3>
-          <p className="text-sm text-muted-foreground mb-6">
-            Looks like you haven't added any items yet.
+          <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-6">
+            <ShoppingBag className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <h3 className="text-xl font-display mb-2">Your bag is empty</h3>
+          <p className="text-muted-foreground mb-8 max-w-sm">
+            Looks like you haven't added any items yet. Start shopping to discover beautiful pieces.
           </p>
-          <Button onClick={onClose} asChild>
+          <Button onClick={onClose} asChild size="lg">
             <Link to="/shop">Start Shopping</Link>
           </Button>
         </div>
@@ -48,119 +56,168 @@ export function CartDrawer({ onClose }: CartDrawerProps) {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b">
-        <h2 className="text-lg font-semibold">Shopping Bag ({itemCount})</h2>
+      <div className="flex items-center justify-between p-6 border-b">
+        <h2 className="text-editorial-title text-xl">Your Bag</h2>
+        <Button variant="ghost" size="icon" onClick={onClose}>
+          <X className="h-5 w-5" />
+        </Button>
       </div>
 
       {/* Free Shipping Progress */}
       {remainingForFreeShipping > 0 && (
-        <div className="py-3 px-4 bg-muted/50 my-4 rounded-lg">
-          <p className="text-sm text-center">
-            Add <span className="font-semibold">{formatCurrency(remainingForFreeShipping)}</span> more for free shipping!
-          </p>
-          <div className="w-full bg-muted rounded-full h-1.5 mt-2">
-            <div 
-              className="bg-primary h-1.5 rounded-full transition-all"
-              style={{ width: `${Math.min((subtotal / freeShippingThreshold) * 100, 100)}%` }}
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-4 bg-muted/30 border-b"
+        >
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-medium">{formatCurrency(remainingForFreeShipping)}</span> more for free shipping
+            </p>
+            <Sparkles className="h-4 w-4 text-foreground" />
+          </div>
+          <div className="w-full bg-border rounded-full h-1.5">
+            <motion.div 
+              className="bg-foreground h-1.5 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${Math.min((subtotal / freeShippingThreshold) * 100, 100)}%` }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
             />
           </div>
-        </div>
+        </motion.div>
+      )}
+
+      {remainingForFreeShipping <= 0 && (
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-4 bg-green-50 border-b"
+        >
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            <p className="text-sm text-green-700 font-medium">
+              Congratulations! You qualify for free shipping.
+            </p>
+          </div>
+        </motion.div>
       )}
 
       {/* Cart Items */}
-      <ScrollArea className="flex-1 -mx-6 px-6">
-        <div className="space-y-4 py-4">
-          {cart.items.map((item: any, index: number) => (
-            <div key={`${item.product_id}-${index}`} className="flex gap-4">
-              {/* Product Image */}
-              <div className="w-20 h-24 bg-muted rounded-lg overflow-hidden flex-shrink-0">
-                {item.image ? (
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <ShoppingBag className="h-8 w-8 text-muted-foreground/30" />
-                  </div>
-                )}
-              </div>
-
-              {/* Product Details */}
-              <div className="flex-1 min-w-0">
-                {item.designer_name && (
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-black mb-0.5">
-                    {item.designer_name}
-                  </p>
-                )}
-                <h4 className="font-medium text-sm truncate">{item.title}</h4>
-                {item.variant && (
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {Object.entries(item.variant).map(([key, value]) => `${key}: ${value}`).join(', ')}
-                  </p>
-                )}
-                <p className="font-semibold text-sm mt-1">{formatCurrency(item.price)}</p>
-
-                {/* Quantity Controls */}
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="flex items-center border rounded-md">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => updateQuantity(item.product_id, item.quantity - 1, item.variant)}
-                      disabled={item.quantity <= 1}
-                    >
-                      <Minus className="h-3 w-3" />
-                    </Button>
-                    <span className="w-8 text-center text-sm">{item.quantity}</span>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8"
-                      onClick={() => updateQuantity(item.product_id, item.quantity + 1, item.variant)}
-                    >
-                      <Plus className="h-3 w-3" />
-                    </Button>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                    onClick={() => removeItem(item.product_id, item.variant)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+      <ScrollArea className="flex-1 p-6">
+        <div className="space-y-6">
+          <AnimatePresence>
+            {cart.items.map((item: any, index: number) => (
+              <motion.div
+                key={`${item.product_id}-${index}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ delay: index * 0.05 }}
+                className="flex gap-4 p-4 border rounded-sm hover:bg-muted/30 transition-colors"
+              >
+                {/* Product Image */}
+                <div className="w-24 h-32 bg-muted rounded-sm overflow-hidden flex-shrink-0">
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <ShoppingBag className="h-8 w-8 text-muted-foreground/30" />
+                    </div>
+                  )}
                 </div>
-              </div>
 
-              {/* Item Total */}
-              <div className="text-right">
-                <p className="font-semibold text-sm">
-                  {formatCurrency(item.price * item.quantity)}
-                </p>
-              </div>
-            </div>
-          ))}
+                {/* Product Details */}
+                <div className="flex-1 min-w-0">
+                  {item.designer_name && (
+                    <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                      {item.designer_name}
+                    </p>
+                  )}
+                  <h4 className="font-display text-base mb-2 line-clamp-2">{item.title}</h4>
+                  
+                  {item.variant && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {Object.entries(item.variant).map(([key, value]) => (
+                        <div key={key} className="text-xs bg-muted/50 px-2 py-1 rounded-sm">
+                          {key}: {value}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <p className="font-display text-lg mb-4">
+                    {formatCurrency(item.price)}
+                  </p>
+
+                  {/* Quantity Controls */}
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center border rounded-sm">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-10 w-10 rounded-none"
+                        onClick={() => updateQuantity(item.product_id, item.quantity - 1, item.variant)}
+                        disabled={item.quantity <= 1}
+                      >
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      <span className="w-12 text-center font-medium">{item.quantity}</span>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-10 w-10 rounded-none"
+                        onClick={() => updateQuantity(item.product_id, item.quantity + 1, item.variant)}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-10 w-10 text-muted-foreground hover:text-destructive"
+                      onClick={() => removeItem(item.product_id, item.variant)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Item Total */}
+                <div className="text-right min-w-fit">
+                  <p className="font-display text-lg">
+                    {formatCurrency(item.price * item.quantity)}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </ScrollArea>
 
       {/* Footer */}
-      <div className="pt-4 border-t space-y-4">
-        <div className="flex items-center justify-between text-sm">
+      <div className="p-6 border-t space-y-4">
+        <div className="flex items-center justify-between text-base">
           <span className="text-muted-foreground">Subtotal</span>
-          <span className="font-semibold">{formatCurrency(subtotal)}</span>
+          <span className="font-display text-xl">{formatCurrency(subtotal)}</span>
         </div>
+        
         <p className="text-xs text-muted-foreground text-center">
           Shipping & taxes calculated at checkout
         </p>
-        <div className="grid gap-2">
-          <Button asChild className="w-full" onClick={onClose}>
-            <Link to="/shop/checkout">Checkout</Link>
+        
+        <div className="grid gap-3">
+          <Button asChild className="h-14 text-base" onClick={onClose}>
+            <Link to="/shop/checkout">
+              Proceed to Checkout
+            </Link>
           </Button>
-          <Button variant="outline" asChild className="w-full" onClick={onClose}>
-            <Link to="/shop/cart">View Bag</Link>
+          <Button variant="outline" asChild className="h-12 text-base" onClick={onClose}>
+            <Link to="/shop/cart">View Full Bag</Link>
           </Button>
         </div>
       </div>

@@ -1,14 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Filter, SlidersHorizontal, Grid, List, X } from "lucide-react";
+import { motion } from "framer-motion";
+import { SlidersHorizontal, ChevronDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MarketplaceLayout } from "@/components/marketplace/MarketplaceLayout";
 import { MarketplaceProductCard } from "@/components/marketplace/MarketplaceProductCard";
 import { AdvancedFilters, FilterState } from "@/components/marketplace/AdvancedFilters";
@@ -16,20 +11,20 @@ import { useMarketplaceProducts, useMarketplaceCategories } from "@/hooks/useMar
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-const sortOptions = [
+const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest' },
   { value: 'price_asc', label: 'Price: Low to High' },
   { value: 'price_desc', label: 'Price: High to Low' },
-  { value: 'rating', label: 'Highest Rated' },
-  { value: 'bestselling', label: 'Best Selling' },
+  { value: 'bestselling', label: 'Most Popular' },
 ];
 
 export default function ShopProducts() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<FilterState>({
     sortBy: 'newest',
   });
+  const [showFilters, setShowFilters] = useState(false);
 
   const { data: categoriesData } = useMarketplaceCategories();
   const { data: designersData } = useQuery({
@@ -52,93 +47,169 @@ export default function ShopProducts() {
     sort: filters.sortBy as any,
     minPrice: filters.priceRange?.[0],
     maxPrice: filters.priceRange?.[1],
+    page: currentPage,
     limit: 24,
   });
 
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
+    setCurrentPage(1);
   };
+
+  const clearFilters = useCallback(() => {
+    setFilters({ sortBy: 'newest' });
+    setCurrentPage(1);
+  }, []);
+
+  const activeFiltersCount = 
+    (filters.categories?.length || 0) + 
+    (filters.designers?.length || 0) +
+    (filters.priceRange ? 1 : 0);
 
   return (
     <MarketplaceLayout>
-      <div className="container py-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">All Products</h1>
+      {/* Header */}
+      <section className="pt-32 pb-12">
+        <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <p className="text-editorial-caption text-muted-foreground mb-4">Browse</p>
+            <h1 className="text-editorial-display mb-4">All Products</h1>
             {productsData && (
               <p className="text-muted-foreground">
-                Showing {productsData.products?.length || 0} of {productsData.pagination?.total || 0} products
+                {productsData.pagination?.total || 0} pieces available
               </p>
             )}
-          </div>
+          </motion.div>
+        </div>
+      </section>
 
-          <div className="flex items-center gap-4">
-            {/* Advanced Filters */}
-            <AdvancedFilters
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              categories={categoriesData?.categories?.map((c: any) => ({ id: c.id, name: c.name })) || []}
-              designers={designersData || []}
-            />
+      {/* Filters Bar */}
+      <section className="sticky top-20 z-30 bg-background/95 backdrop-blur-sm border-y border-border">
+        <div className="max-w-[1800px] mx-auto px-6 lg:px-12 py-4">
+          <div className="flex items-center justify-between gap-4">
+            {/* Filter Toggle */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowFilters(!showFilters)}
+              className="gap-2"
+            >
+              <SlidersHorizontal className="h-4 w-4" />
+              Filters
+              {activeFiltersCount > 0 && (
+                <Badge variant="secondary" className="ml-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                  {activeFiltersCount}
+                </Badge>
+              )}
+            </Button>
 
-            {/* View Mode */}
-            <div className="hidden md:flex items-center border rounded-md">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                size="icon"
-                className="rounded-none rounded-l-md"
-                onClick={() => setViewMode('grid')}
-              >
-                <Grid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'ghost'}
-                size="icon"
-                className="rounded-none rounded-r-md"
-                onClick={() => setViewMode('list')}
-              >
-                <List className="h-4 w-4" />
-              </Button>
+            {/* Sort */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground hidden sm:inline">Sort by:</span>
+              <div className="relative">
+                <select
+                  value={filters.sortBy}
+                  onChange={(e) => handleFilterChange({ ...filters, sortBy: e.target.value })}
+                  className="h-9 pl-3 pr-8 text-sm bg-muted border-0 rounded-md appearance-none cursor-pointer focus-visible:ring-1"
+                >
+                  {SORT_OPTIONS.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex gap-8">
-          {/* Main Content */}
-          <div className="flex-1">
-            {isLoading ? (
-              <div className={`grid gap-6 ${
-                viewMode === 'grid' 
-                  ? 'grid-cols-2 md:grid-cols-3' 
-                  : 'grid-cols-1'
-              }`}>
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="space-y-3">
-                    <div className="aspect-[2/3] bg-white border border-slate-100 animate-pulse" />
-                    <div className="h-3 bg-slate-100 rounded animate-pulse w-1/2" />
-                    <div className="h-4 bg-slate-100 rounded animate-pulse" />
-                  </div>
-                ))}
-              </div>
-            ) : productsData?.products?.length === 0 ? (
-              <div className="text-center py-16">
-                <h3 className="text-lg font-medium mb-2">No products found</h3>
-                <p className="text-muted-foreground mb-6">
-                  Try adjusting your filters or search terms.
-                </p>
-                <Button onClick={clearFilters}>Clear Filters</Button>
-              </div>
-            ) : (
-              <>
-                <div className={`grid gap-6 ${
-                  viewMode === 'grid' 
-                    ? 'grid-cols-2 md:grid-cols-3' 
-                    : 'grid-cols-1'
-                }`}>
-                  {productsData?.products?.map((product: any) => (
+          {/* Active Filters */}
+          {activeFiltersCount > 0 && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="flex flex-wrap items-center gap-2 mt-4 pt-4 border-t border-border"
+            >
+              <span className="text-xs text-muted-foreground">Active:</span>
+              {filters.categories?.map((cat) => (
+                <Badge key={cat} variant="secondary" className="gap-1">
+                  {cat}
+                  <button onClick={() => handleFilterChange({ ...filters, categories: filters.categories?.filter(c => c !== cat) })}>
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+              {filters.designers?.map((des) => (
+                <Badge key={des} variant="secondary" className="gap-1">
+                  {designersData?.find(d => d.id === des)?.brand_name || 'Designer'}
+                  <button onClick={() => handleFilterChange({ ...filters, designers: filters.designers?.filter(d => d !== des) })}>
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))}
+              {filters.priceRange && (
+                <Badge variant="secondary" className="gap-1">
+                  ${filters.priceRange[0]} - ${filters.priceRange[1]}
+                  <button onClick={() => handleFilterChange({ ...filters, priceRange: undefined })}>
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              )}
+              <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs h-7">
+                Clear all
+              </Button>
+            </motion.div>
+          )}
+        </div>
+      </section>
+
+      {/* Filters Panel */}
+      {showFilters && (
+        <AdvancedFilters
+          filters={filters}
+          onFilterChange={handleFilterChange}
+          categories={categoriesData?.map((c: any) => ({ id: c.id, name: c.name })) || []}
+          designers={designersData || []}
+          onClose={() => setShowFilters(false)}
+        />
+      )}
+
+      {/* Products Grid */}
+      <section className="py-12 pb-24">
+        <div className="max-w-[1800px] mx-auto px-6 lg:px-12">
+          {isLoading ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="space-y-4">
+                  <div className="aspect-[3/4] bg-muted rounded-lg animate-pulse" />
+                  <div className="h-4 bg-muted rounded animate-pulse w-2/3" />
+                  <div className="h-6 bg-muted rounded animate-pulse w-1/2" />
+                </div>
+              ))}
+            </div>
+          ) : productsData?.products?.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="font-display text-2xl text-muted-foreground mb-4">No products found</p>
+              <p className="text-muted-foreground mb-6">
+                Try adjusting your filters or search terms.
+              </p>
+              <Button onClick={clearFilters}>Clear Filters</Button>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                {productsData?.products?.map((product: any, i: number) => (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.05 }}
+                  >
                     <MarketplaceProductCard
-                      key={product.id}
                       id={product.id}
                       title={product.title}
                       price={product.price}
@@ -153,48 +224,49 @@ export default function ShopProducts() {
                       isBestseller={product.is_bestseller}
                       slug={product.slug}
                     />
-                  ))}
-                </div>
+                  </motion.div>
+                ))}
+              </div>
 
-                {/* Pagination */}
-                {productsData?.pagination && productsData.pagination.totalPages > 1 && (
-                  <div className="flex justify-center gap-2 mt-12">
-                    <Button
-                      variant="outline"
-                      disabled={currentPage <= 1}
-                      onClick={() => updateFilter('page', String(currentPage - 1))}
-                    >
-                      Previous
-                    </Button>
-                    <div className="flex items-center gap-1">
-                      {[...Array(Math.min(productsData.pagination.totalPages, 5))].map((_, i) => {
-                        const pageNum = i + 1;
-                        return (
-                          <Button
-                            key={pageNum}
-                            variant={currentPage === pageNum ? 'default' : 'outline'}
-                            size="icon"
-                            onClick={() => updateFilter('page', String(pageNum))}
-                          >
-                            {pageNum}
-                          </Button>
-                        );
-                      })}
-                    </div>
-                    <Button
-                      variant="outline"
-                      disabled={currentPage >= productsData.pagination.totalPages}
-                      onClick={() => updateFilter('page', String(currentPage + 1))}
-                    >
-                      Next
-                    </Button>
+              {/* Pagination */}
+              {productsData?.pagination && productsData.pagination.totalPages > 1 && (
+                <div className="flex justify-center gap-2 mt-16">
+                  <Button
+                    variant="outline"
+                    disabled={currentPage <= 1}
+                    onClick={() => setCurrentPage(p => p - 1)}
+                  >
+                    Previous
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    {[...Array(Math.min(productsData.pagination.totalPages, 5))].map((_, i) => {
+                      const pageNum = i + 1;
+                      return (
+                        <Button
+                          key={pageNum}
+                          variant={currentPage === pageNum ? 'default' : 'outline'}
+                          size="icon"
+                          onClick={() => setCurrentPage(pageNum)}
+                          className="h-10 w-10"
+                        >
+                          {pageNum}
+                        </Button>
+                      );
+                    })}
                   </div>
-                )}
-              </>
-            )}
-          </div>
+                  <Button
+                    variant="outline"
+                    disabled={currentPage >= productsData.pagination.totalPages}
+                    onClick={() => setCurrentPage(p => p + 1)}
+                  >
+                    Next
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
         </div>
-      </div>
+      </section>
     </MarketplaceLayout>
   );
 }

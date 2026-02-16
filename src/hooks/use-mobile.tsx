@@ -13,7 +13,8 @@ export function useIsMobile() {
     mql.addEventListener("change", onChange);
     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     return () => mql.removeEventListener("change", onChange);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Media query setup - only on mount
 
   return !!isMobile;
 }

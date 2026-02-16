@@ -22,12 +22,21 @@ export default function AdminLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
 
-  // Redirect if already logged in as admin
+  // Handle redirect after login - check admin access
   useEffect(() => {
-    if (!loading && user && isAdmin) {
-      navigate("/admin");
+    if (!loading && user) {
+      if (isAdmin) {
+        navigate("/admin");
+      } else {
+        // User is logged in but not an admin
+        toast({
+          title: "Access denied",
+          description: "You don't have superadmin access.",
+          variant: "destructive",
+        });
+      }
     }
-  }, [loading, user, isAdmin, navigate]);
+  }, [loading, user, isAdmin, navigate, toast]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,13 +55,9 @@ export default function AdminLogin() {
           variant: "destructive",
         });
       } else {
-        // Check if user has admin role - this will be verified by the auth context
-        toast({ title: "Checking admin access..." });
-        
-        // Give time for role check
-        setTimeout(() => {
-          navigate("/admin");
-        }, 500);
+        // Success - auth context will check role and redirect via useEffect
+        toast({ title: "Login successful", description: "Checking admin access..." });
+        // Don't navigate here - let useEffect handle it after role check
       }
     } catch (error) {
       if (error instanceof z.ZodError) {

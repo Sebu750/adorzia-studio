@@ -155,7 +155,7 @@ export function AppSidebar() {
           </div>
           {!isCollapsed && (
             <span className="font-display text-xl font-bold tracking-tight animate-fade-in">
-              Adorzia
+              The Studio
             </span>
           )}
         </div>

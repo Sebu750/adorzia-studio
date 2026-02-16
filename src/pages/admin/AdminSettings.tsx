@@ -29,7 +29,9 @@ import {
   Save,
   KeyRound,
   Smartphone,
-  Activity
+  Activity,
+  Camera,
+  X
 } from "lucide-react";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -52,7 +54,7 @@ const passwordSchema = z.object({
 
 export default function AdminSettings() {
   const navigate = useNavigate();
-  const { user, signOut, isAdmin } = useAdminAuth();
+  const { user, signOut, isAdmin, isSuperadmin } = useAdminAuth();
   const { toast } = useToast();
   
   const [isLoading, setIsLoading] = useState(false);
@@ -61,18 +63,17 @@ export default function AdminSettings() {
     email: "",
     avatar_url: "",
   });
-  const [userRole, setUserRole] = useState<"admin" | "superadmin">("admin");
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   useEffect(() => {
     if (user) {
       loadProfile();
-      loadRole();
     }
   }, [user]);
 
@@ -111,20 +112,6 @@ export default function AdminSettings() {
     }
   };
 
-  const loadRole = async () => {
-    if (!user) return;
-    
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (data) {
-      setUserRole(data.role as "admin" | "superadmin");
-    }
-  };
-
   const logAdminAction = async (action: string, metadata?: Record<string, unknown>) => {
     if (!user) return;
     
@@ -138,7 +125,118 @@ export default function AdminSettings() {
       };
       await supabase.from("admin_logs").insert([logEntry]);
     } catch (error) {
-      console.error("Failed to log admin action:", error);
+      // Silently fail logging errors in production
+    }
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) {
+      console.error('No file selected or no user logged in');
+      return;
+    }
+
+    // Validate file
+    if (file.size > 2 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 2MB.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file (JPG, PNG, WebP).",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    try {
+      // Generate unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `avatar_${user.id}_${Date.now()}.${fileExt}`;
+      const filePath = `admin-avatars/${fileName}`;
+
+      // Upload to storage
+      const { error: uploadError } = await supabase.storage
+        .from('admin-assets')
+        .upload(filePath, file, { cacheControl: '3600', upsert: true });
+
+      if (uploadError) {
+        throw new Error(`Upload failed: ${uploadError.message}`);
+      }
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('admin-assets')
+        .getPublicUrl(filePath);
+
+      // Update profile with new avatar URL
+      setProfileData(prev => ({ ...prev, avatar_url: publicUrl }));
+
+      // Auto-save the avatar change
+      const { data: updateData, error: updateError } = await supabase.functions.invoke('manage-admin', {
+        body: { 
+          action: 'update_auth', 
+          targetUserId: user.id, 
+          avatar_url: publicUrl
+        }
+      });
+      
+      if (updateError) {
+        console.error('Edge function error:', updateError);
+        throw new Error(updateError.message || 'Failed to save avatar URL');
+      }
+      
+      console.log('Avatar update response:', updateData);
+      
+      toast({
+        title: "Avatar updated",
+        description: "Your profile picture has been updated successfully.",
+      });
+    } catch (error: any) {
+      console.error("Avatar upload error:", error);
+      toast({
+        title: "Upload failed",
+        description: error.message || "Failed to upload avatar. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
+  const handleRemoveAvatar = async () => {
+    if (!user) return;
+    
+    setProfileData(prev => ({ ...prev, avatar_url: "" }));
+    
+    try {
+      const { error } = await supabase.functions.invoke('manage-admin', {
+        body: { 
+          action: 'update_auth', 
+          targetUserId: user.id, 
+          avatar_url: null
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Avatar removed",
+        description: "Your profile picture has been removed.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to remove avatar.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -155,24 +253,37 @@ export default function AdminSettings() {
           action: 'update_auth', 
           targetUserId: user.id, 
           email: validated.email,
-          name: validated.name 
+          name: validated.name,
+          avatar_url: profileData.avatar_url
         }
       });
 
       if (error) throw error;
 
       await logAdminAction("profile_update", { 
-        updated_fields: ["name", "email"] 
+        updated_fields: ["name", "email", "avatar_url"] 
       });
 
       toast({
         title: "Profile updated",
         description: "Account details and authentication updated successfully.",
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Profile update error:", error);
+      
+      // Provide more specific error messages
+      let errorMessage = error instanceof Error ? error.message : "Failed to update profile.";
+      if (error.code === "23505") {
+        errorMessage = "This email address is already in use by another account.";
+      } else if (error.message?.includes("User not found")) {
+        errorMessage = "User account not found. Please log in again.";
+      } else if (error.message?.includes("SUPABASE_SERVICE_ROLE_KEY")) {
+        errorMessage = "Server configuration error. Please contact support.";
+      }
+      
       toast({
         title: "Update failed",
-        description: error instanceof Error ? error.message : "Failed to update profile.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -210,14 +321,21 @@ export default function AdminSettings() {
         title: "Password updated",
         description: "Your authentication password has been changed successfully.",
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Password update error:", error);
       const errorMessage = error instanceof Error ? error.message : "Failed to update password.";
       
       // Specific error handling for known Supabase auth errors
-      if (errorMessage.includes("WeakPassword") || errorMessage.toLowerCase().includes("password") && (errorMessage.toLowerCase().includes("weak") || errorMessage.toLowerCase().includes("compromised"))) {
+      if (errorMessage.includes("WeakPassword") || error.message?.includes("weak_password") || errorMessage.toLowerCase().includes("password") && (errorMessage.toLowerCase().includes("weak") || errorMessage.toLowerCase().includes("compromised"))) {
         toast({
           title: "Password Rejected",
           description: "The password you chose has been identified as potentially compromised. Please select a stronger, unique password that hasn't been used in data breaches.",
+          variant: "destructive",
+        });
+      } else if (error.message?.includes("SUPABASE_SERVICE_ROLE_KEY")) {
+        toast({
+          title: "Server Error",
+          description: "Server configuration error. Please contact support.",
           variant: "destructive",
         });
       } else {
@@ -282,7 +400,7 @@ export default function AdminSettings() {
             className="h-7 px-3 bg-admin-foreground text-admin-background border-0 font-bold uppercase tracking-wider text-xs w-fit"
           >
             <Shield className="h-3.5 w-3.5 mr-1.5" />
-            {userRole === "superadmin" ? "Superadmin" : "Admin"}
+            Super Admin
           </Badge>
         </div>
 
@@ -297,18 +415,64 @@ export default function AdminSettings() {
           </CardHeader>
           <CardContent className="space-y-6 p-6">
             <div className="flex items-center gap-5 p-5 rounded-xl bg-admin-muted/30 border border-admin-border/50">
-              <Avatar className="h-16 w-16 ring-2 ring-admin-border">
-                <AvatarImage src={profileData.avatar_url} />
-                <AvatarFallback className="bg-admin-foreground text-admin-background text-lg font-semibold">
-                  {getInitials(profileData.name || "AD")}
-                </AvatarFallback>
-              </Avatar>
-              <div className="space-y-1.5">
+              <div className="relative">
+                <Avatar className="h-16 w-16 ring-2 ring-admin-border">
+                  <AvatarImage src={profileData.avatar_url} />
+                  <AvatarFallback className="bg-admin-foreground text-admin-background text-lg font-semibold">
+                    {getInitials(profileData.name || "AD")}
+                  </AvatarFallback>
+                </Avatar>
+                {isUploadingAvatar && (
+                  <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center">
+                    <Loader2 className="h-6 w-6 animate-spin text-white" />
+                  </div>
+                )}
+              </div>
+              <div className="space-y-1.5 flex-1">
                 <p className="text-base font-semibold text-admin-foreground">{profileData.name || "Admin User"}</p>
                 <p className="text-sm text-admin-muted-foreground">{profileData.email}</p>
-                <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider border-admin-border bg-success/10 text-success border-success/30">
-                  Active
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-wider border-admin-border bg-success/10 text-success border-success/30">
+                    Active
+                  </Badge>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="cursor-pointer">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleAvatarUpload}
+                    disabled={isUploadingAvatar}
+                  />
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm" 
+                    className="gap-2"
+                    disabled={isUploadingAvatar}
+                    asChild
+                  >
+                    <span>
+                      <Camera className="h-4 w-4" />
+                      {profileData.avatar_url ? 'Change' : 'Upload'}
+                    </span>
+                  </Button>
+                </label>
+                {profileData.avatar_url && (
+                  <Button 
+                    type="button" 
+                    variant="ghost" 
+                    size="sm" 
+                    className="gap-2 text-destructive hover:text-destructive"
+                    onClick={handleRemoveAvatar}
+                    disabled={isUploadingAvatar}
+                  >
+                    <X className="h-4 w-4" />
+                    Remove
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -341,12 +505,12 @@ export default function AdminSettings() {
             <div className="space-y-2.5">
               <Label className="text-xs font-bold uppercase tracking-wider text-admin-muted-foreground">Admin Role</Label>
               <Input 
-                value={userRole === "superadmin" ? "Superadmin" : "Admin"} 
+                value="Super Admin" 
                 disabled 
                 className="h-11 bg-admin-muted/50 border-admin-border text-admin-muted-foreground cursor-not-allowed"
               />
               <p className="text-[10px] text-admin-muted-foreground italic">
-                Role assignment is managed by system administrators
+                You have full administrative access to the dashboard
               </p>
             </div>
 

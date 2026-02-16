@@ -48,7 +48,7 @@ export function DesignerRankModal({
 
   const [formData, setFormData] = useState({
     rank_id: designer.rank_id || "",
-    xp: designer.xp || 0,
+    style_credits: designer.style_credits || 0,
     status: designer.status || "active",
     notes: "",
   });
@@ -58,7 +58,7 @@ export function DesignerRankModal({
   useEffect(() => {
     setFormData({
       rank_id: designer.rank_id || "",
-      xp: designer.xp || 0,
+      style_credits: designer.style_credits || 0,
       status: designer.status || "active",
       notes: "",
     });
@@ -70,7 +70,7 @@ export function DesignerRankModal({
         .from("profiles")
         .update({
           rank_id: formData.rank_id || null,
-          xp: formData.xp,
+          style_credits: formData.style_credits,
           status: formData.status as "active" | "suspended" | "inactive",
         })
         .eq("id", designer.id);
@@ -143,21 +143,21 @@ export function DesignerRankModal({
             )}
           </div>
 
-          {/* XP Points */}
+          {/* SC */}
           <div className="space-y-2">
-            <Label htmlFor="xp" className="flex items-center gap-2">
+            <Label htmlFor="style_credits" className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-admin-camel" />
-              XP Points
+              SC
             </Label>
             <Input
-              id="xp"
+              id="style_credits"
               type="number"
               min={0}
-              value={formData.xp}
-              onChange={(e) => setFormData(prev => ({ ...prev, xp: parseInt(e.target.value) || 0 }))}
+              value={formData.style_credits}
+              onChange={(e) => setFormData(prev => ({ ...prev, style_credits: parseInt(e.target.value) || 0 }))}
             />
             <p className="text-xs text-muted-foreground">
-              Manually adjust XP for special circumstances
+              Manually adjust SC for special circumstances
             </p>
           </div>
 

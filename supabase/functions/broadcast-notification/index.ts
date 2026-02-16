@@ -55,10 +55,11 @@ Deno.serve(async (req) => {
       throw new Error('Could not verify user role')
     }
 
-    const isAdmin = roleData?.role === 'admin' || roleData?.role === 'superadmin'
-    if (!isAdmin) {
-      console.error('[broadcast-notification] Forbidden: user does not have admin role')
-      throw new Error('Forbidden: Admin access required')
+    // MVP: Single role - superadmin only
+    const isSuperadmin = roleData?.role === 'superadmin'
+    if (!isSuperadmin) {
+      console.error('[broadcast-notification] Forbidden: user is not superadmin')
+      throw new Error('Forbidden: Superadmin access required')
     }
 
     const body = await req.json()
@@ -95,16 +96,18 @@ Deno.serve(async (req) => {
     }
 
     // Create notification records for all users
+    // Note: notifications table has columns: id, user_id, type, message, status, created_at
+    // Title is included in metadata since the table doesn't have a title column
     const notifications = users.map(u => ({
       user_id: u.user_id,
       type: type,
-      title: title || 'System Notification',
       message: message,
       status: 'unread',
       metadata: {
         sent_by: requester.id,
         sent_at: new Date().toISOString(),
-        broadcast: true
+        broadcast: true,
+        title: title || 'System Notification'
       }
     }))
 
@@ -140,9 +143,15 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     console.error('[broadcast-notification] Request failed:', error.message, error)
+    // Return appropriate HTTP status codes
+    let status = 500
+    if (error.message?.includes('Forbidden')) status = 403
+    else if (error.message?.includes('Unauthorized')) status = 401
+    else if (error.message?.includes('required')) status = 400
+    
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 400,
+      status: status,
     })
   }
 })

@@ -133,7 +133,7 @@ const Teams = () => {
                       <div className="flex items-center gap-2 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
                         <Crown className="h-4 w-4 text-amber-500" />
                         <span className="text-sm text-amber-600 dark:text-amber-400 font-medium">
-                          Requires Rank 3 (Stylist) or higher - 801+ Style Credits
+                          Requires Rank 3 (Stylist) or higher - 801+ SC
                         </span>
                       </div>
                     </div>

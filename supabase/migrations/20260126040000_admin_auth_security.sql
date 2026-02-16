@@ -62,10 +62,21 @@ COMMIT;
 ALTER TABLE public.auth_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admin_logs ENABLE ROW LEVEL SECURITY;
 
+-- Create security definer function to check admin roles (avoids recursion)
+CREATE OR REPLACE FUNCTION public.is_admin_or_superadmin(user_uuid UUID)
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1 FROM public.user_roles 
+    WHERE user_id = user_uuid AND role IN ('admin', 'superadmin')
+  );
+END;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
+
 DROP POLICY IF EXISTS "Admins can view all auth logs" ON public.auth_logs;
 CREATE POLICY "Admins can view all auth logs" ON public.auth_logs
   FOR SELECT TO authenticated
-  USING (EXISTS (SELECT 1 FROM public.user_roles WHERE user_id = auth.uid() AND role IN ('admin', 'superadmin')));
+  USING (public.is_admin_or_superadmin(auth.uid()));
 
 DROP POLICY IF EXISTS "Anyone can insert auth logs" ON public.auth_logs;
 CREATE POLICY "Anyone can insert auth logs" ON public.auth_logs
@@ -75,4 +86,4 @@ CREATE POLICY "Anyone can insert auth logs" ON public.auth_logs
 DROP POLICY IF EXISTS "Admins can manage admin_logs" ON public.admin_logs;
 CREATE POLICY "Admins can manage admin_logs" ON public.admin_logs
   FOR ALL TO authenticated
-  USING (EXISTS (SELECT 1 FROM public.user_roles WHERE user_id = auth.uid() AND role IN ('admin', 'superadmin')));
+  USING (public.is_admin_or_superadmin(auth.uid()));

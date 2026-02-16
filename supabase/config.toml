@@ -51,6 +51,9 @@ verify_jwt = false
 [functions.marketplace-cart]
 verify_jwt = false
 
+[functions.verify-authenticity]
+verify_jwt = false
+
 [functions.marketplace-checkout]
 verify_jwt = false
 

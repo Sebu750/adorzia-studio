@@ -103,10 +103,11 @@ DROP POLICY IF EXISTS "Admins can update all submissions" ON public.collection_s
 DROP TABLE IF EXISTS public.collection_submissions CASCADE;
 
 -- Drop collection-files storage policies
-DROP POLICY IF EXISTS "Designers can upload collection files" ON storage.objects;
-DROP POLICY IF EXISTS "Anyone can view collection files" ON storage.objects;
-DROP POLICY IF EXISTS "Designers can update own collection files" ON storage.objects;
-DROP POLICY IF EXISTS "Designers can delete own collection files" ON storage.objects;
+-- TEMPORARILY DISABLED: Requires elevated permissions
+-- DROP POLICY IF EXISTS "Designers can upload collection files" ON storage.objects;
+-- DROP POLICY IF EXISTS "Anyone can view collection files" ON storage.objects;
+-- DROP POLICY IF EXISTS "Designers can update own collection files" ON storage.objects;
+-- DROP POLICY IF EXISTS "Designers can delete own collection files" ON storage.objects;
 
 -- Comment on migration
 COMMENT ON COLUMN public.portfolio_projects.migration_source IS 'Tracks data origin for migrated records (e.g., collection_submissions)';

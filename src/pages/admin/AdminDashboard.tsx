@@ -161,8 +161,8 @@ const AdminDashboard = () => {
       // Fetch top designers with real earnings data
       const { data: designers } = await supabaseAdmin
         .from("profiles")
-        .select("id, name, avatar_url, xp, rank_id")
-        .order("xp", { ascending: false })
+        .select("id, name, avatar_url, style_credits, rank_id")
+        .order("style_credits", { ascending: false })
         .limit(5);
 
       // Fetch earnings for each designer
@@ -234,7 +234,7 @@ const AdminDashboard = () => {
       await fetchRecentActivities();
 
     } catch (err) {
-      console.error("Error fetching admin data:", err);
+      // Error handling without logging in production
     } finally {
       setLoading(false);
     }
@@ -398,29 +398,31 @@ const AdminDashboard = () => {
         animate="visible"
       >
         {/* Header */}
-        <motion.header variants={itemVariants} className="relative overflow-hidden rounded-2xl bg-admin-muted/50 p-6 sm:p-8" role="banner">
-          <div className="absolute inset-0 bg-dot-pattern opacity-30" />
+        <motion.header variants={itemVariants} className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-admin-muted/60 to-admin-muted/30 p-6 sm:p-8 border-4 border-red-500" role="banner">
+          <div className="absolute inset-0 bg-dot-pattern opacity-20" />
           <div className="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-bold tracking-tight text-admin-foreground">Dashboard</h1>
-                {isSuperadmin ? (
-                  <Badge className="h-6 px-2.5 text-xs font-bold bg-admin-foreground text-admin-card border-0 uppercase tracking-wider">Superadmin</Badge>
-                ) : (
-                  <Badge variant="outline" className="h-6 px-2.5 text-xs font-medium bg-success/10 text-success border-success/20">Live</Badge>
-                )}
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-admin-foreground">Dashboard</h1>
+                <Badge className="h-6 px-2.5 text-[10px] font-bold bg-admin-foreground text-admin-card border-0 uppercase tracking-wider rounded-full">Super Admin</Badge>
               </div>
               <p className="text-sm text-admin-muted-foreground">
-                Welcome back, <span className="text-admin-foreground font-medium">{user?.user_metadata?.name || user?.email?.split('@')[0]}</span>. Overview of Adorzia Studio operations.
+                Welcome back, <span className="text-admin-foreground font-semibold">{user?.user_metadata?.name || user?.email?.split('@')[0]}</span>. Overview of Adorzia Studio operations.
               </p>
             </div>
-            <div className="flex gap-3">
-              <Button variant="outline" className="gap-2 h-10 px-4 transition-all hover:bg-admin-muted active:scale-[0.98] border-admin-border text-admin-foreground">
-                <Clock className="h-4 w-4" />Last 7 Days
+            <div className="flex gap-2 sm:gap-3">
+              <Button variant="outline" className="gap-2 h-10 px-4 transition-all hover:bg-admin-muted active:scale-[0.98] border-admin-border/60 rounded-xl text-admin-foreground text-sm">
+                <Clock className="h-4 w-4 text-admin-muted-foreground" />
+                <span className="hidden sm:inline">Last 7 Days</span>
+                <span className="sm:hidden">7 Days</span>
               </Button>
-              <Button className="gap-2 h-10 px-4 bg-admin-foreground text-admin-background hover:bg-admin-foreground/90 transition-all active:scale-[0.98] shadow-md">
-                <FileCheck className="h-4 w-4" />Review Queue
-                <Badge className="ml-1 bg-admin-background/20 text-admin-background h-5 px-1.5">{stats.pendingPublications}</Badge>
+              <Button className="gap-2 h-10 px-4 bg-admin-foreground text-admin-background hover:bg-admin-foreground/90 transition-all active:scale-[0.98] shadow-md rounded-xl text-sm">
+                <FileCheck className="h-4 w-4" />
+                <span className="hidden sm:inline">Review Queue</span>
+                <span className="sm:hidden">Queue</span>
+                {stats.pendingPublications > 0 && (
+                  <Badge className="ml-1 bg-admin-background/20 text-admin-background h-5 px-1.5 text-xs rounded-full">{stats.pendingPublications}</Badge>
+                )}
               </Button>
             </div>
           </div>
@@ -429,10 +431,12 @@ const AdminDashboard = () => {
         {/* Primary Stats */}
         <motion.section variants={itemVariants} className="space-y-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-admin-muted-foreground" />
-            <h2 className="text-xs font-bold uppercase tracking-wider text-admin-muted-foreground">Key Metrics</h2>
+            <div className="h-8 w-8 rounded-lg bg-admin-muted/60 flex items-center justify-center">
+              <Sparkles className="h-4 w-4 text-admin-muted-foreground" />
+            </div>
+            <h2 className="text-[11px] font-bold uppercase tracking-wider text-admin-muted-foreground">Key Metrics</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
             <AdminStatCard title="Total Designers" value={stats.totalDesigners.toLocaleString()} subtitle="Active accounts" icon={Users} trend={{ value: 12, isPositive: true }} variant="wine" />
             <AdminStatCard title="Active StyleBoxes" value={stats.activeStyleboxes.toLocaleString()} subtitle="In progress" icon={Box} trend={{ value: 8, isPositive: true }} variant="camel" />
             <AdminStatCard title="Pending Publications" value={stats.pendingPublications.toString()} subtitle="Awaiting review" icon={FolderOpen} variant="warning" />
@@ -441,16 +445,16 @@ const AdminDashboard = () => {
         </motion.section>
 
         {/* Secondary Stats */}
-        <motion.section variants={itemVariants} className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+        <motion.section variants={itemVariants} className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
           {secondaryStats.map((stat) => (
-            <Card key={stat.label} hover className="group card-interactive bg-admin-card border-admin-border">
-              <CardContent className="p-4 sm:p-5 flex items-center gap-4">
-                <div className={`h-11 w-11 sm:h-12 sm:w-12 rounded-xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105 ${stat.color}`}>
-                  <stat.icon className="h-5 w-5" />
+            <Card key={stat.label} className="group bg-admin-card border-admin-border/60 rounded-xl shadow-sm hover:shadow-md hover:border-admin-border transition-all duration-300 hover:-translate-y-0.5">
+              <CardContent className="p-4 flex items-center gap-3 sm:gap-4">
+                <div className={`h-10 w-10 sm:h-11 sm:w-11 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${stat.color}`}>
+                  <stat.icon className="h-[18px] w-[18px]" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-2xl font-bold text-admin-foreground truncate">{stat.value}</p>
-                  <p className="text-xs font-medium text-admin-muted-foreground uppercase tracking-wider truncate">{stat.label}</p>
+                  <p className="text-xl sm:text-2xl font-bold text-admin-foreground truncate">{stat.value}</p>
+                  <p className="text-[10px] sm:text-xs font-semibold text-admin-muted-foreground uppercase tracking-wider truncate">{stat.label}</p>
                 </div>
               </CardContent>
             </Card>
@@ -460,34 +464,36 @@ const AdminDashboard = () => {
         {/* Stylebox Analytics Section */}
         <motion.section variants={itemVariants} className="space-y-4">
           <div className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4 text-admin-muted-foreground" />
-            <h2 className="text-xs font-bold uppercase tracking-wider text-admin-muted-foreground">Stylebox Analytics</h2>
+            <div className="h-8 w-8 rounded-lg bg-admin-muted/60 flex items-center justify-center">
+              <BarChart3 className="h-4 w-4 text-admin-muted-foreground" />
+            </div>
+            <h2 className="text-[11px] font-bold uppercase tracking-wider text-admin-muted-foreground">Stylebox Analytics</h2>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Key Metrics */}
             <div className="space-y-4">
-              <Card className="bg-admin-card border-admin-border">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-admin-muted-foreground">Performance Overview</CardTitle>
+              <Card className="bg-admin-card border-admin-border/60 rounded-xl shadow-sm">
+                <CardHeader className="pb-3 pt-5 px-5">
+                  <CardTitle className="text-sm font-semibold text-admin-foreground">Performance Overview</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between items-center">
+                <CardContent className="space-y-4 px-5 pb-5">
+                  <div className="flex justify-between items-center py-1">
                     <span className="text-sm text-admin-muted-foreground">Pending Reviews</span>
-                    <Badge variant="outline" className="bg-amber-500/20 text-amber-600 border-amber-500/30">
+                    <Badge variant="outline" className="bg-warning/10 text-warning border-warning/30 rounded-full text-xs font-semibold px-2.5">
                       {stats.pendingSubmissions}
                     </Badge>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center py-1">
                     <span className="text-sm text-admin-muted-foreground">Avg Completion Time</span>
-                    <span className="font-medium">{stats.avgCompletionTime} days</span>
+                    <span className="font-semibold text-admin-foreground">{stats.avgCompletionTime} days</span>
                   </div>
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center py-1">
                     <span className="text-sm text-admin-muted-foreground">Approval Rate</span>
-                    <span className="font-medium">{stats.approvalRate}%</span>
+                    <span className="font-semibold text-admin-foreground">{stats.approvalRate}%</span>
                   </div>
-                  <div className="pt-2 border-t border-admin-border">
-                    <p className="text-xs text-admin-muted-foreground mb-1">Top Performing</p>
-                    <p className="text-sm font-medium truncate">{stats.topPerformingStylebox || "Loading..."}</p>
+                  <div className="pt-3 border-t border-admin-border/50">
+                    <p className="text-xs text-admin-muted-foreground mb-1.5 uppercase tracking-wider font-medium">Top Performing</p>
+                    <p className="text-sm font-semibold text-admin-foreground truncate">{stats.topPerformingStylebox || "Loading..."}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -495,13 +501,13 @@ const AdminDashboard = () => {
 
             {/* Submission Trend Chart */}
             <div className="lg:col-span-2">
-              <Card className="bg-admin-card border-admin-border h-full">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm font-medium text-admin-muted-foreground">Submission Trend (30 Days)</CardTitle>
+              <Card className="bg-admin-card border-admin-border/60 rounded-xl shadow-sm h-full">
+                <CardHeader className="pb-3 pt-5 px-5">
+                  <CardTitle className="text-sm font-semibold text-admin-foreground">Submission Trend (30 Days)</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="px-5 pb-5">
                   {stats.submissionTrend.length > 0 ? (
-                    <div className="h-64 flex items-end justify-between gap-1">
+                    <div className="h-56 flex items-end justify-between gap-[2px] sm:gap-1">
                       {Array.from({ length: 30 }, (_, i) => {
                         const date = new Date();
                         date.setDate(date.getDate() - (29 - i));
@@ -520,12 +526,12 @@ const AdminDashboard = () => {
                         const barHeight = Math.max(4, (count / maxCount) * 100);
                         
                         return (
-                          <div key={i} className="flex-1 flex flex-col items-center">
+                          <div key={i} className="flex-1 flex flex-col items-center group/bar">
                             <div 
-                              className="w-full bg-primary rounded-t transition-all hover:bg-primary/80"
-                              style={{ height: `${barHeight}%` }}
+                              className="w-full bg-admin-foreground/80 rounded-t-sm transition-all duration-200 group-hover/bar:bg-admin-foreground"
+                              style={{ height: `${barHeight}%`, minHeight: count > 0 ? '4px' : '2px' }}
                             />
-                            <span className="text-[8px] text-admin-muted-foreground mt-1">
+                            <span className="text-[8px] text-admin-muted-foreground/60 mt-1.5 font-medium">
                               {date.getDate()}
                             </span>
                           </div>
@@ -533,9 +539,9 @@ const AdminDashboard = () => {
                       })}
                     </div>
                   ) : (
-                    <div className="h-64 flex items-center justify-center text-admin-muted-foreground">
-                      <BarChart3 className="h-8 w-8 mr-2" />
-                      <span>No submission data available</span>
+                    <div className="h-56 flex items-center justify-center text-admin-muted-foreground bg-admin-muted/30 rounded-lg">
+                      <BarChart3 className="h-8 w-8 mr-2 opacity-50" />
+                      <span className="text-sm">No submission data available</span>
                     </div>
                   )}
                 </CardContent>
@@ -547,10 +553,12 @@ const AdminDashboard = () => {
         {/* Action Center */}
         <motion.section variants={itemVariants} className="space-y-4">
           <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-admin-muted-foreground" />
-            <h2 className="text-xs font-bold uppercase tracking-wider text-admin-muted-foreground">Action Center</h2>
+            <div className="h-8 w-8 rounded-lg bg-admin-muted/60 flex items-center justify-center">
+              <Zap className="h-4 w-4 text-admin-muted-foreground" />
+            </div>
+            <h2 className="text-[11px] font-bold uppercase tracking-wider text-admin-muted-foreground">Action Center</h2>
           </div>
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 sm:gap-6">
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-5">
             <div className="xl:col-span-2">
               <PendingQueueCard items={pendingPublications} title="Pending Publications" viewAllLink="/admin/publications" />
             </div>
@@ -559,19 +567,19 @@ const AdminDashboard = () => {
         </motion.section>
 
         {/* Bottom Section */}
-        <motion.section variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
+        <motion.section variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-5">
           <RecentActivityCard activities={recentActivities} />
-          <Card className="overflow-hidden bg-admin-card border-admin-border shadow-sm">
-            <CardHeader className="pb-4 border-b border-admin-border bg-admin-muted/30">
-              <CardTitle className="text-base font-bold uppercase tracking-wider text-admin-foreground">Quick Actions</CardTitle>
-              <p className="text-xs text-admin-muted-foreground">Common administrative tasks</p>
+          <Card className="overflow-hidden bg-admin-card border-admin-border/60 rounded-xl shadow-sm">
+            <CardHeader className="pb-4 border-b border-admin-border/50 bg-admin-muted/30 px-5 pt-5">
+              <CardTitle className="text-sm font-bold uppercase tracking-wider text-admin-foreground">Quick Actions</CardTitle>
+              <p className="text-xs text-admin-muted-foreground mt-1">Common administrative tasks</p>
             </CardHeader>
             <CardContent className="p-5">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-3">
                 {quickActions.map((action) => (
-                  <Button key={action.label} variant="ghost" className={`h-auto py-6 flex-col gap-3 rounded-2xl border border-admin-border bg-admin-muted/30 text-admin-foreground transition-all active:scale-[0.98] ${action.color}`}>
-                    <action.icon className="h-6 w-6" />
-                    <span className="text-xs font-bold uppercase tracking-widest">{action.label}</span>
+                  <Button key={action.label} variant="ghost" className={`h-auto py-5 flex-col gap-2.5 rounded-xl border border-admin-border/60 bg-admin-muted/30 text-admin-foreground transition-all duration-200 hover:bg-admin-muted hover:border-admin-border active:scale-[0.98] ${action.color}`}>
+                    <action.icon className="h-5 w-5" />
+                    <span className="text-[10px] font-bold uppercase tracking-wider">{action.label}</span>
                   </Button>
                 ))}
               </div>

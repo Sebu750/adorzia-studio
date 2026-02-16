@@ -94,7 +94,6 @@ const AdminDesignerProfiles = () => {
         await updateProfileFeatureStatus(userId, action === 'feature');
       }
     } catch (error: any) {
-      console.error(`Error ${action}ing profile:`, error);
       alert(`Error ${action}ing profile: ${error.message}`);
     }
   };

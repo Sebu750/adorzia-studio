@@ -176,7 +176,6 @@ export default function AdminWalkthroughs() {
         description: "Failed to archive walkthrough.",
         variant: "destructive",
       });
-      console.error(error);
     },
   });
 
@@ -202,7 +201,6 @@ export default function AdminWalkthroughs() {
         description: "Failed to restore walkthrough.",
         variant: "destructive",
       });
-      console.error(error);
     },
   });
 
@@ -230,7 +228,6 @@ export default function AdminWalkthroughs() {
         description: "Failed to update featured status.",
         variant: "destructive",
       });
-      console.error(error);
     },
   });
 
@@ -260,7 +257,6 @@ export default function AdminWalkthroughs() {
         description: "Failed to duplicate walkthrough.",
         variant: "destructive",
       });
-      console.error(error);
     },
   });
 

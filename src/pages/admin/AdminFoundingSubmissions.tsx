@@ -132,7 +132,8 @@ const AdminFoundingSubmissions = () => {
 
   React.useEffect(() => {
     fetchSubmissions();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Initial data fetch - only on mount
 
   const handleMarkUnderReview = async (id: string) => {
     try {

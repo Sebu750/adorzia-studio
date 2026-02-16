@@ -91,3 +91,32 @@ export function validatePasswordStrength(password: string): PasswordStrengthResu
     hasSymbols
   };
 }
+
+// Simplified password strength for UI display (returns score 0-5 and feedback string)
+export function calculatePasswordStrength(password: string): { score: number; feedback: string } | null {
+  if (!password || password.length === 0) return null;
+  
+  const result = validatePasswordStrength(password);
+  
+  // Convert 0-100 score to 0-5 scale
+  const normalizedScore = Math.min(5, Math.floor(result.score / 20));
+  
+  // Get first feedback message or default
+  let feedbackText = '';
+  if (result.score >= 80) {
+    feedbackText = 'Strong password';
+  } else if (result.score >= 60) {
+    feedbackText = 'Good password';
+  } else if (result.score >= 40) {
+    feedbackText = 'Fair password';
+  } else if (result.score >= 20) {
+    feedbackText = 'Weak password - ' + (result.feedback[0] || 'add more variety');
+  } else {
+    feedbackText = 'Very weak - ' + (result.feedback[0] || 'needs improvement');
+  }
+  
+  return {
+    score: normalizedScore,
+    feedback: feedbackText
+  };
+}

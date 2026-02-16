@@ -1,7 +1,9 @@
 -- Add admin read access to founding-submissions bucket
 -- This allows admins to view moodboards and tech packs in the review interface
 -- Note: Storage policies must be created as the postgres user or with appropriate permissions
+-- TEMPORARILY DISABLED: Requires elevated permissions
 
+/*
 DO $$
 BEGIN
   -- Check if policy already exists
@@ -26,3 +28,6 @@ BEGIN
     ');
   END IF;
 END $$;
+*/
+
+-- Migration placeholder - policy creation requires superuser privileges

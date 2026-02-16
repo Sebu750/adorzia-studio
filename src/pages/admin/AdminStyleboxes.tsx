@@ -142,7 +142,6 @@ export default function AdminStyleboxes() {
         description: "Failed to archive StyleBox. Please try again.",
         variant: "destructive",
       });
-      console.error(error);
     },
   });
 
@@ -175,7 +174,6 @@ export default function AdminStyleboxes() {
         description: "Failed to duplicate StyleBox.",
         variant: "destructive",
       });
-      console.error(error);
     },
   });
 

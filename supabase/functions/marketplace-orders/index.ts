@@ -3,7 +3,6 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-<<<<<<< HEAD
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-forwarded-proto, x-real-ip',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS, PUT, DELETE',
   'Access-Control-Max-Age': '86400', // 24 hours
@@ -16,9 +15,6 @@ const createResponse = (body: string | Record<string, unknown>, status = 200, in
     ...(includeCors ? corsHeaders : {})
   };
   return new Response(JSON.stringify(body), { status, headers });
-=======
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 };
 
 const logStep = (step: string, details?: any) => {
@@ -26,14 +22,9 @@ const logStep = (step: string, details?: any) => {
 };
 
 serve(async (req) => {
-<<<<<<< HEAD
   // OPTIONS preflight always succeeds with proper CORS headers
   if (req.method === 'OPTIONS') {
     return createResponse(null, 204, true);
-=======
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   }
 
   try {
@@ -43,28 +34,14 @@ serve(async (req) => {
 
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-<<<<<<< HEAD
       return createResponse({ error: 'Authorization required' }, 401, true);
-=======
-      return new Response(JSON.stringify({ error: 'Authorization required' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     }
 
     const token = authHeader.replace('Bearer ', '');
     const { data: { user } } = await supabase.auth.getUser(token);
 
     if (!user) {
-<<<<<<< HEAD
       return createResponse({ error: 'Invalid token' }, 401, true);
-=======
-      return new Response(JSON.stringify({ error: 'Invalid token' }), {
-        status: 401,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     }
 
     // Get customer ID
@@ -75,14 +52,7 @@ serve(async (req) => {
       .single();
 
     if (!customer) {
-<<<<<<< HEAD
       return createResponse({ error: 'Customer not found' }, 404, true);
-=======
-      return new Response(JSON.stringify({ error: 'Customer not found' }), {
-        status: 404,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     }
 
     const url = new URL(req.url);

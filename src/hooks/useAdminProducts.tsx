@@ -1,9 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
-=======
-import { supabase } from "@/integrations/supabase/client";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useToast } from "@/hooks/use-toast";
 import type { Database } from "@/integrations/supabase/types";
 
@@ -11,7 +7,6 @@ type Product = Database["public"]["Tables"]["marketplace_products"]["Row"];
 type ProductInsert = Database["public"]["Tables"]["marketplace_products"]["Insert"];
 type ProductUpdate = Database["public"]["Tables"]["marketplace_products"]["Update"];
 
-<<<<<<< HEAD
 interface CollectionLinkData {
   productId: string;
   collectionId: string;
@@ -28,8 +23,6 @@ interface CreateCollectionAndLinkData {
   productId: string;
 }
 
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 export interface AdminProductFilters {
   status?: string;
   is_adorzia_product?: boolean;
@@ -78,23 +71,13 @@ export function useAdminProductStats() {
   return useQuery({
     queryKey: ["admin-product-stats"],
     queryFn: async () => {
-<<<<<<< HEAD
       const [totalResult, adorziaResult, vendorResult, liveResult] = await Promise.all([
-=======
-      const [
-        { count: totalProducts },
-        { count: adorziaProducts },
-        { count: vendorProducts },
-        { count: liveProducts },
-      ] = await Promise.all([
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         supabase.from("marketplace_products").select("*", { count: "exact", head: true }),
         supabase.from("marketplace_products").select("*", { count: "exact", head: true }).eq("is_adorzia_product", true),
         supabase.from("marketplace_products").select("*", { count: "exact", head: true }).eq("is_adorzia_product", false),
         supabase.from("marketplace_products").select("*", { count: "exact", head: true }).eq("status", "live"),
       ]);
 
-<<<<<<< HEAD
       // Try to get pending review count - handle if status enum doesn't include pending_review
       let pendingReview = 0;
       try {
@@ -115,20 +98,6 @@ export function useAdminProductStats() {
         vendorProducts: vendorResult.count || 0,
         pendingReview: pendingReview,
         liveProducts: liveResult.count || 0,
-=======
-      // Get pending review count using filter workaround for new enum value
-      const { count: pendingReview } = await supabase
-        .from("marketplace_products")
-        .select("*", { count: "exact", head: true })
-        .filter("status", "eq", "pending_review");
-
-      return {
-        totalProducts: totalProducts || 0,
-        adorziaProducts: adorziaProducts || 0,
-        vendorProducts: vendorProducts || 0,
-        pendingReview: pendingReview || 0,
-        liveProducts: liveProducts || 0,
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       };
     },
   });
@@ -277,7 +246,6 @@ export function useRejectProduct() {
     },
   });
 }
-<<<<<<< HEAD
 
 export function useLinkProductToCollection() {
   const queryClient = useQueryClient();
@@ -372,5 +340,3 @@ export function useDesignerCollections(designerId: string | null | undefined) {
     enabled: !!designerId,
   });
 }
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241

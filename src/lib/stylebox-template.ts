@@ -209,20 +209,14 @@ export type StyleBoxCategory = 'fashion' | 'textile' | 'jewelry';
 export interface StyleBoxTemplate {
   // === Basic Setup ===
   id?: string;
-<<<<<<< HEAD
   display_id?: string;
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   title: string;
   season?: string; // SS25, FW25, etc.
   category: StyleBoxCategory;
   difficulty: DifficultyLevel;
-<<<<<<< HEAD
   collection_line?: string;
   market_context?: string;
   visibility_tags?: string[];
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   collection_size?: number;
   is_featured?: boolean;
   is_walkthrough?: boolean;
@@ -371,7 +365,6 @@ export const STUDIO_OPTIONS: { value: StudioName; label: string; category: Style
   { value: 'neo-deco', label: 'Neo-Deco 2026', category: 'jewelry' },
 ];
 
-<<<<<<< HEAD
 export const COLLECTION_LINE_OPTIONS = [
   'Signature Series: APEX',
   'The Curriculum',
@@ -403,8 +396,6 @@ export const VISIBILITY_TAG_OPTIONS = [
   'Visible to F2 Rank',
 ];
 
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 export const TARGET_ROLE_OPTIONS = [
   'Junior Designer',
   'Junior Illustrator',
@@ -458,12 +449,9 @@ export function createEmptyStyleBoxTemplate(category: StyleBoxCategory = 'fashio
     xp_reward: 100,
     status: 'draft',
     version: 1,
-<<<<<<< HEAD
     collection_line: '',
     market_context: '',
     visibility_tags: [],
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     // Production-grade defaults
     level_number: 1,
     constraints: [],

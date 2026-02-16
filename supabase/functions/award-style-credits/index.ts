@@ -1,17 +1,9 @@
-<<<<<<< HEAD
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.7";
-=======
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-<<<<<<< HEAD
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 };
 
 // SC Difficulty Ranges
@@ -52,11 +44,7 @@ const logStep = (step: string, details?: any) => {
   console.log(`[AWARD-SC] ${step}${detailsStr}`);
 };
 
-<<<<<<< HEAD
 Deno.serve(async (req) => {
-=======
-serve(async (req) => {
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }

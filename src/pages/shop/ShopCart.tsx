@@ -99,7 +99,6 @@ export default function ShopCart() {
 
                   {/* Product Details */}
                   <div className="flex-1 min-w-0">
-<<<<<<< HEAD
                     {item.designer_name && (
                       <p className="text-[11px] font-bold uppercase tracking-widest text-black mb-1">
                         {item.designer_name}
@@ -107,10 +106,6 @@ export default function ShopCart() {
                     )}
                     <Link to={`/shop/product/${item.product_id}`}>
                       <h3 className="font-medium hover:text-primary transition-colors text-[14px]">
-=======
-                    <Link to={`/shop/product/${item.product_id}`}>
-                      <h3 className="font-medium hover:text-primary transition-colors">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                         {item.title}
                       </h3>
                     </Link>

@@ -29,14 +29,9 @@ export function useNotifications() {
 
       if (fetchError) throw fetchError;
       setNotifications(data || []);
-<<<<<<< HEAD
       setError(null);
     } catch (err) {
       console.error("[useNotifications] Error fetching notifications:", err);
-=======
-    } catch (err) {
-      console.error("Error fetching notifications:", err);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       setError(err instanceof Error ? err : new Error("Failed to fetch notifications"));
     } finally {
       setLoading(false);
@@ -51,10 +46,7 @@ export function useNotifications() {
   useEffect(() => {
     if (!user) return;
 
-<<<<<<< HEAD
     console.log("[useNotifications] Setting up real-time subscription for user:", user.id);
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     const channel = supabase
       .channel(`notifications-${user.id}`)
       .on(
@@ -66,10 +58,7 @@ export function useNotifications() {
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-<<<<<<< HEAD
           console.log("[useNotifications] New notification received:", payload.new);
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           setNotifications((prev) => [payload.new as Notification, ...prev]);
         }
       )
@@ -82,27 +71,18 @@ export function useNotifications() {
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-<<<<<<< HEAD
           console.log("[useNotifications] Notification updated:", payload.new);
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           setNotifications((prev) =>
             prev.map((n) => (n.id === payload.new.id ? (payload.new as Notification) : n))
           );
         }
       )
-<<<<<<< HEAD
       .subscribe((status) => {
         console.log("[useNotifications] Subscription status:", status);
       });
 
     return () => {
       console.log("[useNotifications] Cleaning up subscription");
-=======
-      .subscribe();
-
-    return () => {
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       supabase.removeChannel(channel);
     };
   }, [user]);
@@ -120,12 +100,8 @@ export function useNotifications() {
         prev.map((n) => (n.id === notificationId ? { ...n, status: "read" as const } : n))
       );
     } catch (err) {
-<<<<<<< HEAD
       console.error("[useNotifications] Error marking notification as read:", err);
       throw err;
-=======
-      console.error("Error marking notification as read:", err);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     }
   };
 
@@ -145,7 +121,6 @@ export function useNotifications() {
         prev.map((n) => ({ ...n, status: "read" as const }))
       );
     } catch (err) {
-<<<<<<< HEAD
       console.error("[useNotifications] Error marking all notifications as read:", err);
       throw err;
     }
@@ -164,9 +139,6 @@ export function useNotifications() {
     } catch (err) {
       console.error("[useNotifications] Error deleting notification:", err);
       throw err;
-=======
-      console.error("Error marking all notifications as read:", err);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     }
   };
 
@@ -179,10 +151,7 @@ export function useNotifications() {
     unreadCount,
     markAsRead,
     markAllAsRead,
-<<<<<<< HEAD
     deleteNotification,
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     refetch: fetchNotifications,
   };
 }

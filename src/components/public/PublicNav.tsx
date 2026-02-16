@@ -31,12 +31,8 @@ const primaryNavItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "StyleBoxes", href: "/styleboxes-info", icon: Box },
-<<<<<<< HEAD
   { label: "Shop", href: "/shop", icon: Store },
   { label: "Blog", href: "/blog" },
-=======
-  { label: "Marketplace", href: "/marketplace-preview", icon: Store },
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   { label: "Pricing", href: "/pricing", icon: DollarSign },
 ];
 
@@ -90,12 +86,8 @@ export default function PublicNav() {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-<<<<<<< HEAD
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Event listener setup - only on mount
-=======
-  }, []);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   const isActive = (href: string) => {
     if (href === "/") return location.pathname === "/";

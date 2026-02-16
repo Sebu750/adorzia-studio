@@ -1,10 +1,5 @@
-<<<<<<< HEAD
 import { useState, useRef } from "react";
 import { useForm, useWatch } from "react-hook-form";
-=======
-import { useState } from "react";
-import { useForm } from "react-hook-form";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -28,18 +23,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-<<<<<<< HEAD
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCreateProduct, useUpdateProduct, useLinkProductToCollection, useCreateCollectionAndLink, useDesignerCollections } from "@/hooks/useAdminProducts";
 import { useMarketplaceCategories } from "@/hooks/useMarketplaceProducts";
 import { useAdminDesigners } from "@/hooks/useAdminDesigners";
 import { Loader2, Upload, X, Image as ImageIcon, Package, Sparkles } from "lucide-react";
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
-=======
-import { useCreateProduct, useUpdateProduct } from "@/hooks/useAdminProducts";
-import { useMarketplaceCategories } from "@/hooks/useMarketplaceProducts";
-import { Loader2 } from "lucide-react";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 const productSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -49,7 +38,6 @@ const productSchema = z.object({
   sku: z.string().optional(),
   inventory_count: z.coerce.number().optional().nullable(),
   category_id: z.string().optional().nullable(),
-<<<<<<< HEAD
   designer_id: z.string().optional().nullable(),
   status: z.enum(["draft", "live", "archived", "pending_review", "rejected"]),
   materials: z.string().optional(),
@@ -76,12 +64,6 @@ const productSchema = z.object({
 }, {
   message: "Please select a collection or provide a name for the new collection",
   path: ["collection_id"],
-=======
-  status: z.enum(["draft", "live", "archived", "pending_review", "rejected"]),
-  is_adorzia_product: z.boolean(),
-  materials: z.string().optional(),
-  care_instructions: z.string().optional(),
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
@@ -96,7 +78,6 @@ interface AdminProductFormProps {
     sku?: string | null;
     inventory_count?: number | null;
     category_id?: string | null;
-<<<<<<< HEAD
     designer_id?: string | null;
     status: string;
     materials?: string[] | null;
@@ -105,12 +86,6 @@ interface AdminProductFormProps {
     is_made_to_order?: boolean | null;
     is_limited_edition?: boolean | null;
     edition_size?: number | null;
-=======
-    status: string;
-    is_adorzia_product?: boolean | null;
-    materials?: string[] | null;
-    care_instructions?: string | null;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   };
   onSuccess?: () => void;
   onCancel?: () => void;
@@ -119,7 +94,6 @@ interface AdminProductFormProps {
 export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductFormProps) {
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
-<<<<<<< HEAD
   const linkProductToCollection = useLinkProductToCollection();
   const createCollectionAndLink = useCreateCollectionAndLink();
   const { data: categories } = useMarketplaceCategories();
@@ -127,10 +101,6 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploadingImages, setIsUploadingImages] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-=======
-  const { data: categories } = useMarketplaceCategories();
-  const [isSubmitting, setIsSubmitting] = useState(false);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -142,7 +112,6 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
       sku: product?.sku || "",
       inventory_count: product?.inventory_count || null,
       category_id: product?.category_id || null,
-<<<<<<< HEAD
       designer_id: product?.designer_id || null,
       status: (product?.status as ProductFormData["status"]) || "draft",
       materials: product?.materials?.join(", ") || "",
@@ -163,15 +132,6 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
   const collectionAction = useWatch({ control: form.control, name: "collection_action" });
   const { data: designerCollections } = useDesignerCollections(selectedDesignerId);
 
-=======
-      status: (product?.status as ProductFormData["status"]) || "draft",
-      is_adorzia_product: product?.is_adorzia_product ?? true,
-      materials: product?.materials?.join(", ") || "",
-      care_instructions: product?.care_instructions || "",
-    },
-  });
-
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const onSubmit = async (data: ProductFormData) => {
     setIsSubmitting(true);
     try {
@@ -188,7 +148,6 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
         sku: data.sku || null,
         inventory_count: data.inventory_count || null,
         category_id: data.category_id || null,
-<<<<<<< HEAD
         designer_id: data.designer_id || null,
         status: dbStatus,
         is_adorzia_product: true, // All products are Adorzia-owned
@@ -226,27 +185,12 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
         }
       }
 
-=======
-        status: dbStatus,
-        is_adorzia_product: data.is_adorzia_product,
-        materials: data.materials ? data.materials.split(",").map(m => m.trim()) : null,
-        care_instructions: data.care_instructions || null,
-        designer_id: data.is_adorzia_product ? null : undefined,
-      };
-
-      if (product?.id) {
-        await updateProduct.mutateAsync({ id: product.id, updates: productData });
-      } else {
-        await createProduct.mutateAsync(productData);
-      }
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       onSuccess?.();
     } finally {
       setIsSubmitting(false);
     }
   };
 
-<<<<<<< HEAD
   // Image upload handlers
   const handleImageUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -301,11 +245,6 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Basic Information */}
-=======
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         <Card>
           <CardHeader>
             <CardTitle>Basic Information</CardTitle>
@@ -364,14 +303,10 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
-<<<<<<< HEAD
                     <Select 
                       onValueChange={field.onChange} 
                       value={field.value || undefined}
                     >
-=======
-                    <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select category" />
@@ -393,7 +328,6 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
           </CardContent>
         </Card>
 
-<<<<<<< HEAD
         {/* Product Images */}
         <Card>
           <CardHeader>
@@ -613,8 +547,6 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
         </Card>
 
         {/* Pricing & Inventory */}
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         <Card>
           <CardHeader>
             <CardTitle>Pricing & Inventory</CardTitle>
@@ -677,7 +609,6 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
           </CardContent>
         </Card>
 
-<<<<<<< HEAD
         {/* Product Type - Made to Order / Limited Edition */}
         <Card>
           <CardHeader>
@@ -750,8 +681,6 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
         </Card>
 
         {/* Product Details */}
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         <Card>
           <CardHeader>
             <CardTitle>Product Details</CardTitle>
@@ -788,10 +717,7 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
           </CardContent>
         </Card>
 
-<<<<<<< HEAD
         {/* Publishing */}
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         <Card>
           <CardHeader>
             <CardTitle>Publishing</CardTitle>
@@ -799,36 +725,11 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
           <CardContent className="space-y-4">
             <FormField
               control={form.control}
-<<<<<<< HEAD
-=======
-              name="is_adorzia_product"
-              render={({ field }) => (
-                <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Adorzia Product</FormLabel>
-                    <FormDescription>
-                      List this product as an Adorzia-owned product (not from a vendor)
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch checked={field.value} onCheckedChange={field.onChange} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               name="status"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
-<<<<<<< HEAD
                   <Select onValueChange={field.onChange} value={field.value}>
-=======
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select status" />
@@ -853,13 +754,8 @@ export function AdminProductForm({ product, onSuccess, onCancel }: AdminProductF
               Cancel
             </Button>
           )}
-<<<<<<< HEAD
           <Button type="submit" disabled={isSubmitting || isUploadingImages}>
             {(isSubmitting || isUploadingImages) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-=======
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
             {product?.id ? "Update Product" : "Create Product"}
           </Button>
         </div>

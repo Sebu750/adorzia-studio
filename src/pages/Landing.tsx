@@ -84,12 +84,8 @@ export default function Landing() {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-<<<<<<< HEAD
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Event listener setup - only on mount
-=======
-  }, []);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">

@@ -1,10 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
-<<<<<<< HEAD
 import { supabaseAdmin as supabase } from '@/integrations/supabase/admin-client';
-=======
-import { supabase } from '@/integrations/supabase/client';
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { format, subDays, startOfDay } from 'date-fns';
 
 export function RevenueChart() {

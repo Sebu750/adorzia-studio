@@ -13,16 +13,12 @@ import {
   AlertCircle,
   Package,
   Factory,
-<<<<<<< HEAD
   Store,
   Trash2,
   Star,
   StarOff,
   ImageIcon,
   GripVertical
-=======
-  Store
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -36,11 +32,8 @@ import { PublicationStatus, PUBLICATION_STATUSES } from "@/lib/publication";
 import { RankTier } from "@/lib/ranks";
 import { RequestPublishModal } from "./RequestPublishModal";
 import { PublicationStatusModal } from "./PublicationStatusModal";
-<<<<<<< HEAD
 import { ProjectDetailModal } from "./ProjectDetailModal";
 import { SortablePortfolioGrid } from "./SortablePortfolioGrid";
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 export interface PortfolioItemProps {
   id: string;
@@ -54,21 +47,15 @@ export interface PortfolioItemProps {
   submittedAt?: string;
   lastUpdated?: string;
   reviewerNotes?: string;
-<<<<<<< HEAD
   imageCount?: number;
   isFeatured?: boolean;
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 }
 
 interface PortfolioGridProps {
   items: PortfolioItemProps[];
   currentRank?: RankTier;
   subscriptionTier?: 'basic' | 'pro' | 'elite';
-<<<<<<< HEAD
   isReordering?: boolean;
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 }
 
 const statusConfig = {
@@ -89,7 +76,6 @@ const publicationStatusIcons: Partial<Record<PublicationStatus, React.ElementTyp
 export function PortfolioGrid({ 
   items, 
   currentRank = 'stylist',
-<<<<<<< HEAD
   subscriptionTier = 'pro',
   isReordering = false
 }: PortfolioGridProps) {
@@ -111,13 +97,6 @@ export function PortfolioGrid({
       setLocalIsReordering(!localIsReordering);
     }
   };
-=======
-  subscriptionTier = 'pro' 
-}: PortfolioGridProps) {
-  const [publishModalOpen, setPublishModalOpen] = useState(false);
-  const [statusModalOpen, setStatusModalOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<PortfolioItemProps | null>(null);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   const handleRequestPublish = (item: PortfolioItemProps) => {
     setSelectedProject(item);
@@ -129,14 +108,11 @@ export function PortfolioGrid({
     setStatusModalOpen(true);
   };
 
-<<<<<<< HEAD
   const handleViewDetails = (item: PortfolioItemProps) => {
     setSelectedProject(item);
     setDetailModalOpen(true);
   };
 
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const handleSubmitPublish = (projectId: string, notes: string) => {
     console.log("Submitting project:", projectId, "with notes:", notes);
     // In real app, this would call an API
@@ -157,7 +133,6 @@ export function PortfolioGrid({
 
   return (
     <>
-<<<<<<< HEAD
       {effectiveIsReordering ? (
         <SortablePortfolioGrid items={items.map(item => ({
           id: item.id,
@@ -241,50 +216,6 @@ export function PortfolioGrid({
                   <Badge variant="outline" className="bg-background/80 text-foreground border-0 text-xs">
                     {item.source === "stylebox" ? "Stylebox" : "Uploaded"}
                   </Badge>
-=======
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {items.map((item) => {
-          // Safe access with fallback to draft
-          const status = statusConfig[item.status as keyof typeof statusConfig] ?? statusConfig.draft;
-          const StatusIcon = status.icon;
-          const hasPublication = hasActivePublication(item);
-          const PublicationIcon = item.publicationStatus 
-            ? publicationStatusIcons[item.publicationStatus] 
-            : null;
-
-          return (
-            <Card key={item.id} hover className="overflow-hidden group">
-              <div className="aspect-square relative overflow-hidden">
-                <img
-                  src={item.thumbnail}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                
-                {/* Quick actions overlay */}
-                <div className="absolute inset-0 flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <Button size="icon" variant="secondary" className="h-10 w-10 rounded-full">
-                    <Eye className="h-5 w-5" />
-                  </Button>
-                  <Button size="icon" variant="secondary" className="h-10 w-10 rounded-full">
-                    <Edit className="h-5 w-5" />
-                  </Button>
-                  {canRequestPublish(item) && (
-                    <Button 
-                      size="icon" 
-                      variant="accent" 
-                      className="h-10 w-10 rounded-full"
-                      onClick={() => handleRequestPublish(item)}
-                    >
-                      <Upload className="h-5 w-5" />
-                    </Button>
-                  )}
-                </div>
-
-                {/* Status badge */}
-                <div className="absolute top-3 right-3">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   <Badge variant={status.variant} className="gap-1">
                     <StatusIcon className="h-3 w-3" />
                     {status.label}
@@ -305,16 +236,6 @@ export function PortfolioGrid({
                     </Button>
                   </div>
                 )}
-<<<<<<< HEAD
-=======
-
-                {/* Source indicator */}
-                <div className="absolute top-3 left-3">
-                  <Badge variant="outline" className="bg-background/80 text-foreground border-0 text-xs">
-                    {item.source === "stylebox" ? "Stylebox" : "Uploaded"}
-                  </Badge>
-                </div>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               </div>
 
               <CardContent className="p-4">
@@ -330,7 +251,6 @@ export function PortfolioGrid({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-<<<<<<< HEAD
                       <DropdownMenuItem onClick={() => handleViewDetails(item)}>
                         <Eye className="h-4 w-4 mr-2" />
                         View Details
@@ -343,16 +263,6 @@ export function PortfolioGrid({
                         <GripVertical className="h-4 w-4 mr-2" />
                         {effectiveIsReordering ? 'Exit Reorder' : 'Reorder Projects'}
                       </DropdownMenuItem>
-=======
-                      <DropdownMenuItem>
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Details
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit
-                      </DropdownMenuItem>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                       {hasPublication && (
                         <DropdownMenuItem onClick={() => handleViewStatus(item)}>
                           <Clock className="h-4 w-4 mr-2" />
@@ -380,10 +290,7 @@ export function PortfolioGrid({
           );
         })}
       </div>
-<<<<<<< HEAD
       )}
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
       {/* Request Publish Modal */}
       {selectedProject && (
@@ -408,7 +315,6 @@ export function PortfolioGrid({
           }}
         />
       )}
-<<<<<<< HEAD
 
       {/* Project Detail Modal */}
       {selectedProject && (
@@ -418,8 +324,6 @@ export function PortfolioGrid({
           projectId={selectedProject.id}
         />
       )}
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     </>
   );
 }

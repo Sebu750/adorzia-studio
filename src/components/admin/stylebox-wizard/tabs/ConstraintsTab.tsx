@@ -20,11 +20,7 @@ const CONSTRAINT_TYPES: { value: ConstraintType; label: string; color: string }[
   { value: 'silhouette', label: 'Silhouette', color: 'bg-purple-500/20 text-purple-600' },
   { value: 'fabric', label: 'Fabric', color: 'bg-blue-500/20 text-blue-600' },
   { value: 'structure', label: 'Structure', color: 'bg-amber-500/20 text-amber-600' },
-<<<<<<< HEAD
   { value: 'technique', label: 'Technique', color: 'bg-success/20 text-success' },
-=======
-  { value: 'technique', label: 'Technique', color: 'bg-emerald-500/20 text-emerald-600' },
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   { value: 'sizing', label: 'Sizing', color: 'bg-pink-500/20 text-pink-600' },
   { value: 'innovation', label: 'Innovation', color: 'bg-red-500/20 text-red-600' },
   { value: 'colors', label: 'Colors', color: 'bg-orange-500/20 text-orange-600' },

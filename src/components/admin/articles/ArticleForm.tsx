@@ -23,10 +23,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { X, Eye, Search } from "lucide-react";
 import { Article, useCreateArticle, useUpdateArticle, ARTICLE_CATEGORIES } from "@/hooks/useArticles";
-<<<<<<< HEAD
 import { sanitizeInput, sanitizeTitle, sanitizeRichText } from "@/lib/input-sanitizer";
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 interface ArticleFormProps {
   article?: Article | null;
@@ -85,28 +82,17 @@ export function ArticleForm({ article, open, onOpenChange }: ArticleFormProps) {
   };
 
   const handleTitleChange = (value: string) => {
-<<<<<<< HEAD
     const sanitizedValue = sanitizeTitle(value);
     setTitle(sanitizedValue);
     if (!article) {
       setSlug(sanitizedValue.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""));
-=======
-    setTitle(value);
-    if (!article) {
-      setSlug(value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""));
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     }
   };
 
   const addTag = () => {
-<<<<<<< HEAD
     const sanitizedTagInput = sanitizeInput(tagInput);
     if (sanitizedTagInput.trim() && !tags.includes(sanitizedTagInput.trim())) {
       setTags([...tags, sanitizedTagInput.trim()]);
-=======
-    if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-      setTags([...tags, tagInput.trim()]);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       setTagInput("");
     }
   };
@@ -116,7 +102,6 @@ export function ArticleForm({ article, open, onOpenChange }: ArticleFormProps) {
   };
 
   const handleSubmit = () => {
-<<<<<<< HEAD
     const sanitizedTitle = sanitizeTitle(title);
     const sanitizedExcerpt = sanitizeInput(excerpt);
     const sanitizedContent = sanitizeRichText(content);
@@ -135,19 +120,6 @@ export function ArticleForm({ article, open, onOpenChange }: ArticleFormProps) {
       meta_description: sanitizedMetaDescription || null,
       status,
       tags: sanitizedTags,
-=======
-    const articleData = {
-      title,
-      slug,
-      excerpt: excerpt || null,
-      content: content || null,
-      category,
-      featured_image: featuredImage || null,
-      meta_title: metaTitle || title,
-      meta_description: metaDescription || excerpt,
-      status,
-      tags,
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       is_featured: isFeatured,
       published_at: status === "published" ? new Date().toISOString() : null,
     };

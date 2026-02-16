@@ -47,11 +47,7 @@ import {
   Clock
 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-<<<<<<< HEAD
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
-=======
-import { supabase } from "@/integrations/supabase/client";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 import { DesignerRankModal } from "@/components/admin/DesignerRankModal";
@@ -74,7 +70,6 @@ interface DesignerWithRank extends Profile {
 const rankColors: Record<string, string> = {
   "F1": "bg-purple-500/20 text-purple-600 border-purple-500/30",
   "F2": "bg-indigo-500/20 text-indigo-600 border-indigo-500/30",
-<<<<<<< HEAD
   "Apprentice": "bg-slate-500/20 text-slate-600 border-slate-500/30",
   "Patternist": "bg-amber-500/20 text-amber-600 border-amber-500/30",
   "Stylist": "bg-blue-500/20 text-blue-600 border-blue-500/30",
@@ -85,12 +80,6 @@ const rankColors: Record<string, string> = {
   "Novice": "bg-slate-500/20 text-slate-600 border-slate-500/30",
   "Designer": "bg-blue-500/20 text-blue-600 border-blue-500/30",
   "Senior": "bg-success/20 text-success border-success/30",
-=======
-  "Novice": "bg-slate-500/20 text-slate-600 border-slate-500/30",
-  "Apprentice": "bg-amber-500/20 text-amber-600 border-amber-500/30",
-  "Designer": "bg-blue-500/20 text-blue-600 border-blue-500/30",
-  "Senior": "bg-emerald-500/20 text-emerald-600 border-emerald-500/30",
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   "Lead": "bg-orange-500/20 text-orange-600 border-orange-500/30",
   "Elite": "bg-rose-500/20 text-rose-600 border-rose-500/30",
 };
@@ -115,11 +104,7 @@ export default function AdminRankings() {
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   const [rankFilter, setRankFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
-<<<<<<< HEAD
   const [sortField, setSortField] = useState<string>("SC");
-=======
-  const [sortField, setSortField] = useState<string>("xp");
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   
   const [editingDesigner, setEditingDesigner] = useState<DesignerWithRank | null>(null);
@@ -145,11 +130,7 @@ export default function AdminRankings() {
       let query = supabase
         .from("profiles")
         .select(`*, ranks(*)`)
-<<<<<<< HEAD
         .order("style_credits", { ascending: false });
-=======
-        .order("xp", { ascending: false });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
       if (categoryFilter !== "all") {
         query = query.eq("category", categoryFilter as "fashion" | "textile" | "jewelry");
@@ -242,11 +223,7 @@ export default function AdminRankings() {
       d.email || "",
       d.category || "",
       d.ranks?.name || "Unranked",
-<<<<<<< HEAD
       d.style_credits?.toString() || "0",
-=======
-      d.xp?.toString() || "0",
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       d.ranks?.revenue_share_percent?.toString() || "0",
       d.status || "",
     ]);
@@ -500,11 +477,7 @@ export default function AdminRankings() {
                         <TableCell>
                           <div className="flex items-center gap-1">
                             <Sparkles className="h-4 w-4 text-admin-camel" />
-<<<<<<< HEAD
                             <span className="font-medium">{designer.style_credits?.toLocaleString() || 0}</span>
-=======
-                            <span className="font-medium">{designer.xp?.toLocaleString() || 0}</span>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                           </div>
                         </TableCell>
                         <TableCell>
@@ -696,11 +669,7 @@ export default function AdminRankings() {
                         </div>
                       </div>
                       <div className="text-right">
-<<<<<<< HEAD
                         <p className="font-bold">{designer.style_credits?.toLocaleString()} SC</p>
-=======
-                        <p className="font-bold">{designer.xp?.toLocaleString()} XP</p>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                         <p className="text-xs text-muted-foreground">{designer.ranks?.revenue_share_percent}% share</p>
                       </div>
                     </div>

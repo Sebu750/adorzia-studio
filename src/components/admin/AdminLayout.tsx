@@ -1,8 +1,5 @@
 import { useNavigate, Link } from "react-router-dom";
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { SidebarProvider, SidebarTrigger, SidebarInset } from "@/components/ui/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
 import { Button } from "@/components/ui/button";
@@ -15,16 +12,12 @@ import {
   LogOut,
   Command,
   Sun,
-<<<<<<< HEAD
   Moon,
   Users,
   Box,
   FolderOpen,
   Store,
   Briefcase
-=======
-  Moon
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 } from "lucide-react";
 import { useAdminTheme } from "@/hooks/useAdminTheme";
 import {
@@ -35,7 +28,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-<<<<<<< HEAD
 import {
   CommandDialog,
   CommandEmpty,
@@ -44,8 +36,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
@@ -57,7 +47,6 @@ interface AdminLayoutProps {
 
 export function AdminLayout({ children }: AdminLayoutProps) {
   const navigate = useNavigate();
-<<<<<<< HEAD
   const { user, signOut, adminRole: userRole, loading, isAdmin } = useAdminAuth();
   const { theme, toggleTheme } = useAdminTheme();
   const [commandOpen, setCommandOpen] = useState(false);
@@ -91,13 +80,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       </div>
     );
   }
-=======
-  const { user, signOut, adminRole: userRole } = useAdminAuth();
-  const { theme, toggleTheme } = useAdminTheme();
-  
-  // Derive admin role type for display
-  const adminRole = userRole === 'superadmin' ? 'superadmin' : 'admin';
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const handleSignOut = async () => {
     if (user) {
       await supabaseAdmin.from("admin_logs").insert({
@@ -128,7 +110,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         <AdminSidebar userRole={adminRole} />
         <SidebarInset className="flex-1 flex flex-col">
           {/* Top Header */}
-<<<<<<< HEAD
           <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-admin-border bg-admin-card/95 backdrop-blur-xl px-6 shadow-sm">
             <SidebarTrigger className="-ml-1 h-10 w-10 hover:bg-admin-muted transition-all duration-200 rounded-xl flex items-center justify-center" />
             
@@ -142,33 +123,15 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 readOnly
               />
               <kbd className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none inline-flex h-6 select-none items-center gap-1 rounded-lg border border-admin-border/60 bg-admin-card/80 px-2 font-mono text-[10px] font-medium text-admin-muted-foreground/70 shadow-sm">
-=======
-          <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b border-admin-border bg-admin-card/98 backdrop-blur-md px-6 shadow-sm">
-            <SidebarTrigger className="-ml-2 hover:bg-admin-muted transition-colors rounded-lg p-2" />
-            
-            {/* Search */}
-            <div className="relative flex-1 max-w-xl">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-admin-muted-foreground" />
-              <Input
-                placeholder="Search designers, styleboxes, publications..."
-                className="pl-11 pr-14 h-11 bg-admin-muted/60 border-admin-border focus:bg-admin-card focus:ring-2 focus:ring-admin-foreground/10 focus:border-admin-foreground/20 transition-all text-admin-foreground placeholder:text-admin-muted-foreground rounded-xl"
-              />
-              <kbd className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none inline-flex h-6 select-none items-center gap-1 rounded-md border border-admin-border bg-admin-card px-2 font-mono text-[10px] font-medium text-admin-muted-foreground shadow-sm">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 <Command className="h-3 w-3" />K
               </kbd>
             </div>
 
-<<<<<<< HEAD
             <div className="flex items-center gap-2 ml-auto">
-=======
-            <div className="flex items-center gap-1.5 ml-auto">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               {/* Theme Toggle */}
               <Button 
                 variant="ghost" 
                 size="icon" 
-<<<<<<< HEAD
                 className="h-10 w-10 hover:bg-admin-muted text-admin-muted-foreground hover:text-admin-foreground transition-all duration-200 rounded-xl"
                 onClick={toggleTheme}
               >
@@ -176,15 +139,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   <Sun className="h-[18px] w-[18px]" />
                 ) : (
                   <Moon className="h-[18px] w-[18px]" />
-=======
-                className="h-10 w-10 hover:bg-admin-muted text-admin-foreground transition-colors rounded-xl"
-                onClick={toggleTheme}
-              >
-                {theme === 'dark' ? (
-                  <Sun className="h-5 w-5" />
-                ) : (
-                  <Moon className="h-5 w-5" />
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 )}
                 <span className="sr-only">Toggle admin theme</span>
               </Button>
@@ -193,17 +147,10 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               <Button 
                 variant="ghost" 
                 size="icon" 
-<<<<<<< HEAD
                 className="relative h-10 w-10 hover:bg-admin-muted text-admin-muted-foreground hover:text-admin-foreground transition-all duration-200 rounded-xl"
               >
                 <Bell className="h-[18px] w-[18px]" />
                 <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-success ring-2 ring-admin-card animate-pulse" />
-=======
-                className="relative h-10 w-10 hover:bg-admin-muted text-admin-foreground transition-colors rounded-xl"
-              >
-                <Bell className="h-5 w-5" />
-                <span className="absolute top-2 right-2 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-admin-card animate-pulse" />
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               </Button>
 
               {/* User Menu */}
@@ -211,22 +158,15 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 <DropdownMenuTrigger asChild>
                   <Button 
                     variant="ghost" 
-<<<<<<< HEAD
                     className="gap-3 px-2.5 h-11 hover:bg-admin-muted text-admin-foreground transition-all duration-200 rounded-xl border border-transparent hover:border-admin-border/50"
                   >
                     <Avatar className="h-8 w-8 ring-2 ring-admin-border/50">
-=======
-                    className="gap-3 px-3 h-10 hover:bg-admin-muted text-admin-foreground transition-colors rounded-lg"
-                  >
-                    <Avatar className="h-8 w-8 ring-2 ring-admin-border">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                       <AvatarImage src="" />
                       <AvatarFallback className="bg-admin-foreground text-admin-background text-xs font-semibold">
                         {getInitials()}
                       </AvatarFallback>
                     </Avatar>
                     <div className="hidden md:flex flex-col items-start">
-<<<<<<< HEAD
                       <span className="text-sm font-semibold leading-tight text-admin-foreground">
                         {user?.user_metadata?.name || "Admin"}
                       </span>
@@ -242,28 +182,10 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                     <div className="flex flex-col gap-1.5">
                       <span className="font-semibold text-admin-foreground text-sm">{user?.user_metadata?.name || "Admin User"}</span>
                       <span className="text-xs font-normal text-admin-muted-foreground/80">
-=======
-                      <span className="text-sm font-medium leading-tight text-admin-foreground">
-                        {user?.user_metadata?.name || "Admin"}
-                      </span>
-                      <span className="text-xs text-admin-muted-foreground leading-tight">
-                        {adminRole === 'superadmin' ? 'Superadmin' : 'Admin'}
-                      </span>
-                    </div>
-                    <ChevronDown className="h-4 w-4 text-admin-muted-foreground" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-64 bg-admin-card border-admin-border shadow-lg">
-                  <DropdownMenuLabel className="pb-3">
-                    <div className="flex flex-col gap-1.5">
-                      <span className="font-semibold text-admin-foreground">{user?.user_metadata?.name || "Admin User"}</span>
-                      <span className="text-xs font-normal text-admin-muted-foreground">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                         {user?.email}
                       </span>
                       <Badge 
                         variant="secondary" 
-<<<<<<< HEAD
                         className="w-fit text-[10px] mt-1.5 bg-admin-muted text-admin-foreground font-semibold px-2 py-0.5 rounded-full"
                       >
                         Super Admin
@@ -273,36 +195,16 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                   <DropdownMenuSeparator className="bg-admin-border/60 my-2" />
                   <DropdownMenuItem asChild className="focus:bg-admin-muted rounded-lg cursor-pointer py-2.5 px-2 text-admin-foreground">
                     <Link to="/admin/settings" className="flex items-center gap-3 text-sm">
-=======
-                        className="w-fit text-xs mt-1 bg-admin-muted text-admin-foreground"
-                      >
-                        {adminRole === 'superadmin' ? 'Superadmin' : 'Admin'}
-                      </Badge>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-admin-border" />
-                  <DropdownMenuItem asChild className="focus:bg-admin-muted">
-                    <Link to="/admin/settings" className="flex items-center gap-2.5 cursor-pointer py-2.5 text-admin-foreground">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                       <Settings className="h-4 w-4 text-admin-muted-foreground" />
                       Account Settings
                     </Link>
                   </DropdownMenuItem>
-<<<<<<< HEAD
                   <DropdownMenuSeparator className="bg-admin-border/60 my-2" />
                   <DropdownMenuItem 
                     className="text-destructive focus:text-destructive focus:bg-destructive/10 rounded-lg cursor-pointer py-2.5 px-2 text-sm"
                     onClick={handleSignOut}
                   >
                     <LogOut className="h-4 w-4 mr-3" />
-=======
-                  <DropdownMenuSeparator className="bg-admin-border" />
-                  <DropdownMenuItem 
-                    className="text-destructive flex items-center gap-2.5 cursor-pointer py-2.5 focus:text-destructive focus:bg-destructive/10"
-                    onClick={handleSignOut}
-                  >
-                    <LogOut className="h-4 w-4" />
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                     Sign Out
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -314,7 +216,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           <main className="flex-1 overflow-auto bg-admin-background">
             {children}
           </main>
-<<<<<<< HEAD
 
           {/* Command Palette */}
           <CommandDialog open={commandOpen} onOpenChange={setCommandOpen}>
@@ -345,8 +246,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               </CommandGroup>
             </CommandList>
           </CommandDialog>
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         </SidebarInset>
       </div>
     </SidebarProvider>

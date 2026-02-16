@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 project_id = "lnrhrevpouozugsarsmz"
-=======
-project_id = "lpmwqwpzdhtkrzoounec"
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 [functions.create-checkout]
 verify_jwt = false

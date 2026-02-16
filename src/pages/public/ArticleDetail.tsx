@@ -8,10 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Calendar, Eye, Share2, Clock } from "lucide-react";
 import { useArticle, usePublishedArticles, ARTICLE_CATEGORIES } from "@/hooks/useArticles";
-<<<<<<< HEAD
 import { SafeHTMLRenderer } from "@/components/ui/SafeHTMLRenderer";
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 export default function ArticleDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -189,18 +186,10 @@ export default function ArticleDetail() {
           transition={{ delay: 0.3 }}
           className="container max-w-3xl mx-auto px-4 pb-12"
         >
-<<<<<<< HEAD
           <SafeHTMLRenderer 
             html={article.content || ''}
             className="prose prose-lg max-w-none dark:prose-invert"
           />
-=======
-          <div className="prose prose-lg max-w-none dark:prose-invert">
-            {article.content?.split('\n').map((paragraph, i) => (
-              <p key={i}>{paragraph}</p>
-            ))}
-          </div>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
           {/* Tags */}
           {article.tags && article.tags.length > 0 && (

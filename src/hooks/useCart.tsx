@@ -1,14 +1,13 @@
 import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 interface CartItem {
   product_id: string;
   title: string;
-<<<<<<< HEAD
   designer_name?: string;
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   price: number;
   image: string | null;
   quantity: number;
@@ -38,11 +37,12 @@ interface CartContextType {
   cart: Cart | null;
   itemCount: number;
   isLoading: boolean;
-  addItem: (productId: string, quantity?: number, variant?: Record<string, string>) => Promise<void>;
+  addItem: (productId: string, quantity?: number, variant?: Record<string, string>) => Promise<boolean>;
   updateQuantity: (productId: string, quantity: number, variant?: Record<string, string>) => Promise<void>;
   removeItem: (productId: string, variant?: Record<string, string>) => Promise<void>;
   clearCart: () => Promise<void>;
   refreshCart: () => Promise<void>;
+  isAuthenticated: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -61,6 +61,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<Cart | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const { user, isCustomer } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const getAuthHeader = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -71,7 +74,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const authHeader = await getAuthHeader();
     const sessionId = getSessionId();
 
-<<<<<<< HEAD
     // Add timeout to the function call
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
@@ -100,22 +102,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       throw error;
     }
-=======
-    const response = await supabase.functions.invoke('marketplace-cart', {
-      headers: authHeader,
-      body: {
-        action,
-        session_id: sessionId,
-        ...body,
-      },
-    });
-
-    if (response.error) {
-      throw new Error(response.error.message);
-    }
-
-    return response.data;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   }, []);
 
   const refreshCart = useCallback(async () => {
@@ -134,7 +120,27 @@ export function CartProvider({ children }: { children: ReactNode }) {
     productId: string, 
     quantity = 1, 
     variant?: Record<string, string>
-  ) => {
+  ): Promise<boolean> => {
+    // Check if user is authenticated
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to add items to your bag.",
+      });
+      navigate('/shop/auth', { state: { from: location.pathname } });
+      return false;
+    }
+    
+    // Check if user has customer role
+    if (!isCustomer) {
+      toast({
+        title: "Customer account required",
+        description: "Only customer accounts can make purchases. Please sign in with a customer account.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
     try {
       const data = await callCartFunction('add', {
         product_id: productId,
@@ -146,6 +152,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         title: "Added to bag",
         description: data.message || "Item has been added to your shopping bag.",
       });
+      return true;
     } catch (error) {
       console.error('Error adding item:', error);
       toast({
@@ -153,8 +160,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         description: "Failed to add item to cart.",
         variant: "destructive",
       });
+      return false;
     }
-  }, [callCartFunction, toast]);
+  }, [callCartFunction, toast, user, isCustomer, navigate, location.pathname]);
 
   const updateQuantity = useCallback(async (
     productId: string, 
@@ -221,6 +229,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [refreshCart]);
 
   const itemCount = cart?.items?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+  const isAuthenticated = !!user && isCustomer;
 
   return (
     <CartContext.Provider value={{
@@ -232,6 +241,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeItem,
       clearCart,
       refreshCart,
+      isAuthenticated,
     }}>
       {children}
     </CartContext.Provider>

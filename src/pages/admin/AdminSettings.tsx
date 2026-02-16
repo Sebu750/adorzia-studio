@@ -29,7 +29,6 @@ import {
   Save,
   KeyRound,
   Smartphone,
-<<<<<<< HEAD
   Activity,
   Camera,
   X
@@ -37,13 +36,6 @@ import {
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { useToast } from "@/hooks/use-toast";
 import { supabaseAdmin as supabase } from "@/integrations/supabase/admin-client";
-=======
-  Activity
-} from "lucide-react";
-import { useAdminAuth } from "@/hooks/useAdminAuth";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { z } from "zod";
 
 const profileSchema = z.object({
@@ -52,13 +44,8 @@ const profileSchema = z.object({
 });
 
 const passwordSchema = z.object({
-<<<<<<< HEAD
   currentPassword: z.string().min(8, "Password must be at least 8 characters"),
   newPassword: z.string().min(8, "Password must be at least 8 characters").regex(/[a-z]/, "Password must contain at least one lowercase letter").regex(/[A-Z]/, "Password must contain at least one uppercase letter").regex(/[0-9]/, "Password must contain at least one number").regex(/[^a-zA-Z0-9]/, "Password must contain at least one special character"),
-=======
-  currentPassword: z.string().min(6, "Password must be at least 6 characters"),
-  newPassword: z.string().min(6, "Password must be at least 6 characters"),
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   confirmPassword: z.string(),
 }).refine((data) => data.newPassword === data.confirmPassword, {
   message: "Passwords don't match",
@@ -67,11 +54,7 @@ const passwordSchema = z.object({
 
 export default function AdminSettings() {
   const navigate = useNavigate();
-<<<<<<< HEAD
   const { user, signOut, isAdmin, isSuperadmin } = useAdminAuth();
-=======
-  const { user, signOut, isAdmin } = useAdminAuth();
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const { toast } = useToast();
   
   const [isLoading, setIsLoading] = useState(false);
@@ -80,42 +63,26 @@ export default function AdminSettings() {
     email: "",
     avatar_url: "",
   });
-<<<<<<< HEAD
-=======
-  const [userRole, setUserRole] = useState<"admin" | "superadmin">("admin");
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
   });
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
-<<<<<<< HEAD
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   useEffect(() => {
     if (user) {
       loadProfile();
-<<<<<<< HEAD
-=======
-      loadRole();
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     }
   }, [user]);
 
   const loadProfile = async () => {
     if (!user) return;
     
-<<<<<<< HEAD
     // Check admin_profiles FIRST
     const { data } = await supabase
       .from("admin_profiles")
-=======
-    const { data } = await supabase
-      .from("profiles")
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       .select("*")
       .eq("user_id", user.id)
       .maybeSingle();
@@ -127,7 +94,6 @@ export default function AdminSettings() {
         avatar_url: data.avatar_url || "",
       });
     } else {
-<<<<<<< HEAD
       // Fallback to legacy profiles table
       const { data: legacyData } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
       if (legacyData) {
@@ -143,27 +109,6 @@ export default function AdminSettings() {
           avatar_url: "",
         });
       }
-=======
-      setProfileData({
-        name: user.user_metadata?.name || "",
-        email: user.email || "",
-        avatar_url: "",
-      });
-    }
-  };
-
-  const loadRole = async () => {
-    if (!user) return;
-    
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (data) {
-      setUserRole(data.role as "admin" | "superadmin");
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     }
   };
 
@@ -180,7 +125,6 @@ export default function AdminSettings() {
       };
       await supabase.from("admin_logs").insert([logEntry]);
     } catch (error) {
-<<<<<<< HEAD
       // Silently fail logging errors in production
     }
   };
@@ -293,9 +237,6 @@ export default function AdminSettings() {
         description: error.message || "Failed to remove avatar.",
         variant: "destructive",
       });
-=======
-      console.error("Failed to log admin action:", error);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     }
   };
 
@@ -306,7 +247,6 @@ export default function AdminSettings() {
     try {
       const validated = profileSchema.parse(profileData);
       
-<<<<<<< HEAD
       // Use Edge Function to update BOTH auth and profile to ensure consistency
       const { data, error } = await supabase.functions.invoke('manage-admin', {
         body: { 
@@ -317,32 +257,15 @@ export default function AdminSettings() {
           avatar_url: profileData.avatar_url
         }
       });
-=======
-      const { error } = await supabase
-        .from("profiles")
-        .upsert({
-          user_id: user.id,
-          name: validated.name,
-          email: validated.email,
-          updated_at: new Date().toISOString(),
-        }, {
-          onConflict: "user_id",
-        });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
       if (error) throw error;
 
       await logAdminAction("profile_update", { 
-<<<<<<< HEAD
         updated_fields: ["name", "email", "avatar_url"] 
-=======
-        updated_fields: ["name", "email"] 
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       });
 
       toast({
         title: "Profile updated",
-<<<<<<< HEAD
         description: "Account details and authentication updated successfully.",
       });
     } catch (error: any) {
@@ -363,40 +286,18 @@ export default function AdminSettings() {
         description: errorMessage,
         variant: "destructive",
       });
-=======
-        description: "Your changes have been saved.",
-      });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        toast({
-          title: "Validation error",
-          description: error.errors[0].message,
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Error",
-          description: "Failed to update profile.",
-          variant: "destructive",
-        });
-      }
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     } finally {
       setIsLoading(false);
     }
   };
 
   const handlePasswordUpdate = async () => {
-<<<<<<< HEAD
     if (!user) return;
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     setIsLoading(true);
 
     try {
       const validated = passwordSchema.parse(passwordData);
       
-<<<<<<< HEAD
       // Use Edge Function to update password via service role (more reliable for isolated auth)
       const { data, error } = await supabase.functions.invoke('manage-admin', {
         body: { 
@@ -404,10 +305,6 @@ export default function AdminSettings() {
           targetUserId: user.id, 
           password: validated.newPassword 
         }
-=======
-      const { error } = await supabase.auth.updateUser({
-        password: validated.newPassword,
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       });
 
       if (error) throw error;
@@ -422,7 +319,6 @@ export default function AdminSettings() {
 
       toast({
         title: "Password updated",
-<<<<<<< HEAD
         description: "Your authentication password has been changed successfully.",
       });
     } catch (error: any) {
@@ -440,25 +336,12 @@ export default function AdminSettings() {
         toast({
           title: "Server Error",
           description: "Server configuration error. Please contact support.",
-=======
-        description: "Your password has been changed successfully.",
-      });
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        toast({
-          title: "Validation error",
-          description: error.errors[0].message,
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           variant: "destructive",
         });
       } else {
         toast({
           title: "Error",
-<<<<<<< HEAD
           description: errorMessage,
-=======
-          description: "Failed to update password.",
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           variant: "destructive",
         });
       }
@@ -502,7 +385,6 @@ export default function AdminSettings() {
 
   return (
     <AdminLayout>
-<<<<<<< HEAD
       <div className="p-6 lg:p-8 space-y-6 max-w-[1200px] mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -519,29 +401,10 @@ export default function AdminSettings() {
           >
             <Shield className="h-3.5 w-3.5 mr-1.5" />
             Super Admin
-=======
-      <div className="p-6 lg:p-8 space-y-8 max-w-4xl">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="font-display text-3xl font-bold tracking-tight">
-              Account Settings
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Manage your admin account and security
-            </p>
-          </div>
-          <Badge 
-            className="bg-admin-wine text-admin-wine-foreground px-3 py-1"
-          >
-            <Shield className="h-3 w-3 mr-1" />
-            {userRole === "superadmin" ? "Superadmin" : "Admin"}
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           </Badge>
         </div>
 
         {/* Profile Information */}
-<<<<<<< HEAD
         <Card className="border-admin-border shadow-sm">
           <CardHeader className="pb-4 border-b border-admin-border bg-admin-muted/30">
             <CardTitle className="flex items-center gap-2.5 text-base font-bold uppercase tracking-wider text-admin-foreground">
@@ -618,70 +481,27 @@ export default function AdminSettings() {
             <div className="grid gap-5 md:grid-cols-2">
               <div className="space-y-2.5">
                 <Label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-admin-muted-foreground">Full Name</Label>
-=======
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
-              Profile Information
-            </CardTitle>
-            <CardDescription>Update your admin profile details</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center gap-6">
-              <Avatar className="h-20 w-20 border-2 border-admin-camel/30">
-                <AvatarImage src={profileData.avatar_url} />
-                <AvatarFallback className="bg-admin-wine text-admin-wine-foreground text-xl">
-                  {getInitials(profileData.name || "AD")}
-                </AvatarFallback>
-              </Avatar>
-              <div className="space-y-1">
-                <p className="font-medium">{profileData.name || "Admin User"}</p>
-                <p className="text-sm text-muted-foreground">{profileData.email}</p>
-                <Badge variant="outline" className="text-xs">
-                  Status: Active
-                </Badge>
-              </div>
-            </div>
-
-            <Separator />
-
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 <Input 
                   id="name" 
                   value={profileData.name}
                   onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="Your name"
-<<<<<<< HEAD
                   className="h-11 bg-admin-card border-admin-border focus:ring-2 focus:ring-admin-foreground/10"
                 />
               </div>
               <div className="space-y-2.5">
                 <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-admin-muted-foreground">Email Address</Label>
-=======
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 <Input 
                   id="email" 
                   type="email" 
                   value={profileData.email}
                   onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
                   placeholder="admin@adorzia.com"
-<<<<<<< HEAD
                   className="h-11 bg-admin-card border-admin-border focus:ring-2 focus:ring-admin-foreground/10"
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 />
               </div>
             </div>
             
-<<<<<<< HEAD
             <div className="space-y-2.5">
               <Label className="text-xs font-bold uppercase tracking-wider text-admin-muted-foreground">Admin Role</Label>
               <Input 
@@ -691,26 +511,11 @@ export default function AdminSettings() {
               />
               <p className="text-[10px] text-admin-muted-foreground italic">
                 You have full administrative access to the dashboard
-=======
-            <div className="space-y-2">
-              <Label>Role</Label>
-              <Input 
-                value={userRole === "superadmin" ? "Superadmin" : "Admin"} 
-                disabled 
-                className="bg-muted"
-              />
-              <p className="text-xs text-muted-foreground">
-                Role cannot be changed from this interface
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               </p>
             </div>
 
             <Button 
-<<<<<<< HEAD
               className="gap-2 h-11 px-6 bg-admin-foreground text-admin-background hover:bg-admin-foreground/90 font-bold transition-all active:scale-[0.98] shadow-md"
-=======
-              className="gap-2 bg-admin-wine hover:bg-admin-wine/90 text-admin-wine-foreground"
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               onClick={handleProfileUpdate}
               disabled={isLoading}
             >
@@ -725,7 +530,6 @@ export default function AdminSettings() {
         </Card>
 
         {/* Password Management */}
-<<<<<<< HEAD
         <Card className="border-admin-border shadow-sm">
           <CardHeader className="pb-4 border-b border-admin-border bg-admin-muted/30">
             <CardTitle className="flex items-center gap-2.5 text-base font-bold uppercase tracking-wider text-admin-foreground">
@@ -737,91 +541,51 @@ export default function AdminSettings() {
           <CardContent className="space-y-5 p-6">
             <div className="space-y-2.5">
               <Label htmlFor="currentPassword" className="text-xs font-bold uppercase tracking-wider text-admin-muted-foreground">Current Password</Label>
-=======
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <KeyRound className="h-5 w-5" />
-              Password Management
-            </CardTitle>
-            <CardDescription>Update your password to keep your account secure</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="currentPassword">Current Password</Label>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               <Input 
                 id="currentPassword" 
                 type="password"
                 value={passwordData.currentPassword}
                 onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
                 placeholder="Enter current password"
-<<<<<<< HEAD
                 className="h-11 bg-admin-card border-admin-border focus:ring-2 focus:ring-admin-foreground/10"
               />
             </div>
             <div className="grid gap-5 md:grid-cols-2">
               <div className="space-y-2.5">
                 <Label htmlFor="newPassword" className="text-xs font-bold uppercase tracking-wider text-admin-muted-foreground">New Password</Label>
-=======
-              />
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="newPassword">New Password</Label>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 <Input 
                   id="newPassword" 
                   type="password"
                   value={passwordData.newPassword}
                   onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
                   placeholder="Min 6 characters"
-<<<<<<< HEAD
                   className="h-11 bg-admin-card border-admin-border focus:ring-2 focus:ring-admin-foreground/10"
                 />
               </div>
               <div className="space-y-2.5">
                 <Label htmlFor="confirmPassword" className="text-xs font-bold uppercase tracking-wider text-admin-muted-foreground">Confirm New Password</Label>
-=======
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm New Password</Label>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 <Input 
                   id="confirmPassword" 
                   type="password"
                   value={passwordData.confirmPassword}
                   onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
                   placeholder="Confirm password"
-<<<<<<< HEAD
                   className="h-11 bg-admin-card border-admin-border focus:ring-2 focus:ring-admin-foreground/10"
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 />
               </div>
             </div>
             <Button 
-<<<<<<< HEAD
               className="gap-2 h-11 px-6 bg-admin-foreground text-admin-background hover:bg-admin-foreground/90 font-bold transition-all active:scale-[0.98] shadow-md"
               onClick={handlePasswordUpdate}
               disabled={isLoading}
             >
               {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-=======
-              className="bg-admin-wine hover:bg-admin-wine/90 text-admin-wine-foreground"
-              onClick={handlePasswordUpdate}
-              disabled={isLoading}
-            >
-              {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               Update Password
             </Button>
           </CardContent>
         </Card>
 
         {/* Two-Factor Authentication */}
-<<<<<<< HEAD
         <Card className="border-admin-border shadow-sm">
           <CardHeader className="pb-4 border-b border-admin-border bg-admin-muted/30">
             <CardTitle className="flex items-center gap-2.5 text-base font-bold uppercase tracking-wider text-admin-foreground">
@@ -835,21 +599,6 @@ export default function AdminSettings() {
               <div className="space-y-1.5">
                 <p className="text-sm font-semibold text-admin-foreground">Enable 2FA</p>
                 <p className="text-xs text-admin-muted-foreground max-w-md leading-relaxed">
-=======
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Smartphone className="h-5 w-5" />
-              Two-Factor Authentication
-            </CardTitle>
-            <CardDescription>Add an extra layer of security to your admin account</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50 border">
-              <div className="space-y-1">
-                <p className="font-medium">Enable 2FA</p>
-                <p className="text-sm text-muted-foreground">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   Protect your admin account with two-factor authentication via authenticator app
                 </p>
               </div>
@@ -859,15 +608,9 @@ export default function AdminSettings() {
               />
             </div>
             {is2FAEnabled && (
-<<<<<<< HEAD
               <div className="mt-4 p-4 rounded-xl bg-success/5 border border-success/20">
                 <p className="text-xs text-admin-foreground leading-relaxed">
                   ✓ 2FA is enabled. Use your authenticator app to generate codes when signing in.
-=======
-              <div className="mt-4 p-4 rounded-lg bg-admin-apricot/10 border border-admin-camel/20">
-                <p className="text-sm text-muted-foreground">
-                  2FA is enabled. Use your authenticator app to generate codes when signing in.
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 </p>
               </div>
             )}
@@ -875,7 +618,6 @@ export default function AdminSettings() {
         </Card>
 
         {/* Sign Out & Sessions */}
-<<<<<<< HEAD
         <Card className="border-admin-border shadow-sm">
           <CardHeader className="pb-4 border-b border-admin-border bg-admin-muted/30">
             <CardTitle className="flex items-center gap-2.5 text-base font-bold uppercase tracking-wider text-admin-foreground">
@@ -889,51 +631,22 @@ export default function AdminSettings() {
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button variant="outline" className="gap-2 h-10 border-admin-border hover:bg-admin-muted transition-all">
-=======
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="h-5 w-5" />
-              Sessions & Sign Out
-            </CardTitle>
-            <CardDescription>Manage your active sessions and sign out</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="outline" className="gap-2">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                     <LogOut className="h-4 w-4" />
                     Sign Out
                   </Button>
                 </AlertDialogTrigger>
-<<<<<<< HEAD
                 <AlertDialogContent className="border-admin-border">
                   <AlertDialogHeader>
                     <AlertDialogTitle className="text-admin-foreground">Sign out of your account?</AlertDialogTitle>
                     <AlertDialogDescription className="text-admin-muted-foreground">
-=======
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Sign out of your account?</AlertDialogTitle>
-                    <AlertDialogDescription>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                       You will be signed out of this device and redirected to the login page.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-<<<<<<< HEAD
                     <AlertDialogCancel className="border-admin-border">Cancel</AlertDialogCancel>
                     <AlertDialogAction 
                       onClick={handleSignOut}
                       className="bg-admin-foreground hover:bg-admin-foreground/90 text-admin-background"
-=======
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction 
-                      onClick={handleSignOut}
-                      className="bg-admin-wine hover:bg-admin-wine/90"
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                     >
                       Sign Out
                     </AlertDialogAction>
@@ -943,35 +656,20 @@ export default function AdminSettings() {
 
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-<<<<<<< HEAD
                   <Button variant="destructive" className="gap-2 h-10 transition-all">
-=======
-                  <Button variant="destructive" className="gap-2">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                     <LogOut className="h-4 w-4" />
                     Sign Out of All Devices
                   </Button>
                 </AlertDialogTrigger>
-<<<<<<< HEAD
                 <AlertDialogContent className="border-admin-border">
                   <AlertDialogHeader>
                     <AlertDialogTitle className="text-admin-foreground">Sign out of all devices?</AlertDialogTitle>
                     <AlertDialogDescription className="text-admin-muted-foreground">
-=======
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Sign out of all devices?</AlertDialogTitle>
-                    <AlertDialogDescription>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                       This will sign you out of all devices where you are currently logged in. You will need to sign in again on each device.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-<<<<<<< HEAD
                     <AlertDialogCancel className="border-admin-border">Cancel</AlertDialogCancel>
-=======
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                     <AlertDialogAction 
                       onClick={handleSignOutAllDevices}
                       className="bg-destructive hover:bg-destructive/90"
@@ -983,15 +681,9 @@ export default function AdminSettings() {
               </AlertDialog>
             </div>
 
-<<<<<<< HEAD
             <Separator className="bg-admin-border" />
 
             <div className="text-[10px] text-admin-muted-foreground italic bg-admin-muted/30 p-3 rounded-lg">
-=======
-            <Separator />
-
-            <div className="text-xs text-muted-foreground">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
               <p>All account changes are logged for security and audit purposes.</p>
             </div>
           </CardContent>

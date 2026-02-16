@@ -63,7 +63,6 @@ export function useAnalyticsData(): AnalyticsDataResult {
         setLoading(true);
         setError(null);
 
-<<<<<<< HEAD
         // Fetch consolidated stats using RPC
         const { data: statsData, error: statsError } = await supabase.rpc('get_designer_stats', {
           designer_uuid: user.id
@@ -82,11 +81,6 @@ export function useAnalyticsData(): AnalyticsDataResult {
         });
 
         // Fetch earnings for chart data
-=======
-        const monthStart = startOfMonth(new Date()).toISOString();
-
-        // Fetch earnings
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         const { data: earningsData, error: earningsError } = await supabase
           .from("earnings")
           .select("amount, created_at")
@@ -94,16 +88,7 @@ export function useAnalyticsData(): AnalyticsDataResult {
 
         if (earningsError) throw earningsError;
 
-<<<<<<< HEAD
         // Fetch products for transactions and top products
-=======
-        const totalEarnings = earningsData?.reduce((sum, e) => sum + Number(e.amount), 0) || 0;
-        const monthlyEarnings = earningsData
-          ?.filter(e => e.created_at >= monthStart)
-          .reduce((sum, e) => sum + Number(e.amount), 0) || 0;
-
-        // Fetch products and sales
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         const { data: productsData, error: productsError } = await supabase
           .from("marketplace_products")
           .select("id, title")
@@ -113,10 +98,6 @@ export function useAnalyticsData(): AnalyticsDataResult {
 
         const productIds = productsData?.map(p => p.id) || [];
 
-<<<<<<< HEAD
-=======
-        let productsSold = 0;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         let salesData: any[] = [];
         if (productIds.length > 0) {
           const { data: sales, error: salesError } = await supabase
@@ -127,41 +108,9 @@ export function useAnalyticsData(): AnalyticsDataResult {
 
           if (!salesError && sales) {
             salesData = sales;
-<<<<<<< HEAD
           }
         }
 
-=======
-            productsSold = sales.reduce((sum, s) => sum + s.quantity_sold, 0);
-          }
-        }
-
-        // Fetch portfolio views
-        const { data: portfolios } = await supabase
-          .from("portfolios")
-          .select("id")
-          .eq("designer_id", user.id);
-
-        let productViews = 0;
-        if (portfolios && portfolios.length > 0) {
-          const portfolioIds = portfolios.map(p => p.id);
-          const { data: analytics } = await supabase
-            .from("portfolio_analytics")
-            .select("id")
-            .in("portfolio_id", portfolioIds)
-            .eq("event_type", "view");
-          
-          productViews = analytics?.length || 0;
-        }
-
-        setStats({
-          totalEarnings,
-          monthlyEarnings,
-          productsSold,
-          productViews,
-        });
-
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         // Build revenue data for last 6 months
         const revenueByMonth: Record<string, number> = {};
         for (let i = 5; i >= 0; i--) {

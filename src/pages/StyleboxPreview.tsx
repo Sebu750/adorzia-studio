@@ -45,10 +45,7 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import type { Database } from "@/integrations/supabase/types";
-<<<<<<< HEAD
 import { sanitizeInput } from "@/lib/input-sanitizer";
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
 type Stylebox = Database["public"]["Tables"]["styleboxes"]["Row"];
 type StyleboxSubmission = Database["public"]["Tables"]["stylebox_submissions"]["Row"];
@@ -166,21 +163,14 @@ export default function StyleboxPreview() {
       if (!user?.id || !id) throw new Error("Not authenticated");
       if (submissionFiles.length === 0) throw new Error("Please add at least one file URL");
       
-<<<<<<< HEAD
       const sanitizedHackLog = sanitizeInput(hackLog);
       
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       const { error } = await supabase
         .from("stylebox_submissions")
         .insert({
           stylebox_id: id,
           designer_id: user.id,
-<<<<<<< HEAD
           description: sanitizedHackLog || null,
-=======
-          description: hackLog || null,
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           submission_files: submissionFiles,
           status: "submitted",
         });

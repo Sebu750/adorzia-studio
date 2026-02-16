@@ -10,11 +10,7 @@ import { Loader2, Lock, Sparkles, CheckCircle2 } from "lucide-react";
 import { z } from "zod";
 
 const passwordSchema = z.object({
-<<<<<<< HEAD
   password: z.string().min(8, "Password must be at least 8 characters").regex(/[a-z]/, "Password must contain at least one lowercase letter").regex(/[A-Z]/, "Password must contain at least one uppercase letter").regex(/[0-9]/, "Password must contain at least one number").regex(/[^a-zA-Z0-9]/, "Password must contain at least one special character"),
-=======
-  password: z.string().min(6, "Password must be at least 6 characters"),
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
@@ -51,7 +47,6 @@ export default function ResetPassword() {
       });
 
       if (error) {
-<<<<<<< HEAD
         const errorMessage = error.message || error.error_description || error.error || "Failed to update password.";
         
         // Specific error handling for known Supabase auth errors
@@ -68,13 +63,6 @@ export default function ResetPassword() {
             variant: "destructive",
           });
         }
-=======
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       } else {
         setIsSuccess(true);
         toast({

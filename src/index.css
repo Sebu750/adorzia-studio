@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;450;500;550;600&display=swap');
-=======
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;450;500;550;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -86,7 +83,6 @@
     --admin-accent: 210 14% 93%;
     --admin-accent-foreground: 210 11% 15%;
     
-<<<<<<< HEAD
     /* Admin Sidebar - Professional Slate (Unified for both themes) */
     --admin-sidebar: 220 15% 18%; /* Deep slate blue-gray */
     --admin-sidebar-foreground: 0 0% 100%; /* Pure white */
@@ -95,15 +91,6 @@
     --admin-sidebar-accent-foreground: 0 0% 100%;
     --admin-sidebar-border: 220 12% 28%;
     --admin-sidebar-hover: 220 13% 28%;
-=======
-    /* Admin Sidebar - Carbon Black (Dark Sidebar) */
-    --admin-sidebar: 210 11% 15%;
-    --admin-sidebar-foreground: 210 17% 98%;
-    --admin-sidebar-muted: 210 10% 23%;
-    --admin-sidebar-accent: 210 10% 28%;
-    --admin-sidebar-accent-foreground: 210 17% 98%;
-    --admin-sidebar-border: 210 10% 23%;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     
     /* Admin Login Page Colors - Light Mode */
     --admin-login-background: 210 17% 98%;
@@ -142,7 +129,6 @@
     --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
 
-<<<<<<< HEAD
     /* Typography - Luxury Editorial */
     --font-display: 'Cormorant Garamond', serif;
     --font-body: 'Inter', sans-serif;
@@ -164,11 +150,6 @@
     /* Transitions */
     --transition-luxury: 600ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-swift: 300ms cubic-bezier(0.4, 0, 0.2, 1);
-=======
-    /* Typography */
-    --font-display: 'Playfair Display', serif;
-    --font-body: 'Inter', sans-serif;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
     /* Rank Colors - Grayscale System */
     --rank-f1: 210 11% 10%;
@@ -269,7 +250,6 @@
     --admin-accent: 210 10% 23%;
     --admin-accent-foreground: 210 17% 98%;
     
-<<<<<<< HEAD
     /* Admin Sidebar - Professional Slate (Unified for both themes) */
     --admin-sidebar: 220 15% 14%; /* Darker slate for dark mode */
     --admin-sidebar-foreground: 0 0% 100%; /* Pure white */
@@ -278,15 +258,6 @@
     --admin-sidebar-accent-foreground: 0 0% 100%;
     --admin-sidebar-border: 220 12% 25%;
     --admin-sidebar-hover: 220 13% 26%;
-=======
-    /* Admin Sidebar - Darker Carbon (unified dark tone) */
-    --admin-sidebar: 210 11% 8%;
-    --admin-sidebar-foreground: 210 17% 98%;
-    --admin-sidebar-muted: 210 10% 18%;
-    --admin-sidebar-accent: 210 10% 22%;
-    --admin-sidebar-accent-foreground: 210 17% 98%;
-    --admin-sidebar-border: 210 10% 18%;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     
     /* Admin Login Page Colors - Dark Mode */
     --admin-login-background: 210 11% 10%;
@@ -323,7 +294,6 @@
     --admin-border: 210 14% 89%;
     --admin-accent: 210 14% 93%;
     --admin-accent-foreground: 210 11% 15%;
-<<<<<<< HEAD
     --admin-sidebar: 220 15% 18%;
     --admin-sidebar-foreground: 0 0% 100%;
     --admin-sidebar-muted: 220 12% 25%;
@@ -331,14 +301,6 @@
     --admin-sidebar-accent-foreground: 0 0% 100%;
     --admin-sidebar-border: 220 12% 28%;
     --admin-sidebar-hover: 220 13% 28%;
-=======
-    --admin-sidebar: 210 11% 15%;
-    --admin-sidebar-foreground: 210 17% 98%;
-    --admin-sidebar-muted: 210 10% 23%;
-    --admin-sidebar-accent: 210 10% 28%;
-    --admin-sidebar-accent-foreground: 210 17% 98%;
-    --admin-sidebar-border: 210 10% 23%;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     --admin-login-background: 210 17% 98%;
     --admin-login-card: 0 0% 100%;
     --admin-login-card-border: 210 14% 89%;
@@ -360,7 +322,6 @@
     --admin-apricot-foreground: 210 17% 98%;
   }
 
-<<<<<<< HEAD
   /* Studio Theme Isolation - Light Mode */
   .studio-light {
     --background: 210 17% 99%;
@@ -431,8 +392,6 @@
     --sidebar-ring: 210 17% 85%;
   }
 
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   /* Admin Theme Isolation - Dark Mode */
   .admin-dark {
     --admin-background: 210 11% 10%;
@@ -444,7 +403,6 @@
     --admin-border: 210 10% 23%;
     --admin-accent: 210 10% 23%;
     --admin-accent-foreground: 210 17% 98%;
-<<<<<<< HEAD
     --admin-sidebar: 220 15% 14%;
     --admin-sidebar-foreground: 0 0% 100%;
     --admin-sidebar-muted: 220 12% 22%;
@@ -452,14 +410,6 @@
     --admin-sidebar-accent-foreground: 0 0% 100%;
     --admin-sidebar-border: 220 12% 25%;
     --admin-sidebar-hover: 220 13% 26%;
-=======
-    --admin-sidebar: 210 11% 8%;
-    --admin-sidebar-foreground: 210 17% 98%;
-    --admin-sidebar-muted: 210 10% 18%;
-    --admin-sidebar-accent: 210 10% 22%;
-    --admin-sidebar-accent-foreground: 210 17% 98%;
-    --admin-sidebar-border: 210 10% 18%;
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     --admin-login-background: 210 11% 10%;
     --admin-login-card: 210 11% 15%;
     --admin-login-card-border: 210 10% 23%;
@@ -498,7 +448,6 @@
   }
 }
 
-<<<<<<< HEAD
 /* Mobile-specific enhancements */
 @media (max-width: 640px) {
   /* Adjust typography for better readability on small screens */
@@ -597,10 +546,6 @@
   }
 
   /* Legacy Typography Scale */
-=======
-@layer components {
-  /* Typography Scale */
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   .text-display-2xl {
     @apply text-4xl sm:text-5xl font-display font-bold tracking-tight;
     letter-spacing: -0.03em;
@@ -854,7 +799,6 @@
     font-family: var(--font-display);
   }
 
-<<<<<<< HEAD
   /* Luxury Color Utilities */
   .text-luxury-gold {
     color: hsl(var(--luxury-gold));
@@ -980,8 +924,6 @@
     border: 1px solid hsl(var(--border) / 0.3);
   }
 
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   .font-body {
     font-family: var(--font-body);
   }
@@ -1358,7 +1300,6 @@
     pointer-events: none;
   }
 
-<<<<<<< HEAD
   /* Admin Dashboard Specific Utilities */
   .admin-card {
     @apply bg-admin-card border border-admin-border rounded-xl shadow-sm transition-all duration-300;
@@ -1523,8 +1464,6 @@
     animation: tab-slide 0.3s ease-out;
   }
 
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     .animate-float,
@@ -1534,7 +1473,6 @@
     .animate-shimmer,
     .animate-blur-reveal,
     .animate-scale-fade,
-<<<<<<< HEAD
     .text-shine,
     .animate-stat-pulse {
       animation: none;
@@ -1542,13 +1480,6 @@
     
     .hover-lift:hover,
     .hover-lift-sm:hover {
-=======
-    .text-shine {
-      animation: none;
-    }
-    
-    .hover-lift:hover {
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       transform: none;
     }
 
@@ -1563,13 +1494,10 @@
     .shadow-premium-hover:hover {
       transform: none;
     }
-<<<<<<< HEAD
 
     .admin-card:hover,
     .admin-card-elevated:hover {
       transform: none;
     }
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   }
 }

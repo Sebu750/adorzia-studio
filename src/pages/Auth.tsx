@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { useState, useEffect } from "react";
-=======
-import { useState } from "react";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Badge } from "@/components/ui/badge";
@@ -20,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-<<<<<<< HEAD
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Mail, Lock, User, Sparkles, ArrowLeft, Home } from 'lucide-react';
@@ -30,39 +25,14 @@ import PasswordStrengthMeter from '@/components/ui/PasswordStrengthMeter';
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-=======
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Mail, Lock, User, Sparkles, FileText, Award, ArrowLeft, Home } from "lucide-react";
-import { z } from "zod";
-
-const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 });
 
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
   email: z.string().email("Invalid email address"),
-<<<<<<< HEAD
   password: z.string().min(8, "Password must be at least 8 characters").regex(/[a-z]/, "Password must contain at least one lowercase letter").regex(/[A-Z]/, "Password must contain at least one uppercase letter").regex(/[0-9]/, "Password must contain at least one number").regex(/[^a-zA-Z0-9]/, "Password must contain at least one special character"),
 });
 
-=======
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  category: z.enum(["fashion", "textile", "jewelry"]),
-  bio: z.string().max(500, "Bio must be less than 500 characters").optional(),
-  skills: z.array(z.string()).optional(),
-});
-
-const availableSkills = [
-  "Sketching", "Pattern Making", "Draping", "CAD Design", 
-  "Textile Design", "Color Theory", "Trend Forecasting",
-  "Jewelry Design", "3D Modeling", "Embroidery", "Hand Illustration"
-];
-
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 export default function Auth() {
   const navigate = useNavigate();
   const { signIn, signUp, user } = useAuth();
@@ -70,30 +40,12 @@ export default function Auth() {
   
   const [isLoading, setIsLoading] = useState(false);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-<<<<<<< HEAD
   const [signupData, setSignupData] = useState({ 
     name: "", 
     email: "", 
     password: ""
   });
   const [showPasswordMeter, setShowPasswordMeter] = useState(false);
-=======
-  const [signupData, setSignupData] = useState<{ 
-    name: string; 
-    email: string; 
-    password: string; 
-    category: "fashion" | "textile" | "jewelry";
-    bio: string;
-    skills: string[];
-  }>({ 
-    name: "", 
-    email: "", 
-    password: "", 
-    category: "fashion",
-    bio: "",
-    skills: [],
-  });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
@@ -125,20 +77,12 @@ export default function Auth() {
     }
   };
 
-<<<<<<< HEAD
   // Redirect if already logged in - use useEffect to avoid setState during render
   useEffect(() => {
     if (user) {
       navigate("/dashboard", { replace: true });
     }
   }, [user, navigate]);
-=======
-  // Redirect if already logged in
-  if (user) {
-    navigate("/dashboard");
-    return null;
-  }
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,7 +93,6 @@ export default function Auth() {
       const { error } = await signIn(validated.email, validated.password);
       
       if (error) {
-<<<<<<< HEAD
         let errorMessage = error.message;
         
         // Enhanced error handling for password breach detection and other auth errors
@@ -166,23 +109,12 @@ export default function Auth() {
         toast({
           title: "Login failed",
           description: errorMessage,
-=======
-        toast({
-          title: "Login failed",
-          description: error.message === "Invalid login credentials" 
-            ? "Invalid email or password. Please try again."
-            : error.message,
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           variant: "destructive",
         });
       } else {
         toast({ 
           title: "Welcome back!",
-<<<<<<< HEAD
           description: "You've successfully signed in to Adorzia."
-=======
-          description: "You've successfully signed in to The Studio."
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         });
         navigate("/dashboard");
       }
@@ -209,30 +141,21 @@ export default function Auth() {
         validated.email, 
         validated.password, 
         validated.name, 
-<<<<<<< HEAD
         "fashion", // Default category
         "", // Empty bio
         [] // Empty skills
-=======
-        validated.category,
-        validated.bio,
-        validated.skills
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
       );
       
       if (error) {
         let message = error.message;
         if (message.includes("already registered")) {
           message = "This email is already registered. Please sign in instead.";
-<<<<<<< HEAD
         } else if (message.includes('Password is too weak') || message.toLowerCase().includes('leaked')) {
           message = 'This password has been involved in a data breach and cannot be used. Please choose a different password.';
         } else if (message.includes('Password is too common')) {
           message = 'Password is too common. Please choose a stronger, more unique password.';
         } else if (message.includes('Password is too similar')) {
           message = 'Password is too similar to your personal information. Please choose a more unique password.';
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
         }
         toast({
           title: "Signup failed",
@@ -240,14 +163,8 @@ export default function Auth() {
           variant: "destructive",
         });
       } else {
-<<<<<<< HEAD
         toast({
           title: "Welcome to Adorzia!",
-=======
-        // With auto-confirm enabled, redirect directly to dashboard
-        toast({
-          title: "Welcome to The Studio!",
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           description: "Your account has been created successfully.",
         });
         navigate("/dashboard");
@@ -284,20 +201,12 @@ export default function Auth() {
           {/* Logo */}
           <div className="text-center">
             <Link to="/" className="inline-flex items-center gap-2">
-<<<<<<< HEAD
               <div className="h-12 w-12 rounded-xl bg-gradient-accent flex items-center justify-center shadow-lg">
-=======
-              <div className="h-12 w-12 rounded-xl bg-gradient-accent flex items-center justify-center">
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 <Sparkles className="h-6 w-6 text-white" />
               </div>
               <span className="font-display text-3xl font-bold text-white">Adorzia</span>
             </Link>
-<<<<<<< HEAD
             <p className="text-muted-foreground/90 mt-2 text-base font-medium">Designer Studio</p>
-=======
-            <p className="text-muted-foreground mt-2">Designer Studio</p>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
           </div>
 
         <Card className="bg-card/95 backdrop-blur border-border/50">
@@ -312,13 +221,8 @@ export default function Auth() {
             <CardContent>
               {/* Login Tab */}
               <TabsContent value="login" className="space-y-4 mt-0">
-<<<<<<< HEAD
                 <CardTitle className="text-xl font-semibold">Welcome back</CardTitle>
                 <CardDescription className="text-base">
-=======
-                <CardTitle className="text-xl">Welcome back</CardTitle>
-                <CardDescription>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   Sign in to your designer account
                 </CardDescription>
 
@@ -357,17 +261,10 @@ export default function Auth() {
 
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
-<<<<<<< HEAD
                     <span className="w-full border-t border-border/60" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
                     <span className="bg-card px-2 text-muted-foreground font-medium">or</span>
-=======
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">or</span>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   </div>
                 </div>
 
@@ -393,11 +290,7 @@ export default function Auth() {
                       <Label htmlFor="login-password">Password</Label>
                       <Link 
                         to="/forgot-password"
-<<<<<<< HEAD
                         className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-=======
-                        className="text-xs text-accent hover:underline"
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                       >
                         Forgot password?
                       </Link>
@@ -429,19 +322,12 @@ export default function Auth() {
 
               {/* Signup Tab */}
               <TabsContent value="signup" className="space-y-4 mt-0">
-<<<<<<< HEAD
                 <div className="space-y-1">
                   <CardTitle className="text-xl font-semibold">Start designing</CardTitle>
                   <CardDescription className="text-base">
                     Create your free account in seconds
                   </CardDescription>
                 </div>
-=======
-                <CardTitle className="text-xl">Create account</CardTitle>
-                <CardDescription>
-                  Join the Adorzia designer community
-                </CardDescription>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
                 {/* Google Sign Up Button */}
                 <Button 
@@ -478,17 +364,10 @@ export default function Auth() {
 
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
-<<<<<<< HEAD
                     <span className="w-full border-t border-border/60" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
                     <span className="bg-card px-2 text-muted-foreground font-medium">or</span>
-=======
-                    <span className="w-full border-t" />
-                  </div>
-                  <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card px-2 text-muted-foreground">or</span>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   </div>
                 </div>
 
@@ -532,16 +411,11 @@ export default function Auth() {
                       <Input
                         id="signup-password"
                         type="password"
-<<<<<<< HEAD
                         placeholder="At least 8 characters with uppercase, lowercase, number and symbol"
-=======
-                        placeholder="Min 6 characters"
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                         value={signupData.password}
                         onChange={(e) => setSignupData(prev => ({ ...prev, password: e.target.value }))}
                         className="pl-10"
                         required
-<<<<<<< HEAD
                         onFocus={() => setShowPasswordMeter(true)}
                         onBlur={() => setShowPasswordMeter(false)}
                       />
@@ -549,75 +423,6 @@ export default function Auth() {
                     {showPasswordMeter && signupData.password && (
                       <PasswordStrengthMeter password={signupData.password} className="mt-2" />
                     )}
-=======
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Specialty</Label>
-                    <Select 
-                      value={signupData.category}
-                      onValueChange={(v) => setSignupData(prev => ({ ...prev, category: v as "fashion" | "textile" | "jewelry" }))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="fashion">Fashion Design</SelectItem>
-                        <SelectItem value="textile">Textile Design</SelectItem>
-                        <SelectItem value="jewelry">Jewelry Design</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-bio">Short Bio (Optional)</Label>
-                    <div className="relative">
-                      <FileText className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Textarea
-                        id="signup-bio"
-                        placeholder="Tell us about yourself and your design journey..."
-                        value={signupData.bio}
-                        onChange={(e) => setSignupData(prev => ({ ...prev, bio: e.target.value }))}
-                        className="pl-10 min-h-[80px] resize-none"
-                        maxLength={500}
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground">{signupData.bio.length}/500 characters</p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Skills (Optional)</Label>
-                    <div className="flex flex-wrap gap-2">
-                      {availableSkills.map((skill) => (
-                        <Badge
-                          key={skill}
-                          variant={signupData.skills.includes(skill) ? "default" : "outline"}
-                          className="cursor-pointer transition-all hover:scale-105"
-                          onClick={() => {
-                            setSignupData(prev => ({
-                              ...prev,
-                              skills: prev.skills.includes(skill)
-                                ? prev.skills.filter(s => s !== skill)
-                                : [...prev.skills, skill]
-                            }));
-                          }}
-                        >
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* F1 Rank Badge Info */}
-                  <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 flex items-start gap-3">
-                    <Award className="h-5 w-5 text-accent mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium text-foreground">F1 Foundation Rank</p>
-                      <p className="text-xs text-muted-foreground">As an early joiner, you'll be automatically assigned the exclusive F1 rank with 50% revenue share!</p>
-                    </div>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                   </div>
 
                   <div className="flex items-start gap-2">
@@ -627,7 +432,6 @@ export default function Auth() {
                       onCheckedChange={(checked) => setAgreedToTerms(checked === true)}
                       className="mt-1"
                     />
-<<<<<<< HEAD
                     <Label htmlFor="terms" className="text-sm text-foreground/90 leading-relaxed cursor-pointer">
                       I agree to the{" "}
                       <Link to="/terms" className="text-primary font-medium hover:text-primary/80 underline underline-offset-2">
@@ -637,26 +441,17 @@ export default function Auth() {
                       <Link to="/privacy" className="text-primary font-medium hover:text-primary/80 underline underline-offset-2">
                         Privacy Policy
                       </Link>
-=======
-                    <Label htmlFor="terms" className="text-xs text-muted-foreground leading-relaxed cursor-pointer">
-                      I agree to the <Link to="#" className="text-accent hover:underline">Terms of Service</Link> and <Link to="#" className="text-accent hover:underline">Privacy Policy</Link>
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                     </Label>
                   </div>
 
                   <Button 
                     type="submit" 
-<<<<<<< HEAD
                     className="w-full bg-gradient-accent hover:opacity-90 h-11"
-=======
-                    className="w-full bg-gradient-accent hover:opacity-90"
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                     disabled={isLoading || !agreedToTerms}
                   >
                     {isLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                     Create Account
                   </Button>
-<<<<<<< HEAD
 
                   <p className="text-sm text-center text-foreground/80">
                     Already have an account?{" "}
@@ -668,8 +463,6 @@ export default function Auth() {
                       Sign in
                     </button>
                   </p>
-=======
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
                 </form>
               </TabsContent>
             </CardContent>

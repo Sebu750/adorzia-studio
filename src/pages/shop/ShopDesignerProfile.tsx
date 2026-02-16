@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   MapPin, Share2, Heart, ArrowLeft, ArrowUpRight,
@@ -12,10 +12,26 @@ import { MarketplaceLayout } from "@/components/marketplace/MarketplaceLayout";
 import { MarketplaceProductCard } from "@/components/marketplace/MarketplaceProductCard";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { useFollowDesigner } from "@/hooks/useGlobalSearch";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ShopDesignerProfile() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user, isCustomer } = useAuth();
+  const { toast } = useToast();
+  const { followDesigner, unfollowDesigner, isFollowing: checkIsFollowing } = useFollowDesigner();
   const [isFollowing, setIsFollowing] = useState(false);
+  const [isFollowLoading, setIsFollowLoading] = useState(false);
+
+  // Check if user is following this designer
+  useEffect(() => {
+    if (user && id) {
+      checkIsFollowing(id).then(setIsFollowing);
+    }
+  }, [user, id, checkIsFollowing]);
 
   // Fetch designer profile
   const { data: designer, isLoading } = useQuery({
@@ -81,7 +97,7 @@ export default function ShopDesignerProfile() {
 
       const { data, error } = await supabase
         .from('marketplace_products')
-        .select('id, title, price, images, slug')
+        .select('id, title, price, images, slug, is_made_to_order, is_limited_edition, edition_size')
         .eq('designer_id', id)
         .eq('status', 'live')
         .order('created_at', { ascending: false })
@@ -277,7 +293,41 @@ export default function ShopDesignerProfile() {
                 <Button
                   variant={isFollowing ? "default" : "outline"}
                   size="lg"
-                  onClick={() => setIsFollowing(!isFollowing)}
+                  onClick={async () => {
+                    if (!user) {
+                      navigate('/shop/auth', { state: { from: location.pathname } });
+                      return;
+                    }
+                    if (!isCustomer) {
+                      toast({
+                        title: "Customer account required",
+                        description: "Please sign in as a customer to follow designers.",
+                        variant: "destructive",
+                      });
+                      return;
+                    }
+                    setIsFollowLoading(true);
+                    try {
+                      if (isFollowing) {
+                        await unfollowDesigner(id!);
+                        setIsFollowing(false);
+                        toast({ title: "Unfollowed", description: `You are no longer following ${designer.brand_name || designer.name}` });
+                      } else {
+                        await followDesigner(id!);
+                        setIsFollowing(true);
+                        toast({ title: "Following", description: `You are now following ${designer.brand_name || designer.name}` });
+                      }
+                    } catch (error) {
+                      toast({
+                        title: "Error",
+                        description: "Failed to update follow status. Please try again.",
+                        variant: "destructive",
+                      });
+                    } finally {
+                      setIsFollowLoading(false);
+                    }
+                  }}
+                  disabled={isFollowLoading}
                   className={`gap-2 ${isFollowing 
                     ? 'bg-gray-900 text-white hover:bg-gray-800' 
                     : 'border-gray-300 text-gray-700 hover:bg-gray-50'}`}
@@ -285,7 +335,41 @@ export default function ShopDesignerProfile() {
                   <Heart className={`h-4 w-4 ${isFollowing ? 'fill-current' : ''}`} />
                   {isFollowing ? 'Following' : 'Follow'}
                 </Button>
-                <Button variant="outline" size="icon" className="h-11 w-11 border-gray-300 text-gray-700 hover:bg-gray-50">
+                <Button 
+                  variant="outline" 
+                  size="icon" 
+                  className="h-11 w-11 border-gray-300 text-gray-700 hover:bg-gray-50"
+                  onClick={async () => {
+                    const shareUrl = `${window.location.origin}/shop/designer/${id}`;
+                    const shareData = {
+                      title: `${designer.brand_name || designer.name} on Adorzia`,
+                      text: `Check out ${designer.brand_name || designer.name} on Adorzia!`,
+                      url: shareUrl,
+                    };
+                    
+                    if (navigator.share) {
+                      try {
+                        await navigator.share(shareData);
+                      } catch (err) {
+                        // User cancelled or share failed
+                      }
+                    } else {
+                      // Fallback: copy to clipboard
+                      try {
+                        await navigator.clipboard.writeText(shareUrl);
+                        toast({
+                          title: "Link copied!",
+                          description: "Designer profile link copied to clipboard.",
+                        });
+                      } catch (err) {
+                        toast({
+                          title: "Share",
+                          description: shareUrl,
+                        });
+                      }
+                    }
+                  }}
+                >
                   <Share2 className="h-4 w-4" />
                 </Button>
               </div>
@@ -388,6 +472,9 @@ export default function ShopDesignerProfile() {
                         designerName={designer.name}
                         designerId={designer.id}
                         slug={product.slug}
+                        isMadeToOrder={product.is_made_to_order}
+                        isLimitedEdition={product.is_limited_edition}
+                        editionSize={product.edition_size}
                       />
                     ))}
                   </div>

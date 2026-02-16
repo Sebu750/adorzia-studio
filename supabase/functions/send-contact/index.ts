@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 
@@ -26,13 +22,8 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-<<<<<<< HEAD
     const resendApiKey = Deno.env.get("RESEND_API_KEY_CONTACT");
     if (!resendApiKey) throw new Error("RESEND_API_KEY_CONTACT not configured");
-=======
-    const resendApiKey = Deno.env.get("RESEND_API_KEY");
-    if (!resendApiKey) throw new Error("RESEND_API_KEY not configured");
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
     const resend = new Resend(resendApiKey);
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -58,11 +49,7 @@ const handler = async (req: Request): Promise<Response> => {
     if (insertError) throw new Error("Failed to save submission");
 
     // Send emails
-<<<<<<< HEAD
     const fromAddress = "Adorzia Contact <contact@mail.adorzia.com>";
-=======
-    const fromAddress = "Adorzia Contact <onboarding@resend.dev>";
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
     
     await resend.emails.send({
       from: fromAddress,
@@ -79,11 +66,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     // Log email
-<<<<<<< HEAD
     await supabase.from("email_logs").insert({ subdomain: "contact", email_type: "contact_inquiry", from_address: "contact@mail.adorzia.com", to_address: email, subject: "Contact confirmation", status: "sent", metadata: { submission_id: submission.id } });
-=======
-    await supabase.from("email_logs").insert({ subdomain: "contact", email_type: "contact_inquiry", from_address: fromAddress, to_address: email, subject: "Contact confirmation", status: "sent", metadata: { submission_id: submission.id } });
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241
 
     return new Response(JSON.stringify({ success: true, message: "Message sent successfully!" }), {
       status: 200, headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -96,8 +79,4 @@ const handler = async (req: Request): Promise<Response> => {
   }
 };
 
-<<<<<<< HEAD
 Deno.serve(handler);
-=======
-serve(handler);
->>>>>>> 031c161bf7b91941f5f0d649b9170bfe406ca241

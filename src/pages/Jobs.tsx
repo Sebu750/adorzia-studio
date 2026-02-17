@@ -208,8 +208,8 @@ export default function Jobs() {
 
   return (
     <AppLayout>
-      <div className="container max-w-7xl py-8">
-        <div className="mb-8 flex items-start justify-between">
+      <div className="w-full py-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto mb-8 flex items-start justify-between">
           <div>
             <div className="flex items-center gap-3">
               <h1 className="text-3xl font-bold">Job Portal</h1>
@@ -245,29 +245,84 @@ export default function Jobs() {
           </TabsList>
 
           <TabsContent value="browse">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
               <div className="lg:col-span-1">
                 <JobFilters filters={filters} onFiltersChange={setFilters} onReset={() => setFilters(defaultFilters)} />
               </div>
-              <div className="lg:col-span-3 space-y-4">
+              <div className="lg:col-span-3">
                 {jobsLoading ? (
-                  Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-40 w-full" />)
+                  <div className="space-y-4">
+                    {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-40 w-full rounded-lg" />)}
+                  </div>
                 ) : filteredJobs.length === 0 ? (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <p>No jobs found matching your criteria</p>
+                  <div className="text-center py-16 text-muted-foreground">
+                    <p className="text-lg">No jobs found matching your criteria</p>
+                    <p className="text-sm mt-2">
+                      Try adjusting your filters or check back later for new opportunities
+                    </p>
                     {isRealtimeConnected && (
-                      <p className="text-sm mt-2 text-green-600">
+                      <p className="text-sm mt-4 text-green-600">
                         <Wifi className="h-3 w-3 inline mr-1" />
                         Listening for new job postings...
                       </p>
                     )}
                   </div>
                 ) : (
-                  filteredJobs.map(job => (
+                  <div className="space-y-4">
+                    {filteredJobs.map(job => (
+                      <JobCard
+                        key={job.id}
+                        job={job}
+                        isSaved={savedJobIds.includes(job.id)}
+                        hasApplied={appliedJobIds.includes(job.id)}
+                        onView={(j) => { setSelectedJob(j); setDetailOpen(true); }}
+                        onSave={(id) => {
+                          if (user) {
+                            saveMutation.mutate({ 
+                              jobId: id, 
+                              designerId: user.id, 
+                              isSaved: savedJobIds.includes(id) 
+                            });
+                          }
+                        }}
+                        onApply={(j) => { setSelectedJob(j); setApplyOpen(true); }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="applications">
+            <div className="max-w-4xl mx-auto">
+              {applications.length === 0 ? (
+                <div className="text-center py-16 text-muted-foreground">
+                  <p className="text-lg">You haven't applied to any jobs yet</p>
+                  <p className="text-sm mt-2">When you apply to jobs, they'll appear here for easy tracking</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {applications.map(app => <ApplicationCard key={app.id} application={app} />)}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="saved">
+            <div className="max-w-4xl mx-auto">
+              {savedJobsList.length === 0 ? (
+                <div className="text-center py-16 text-muted-foreground">
+                  <p className="text-lg">No saved jobs</p>
+                  <p className="text-sm mt-2">Jobs you save will appear here for later review</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {savedJobsList.map(job => (
                     <JobCard
                       key={job.id}
                       job={job}
-                      isSaved={savedJobIds.includes(job.id)}
+                      isSaved={true}
                       hasApplied={appliedJobIds.includes(job.id)}
                       onView={(j) => { setSelectedJob(j); setDetailOpen(true); }}
                       onSave={(id) => {
@@ -275,55 +330,14 @@ export default function Jobs() {
                           saveMutation.mutate({ 
                             jobId: id, 
                             designerId: user.id, 
-                            isSaved: savedJobIds.includes(id) 
+                            isSaved: true 
                           });
                         }
                       }}
                       onApply={(j) => { setSelectedJob(j); setApplyOpen(true); }}
                     />
-                  ))
-                )}
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="applications">
-            <div className="space-y-4 max-w-2xl">
-              {applications.length === 0 ? (
-                <div className="text-center py-12 text-muted-foreground">You haven't applied to any jobs yet</div>
-              ) : (
-                applications.map(app => <ApplicationCard key={app.id} application={app} />)
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="saved">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {savedJobsList.length === 0 ? (
-                <div className="col-span-2 text-center py-12 text-muted-foreground">
-                  <p>No saved jobs</p>
-                  <p className="text-sm mt-1">Jobs you save will appear here</p>
+                  ))}
                 </div>
-              ) : (
-                savedJobsList.map(job => (
-                  <JobCard
-                    key={job.id}
-                    job={job}
-                    isSaved={true}
-                    hasApplied={appliedJobIds.includes(job.id)}
-                    onView={(j) => { setSelectedJob(j); setDetailOpen(true); }}
-                    onSave={(id) => {
-                      if (user) {
-                        saveMutation.mutate({ 
-                          jobId: id, 
-                          designerId: user.id, 
-                          isSaved: true 
-                        });
-                      }
-                    }}
-                    onApply={(j) => { setSelectedJob(j); setApplyOpen(true); }}
-                  />
-                ))
               )}
             </div>
           </TabsContent>

@@ -82,6 +82,7 @@ import Notifications from "./pages/Notifications";
 import FoundingDesignersProgram from "./pages/FoundingDesignersProgram";
 import NotFound from "./pages/NotFound";
 import DesignerProjectsPage from "./pages/DesignerProjects";
+import BrandedStyleboxes from "./pages/BrandedStyleboxes";
 
 // Admin Pages
 import AdminLogin from "./pages/admin/AdminLogin";
@@ -312,6 +313,11 @@ const App = () => {
                 <Route path="/projects" element={
                   <ProtectedRoute>
                     <DesignerProjectsPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/branded-styleboxes" element={
+                  <ProtectedRoute>
+                    <BrandedStyleboxes />
                   </ProtectedRoute>
                 } />
               </Route>

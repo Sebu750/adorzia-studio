@@ -50,6 +50,7 @@ const mainNavItems = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Walkthroughs", url: "/walkthroughs", icon: BookOpen },
   { title: "Stylebox Library", url: "/styleboxes", icon: Box },
+  { title: "Branded StyleBox", url: "/branded-styleboxes", icon: Box },
   { title: "Portfolio", url: "/portfolio", icon: FolderOpen },
   { title: "Teams", url: "/teams", icon: Users },
   { title: "Job Portal", url: "/jobs", icon: Briefcase },

@@ -25,6 +25,7 @@ import AnimatedHeading from "@/components/public/AnimatedHeading";
 import ParallaxSection from "@/components/public/ParallaxSection";
 import SEOHead from "@/components/public/SEOHead";
 import { SOCIAL_LINKS } from "@/lib/social-links";
+import founderImage from "@/assets/founder.png";
 
 const uniquePoints = [
   {
@@ -52,14 +53,14 @@ const leadership = [
     role: "Founder & CEO",
     bio: "A software engineer by training and a contrarian by instinct. Without a traditional fashion background, he entered the industry to solve what others had normalized-systems that undervalue designers. Drawing from technology and entrepreneurship, he built Adorzia as an alternative to the exposure economy, where structure, ownership, and sustainability replace empty visibility.'",
     avatar: "HM",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
+    image: founderImage,
   },
   {
     name: "M. Osama Khan",
     role: "Strategic Advisor & Friend",
     bio: "M. Osama Khan has been an invaluable friend and supporter throughout Adorzia’s journey.His insights and encouragement helped shape both the vision and the execution of the brand.From early ideas to concrete steps, his guidance has been a constant source of inspiration and support.",
     avatar: "AR",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&q=80",
+    image: founderImage,
   },
 ];
 

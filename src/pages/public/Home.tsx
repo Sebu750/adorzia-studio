@@ -29,6 +29,12 @@ import MarqueeText from "@/components/public/MarqueeText";
 import ScrollReveal from "@/components/public/ScrollReveal";
 import SEOHead from "@/components/public/SEOHead";
 import { designerImages, productImages } from "@/lib/images";
+import hero1 from "@/assets/hero1.png";
+import hero2 from "@/assets/hero2.png";
+import hero3 from "@/assets/hero3.png";
+import yusra1 from "@/assets/Yusra_1.jpeg";
+import yusra2 from "@/assets/Yusra_2.jpeg";
+import yusra3 from "@/assets/Yusra_3.jpeg";
 
 const howItWorks = [
   { 
@@ -77,9 +83,9 @@ const whyPakistan = [
 ];
 
 const marketplaceProducts = [
-  { id: 1, title: "Karachi Street Hoodie", price: "PKR 4,500", image: productImages.streetwearHoodie },
-  { id: 2, title: "Heritage Kurta Set", price: "PKR 8,900", image: productImages.heritageKurta },
-  { id: 3, title: "Urban Joggers", price: "PKR 3,200", image: productImages.urbanJoggers },
+  { id: 1, title: "Karachi Street Hoodie", price: "PKR 4,500", image: yusra1 },
+  { id: 2, title: "Heritage Kurta Set", price: "PKR 8,900", image: yusra2 },
+  { id: 3, title: "Urban Joggers", price: "PKR 3,200", image: yusra3 },
 ];
 
 const testimonials = [

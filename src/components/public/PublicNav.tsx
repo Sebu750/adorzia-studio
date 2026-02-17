@@ -31,7 +31,6 @@ const primaryNavItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "StyleBoxes", href: "/styleboxes-info", icon: Box },
-  { label: "Shop", href: "/shop", icon: Store },
   { label: "Blog", href: "/blog" },
   { label: "Pricing", href: "/pricing", icon: DollarSign },
 ];

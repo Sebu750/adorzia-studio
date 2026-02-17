@@ -4,27 +4,30 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import AnimatedCounter from './AnimatedCounter';
+import hero1 from '@/assets/hero1.png';
+import hero2 from '@/assets/hero2.png';
+import hero3 from '@/assets/hero3.png';
 
 const heroSlides = [
   {
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&q=80',
+    image: hero1,
     title: 'Design Your Future',
     subtitle: 'Join Pakistan\'s premier fashion design platform',
   },
   {
-    image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1920&q=80',
+    image: hero2,
     title: 'Create & Earn',
     subtitle: 'Turn your designs into marketplace-ready products',
   },
   {
-    image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=1920&q=80',
+    image: hero3,
     title: 'Learn & Grow',
     subtitle: 'Master skills through guided StyleBox challenges',
   },
 ];
 
 const stats = [
-  { value: 2500, suffix: '+', label: 'Designers' },
+  { value: 200, suffix: '+', label: 'Designers' },
   { value: 150, suffix: '+', label: 'StyleBoxes' },
   { value: 50, prefix: '$', suffix: 'K+', label: 'Paid to Creators' },
 ];
@@ -108,7 +111,7 @@ const HeroSection = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
               </span>
-              Foundation Ranks Open — Limited Spots
+              Foundation Ranks Open - Limited Spots
             </span>
           </motion.div>
 
@@ -162,12 +165,17 @@ const HeroSection = () => {
             </Button>
 
             <Button
+              asChild
               variant="outline"
               size="lg"
               className="group border-foreground/20 hover:bg-foreground/5 px-8 py-6 text-lg"
             >
-              <Play className="w-5 h-5 mr-2 transition-transform group-hover:scale-110" />
-              Watch Demo
+              <Link to="/shop">
+                <span className="relative z-10 flex items-center gap-2">
+                  Explore Marketplace
+                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
             </Button>
           </motion.div>
 

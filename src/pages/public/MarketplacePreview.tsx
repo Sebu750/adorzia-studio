@@ -182,10 +182,10 @@ export default function MarketplacePreview() {
   return (
     <PublicLayout>
       <SEOHead
-        title="Fashion Marketplace | Shop Designer Made in Pakistan"
-        description="Discover unique fashion pieces from emerging Pakistani designers. Every purchase supports independent creators and sustainable fashion."
-        url="https://studio.adorzia.com/marketplace-preview"
-        keywords="fashion marketplace, designer clothing, pakistan fashion, independent designers, sustainable fashion"
+        title="Fashion Marketplace Preview | Shop Designer Collections Pakistan"
+        description="Browse exclusive fashion collections from Pakistani designers. Made-to-order fashion, jewelry, and textile designs. Support emerging talent and sustainable fashion."
+        url="https://www.adorzia.com/marketplace-preview"
+        keywords="Fashion marketplace Pakistan, Designer collections, Made-to-order fashion, Pakistani designer shop, Buy fashion designs, Sustainable fashion Pakistan"
       />
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
         <div

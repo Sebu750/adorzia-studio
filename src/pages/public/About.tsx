@@ -151,10 +151,10 @@ export default function About() {
   return (
     <PublicLayout>
       <SEOHead
-        title="About Adorzia | Fashion Design Platform from Pakistan"
-        description="Learn about Adorzia's mission to reinvent fashion creation. Meet our team and discover how we're building the world's first end-to-end fashion ecosystem."
-        url="https://studio.adorzia.com/about"
-        keywords="adorzia about, fashion platform, pakistan fashion tech, design ecosystem, fashion startup"
+        title="About Adorzia | Transforming Pakistani Fashion Ecosystem"
+        description="Adorzia is revolutionizing the Pakistani fashion industry. We connect fashion design students, emerging designers, and brands through a unified digital platform. Building the world's first end-to-end fashion ecosystem."
+        url="https://www.adorzia.com/about"
+        keywords="About Adorzia, Pakistani fashion ecosystem, Fashion technology Pakistan, Fashion industry transformation, Fashion platform Pakistan, Fashion startup Lahore"
       />
       {/* Hero */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">

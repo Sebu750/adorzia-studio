@@ -89,10 +89,10 @@ export default function StyleBoxesInfo() {
   return (
     <PublicLayout>
       <SEOHead 
-        title="StyleBoxes - Learn Fashion Design | Adorzia"
-        description="Hands-on design challenges that build real industry skills. Every completed StyleBox becomes a portfolio asset and potential marketplace product."
-        url="https://studio.adorzia.com/styleboxes-info"
-        keywords="fashion design challenges, learn fashion design, design portfolio, stylebox, gamified learning"
+        title="Digital Tech Packs & Fashion Portfolio Builder | Adorzia StyleBoxes"
+        description="How to build a professional fashion portfolio in Pakistan. Create production-ready digital tech packs. Collaborative design platform for fashion students in Lahore and Karachi."
+        url="https://www.adorzia.com/styleboxes-info"
+        keywords="Digital Tech Pack Pakistan, Fashion Portfolio Builder, Production-ready tech packs, Collaborative design platform Pakistan, Fashion design templates, Learn fashion design Pakistan"
       />
       {/* Hero with gradient background */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">

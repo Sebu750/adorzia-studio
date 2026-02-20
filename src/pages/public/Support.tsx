@@ -63,10 +63,10 @@ export default function Support() {
   return (
     <PublicLayout>
       <SEOHead 
-        title="Help & Support | Adorzia"
-        description="Get answers to FAQs about StyleBoxes, IP ownership, profit sharing, teaming, and more. Contact our support team for personalized assistance."
-        url="https://studio.adorzia.com/support"
-        keywords="adorzia support, fashion design help, FAQs, contact support, designer help"
+        title="Support & Help Center | Adorzia Pakistan"
+        description="Get help with Adorzia platform. FAQs, tutorials, and customer support for fashion designers in Pakistan. Questions about StyleBoxes, IP ownership, profit sharing, and more."
+        url="https://www.adorzia.com/support"
+        keywords="Adorzia support, Help center, Fashion platform help, Customer support Pakistan, Designer assistance, FAQs Pakistan"
       />
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />

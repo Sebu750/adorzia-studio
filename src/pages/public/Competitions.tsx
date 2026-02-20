@@ -97,10 +97,10 @@ export default function Competitions() {
   return (
     <PublicLayout>
       <SEOHead 
-        title="Design Competitions | Adorzia Styleathon"
-        description="Compete in real-time fashion design challenges. Win prizes, build your reputation, and get discovered. Join live challenges and upcoming events."
-        url="https://studio.adorzia.com/competitions"
-        keywords="design competition, fashion challenge, styleathon, design contest, win prizes"
+        title="Fashion Design Competitions 2026 | Adorzia Pakistan"
+        description="Fashion design competitions for students in Lahore and Karachi. Win prizes, build your portfolio, and get noticed by top Pakistani fashion brands. PIFD vs STEP design challenges."
+        url="https://www.adorzia.com/competitions"
+        keywords="Fashion Competitions 2026, PIFD vs STEP competitions, Inter-university fashion design competitions, Fashion design contests Pakistan, Design challenges Lahore Karachi, Styleathon Pakistan"
       />
       {/* Hero with animated background */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-foreground text-background overflow-hidden">

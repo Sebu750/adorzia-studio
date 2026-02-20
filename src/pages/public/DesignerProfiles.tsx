@@ -88,10 +88,10 @@ export default function DesignerProfiles() {
   return (
     <PublicLayout>
       <SEOHead 
-        title="Designer Community | Adorzia"
-        description="Meet Pakistan's top emerging fashion designers. Discover their work, specialties, and creative journeys on Adorzia's designer platform."
-        url="https://studio.adorzia.com/designers"
-        keywords="fashion designers, pakistan designers, emerging talent, designer community, creative professionals"
+        title="Pakistani Fashion Designers | Textile & Jewelry Design Portfolio"
+        description="Best fashion designers in Karachi. Textile design talent Faisalabad. Jewelry design portfolios. Get hired by top fashion brands in Pakistan as a fresher."
+        url="https://www.adorzia.com/designer-profiles"
+        keywords="Pakistani Fashion Designers, Best fashion designers Karachi, Textile design talent Faisalabad, Jewelry design portfolio, Fashion design fresher jobs Pakistan"
       />
       {/* Hero Section */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">

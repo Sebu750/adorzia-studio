@@ -90,10 +90,10 @@ export default function Pricing() {
   return (
     <PublicLayout>
       <SEOHead 
-        title="Pricing & Founder Access | Adorzia Studio"
-        description="Access professional design tools with monthly subscriptions. Secure lifetime profit boosts with limited Founder Titles. Up to 50% revenue share."
-        url="https://studio.adorzia.com/pricing"
-        keywords="adorzia pricing, fashion design subscription, founder access, revenue share, designer earnings"
+        title="Pricing & Subscription Plans | Adorzia Fashion Platform"
+        description="Affordable pricing for fashion designers in Pakistan. Choose from free, pro, and enterprise plans. Secure lifetime profit boosts with limited Founder Titles. Up to 50% revenue share."
+        url="https://www.adorzia.com/pricing"
+        keywords="Fashion platform pricing, Designer subscription Pakistan, Fashion portfolio pricing, Adorzia plans, Fashion design tools pricing, Founder access Pakistan"
       />
       {/* Hero Section with Parallax */}
       <motion.section 

@@ -114,11 +114,11 @@ export default function Blog() {
   return (
     <PublicLayout>
       <SEOHead
-        title="Fashion Blog | Designer Stories, Trends & Style Guides | Adorzia"
-        description="Explore the world of Pakistani fashion design. Read designer spotlights, sustainability insights, bridal trends, streetwear evolution, and expert style guides from Adorzia's creative community."
-        keywords="pakistani fashion blog, designer interviews, fashion trends 2024, sustainable fashion pakistan, bridal fashion trends, streetwear pakistan, designer spotlight, fashion industry insights, style guides, luxury fashion blog"
-        url="https://studio.adorzia.com/blog"
-        image={featuredPost?.hero_image || "https://studio.adorzia.com/og-blog.jpg"}
+        title="Fashion Design Blog | Trends & Tips for Pakistani Designers"
+        description="Latest fashion design trends, tutorials, and industry insights for Pakistani designers. Learn how to build a successful fashion career. Designer spotlights, sustainability insights, bridal trends."
+        keywords="Fashion design blog Pakistan, Fashion trends 2026, Fashion design tips, Pakistani fashion industry, Designer career advice, Sustainable fashion Pakistan, Bridal fashion trends"
+        url="https://www.adorzia.com/blog"
+        image={featuredPost?.hero_image || "https://www.adorzia.com/og-blog.jpg"}
         type="website"
       />
 

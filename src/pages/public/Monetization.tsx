@@ -61,10 +61,10 @@ export default function Monetization() {
   return (
     <PublicLayout>
       <SEOHead 
-        title="Monetize Your Designs | Adorzia Marketplace"
-        description="Turn your creativity into income. From design to doorstep, we handle production and fulfillment. Keep up to 40% revenue share on every sale."
-        url="https://studio.adorzia.com/monetization"
-        keywords="designer earnings, fashion monetization, revenue share, design income, sell designs online"
+        title="Sell Fashion Designs Online Pakistan | Made-to-Order Marketplace"
+        description="How to start a fashion brand with zero inventory in Pakistan. Sell your jewelry designs on a made-to-order marketplace. Peer-to-peer fashion design networking. Up to 40% revenue share."
+        url="https://www.adorzia.com/monetization"
+        keywords="Sell fashion designs Pakistan, Made-to-order marketplace, Fashion brand zero inventory, Freelance Fashion Design Pakistan, Fashion monetization, Designer earnings Pakistan"
       />
       {/* Hero with animated gradient */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">

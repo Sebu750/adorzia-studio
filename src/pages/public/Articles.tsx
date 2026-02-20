@@ -29,10 +29,10 @@ export default function Articles() {
   return (
     <PublicLayout>
       <SEOHead 
-        title="Articles | Adorzia - Fashion Design Insights & Trends"
-        description="Explore trend reports, designer spotlights, style guides, and industry news from the world of emerging fashion design."
-        url="https://adorzia.com/articles"
-        keywords="fashion articles, design trends, style guides, designer spotlights, fashion industry news"
+        title="Fashion Industry Articles | Insights for Pakistani Designers"
+        description="In-depth articles on fashion design, sustainable fashion, and industry trends in Pakistan. Expert insights for students and professionals. Trend reports and style guides."
+        url="https://www.adorzia.com/articles"
+        keywords="Fashion articles Pakistan, Fashion industry insights, Sustainable fashion Pakistan, Fashion design education, Industry trends 2026, Designer spotlights"
       />
 
       <div className="min-h-screen bg-background">

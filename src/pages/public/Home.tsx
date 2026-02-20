@@ -113,9 +113,10 @@ export default function Home() {
   return (
     <PublicLayout showPreloader={false}>
       <SEOHead 
-        title="Adorzia Studio - Design, Create, Collaborate"
-        description="The central platform for fashion, textile, and jewelry designers. Create with Styleboxes, build your portfolio, collaborate with teams, and publish to the marketplace."
-        url="https://studio.adorzia.com"
+        title="Adorzia | Pakistan's Fashion Marketplace for Designers & Brands"
+        description="Where visionaries rise. Join Pakistan's first fashion marketplace where students build portfolios, designers launch startups, and brands host competitions. From Stylebox tech packs to made-to-order collections."
+        keywords="Fashion Marketplace Pakistan, Adorzia Fashion, Pakistani Fashion Designers, Fashion Portfolio Builder, Fashion Startups Pakistan, Digital Tech Pack Pakistan, Fashion Competitions 2026"
+        url="https://www.adorzia.com"
       />
       
       {/* Hero Section */}

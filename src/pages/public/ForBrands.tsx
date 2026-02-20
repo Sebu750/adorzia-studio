@@ -77,10 +77,10 @@ export default function ForBrands() {
   return (
     <PublicLayout>
       <SEOHead 
-        title="Brand Partnerships | Adorzia"
-        description="Partner with Adorzia to access Pakistan's top emerging design talent and manufacturing infrastructure. Host challenges, collaborate, and scale production."
-        url="https://studio.adorzia.com/brands"
-        keywords="brand partnerships, fashion collaboration, white label production, design challenges, pakistan manufacturing"
+        title="Hire Freelance Fashion Designers Pakistan | Adorzia for Brands"
+        description="Host a fashion design contest for your next collection. Source production-ready tech packs from vetted Pakistani designers. Custom fashion collection design services for startups."
+        url="https://www.adorzia.com/for-brands"
+        keywords="Vetted fashion designer marketplace Pakistan, Hire freelance textile designers, Custom fashion collection design, Fashion design services startups, White-label fashion production Pakistan"
       />
       {/* Hero with parallax background */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">

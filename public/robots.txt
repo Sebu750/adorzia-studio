@@ -1,5 +1,5 @@
 # Adorzia Studio Robots.txt
-# https://studio.adorzia.com
+# https://www.adorzia.com
 
 User-agent: Googlebot
 Allow: /
@@ -40,6 +40,10 @@ Allow: /designer-profiles
 Allow: /monetization
 Allow: /for-brands
 Allow: /support
+Allow: /blog
+Allow: /blog/*
+Allow: /articles
+Allow: /articles/*
 
 # Sitemap
 Sitemap: https://studio.adorzia.com/sitemap.xml

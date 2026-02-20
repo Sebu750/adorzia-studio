@@ -65,10 +65,10 @@ export default function StudioInfo() {
   return (
     <PublicLayout>
       <SEOHead 
-        title="Designer Studio Tools | Adorzia"
-        description="Professional design tools for every creator. Pattern tools, moodboard builders, mockup generators, and automated tech packs—all in one workspace."
-        url="https://studio.adorzia.com/studio-info"
-        keywords="fashion design tools, pattern design, moodboard builder, tech pack generator, design studio"
+        title="Adorzia Studio | Fashion Design Tools & Workspace Pakistan"
+        description="Professional fashion design studio tools. Create tech packs, manage collections, collaborate with teams. Everything you need to build your fashion brand in Pakistan."
+        url="https://www.adorzia.com/studio-info"
+        keywords="Fashion design studio, Design workspace Pakistan, Fashion tools, Tech pack creator, Collection management, Fashion collaboration tools"
       />
       {/* Hero with floating elements */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">

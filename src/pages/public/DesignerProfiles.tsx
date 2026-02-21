@@ -8,6 +8,7 @@ import TiltCard from "@/components/public/TiltCard";
 import StatsSection from "@/components/public/StatsSection";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import SEOHead from "@/components/public/SEOHead";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import { designerImages } from "@/lib/images";
 import { Link } from "react-router-dom";
 
@@ -93,6 +94,10 @@ export default function DesignerProfiles() {
         url="https://www.adorzia.com/designer-profiles"
         keywords="Pakistani Fashion Designers, Best fashion designers Karachi, Textile design talent Faisalabad, Jewelry design portfolio, Fashion design fresher jobs Pakistan"
       />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://www.adorzia.com" },
+        { name: "Designers", url: "https://www.adorzia.com/designers" }
+      ]} />
       {/* Hero Section */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/10" />

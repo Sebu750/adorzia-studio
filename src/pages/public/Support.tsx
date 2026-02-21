@@ -14,6 +14,8 @@ import PublicLayout from "@/components/public/PublicLayout";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import SEOHead from "@/components/public/SEOHead";
+import { FAQSchema, COMMON_FAQS } from "@/components/seo/FAQSchema";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import { DESIGNER_FAQS, FAQ_CATEGORIES, FAQCategory } from "@/lib/founder-tiers";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { supabase } from "@/integrations/supabase/client";
@@ -68,6 +70,11 @@ export default function Support() {
         url="https://www.adorzia.com/support"
         keywords="Adorzia support, Help center, Fashion platform help, Customer support Pakistan, Designer assistance, FAQs Pakistan"
       />
+      <FAQSchema items={[...COMMON_FAQS.portfolio, ...COMMON_FAQS.brands, ...COMMON_FAQS.marketplace]} mainEntityName="Adorzia Support" />
+            <BreadcrumbSchema items={[
+              { name: "Home", url: "https://www.adorzia.com" },
+              { name: "Support", url: "https://www.adorzia.com/support" }
+            ]} />
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />
         <motion.div className="absolute top-20 right-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 8, repeat: Infinity }} />

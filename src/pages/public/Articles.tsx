@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { format } from "date-fns";
 import PublicLayout from "@/components/public/PublicLayout";
 import SEOHead from "@/components/public/SEOHead";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,10 @@ export default function Articles() {
         url="https://www.adorzia.com/articles"
         keywords="Fashion articles Pakistan, Fashion industry insights, Sustainable fashion Pakistan, Fashion design education, Industry trends 2026, Designer spotlights"
       />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://www.adorzia.com" },
+        { name: "Articles", url: "https://www.adorzia.com/articles" }
+      ]} />
 
       <div className="min-h-screen bg-background">
         {/* Hero Section */}

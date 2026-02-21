@@ -19,6 +19,8 @@ import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import ParallaxSection from "@/components/public/ParallaxSection";
 import SEOHead from "@/components/public/SEOHead";
+import { FAQSchema, COMMON_FAQS } from "@/components/seo/FAQSchema";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import { monetizationImages, backgroundImages } from "@/lib/images";
 
 const publishingSteps = [
@@ -66,6 +68,11 @@ export default function Monetization() {
         url="https://www.adorzia.com/monetization"
         keywords="Sell fashion designs Pakistan, Made-to-order marketplace, Fashion brand zero inventory, Freelance Fashion Design Pakistan, Fashion monetization, Designer earnings Pakistan"
       />
+      <FAQSchema items={COMMON_FAQS.marketplace} mainEntityName="Adorzia Marketplace" />
+            <BreadcrumbSchema items={[
+              { name: "Home", url: "https://www.adorzia.com" },
+              { name: "Monetization", url: "https://www.adorzia.com/monetization" }
+            ]} />
       {/* Hero with animated gradient */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10" />

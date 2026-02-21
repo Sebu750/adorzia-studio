@@ -20,6 +20,8 @@ import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import ParallaxSection from "@/components/public/ParallaxSection";
 import SEOHead from "@/components/public/SEOHead";
+import { FAQSchema, COMMON_FAQS } from "@/components/seo/FAQSchema";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import { styleboxImages, backgroundImages } from "@/lib/images";
 import { SUBSCRIPTION_TIERS, type SubscriptionTier } from "@/lib/subscription";
 
@@ -94,6 +96,11 @@ export default function StyleBoxesInfo() {
         url="https://www.adorzia.com/styleboxes-info"
         keywords="Digital Tech Pack Pakistan, Fashion Portfolio Builder, Production-ready tech packs, Collaborative design platform Pakistan, Fashion design templates, Learn fashion design Pakistan"
       />
+      <FAQSchema items={COMMON_FAQS.portfolio} mainEntityName="Adorzia StyleBoxes" />
+            <BreadcrumbSchema items={[
+              { name: "Home", url: "https://www.adorzia.com" },
+              { name: "StyleBoxes", url: "https://www.adorzia.com/styleboxes-info" }
+            ]} />
       {/* Hero with gradient background */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />

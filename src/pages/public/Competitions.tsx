@@ -19,6 +19,9 @@ import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import ParallaxSection from "@/components/public/ParallaxSection";
 import SEOHead from "@/components/public/SEOHead";
+import { FAQSchema, COMMON_FAQS } from "@/components/seo/FAQSchema";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
+import { CompetitionSchema } from "@/components/seo/EventSchema";
 import { eventBanners, competitionImages, designerImages } from "@/lib/images";
 
 const liveChallenges = [
@@ -101,6 +104,20 @@ export default function Competitions() {
         description="Fashion design competitions for students in Lahore and Karachi. Win prizes, build your portfolio, and get noticed by top Pakistani fashion brands. PIFD vs STEP design challenges."
         url="https://www.adorzia.com/competitions"
         keywords="Fashion Competitions 2026, PIFD vs STEP competitions, Inter-university fashion design competitions, Fashion design contests Pakistan, Design challenges Lahore Karachi, Styleathon Pakistan"
+      />
+      <FAQSchema items={COMMON_FAQS.competitions} mainEntityName="Adorzia Fashion Competitions" />
+            <BreadcrumbSchema items={[
+              { name: "Home", url: "https://www.adorzia.com" },
+              { name: "Competitions", url: "https://www.adorzia.com/competitions" }
+            ]} />
+      <CompetitionSchema
+        name="Adorzia Design Competitions 2026"
+        description="Join Pakistan's premier fashion design competitions. Compete in StyleBox challenges, Styleathons, and brand-sponsored events. Win prizes up to PKR 100,000 and get featured by top Pakistani fashion brands."
+        startDate="2026-01-01"
+        endDate="2026-12-31"
+        prize="PKR 100,000"
+        url="https://www.adorzia.com/competitions"
+        category="Fashion Design Competition Pakistan"
       />
       {/* Hero with animated background */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 bg-foreground text-background overflow-hidden">

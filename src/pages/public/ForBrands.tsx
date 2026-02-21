@@ -21,6 +21,8 @@ import TiltCard from "@/components/public/TiltCard";
 import ParallaxSection from "@/components/public/ParallaxSection";
 import StatsSection from "@/components/public/StatsSection";
 import SEOHead from "@/components/public/SEOHead";
+import { FAQSchema, COMMON_FAQS } from "@/components/seo/FAQSchema";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import { brandPartnershipImages, backgroundImages } from "@/lib/images";
 
 const offerings = [
@@ -82,6 +84,11 @@ export default function ForBrands() {
         url="https://www.adorzia.com/for-brands"
         keywords="Vetted fashion designer marketplace Pakistan, Hire freelance textile designers, Custom fashion collection design, Fashion design services startups, White-label fashion production Pakistan"
       />
+      <FAQSchema items={COMMON_FAQS.brands} mainEntityName="Adorzia for Brands" />
+            <BreadcrumbSchema items={[
+              { name: "Home", url: "https://www.adorzia.com" },
+              { name: "For Brands", url: "https://www.adorzia.com/brands" }
+            ]} />
       {/* Hero with parallax background */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
         <motion.div 

@@ -19,6 +19,7 @@ import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import ParallaxSection from "@/components/public/ParallaxSection";
 import SEOHead from "@/components/public/SEOHead";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import { studioToolImages, backgroundImages } from "@/lib/images";
 
 const tools = [
@@ -70,6 +71,10 @@ export default function StudioInfo() {
         url="https://www.adorzia.com/studio-info"
         keywords="Fashion design studio, Design workspace Pakistan, Fashion tools, Tech pack creator, Collection management, Fashion collaboration tools"
       />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://www.adorzia.com" },
+        { name: "Studio", url: "https://www.adorzia.com/studio-info" }
+      ]} />
       {/* Hero with floating elements */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-secondary/10" />

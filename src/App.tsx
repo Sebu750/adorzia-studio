@@ -38,6 +38,9 @@ import Support from "./pages/public/Support";
 import Studios from "./pages/Studios";
 import DesignerProfiles from "./pages/public/DesignerProfiles";
 import Blog from "./pages/public/Blog";
+import ForStudents from "./pages/public/ForStudents";
+import ForStartups from "./pages/public/ForStartups";
+import InstituteBattles from "./pages/public/InstituteBattles";
 
 // Marketplace Pages
 import ShopHome from "./pages/shop/ShopHome";
@@ -198,6 +201,9 @@ const App = () => {
               <Route path="studios" element={<Studios />} />
               <Route path="articles" element={<Articles />} />
               <Route path="articles/:slug" element={<ArticleDetail />} />
+                            <Route path="students" element={<ForStudents />} />
+                            <Route path="startups" element={<ForStartups />} />
+                            <Route path="institute-battles" element={<InstituteBattles />} />
               
               {/* Marketplace Routes - Public Shopping */}
               <Route path="shop" element={<CartProvider><WishlistProvider><ShopHome /></WishlistProvider></CartProvider>} />

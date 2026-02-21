@@ -24,6 +24,7 @@ import StatsSection from "@/components/public/StatsSection";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import ParallaxSection from "@/components/public/ParallaxSection";
 import SEOHead from "@/components/public/SEOHead";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import { SOCIAL_LINKS } from "@/lib/social-links";
 import founderImage from "@/assets/founder.png";
 
@@ -156,6 +157,10 @@ export default function About() {
         url="https://www.adorzia.com/about"
         keywords="About Adorzia, Pakistani fashion ecosystem, Fashion technology Pakistan, Fashion industry transformation, Fashion platform Pakistan, Fashion startup Lahore"
       />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://www.adorzia.com" },
+        { name: "About", url: "https://www.adorzia.com/about" }
+      ]} />
       {/* Hero */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/10" />

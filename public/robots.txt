@@ -44,6 +44,9 @@ Allow: /blog
 Allow: /blog/*
 Allow: /articles
 Allow: /articles/*
+Allow: /students
+Allow: /startups
+Allow: /institute-battles
 
 # Sitemap
 Sitemap: https://studio.adorzia.com/sitemap.xml

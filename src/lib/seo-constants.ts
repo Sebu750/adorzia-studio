@@ -162,6 +162,24 @@ export const PAGE_SEO = {
     keywords: 'Adorzia support, Help center, Fashion platform help, Customer support Pakistan, Designer assistance',
     url: 'https://www.adorzia.com/support',
   },
+  forStudents: {
+    title: 'Fashion Design Students Pakistan | Build Your Portfolio | Adorzia',
+    description: 'How to build a professional fashion portfolio in Pakistan. Join design competitions from PIFD, STEP, IVSAA. Get hired by top fashion brands as a fresher.',
+    keywords: 'Fashion Design Students, Fashion Competitions 2026, Fashion Portfolio Builder, PIFD vs STEP competitions, Fashion Internships Pakistan, Fashion design fresher jobs',
+    url: 'https://www.adorzia.com/students',
+  },
+  forStartups: {
+    title: 'Start a Fashion Brand in Pakistan | Zero Inventory | Adorzia',
+    description: 'How to start a fashion brand with zero inventory in Pakistan. Find co-founders, collaborate with designers for capsule collections. Peer-to-peer fashion networking.',
+    keywords: 'Start fashion brand Pakistan, Zero inventory fashion, Fashion startup Pakistan, Find fashion co-founder, Capsule collection collaboration, Made-to-order fashion business',
+    url: 'https://www.adorzia.com/startups',
+  },
+  instituteBattles: {
+    title: 'PIFD vs STEP Design Competitions 2026 | Inter-University Fashion | Adorzia',
+    description: 'Top fashion student designs from PIFD vs STEP. Inter-university fashion design competitions 2026. Compare portfolios from Pakistan top fashion institutes.',
+    keywords: 'PIFD vs STEP, PIFD vs IVSAA design competitions, Inter-university fashion design competitions 2026, Top fashion institutes Pakistan, Fashion student designs, NCA fashion design',
+    url: 'https://www.adorzia.com/institute-battles',
+  },
 };
 
 // Utility function to generate keywords string from arrays

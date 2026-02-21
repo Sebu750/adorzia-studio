@@ -30,6 +30,7 @@ import PublicLayout from "@/components/public/PublicLayout";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import SEOHead from "@/components/public/SEOHead";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import { FOUNDER_TIERS, EARNING_LADDER, DESIGNER_FAQS, FAQ_CATEGORIES, FAQCategory } from "@/lib/founder-tiers";
 import { SUBSCRIPTION_TIERS, SubscriptionTier } from "@/lib/subscription";
 import { useFounderSlots } from "@/hooks/useFounderSlots";
@@ -95,6 +96,10 @@ export default function Pricing() {
         url="https://www.adorzia.com/pricing"
         keywords="Fashion platform pricing, Designer subscription Pakistan, Fashion portfolio pricing, Adorzia plans, Fashion design tools pricing, Founder access Pakistan"
       />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://www.adorzia.com" },
+        { name: "Pricing", url: "https://www.adorzia.com/pricing" }
+      ]} />
       {/* Hero Section with Parallax */}
       <motion.section 
         ref={heroRef}

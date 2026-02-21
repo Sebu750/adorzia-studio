@@ -10,6 +10,7 @@ import PublicLayout from "@/components/public/PublicLayout";
 import AnimatedHeading from "@/components/public/AnimatedHeading";
 import TiltCard from "@/components/public/TiltCard";
 import SEOHead from "@/components/public/SEOHead";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 
 // TODO: REMOVE MOCK DATA - Replace with real database queries
 const MOCK_BLOG_POSTS = [
@@ -121,6 +122,10 @@ export default function Blog() {
         image={featuredPost?.hero_image || "https://www.adorzia.com/og-blog.jpg"}
         type="website"
       />
+      <BreadcrumbSchema items={[
+        { name: "Home", url: "https://www.adorzia.com" },
+        { name: "Blog", url: "https://www.adorzia.com/blog" }
+      ]} />
 
       {/* Hero Section */}
       <section className="pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">

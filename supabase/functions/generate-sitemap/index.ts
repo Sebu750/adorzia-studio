@@ -55,6 +55,10 @@ Deno.serve(async (req) => {
       { url: "/brands", priority: "0.7", changefreq: "monthly" },
       { url: "/support", priority: "0.5", changefreq: "monthly" },
       { url: "/articles", priority: "0.8", changefreq: "daily" },
+      { url: "/students", priority: "0.8", changefreq: "weekly" },
+      { url: "/startups", priority: "0.8", changefreq: "weekly" },
+      { url: "/institute-battles", priority: "0.7", changefreq: "weekly" },
+      { url: "/blog", priority: "0.7", changefreq: "weekly" },
     ];
 
     let sitemap = `<?xml version="1.0" encoding="UTF-8"?>

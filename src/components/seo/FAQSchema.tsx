@@ -73,4 +73,36 @@ export const COMMON_FAQS = {
       answer: "Yes! Adorzia supports fashion, textile, and jewelry designers. List your designs on the marketplace, set your prices, and earn from each sale with our transparent commission structure."
     },
   ],
+  startups: [
+    {
+      question: "How to start a fashion brand with zero inventory in Pakistan?",
+      answer: "Adorzia's made-to-order model lets you launch a fashion brand without holding any inventory. You design or curate products, list them on the marketplace, and we handle production only when orders come in. This eliminates upfront costs and inventory risk."
+    },
+    {
+      question: "How to find a co-founder for a fashion startup in Pakistan?",
+      answer: "Use Adorzia's designer network to find potential co-founders. Browse designer profiles, review portfolios, and reach out for collaboration. Many successful fashion startups on our platform started as designer-entrepreneur partnerships."
+    },
+    {
+      question: "What is the revenue share for fashion startups on Adorzia?",
+      answer: "Startups earn up to 40% revenue share depending on their rank and founder status. Early founders (F1/F2) receive permanent bonus percentages. Production costs, shipping, and platform fees are deducted from the remaining share."
+    },
+    {
+      question: "Can I collaborate with designers for a capsule collection?",
+      answer: "Yes! Adorzia's peer-to-peer networking connects you with designers across Pakistan. You can collaborate on capsule collections, limited editions, or ongoing partnerships with transparent revenue sharing."
+    },
+  ],
+  institutes: [
+    {
+      question: "What are the best fashion design institutes in Pakistan?",
+      answer: "Top fashion design institutes in Pakistan include PIFD (Pakistan Institute of Fashion & Design) in Lahore, STEP Institute in Karachi, National College of Arts (NCA), IVSAA (Indus Valley School), Beaconhouse National University, and SZABIST. Each has unique strengths in different fashion categories."
+    },
+    {
+      question: "How do PIFD vs STEP design competitions work on Adorzia?",
+      answer: "Inter-university competitions on Adorzia pit students from different institutes against each other in themed design challenges. Students submit StyleBox entries, which are judged on creativity, execution, and market readiness. Winners receive cash prizes, brand exposure, and portfolio features."
+    },
+    {
+      question: "Can fashion students from any institute join Adorzia?",
+      answer: "Yes! Adorzia welcomes fashion design students from all institutes across Pakistan. Whether you're from PIFD, STEP, NCA, IVSAA, or any other fashion school, you can create a free account, build your portfolio, and participate in competitions."
+    },
+  ],
 };

@@ -42,7 +42,7 @@ export interface FilterState {
 interface AdvancedFiltersProps {
   filters: FilterState;
   onFilterChange: (filters: FilterState) => void;
-  categories?: Array<{ id: string; name: string }>;
+  categories?: Array<{ id: string; name: string; category?: string; slug: string }>;
   designers?: Array<{ id: string; name: string; brand_name?: string }>;
 }
 
@@ -265,7 +265,7 @@ export function AdvancedFilters({ filters, onFilterChange, categories = [], desi
                   </AccordionContent>
                 </AccordionItem>
 
-                {/* Categories */}
+                {/* Categories - Grouped by Main Categories */}
                 {categories.length > 0 && (
                   <AccordionItem value="category" className="border-b px-6">
                     <AccordionTrigger className="py-4 hover:no-underline">
@@ -277,19 +277,32 @@ export function AdvancedFilters({ filters, onFilterChange, categories = [], desi
                       )}
                     </AccordionTrigger>
                     <AccordionContent className="pb-6">
-                      <div className="space-y-3 pt-2">
-                        {categories.map((cat) => (
-                          <div key={cat.id} className="flex items-center space-x-3">
-                            <Checkbox
-                              id={`cat-${cat.id}`}
-                              checked={localFilters.categories?.includes(cat.id)}
-                              onCheckedChange={() => toggleArrayFilter('categories', cat.id)}
-                            />
-                            <Label htmlFor={`cat-${cat.id}`} className="cursor-pointer text-sm">
-                              {cat.name}
-                            </Label>
-                          </div>
-                        ))}
+                      <div className="space-y-6 pt-2">
+                        {/* Group categories by main category */}
+                        {Array.from(new Set(categories.map(cat => cat.category || 'Other'))).map((mainCategory) => {
+                          const subCategories = categories.filter(cat => (cat.category || 'Other') === mainCategory);
+                          return (
+                            <div key={mainCategory}>
+                              <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">
+                                {mainCategory}
+                              </h4>
+                              <div className="space-y-2">
+                                {subCategories.map((cat) => (
+                                  <div key={cat.id} className="flex items-center space-x-3">
+                                    <Checkbox
+                                      id={`cat-${cat.id}`}
+                                      checked={localFilters.categories?.includes(cat.slug || cat.id)}
+                                      onCheckedChange={() => toggleArrayFilter('categories', cat.slug || cat.id)}
+                                    />
+                                    <Label htmlFor={`cat-${cat.id}`} className="cursor-pointer text-sm">
+                                      {cat.name}
+                                    </Label>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </AccordionContent>
                   </AccordionItem>

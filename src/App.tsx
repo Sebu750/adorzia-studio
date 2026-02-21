@@ -41,6 +41,7 @@ import Blog from "./pages/public/Blog";
 import ForStudents from "./pages/public/ForStudents";
 import ForStartups from "./pages/public/ForStartups";
 import InstituteBattles from "./pages/public/InstituteBattles";
+import PublicDesignerPortfolio from "./pages/public/PublicDesignerPortfolio";
 
 // Marketplace Pages
 import ShopHome from "./pages/shop/ShopHome";
@@ -51,6 +52,7 @@ import ShopCheckout from "./pages/shop/ShopCheckout";
 import ShopOrderConfirmation from "./pages/shop/ShopOrderConfirmation";
 import ShopDesigners from "./pages/shop/ShopDesigners";
 import ShopDesignerProfile from "./pages/shop/ShopDesignerProfile";
+import EnhancedShopDesignerProfile from "./pages/shop/EnhancedShopDesignerProfile";
 import ShopCollections from "./pages/shop/ShopCollections";
 import ShopCollectionDetail from "./pages/shop/ShopCollectionDetail";
 import ShopOrderTracking from "./pages/shop/ShopOrderTracking";
@@ -204,12 +206,13 @@ const App = () => {
                             <Route path="students" element={<ForStudents />} />
                             <Route path="startups" element={<ForStartups />} />
                             <Route path="institute-battles" element={<InstituteBattles />} />
+              <Route path="portfolio/:designerId" element={<PublicDesignerPortfolio />} />
               
               {/* Marketplace Routes - Public Shopping */}
               <Route path="shop" element={<CartProvider><WishlistProvider><ShopHome /></WishlistProvider></CartProvider>} />
               <Route path="shop/products" element={<CartProvider><WishlistProvider><ShopProducts /></WishlistProvider></CartProvider>} />
               <Route path="shop/designers" element={<CartProvider><WishlistProvider><ShopDesigners /></WishlistProvider></CartProvider>} />
-              <Route path="shop/designer/:id" element={<CartProvider><WishlistProvider><ShopDesignerProfile /></WishlistProvider></CartProvider>} />
+              <Route path="shop/designer/:id" element={<CartProvider><WishlistProvider><EnhancedShopDesignerProfile /></WishlistProvider></CartProvider>} />
               <Route path="shop/collections" element={<CartProvider><WishlistProvider><ShopCollections /></WishlistProvider></CartProvider>} />
               <Route path="shop/collection/:slug" element={<CartProvider><WishlistProvider><ShopCollectionDetail /></WishlistProvider></CartProvider>} />
               <Route path="shop/product/:id" element={<CartProvider><WishlistProvider><ShopProductDetail /></WishlistProvider></CartProvider>} />

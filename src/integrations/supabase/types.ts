@@ -1480,11 +1480,16 @@ export type Database = {
       portfolio_projects: {
         Row: {
           category: string | null
+          collection_name: string | null
           created_at: string | null
           description: string | null
           display_order: number | null
+          fabric_details: string | null
           id: string
+          inspiration: string | null
           is_featured: boolean | null
+          is_stylebox_certified: boolean | null
+          marketplace_status: string | null
           metadata: Json | null
           portfolio_id: string
           source_id: string | null
@@ -1493,14 +1498,20 @@ export type Database = {
           thumbnail_url: string | null
           title: string
           updated_at: string | null
+          year: number | null
         }
         Insert: {
           category?: string | null
+          collection_name?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
+          fabric_details?: string | null
           id?: string
+          inspiration?: string | null
           is_featured?: boolean | null
+          is_stylebox_certified?: boolean | null
+          marketplace_status?: string | null
           metadata?: Json | null
           portfolio_id: string
           source_id?: string | null
@@ -1509,14 +1520,20 @@ export type Database = {
           thumbnail_url?: string | null
           title: string
           updated_at?: string | null
+          year?: number | null
         }
         Update: {
           category?: string | null
+          collection_name?: string | null
           created_at?: string | null
           description?: string | null
           display_order?: number | null
+          fabric_details?: string | null
           id?: string
+          inspiration?: string | null
           is_featured?: boolean | null
+          is_stylebox_certified?: boolean | null
+          marketplace_status?: string | null
           metadata?: Json | null
           portfolio_id?: string
           source_id?: string | null
@@ -1525,6 +1542,7 @@ export type Database = {
           thumbnail_url?: string | null
           title?: string
           updated_at?: string | null
+          year?: number | null
         }
         Relationships: [
           {
@@ -2024,7 +2042,7 @@ export type Database = {
           bio: string | null
           banner_image: string | null
           brand_name: string | null
-          category: Database["public"]["Enums"]["designer_category"] | null
+          category: string | null
           created_at: string
           education: string[] | null
           email: string | null
@@ -2058,13 +2076,21 @@ export type Database = {
           manufacturing_countries: string[] | null
           sustainability_practices: string[] | null
           artist_statement: string | null
+          role: string | null
+          is_approved: boolean | null
+          is_featured: boolean | null
+          approved_at: string | null
+          approved_by: string | null
+          featured_at: string | null
+          featured_by: string | null
+          last_login_at: string | null
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
           banner_image?: string | null
           brand_name?: string | null
-          category?: Database["public"]["Enums"]["designer_category"] | null
+          category?: string | null
           created_at?: string
           education?: string[] | null
           email?: string | null
@@ -2098,13 +2124,21 @@ export type Database = {
           manufacturing_countries?: string[] | null
           sustainability_practices?: string[] | null
           artist_statement?: string | null
+          role?: string | null
+          is_approved?: boolean | null
+          is_featured?: boolean | null
+          approved_at?: string | null
+          approved_by?: string | null
+          featured_at?: string | null
+          featured_by?: string | null
+          last_login_at?: string | null
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
           banner_image?: string | null
           brand_name?: string | null
-          category?: Database["public"]["Enums"]["designer_category"] | null
+          category?: string | null
           created_at?: string
           education?: string[] | null
           email?: string | null
@@ -2138,6 +2172,14 @@ export type Database = {
           manufacturing_countries?: string[] | null
           sustainability_practices?: string[] | null
           artist_statement?: string | null
+          role?: string | null
+          is_approved?: boolean | null
+          is_featured?: boolean | null
+          approved_at?: string | null
+          approved_by?: string | null
+          featured_at?: string | null
+          featured_by?: string | null
+          last_login_at?: string | null
         }
         Relationships: [
           {

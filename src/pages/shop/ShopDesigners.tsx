@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Search, ArrowUpRight, MapPin } from "lucide-react";
+import { Search, ArrowUpRight, MapPin, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,27 +17,31 @@ interface Designer {
   brand_name?: string | null;
   category: string | null;
   location?: string | null;
+  banner_image?: string | null;
   style_credits: number;
   product_count?: number;
   product_images?: string[];
+  is_featured?: boolean;
 }
 
 export default function ShopDesigners() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Fetch designers with product counts and sample images
+  // Fetch only APPROVED designers with product counts and sample images
   const { data: designers, isLoading } = useQuery({
     queryKey: ['shop-designers'],
     queryFn: async () => {
+      // Fetch ALL designers with product counts and sample images
+      // No approval required - all designers with brand names are visible
       let query = supabase
         .from('profiles')
-        .select('user_id, name, avatar_url, bio, brand_name, category, location, style_credits')
+        .select('user_id, name, avatar_url, bio, brand_name, category, location, xp, is_featured, banner_image')
         .not('name', 'is', null);
 
       const { data: profileData, error } = await query;
       if (error) throw error;
 
-      // Fetch product counts for real designers
+      // Fetch product counts for approved designers
       const designersWithProducts = await Promise.all(
         (profileData || []).map(async (profile) => {
           const { count } = await supabase
@@ -66,14 +70,21 @@ export default function ShopDesigners() {
             brand_name: profile.brand_name,
             category: profile.category,
             location: profile.location,
-            style_credits: profile.style_credits || 0,
+            banner_image: profile.banner_image,
+            style_credits: profile.xp || 0,
             product_count: count || 0,
             product_images: productImages,
+            is_featured: profile.is_featured || false,
           };
         })
       );
 
-      return designersWithProducts;
+      // Sort: featured designers first, then by style credits (xp)
+      return designersWithProducts.sort((a, b) => {
+        if (a.is_featured && !b.is_featured) return -1;
+        if (!a.is_featured && b.is_featured) return 1;
+        return (b.style_credits || 0) - (a.style_credits || 0);
+      });
     },
   });
 
@@ -163,19 +174,50 @@ export default function ShopDesigners() {
                     className="group block"
                   >
                     <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-muted mb-4">
-                      {designer.product_images && designer.product_images.length > 0 ? (
-                        <img
-                          src={designer.product_images[0]}
-                          alt={designer.brand_name || designer.name}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
+                      {/* Background Banner */}
+                      {designer.banner_image ? (
+                        <div className="absolute inset-0">
+                          <img
+                            src={designer.banner_image}
+                            alt={`${designer.brand_name || designer.name} banner`}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-transparent to-transparent"></div>
+                        </div>
                       ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-muted to-muted/50 flex items-center justify-center">
-                          <span className="font-display text-6xl text-muted-foreground/30">
-                            {(designer.brand_name || designer.name)?.charAt(0)}
-                          </span>
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10"></div>
+                      )}
+                      
+                      {/* Profile Picture */}
+                      <div className="absolute top-4 left-4 z-10">
+                        <div className="w-16 h-16 rounded-full border-4 border-background overflow-hidden bg-background shadow-lg">
+                          {designer.avatar_url ? (
+                            <img
+                              src={designer.avatar_url}
+                              alt={designer.name || "Designer"}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-muted">
+                              <span className="font-display text-xl text-muted-foreground">
+                                {(designer.name || "?").charAt(0).toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {/* Featured Badge */}
+                      {designer.is_featured && (
+                        <div className="absolute top-4 right-4 z-10">
+                          <Badge className="bg-yellow-500 hover:bg-yellow-500 text-white border-0">
+                            <Star className="h-3 w-3 mr-1 fill-current" />
+                            Featured
+                          </Badge>
                         </div>
                       )}
+                      
+                      {/* Hover Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                         <span className="text-sm font-medium text-background">
@@ -186,18 +228,23 @@ export default function ShopDesigners() {
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-start justify-between">
-                        <div>
+                        <div className="flex-1">
                           <h3 className="font-display text-xl font-medium group-hover:text-foreground/80 transition-colors">
                             {designer.brand_name || designer.name}
                           </h3>
-                          {designer.category && (
+                          {designer.brand_name && (
+                            <p className="text-sm text-muted-foreground">
+                              by {designer.name}
+                            </p>
+                          )}
+                          {designer.category && !designer.brand_name && (
                             <p className="text-sm text-muted-foreground">
                               {designer.category}
                             </p>
                           )}
                         </div>
                         {designer.product_count !== undefined && designer.product_count > 0 && (
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant="secondary" className="text-xs mt-1">
                             {designer.product_count} pieces
                           </Badge>
                         )}

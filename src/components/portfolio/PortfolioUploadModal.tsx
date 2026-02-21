@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,8 +21,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { Loader2, Upload, X, Plus } from "lucide-react";
+import { Loader2, Upload, X, Plus, Palette, Lightbulb, FolderOpen, Calendar, Scissors, Image } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PortfolioUploadModalProps {
@@ -32,13 +34,21 @@ interface PortfolioUploadModalProps {
 
 const CATEGORIES = [
   "Fashion Design",
+  "Bridal Couture",
+  "Haute Couture",
+  "Prêt-à-Porter",
+  "Streetwear",
   "Jewelry Design",
   "Textile Design",
   "Accessory Design",
   "Footwear Design",
   "Bag Design",
+  "Sustainable Fashion",
   "Other",
 ];
+
+const CURRENT_YEAR = new Date().getFullYear();
+const YEARS = Array.from({ length: 20 }, (_, i) => CURRENT_YEAR - i);
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -65,63 +75,146 @@ export function PortfolioUploadModal({
   const [images, setImages] = useState<ImageFile[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const [currentFile, setCurrentFile] = useState("");
+  
+  // Enhanced Manual Project Fields
+  const [collectionName, setCollectionName] = useState("");
+  const [year, setYear] = useState<string>("");
+  const [fabricDetails, setFabricDetails] = useState("");
+  const [inspiration, setInspiration] = useState("");
 
   const uploadMutation = useMutation({
     mutationFn: async () => {
       if (images.length === 0) throw new Error("At least one image is required");
       if (!title.trim()) throw new Error("Title is required");
 
-      setCurrentFile("Preparing upload...");
+      setCurrentFile("Checking authentication...");
 
-      // Convert images to base64
-      const imageData = await Promise.all(
-        images.map(async (img) => {
-          return new Promise<{ fileName: string; fileType: string; fileData: string }>(
-            (resolve, reject) => {
-              const reader = new FileReader();
-              reader.onload = () => {
-                resolve({
-                  fileName: img.fileName,
-                  fileType: img.fileType,
-                  fileData: reader.result as string,
-                });
-              };
-              reader.onerror = reject;
-              reader.readAsDataURL(img.file);
-            }
-          );
-        })
-      );
-
-      setCurrentFile("Uploading to server...");
-
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error("Not authenticated");
-
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/upload-portfolio-project`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title,
-            description: description || undefined,
-            category: category || undefined,
-            tags: tags.length > 0 ? tags : undefined,
-            images: imageData,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Upload failed");
+      // Get current user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        throw new Error("Not authenticated. Please log in again.");
       }
 
-      return response.json();
+      setCurrentFile("Preparing portfolio...");
+
+      // Get or create portfolio for the user
+      let { data: portfolio, error: portfolioError } = await supabase
+        .from("portfolios")
+        .select("id")
+        .eq("designer_id", user.id)
+        .single();
+
+      if (portfolioError || !portfolio) {
+        // Create portfolio if it doesn't exist
+        const { data: newPortfolio, error: createError } = await supabase
+          .from("portfolios")
+          .insert({
+            designer_id: user.id,
+            title: `${user.email}'s Portfolio`,
+            description: "My design portfolio",
+          })
+          .select("id")
+          .single();
+
+        if (createError) {
+          console.error("Error creating portfolio:", createError);
+          throw new Error("Failed to create portfolio: " + createError.message);
+        }
+        portfolio = newPortfolio;
+      }
+
+      setCurrentFile("Creating project...");
+
+      // Create portfolio project
+      const { data: project, error: projectError } = await supabase
+        .from("portfolio_projects")
+        .insert({
+          portfolio_id: portfolio.id,
+          title,
+          description: description || null,
+          category: category || null,
+          tags: tags.length > 0 ? tags : null,
+          source_type: "manual",
+        })
+        .select("id")
+        .single();
+
+      if (projectError) {
+        console.error("Error creating project:", projectError);
+        throw new Error("Failed to create project: " + projectError.message);
+      }
+
+      // Upload images to storage
+      const uploadedAssets = [];
+      let thumbnailUrl: string | null = null;
+
+      for (let i = 0; i < images.length; i++) {
+        const img = images[i];
+        setCurrentFile(`Uploading image ${i + 1} of ${images.length}...`);
+
+        // Generate unique filename
+        const fileExt = img.fileName.split(".").pop() || "jpg";
+        const fileName = `${user.id}/${project.id}/${Date.now()}-${i}.${fileExt}`;
+
+        // Upload to storage
+        const { error: uploadError } = await supabase.storage
+          .from("portfolio")
+          .upload(fileName, img.file, {
+            contentType: img.fileType,
+            cacheControl: "3600",
+          });
+
+        if (uploadError) {
+          console.error(`Error uploading image ${i + 1}:`, uploadError);
+          // Continue with other images, don't fail completely
+          continue;
+        }
+
+        // Get public URL
+        const { data: { publicUrl } } = supabase.storage
+          .from("portfolio")
+          .getPublicUrl(fileName);
+
+        // Set first image as thumbnail
+        if (i === 0) {
+          thumbnailUrl = publicUrl;
+        }
+
+        // Create asset record
+        const { data: asset, error: assetError } = await supabase
+          .from("portfolio_assets")
+          .insert({
+            portfolio_id: portfolio.id,
+            project_id: project.id,
+            designer_id: user.id,
+            file_url: publicUrl,
+            file_name: img.fileName,
+            file_type: "image",
+            file_size: img.file.size,
+            mime_type: img.fileType,
+            display_order: i,
+          })
+          .select()
+          .single();
+
+        if (!assetError && asset) {
+          uploadedAssets.push(asset);
+        }
+      }
+
+      // Update project with thumbnail
+      if (thumbnailUrl) {
+        await supabase
+          .from("portfolio_projects")
+          .update({ thumbnail_url: thumbnailUrl })
+          .eq("id", project.id);
+      }
+
+      return {
+        success: true,
+        project: { id: project.id, title, thumbnail_url: thumbnailUrl },
+        assets: uploadedAssets,
+      };
     },
     onSuccess: () => {
       toast.success("Project uploaded successfully!");
@@ -144,6 +237,10 @@ export function PortfolioUploadModal({
     setNewTag("");
     setImages([]);
     setCurrentFile("");
+    setCollectionName("");
+    setYear("");
+    setFabricDetails("");
+    setInspiration("");
     onOpenChange(false);
   };
 
@@ -410,6 +507,82 @@ export function PortfolioUploadModal({
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Enhanced Manual Project Details */}
+          <Separator className="my-4" />
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+              <Image className="h-4 w-4" />
+              Additional Project Details (Optional)
+            </div>
+
+            {/* Collection Name & Year */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="collection" className="flex items-center gap-2">
+                  <FolderOpen className="h-4 w-4 text-muted-foreground" />
+                  Collection Name
+                </Label>
+                <Input
+                  id="collection"
+                  value={collectionName}
+                  onChange={(e) => setCollectionName(e.target.value)}
+                  placeholder="e.g., Spring 2026"
+                  maxLength={100}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="year" className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  Year
+                </Label>
+                <Select value={year} onValueChange={setYear}>
+                  <SelectTrigger id="year">
+                    <SelectValue placeholder="Select year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {YEARS.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Fabric Details */}
+            <div className="space-y-2">
+              <Label htmlFor="fabric" className="flex items-center gap-2">
+                <Scissors className="h-4 w-4 text-muted-foreground" />
+                Fabric & Material Details
+              </Label>
+              <Textarea
+                id="fabric"
+                value={fabricDetails}
+                onChange={(e) => setFabricDetails(e.target.value)}
+                placeholder="Describe fabrics, materials, textures used..."
+                rows={3}
+                maxLength={500}
+              />
+            </div>
+
+            {/* Inspiration */}
+            <div className="space-y-2">
+              <Label htmlFor="inspiration" className="flex items-center gap-2">
+                <Lightbulb className="h-4 w-4 text-muted-foreground" />
+                Inspiration
+              </Label>
+              <Textarea
+                id="inspiration"
+                value={inspiration}
+                onChange={(e) => setInspiration(e.target.value)}
+                placeholder="What inspired this design? Reference artists, cultures, themes..."
+                rows={3}
+                maxLength={500}
+              />
+            </div>
           </div>
         </div>
 

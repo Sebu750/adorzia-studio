@@ -26,7 +26,52 @@ export default function ShopProducts() {
   });
   const [showFilters, setShowFilters] = useState(false);
 
-  const { data: categoriesData } = useMarketplaceCategories();
+  // Use local category data
+  const categoriesData = {
+    data: [
+      // Couture & Bespoke Fashion
+      { id: "1", name: "Bridal & Wedding Gowns", category: "Couture & Bespoke", slug: "bridal-wedding-gowns" },
+      { id: "2", name: "Evening & Red Carpet", category: "Couture & Bespoke", slug: "evening-red-carpet" },
+      { id: "3", name: "Custom Tailored Suits", category: "Couture & Bespoke", slug: "custom-tailored-suits" },
+      { id: "4", name: "Couture Ready-to-Wear", category: "Couture & Bespoke", slug: "couture-ready-to-wear" },
+      
+      // Limited Edition Clothing
+      { id: "5", name: "Seasonal Dresses", category: "Limited Edition", slug: "seasonal-dresses" },
+      { id: "6", name: "Tops & Shirts", category: "Limited Edition", slug: "tops-shirts" },
+      { id: "7", name: "Pants & Skirts", category: "Limited Edition", slug: "pants-skirts" },
+      { id: "8", name: "Outerwear & Jackets", category: "Limited Edition", slug: "outerwear-jackets" },
+      { id: "9", name: "Knitwear & Sweaters", category: "Limited Edition", slug: "knitwear-sweaters" },
+      
+      // Designer Accessories
+      { id: "10", name: "Luxury Bags & Clutches", category: "Accessories", slug: "luxury-bags-clutches" },
+      { id: "11", name: "Custom Shoes", category: "Accessories", slug: "custom-shoes" },
+      { id: "12", name: "Scarves & Shawls", category: "Accessories", slug: "scarves-shawls" },
+      { id: "13", name: "Belts & Gloves", category: "Accessories", slug: "belts-gloves" },
+      { id: "14", name: "Statement Headpieces", category: "Accessories", slug: "statement-headpieces" },
+      
+      // Fine Jewelry & Watches
+      { id: "15", name: "Necklaces & Pendants", category: "Jewelry & Watches", slug: "necklaces-pendants" },
+      { id: "16", name: "Earrings", category: "Jewelry & Watches", slug: "earrings" },
+      { id: "17", name: "Bracelets & Bangles", category: "Jewelry & Watches", slug: "bracelets-bangles" },
+      { id: "18", name: "Rings", category: "Jewelry & Watches", slug: "rings" },
+      { id: "19", name: "Designer Watches", category: "Jewelry & Watches", slug: "designer-watches" },
+      
+      // Custom / Made-to-Order Fashion
+      { id: "20", name: "Personalized Clothing", category: "Custom Fashion", slug: "personalized-clothing" },
+      { id: "21", name: "Bespoke Accessories", category: "Custom Fashion", slug: "bespoke-accessories" },
+      { id: "22", name: "Tailored Couture", category: "Custom Fashion", slug: "tailored-couture" },
+      
+      // Exclusive Collections
+      { id: "23", name: "Seasonal Designer Drops", category: "Exclusive Collections", slug: "seasonal-designer-drops" },
+      { id: "24", name: "One-of-a-Kind Pieces", category: "Exclusive Collections", slug: "one-of-a-kind" },
+      { id: "25", name: "Designer Collaborations", category: "Exclusive Collections", slug: "designer-collaborations" },
+      
+      // Sustainable / Artisan Fashion
+      { id: "26", name: "Eco-Conscious Luxury", category: "Sustainable Fashion", slug: "eco-conscious-luxury" },
+      { id: "27", name: "Handcrafted Artisan", category: "Sustainable Fashion", slug: "handcrafted-artisan" },
+      { id: "28", name: "Limited Batch", category: "Sustainable Fashion", slug: "limited-batch" },
+    ]
+  };
   const { data: designersData } = useQuery({
     queryKey: ['shop-designers-list'],
     queryFn: async () => {
@@ -42,7 +87,7 @@ export default function ShopProducts() {
   });
 
   const { data: productsData, isLoading } = useMarketplaceProducts({
-    category: filters.categories?.[0] || undefined,
+    category: searchParams.get('category') || filters.categories?.[0] || undefined,
     designer: filters.designers?.[0] || undefined,
     sort: filters.sortBy as any,
     minPrice: filters.priceRange?.[0],

@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   MapPin, Share2, Heart, ArrowLeft, ArrowUpRight,
-  Instagram, Globe, Mail, Package
+  Instagram, Globe, Mail, Package, Briefcase
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +39,8 @@ export default function ShopDesignerProfile() {
     queryFn: async () => {
       if (!id) return null;
 
+      // Fetch designer profile
+      // No approval required - all designers with brand names are visible
       const { data, error } = await supabase
         .from('profiles')
         .select(`
@@ -47,7 +49,7 @@ export default function ShopDesignerProfile() {
           avatar_url, 
           bio, 
           category, 
-          style_credits,
+          xp,
           brand_name,
           banner_image,
           location,
@@ -61,6 +63,7 @@ export default function ShopDesignerProfile() {
           sustainability_practices
         `)
         .eq('user_id', id)
+        .not('brand_name', 'is', null)
         .single();
 
       // Handle case where designer doesn't exist
@@ -290,6 +293,17 @@ export default function ShopDesignerProfile() {
 
               {/* Actions */}
               <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  asChild
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 gap-2"
+                >
+                  <Link to={`/portfolio/${id}`}>
+                    <Briefcase className="h-4 w-4" />
+                    View Portfolio
+                  </Link>
+                </Button>
                 <Button
                   variant={isFollowing ? "default" : "outline"}
                   size="lg"

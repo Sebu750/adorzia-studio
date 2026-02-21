@@ -16,6 +16,12 @@ interface UploadRequest {
     fileType: string;
     fileData: string; // base64 encoded
   }[];
+  // Enhanced manual project fields
+  collection_name?: string;
+  year?: number;
+  fabric_details?: string;
+  inspiration?: string;
+  source_type?: string;
 }
 
 serve(async (req) => {
@@ -45,37 +51,31 @@ serve(async (req) => {
       );
     }
 
-    // Create anon client to validate the user's JWT
-    const supabase = createClient(
-      supabaseUrl,
-      supabaseAnonKey,
-      { auth: { persistSession: false, autoRefreshToken: false } }
-    );
+    // Create client with user's auth header for authentication
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
 
     // Validate JWT and get user
-    const { data: { user }, error: authError } = await supabase.auth.getUser(
-      authHeader.replace("Bearer ", "")
-    );
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
       console.error("[upload-portfolio-project] Auth error:", authError?.message || "No user");
       return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
+        JSON.stringify({ error: "Unauthorized", details: authError?.message }),
         { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     console.log("[upload-portfolio-project] Authenticated user:", user.id);
 
-    // Create service role client for storage operations
-    const supabaseAdmin = createClient(
-      supabaseUrl,
-      serviceRoleKey,
-      { auth: { persistSession: false, autoRefreshToken: false } }
-    );
+    // Create service role client for storage operations (bypasses RLS)
+    const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
 
     const requestData: UploadRequest = await req.json();
-    const { title, description, category, tags, images } = requestData;
+    const { title, description, category, tags, images, collection_name, year, fabric_details, inspiration, source_type } = requestData;
 
     if (!title || !images || images.length === 0) {
       return new Response(
@@ -123,7 +123,12 @@ serve(async (req) => {
         description: description || null,
         category: category || null,
         tags: tags && tags.length > 0 ? tags : null,
-        source_type: "upload",
+        source_type: source_type || "upload",
+        // Enhanced fields
+        collection_name: collection_name || null,
+        year: year || null,
+        fabric_details: fabric_details || null,
+        inspiration: inspiration || null,
       })
       .select("id")
       .single();

@@ -198,13 +198,15 @@ export default function ShopProductDetail() {
               <div className="space-y-4">
                 {product.designer && (
                   <Link 
-                    to={`/shop/designer/${product.designer.id}`}
-                    className="inline-flex items-center gap-2 group"
+                    to={`/shop/designer/${product.designer.user_id}`}
+                    className="inline-flex flex-col items-start gap-1 group"
                   >
-                    <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground group-hover:text-foreground transition-colors">
-                      {product.designer.brand_name || product.designer.full_name}
+                    <span className="text-lg font-display font-medium text-foreground group-hover:text-foreground/80 transition-colors">
+                      {product.designer.brand_name || product.designer.name}
                     </span>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground group-hover:text-foreground transition-colors" />
+                    <span className="text-sm text-muted-foreground">
+                      by {product.designer.name}
+                    </span>
                   </Link>
                 )}
                 

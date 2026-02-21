@@ -35,8 +35,8 @@ interface Product {
   materials?: string[];
   care_instructions?: string;
   designer?: {
-    id: string;
-    full_name: string;
+    user_id: string;
+    name: string;
     brand_name: string;
     avatar_url: string;
   };

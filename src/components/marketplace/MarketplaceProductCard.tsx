@@ -16,6 +16,11 @@ interface MarketplaceProductCardProps {
   images: string[];
   designerName?: string;
   brandName?: string;
+  designer?: {
+    user_id: string;
+    name: string;
+    brand_name: string;
+  };
   designerId?: string;
   averageRating?: number;
   reviewCount?: number;
@@ -36,6 +41,7 @@ export function MarketplaceProductCard({
   images,
   designerName,
   brandName,
+  designer,
   designerId,
   isNew,
   isBestseller,
@@ -156,12 +162,16 @@ export function MarketplaceProductCard({
 
         {/* Product Info - Editorial Style */}
         <div className="space-y-2">
-          {/* Designer Name */}
-          {(brandName || designerName) && (
-            <p className="text-editorial-label text-muted-foreground">
-              {brandName || designerName}
-            </p>
-          )}
+          {/* Designer Name - Brand Name by Designer Name format */}
+          <div className="space-y-1">
+            {(brandName || designer?.brand_name) && (
+              <p className="text-editorial-label font-medium text-foreground">
+                {brandName || designer?.brand_name}
+              </p>
+            )}
+            <p className="text-xs text-muted-foreground">
+              by {designerName || designer?.name || 'Designer'}</p>
+          </div>
 
           {/* Title */}
           <h3 className="font-display text-base font-medium text-foreground line-clamp-1 group-hover:text-foreground/80 transition-colors">

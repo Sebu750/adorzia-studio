@@ -60,7 +60,8 @@ serve(async (req) => {
         .from('marketplace_products')
         .select(`
           *,
-          category:marketplace_categories(id, name, slug)
+          category:marketplace_categories(id, name, slug),
+          designer:profiles(user_id, name, brand_name, avatar_url)
         `, { count: 'exact' })
         .eq('status', 'live');
 
@@ -141,7 +142,8 @@ serve(async (req) => {
         .from('marketplace_products')
         .select(`
           *,
-          category:marketplace_categories(id, name, slug)
+          category:marketplace_categories(id, name, slug),
+          designer:profiles(user_id, name, brand_name, avatar_url)
         `)
         .eq('status', 'live');
 
@@ -167,7 +169,7 @@ serve(async (req) => {
       // Fetch related products - NJAL Logic: Prioritize same designer
       const { data: sameDesignerProducts } = await supabase
         .from('marketplace_products')
-        .select('id, title, price, images, designer_id, average_rating')
+        .select('id, title, price, images, designer_id, average_rating, designer:profiles(user_id, name, brand_name)')
         .eq('status', 'live')
         .eq('designer_id', product.designer_id)
         .neq('id', product.id)
@@ -179,7 +181,7 @@ serve(async (req) => {
         const excludeIds = [product.id, ...relatedProducts.map(p => p.id)];
         const { data: categoryProducts } = await supabase
           .from('marketplace_products')
-          .select('id, title, price, images, designer_id, average_rating')
+          .select('id, title, price, images, designer_id, average_rating, designer:profiles(user_id, name, brand_name)')
           .eq('status', 'live')
           .eq('category_id', product.category_id)
           .not('id', 'in', `(${excludeIds.join(',')})`)
